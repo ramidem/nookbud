@@ -163,7 +163,7 @@ export function SettingsScreen({ navigation }: Props) {
             ) : (
               <View>
                 <Text style={tw`mb-2 text-gray-700`}>
-                  Your co-parent hasn't joined yet. Share this code:
+                  Your co-parent hasn{"'"}t joined yet. Share this code:
                 </Text>
                 <View style={tw`rounded-lg bg-gray-100 p-3`}>
                   <Text style={tw`text-center font-mono text-xl font-bold text-gray-900`}>

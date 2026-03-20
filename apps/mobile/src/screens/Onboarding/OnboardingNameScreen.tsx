@@ -25,9 +25,9 @@ export function OnboardingNameScreen({ navigation }: Props) {
       style={tw`flex-1 bg-white`}
     >
       <View style={tw`flex-1 px-6 pt-16`}>
-        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>What's your name?</Text>
+        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>What{"'"}s your name?</Text>
         <Text style={tw`mb-8 text-base text-gray-600`}>
-          This is how you'll appear to your co-parent.
+          This is how you{"'"}ll appear to your co-parent.
         </Text>
 
         <TextInput

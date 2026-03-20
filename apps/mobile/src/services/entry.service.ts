@@ -1,7 +1,7 @@
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 
 import { AuditService } from './audit.service';
-import { FileService, type SavedFile } from './file.service';
+import { FileService } from './file.service';
 import { UserService } from './user.service';
 
 import { db, opsqlite } from '@/database';
@@ -19,15 +19,22 @@ import {
 } from '@/database/schema';
 import { computeDiff } from '@/utils/diff.util';
 
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
+const ERROR_NO_CURRENT_USER = 'No current user';
+const AUDIT_ACTION_CREATE = 'create';
+const AUDIT_ENTITY_ENTRY = 'entry';
+
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
 
@@ -54,7 +61,7 @@ export const EntryService = {
     attachmentInputs?: AttachmentInput[];
   }): Promise<Entry> {
     const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     const entryId = generateUUID();
     const versionId = generateUUID();
@@ -107,11 +114,17 @@ export const EntryService = {
           };
           await db.insert(attachments).values(newAttachment);
 
-          await AuditService.log(userId, 'create', 'attachment', attachmentId, {
-            entryId,
-            filename: saved.originalFilename,
-            hash: saved.fileHash,
-            versionId,
+          await AuditService.log({
+            action: AUDIT_ACTION_CREATE,
+            entityId: attachmentId,
+            entityType: 'attachment',
+            metadata: {
+              entryId,
+              filename: saved.originalFilename,
+              hash: saved.fileHash,
+              versionId,
+            },
+            userId,
           });
         }
       }
@@ -129,11 +142,17 @@ export const EntryService = {
       await opsqlite.execute('COMMIT');
 
       // Audit log
-      await AuditService.log(userId, 'create', 'entry', entryId, {
-        childId: data.childId,
-        relationshipId: data.relationshipId,
-        type: data.type,
-        versionId,
+      await AuditService.log({
+        action: AUDIT_ACTION_CREATE,
+        entityId: entryId,
+        entityType: AUDIT_ENTITY_ENTRY,
+        metadata: {
+          childId: data.childId,
+          relationshipId: data.relationshipId,
+          type: data.type,
+          versionId,
+        },
+        userId,
       });
 
       const [entry] = await db.select().from(entries).where(eq(entries.id, entryId));
@@ -172,11 +191,10 @@ export const EntryService = {
       .orderBy(desc(entryVersions.versionNumber));
   },
 
-  
   /**
    * Get entry with current version and acknowledgment status
    */
-async getWithDetails(id: string): Promise<EntryWithVersion | null> {
+  async getWithDetails(id: string): Promise<EntryWithVersion | null> {
     const entry = await this.getById(id);
     if (!entry) return null;
 
@@ -198,22 +216,33 @@ async getWithDetails(id: string): Promise<EntryWithVersion | null> {
     };
   },
 
-  
-  
-/**
+  /**
+   * Parse content from version
+   */
+  parseContent<T = Record<string, unknown>>(version: EntryVersion): T {
+    return JSON.parse(version.contentJson) as T;
+  },
+
+  /**
    * Soft delete an entry
    */
-async softDelete(entryId: string): Promise<Entry> {
+  async softDelete(entryId: string): Promise<Entry> {
     const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     const entry = await this.getById(entryId);
     if (!entry) throw new Error('Entry not found');
 
     await db.update(entries).set({ status: 'soft_deleted' }).where(eq(entries.id, entryId));
 
-    await AuditService.log(userId, 'soft_delete', 'entry', entryId, {
-      previousStatus: entry.status,
+    await AuditService.log({
+      action: 'soft_delete',
+      entityId: entryId,
+      entityType: AUDIT_ENTITY_ENTRY,
+      metadata: {
+        previousStatus: entry.status,
+      },
+      userId,
     });
 
     const [updated] = await db.select().from(entries).where(eq(entries.id, entryId));
@@ -232,7 +261,7 @@ async softDelete(entryId: string): Promise<Entry> {
     },
   ): Promise<Entry> {
     const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     const entry = await this.getById(entryId);
     if (!entry) throw new Error('Entry not found');
@@ -290,22 +319,34 @@ async softDelete(entryId: string): Promise<Entry> {
           };
           await db.insert(attachments).values(newAttachment);
 
-          await AuditService.log(userId, 'create', 'attachment', attachmentId, {
-            entryId,
-            filename: saved.originalFilename,
-            hash: saved.fileHash,
-            versionId: newVersionId,
+          await AuditService.log({
+            action: AUDIT_ACTION_CREATE,
+            entityId: attachmentId,
+            entityType: 'attachment',
+            metadata: {
+              entryId,
+              filename: saved.originalFilename,
+              hash: saved.fileHash,
+              versionId: newVersionId,
+            },
+            userId,
           });
         }
       }
 
       await opsqlite.execute('COMMIT');
 
-      await AuditService.log(userId, 'update', 'entry', entryId, {
-        diff,
-        newVersionId,
-        previousVersionId: currentVersion.id,
-        versionNumber: newVersionNumber,
+      await AuditService.log({
+        action: 'update',
+        entityId: entryId,
+        entityType: AUDIT_ENTITY_ENTRY,
+        metadata: {
+          diff,
+          newVersionId,
+          previousVersionId: currentVersion.id,
+          versionNumber: newVersionNumber,
+        },
+        userId,
       });
 
       const [updated] = await db.select().from(entries).where(eq(entries.id, entryId));
@@ -315,12 +356,5 @@ async softDelete(entryId: string): Promise<Entry> {
       await opsqlite.execute('ROLLBACK');
       throw error;
     }
-  },
-
-  /**
-   * Parse content from version
-   */
-  parseContent<T = Record<string, unknown>>(version: EntryVersion): T {
-    return JSON.parse(version.contentJson) as T;
   },
 };

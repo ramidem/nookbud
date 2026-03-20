@@ -13,15 +13,19 @@ const storage = createMMKV({
 
 const CURRENT_USER_ID_KEY = 'current_user_id';
 
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
+
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
 

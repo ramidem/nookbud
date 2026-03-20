@@ -1,5 +1,5 @@
 import { eq, and, gte, lte, ne, inArray, desc } from 'drizzle-orm';
-import { Platform, Share } from 'react-native';
+import { Share } from 'react-native';
 import RNFS from 'react-native-fs';
 
 import { FileService } from './file.service';
@@ -10,12 +10,8 @@ import {
   entryVersions,
   attachments,
   acknowledgments,
-  disputes,
-  disputeResponses,
-  children,
-  users,
+  type EntryType,
 } from '@/database/schema';
-import type { EntryType, EntryStatus } from '@/database/schema';
 
 export type ExportFilters = {
   relationshipId: string;
@@ -32,20 +28,24 @@ export type ExportResult = {
   mimeType: string;
 };
 
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
+
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
 
 function getExportDir(): string {
-  return Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.DocumentDirectoryPath;
+  return RNFS.DocumentDirectoryPath;
 }
 
 function formatDate(date: Date): string {
@@ -145,20 +145,20 @@ export const ExportService = {
     // Generate data.json
     const dataJson = {
       entries: entryList.map((e) => ({
-        createdAt: e.createdAt.toISOString(),
-        createdBy: e.createdBy,
         acknowledgmentStatus: e.ackStatus,
-        id: e.id,
-        content: JSON.parse(e.version.contentJson),
-        type: e.type,
         attachments: e.attachments.map((a) => ({
+          bundlePath: `attachments/${a.fileHash}_${a.originalFilename}`,
           filename: a.originalFilename,
           hash: a.fileHash,
           mimeType: a.mimeType,
-          bundlePath: `attachments/${a.fileHash}_${a.originalFilename}`,
           size: a.fileSizeBytes,
         })),
+        content: JSON.parse(e.version.contentJson),
+        createdAt: e.createdAt.toISOString(),
+        createdBy: e.createdBy,
+        id: e.id,
         status: e.status,
+        type: e.type,
         versionNumber: e.version.versionNumber,
       })),
       entryCount: entryList.length,
@@ -177,26 +177,26 @@ export const ExportService = {
     // Copy attachments with hash in filename
     const manifest: Array<{ filename: string; hash: string; verified: boolean }> = [];
 
-    for (const entry of entryList) {
-      for (const att of entry.attachments) {
-        const sourcePath = FileService.getFullPath(att.storagePath);
-        const destFilename = `${att.fileHash}_${att.originalFilename}`;
-        const destPath = `${bundleDir}/attachments/${destFilename}`;
+    const allAttachments = entryList.flatMap((entry) => entry.attachments);
 
-        try {
-          const exists = await RNFS.exists(sourcePath);
-          if (exists) {
-            await RNFS.copyFile(sourcePath, destPath);
-            const verified = await FileService.verifyIntegrity(att.storagePath, att.fileHash);
-            manifest.push({
-              filename: destFilename,
-              hash: att.fileHash,
-              verified,
-            });
-          }
-        } catch (err) {
-          console.error('Failed to copy attachment:', err);
-        }
+    for (const att of allAttachments) {
+      const sourcePath = FileService.getFullPath(att.storagePath);
+      const destFilename = `${att.fileHash}_${att.originalFilename}`;
+      const destPath = `${bundleDir}/attachments/${destFilename}`;
+
+      try {
+        const exists = await RNFS.exists(sourcePath);
+        if (!exists) continue;
+
+        await RNFS.copyFile(sourcePath, destPath);
+        const verified = await FileService.verifyIntegrity(att.storagePath, att.fileHash);
+        manifest.push({
+          filename: destFilename,
+          hash: att.fileHash,
+          verified,
+        });
+      } catch (err) {
+        console.error('Failed to copy attachment:', err);
       }
     }
 

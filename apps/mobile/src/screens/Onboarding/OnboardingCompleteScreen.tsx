@@ -37,7 +37,7 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
   return (
     <View style={tw`flex-1 bg-white px-6 pt-16`}>
       <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Ready to go!</Text>
-      <Text style={tw`mb-8 text-base text-gray-600`}>Here's a summary of your profile.</Text>
+      <Text style={tw`mb-8 text-base text-gray-600`}>Here{"'"}s a summary of your profile.</Text>
 
       <View style={tw`mb-8 rounded-xl bg-gray-50 p-4`}>
         <View style={tw`flex-row justify-between border-b border-gray-200 py-3`}>

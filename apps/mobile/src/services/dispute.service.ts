@@ -1,7 +1,7 @@
-import { eq, desc } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import { AuditService } from './audit.service';
-import { FileService, type SavedFile } from './file.service';
+import { FileService } from './file.service';
 import { UserService } from './user.service';
 
 import { db } from '@/database';
@@ -16,15 +16,19 @@ import {
   type NewAttachment,
 } from '@/database/schema';
 
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
+
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
 
@@ -101,19 +105,31 @@ export const DisputeService = {
       };
       await db.insert(attachments).values(newAttachment);
 
-      await AuditService.log(userId, 'create', 'attachment', attachmentId, {
-        disputeId,
-        filename: saved.originalFilename,
-        hash: saved.fileHash,
-        responseId,
-        type: 'dispute_evidence',
+      await AuditService.log({
+        action: 'create',
+        entityId: attachmentId,
+        entityType: 'attachment',
+        metadata: {
+          disputeId,
+          filename: saved.originalFilename,
+          hash: saved.fileHash,
+          responseId,
+          type: 'dispute_evidence',
+        },
+        userId,
       });
     }
 
-    await AuditService.log(userId, 'respond', 'dispute', disputeId, {
-      evidenceCount: attachmentInputs.length,
-      responseId,
-      type: 'evidence',
+    await AuditService.log({
+      action: 'respond',
+      entityId: disputeId,
+      entityType: 'dispute',
+      metadata: {
+        evidenceCount: attachmentInputs.length,
+        responseId,
+        type: 'evidence',
+      },
+      userId,
     });
   },
 
@@ -190,9 +206,15 @@ export const DisputeService = {
 
     await db.insert(disputeResponses).values(newResponse);
 
-    await AuditService.log(userId, 'respond', 'dispute', disputeId, {
-      entryId: dispute.entryId,
-      responseId: id,
+    await AuditService.log({
+      action: 'respond',
+      entityId: disputeId,
+      entityType: 'dispute',
+      metadata: {
+        entryId: dispute.entryId,
+        responseId: id,
+      },
+      userId,
     });
 
     const [response] = await db.select().from(disputeResponses).where(eq(disputeResponses.id, id));

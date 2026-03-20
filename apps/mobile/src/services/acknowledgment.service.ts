@@ -12,15 +12,19 @@ import {
   type NewDispute,
 } from '@/database/schema';
 
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
+
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
 
@@ -64,9 +68,15 @@ export const AcknowledgmentService = {
         })
         .where(eq(acknowledgments.id, existing.id));
 
-      await AuditService.log(userId, 'acknowledge', 'entry', entryId, {
-        acknowledgmentId: existing.id,
-        comment,
+      await AuditService.log({
+        action: 'acknowledge',
+        entityId: entryId,
+        entityType: 'entry',
+        metadata: {
+          acknowledgmentId: existing.id,
+          comment,
+        },
+        userId,
       });
 
       const [updated] = await db
@@ -86,9 +96,15 @@ export const AcknowledgmentService = {
         status: 'acknowledged',
       });
 
-      await AuditService.log(userId, 'acknowledge', 'entry', entryId, {
-        acknowledgmentId: id,
-        comment,
+      await AuditService.log({
+        action: 'acknowledge',
+        entityId: entryId,
+        entityType: 'entry',
+        metadata: {
+          acknowledgmentId: id,
+          comment,
+        },
+        userId,
       });
 
       const [created] = await db.select().from(acknowledgments).where(eq(acknowledgments.id, id));
@@ -171,10 +187,16 @@ export const AcknowledgmentService = {
         })
         .where(eq(acknowledgments.id, existing.id));
 
-      await AuditService.log(userId, 'dispute', 'entry', entryId, {
-        acknowledgmentId: existing.id,
-        disputeId,
-        reason,
+      await AuditService.log({
+        action: 'dispute',
+        entityId: entryId,
+        entityType: 'entry',
+        metadata: {
+          acknowledgmentId: existing.id,
+          disputeId,
+          reason,
+        },
+        userId,
       });
 
       const [updated] = await db
@@ -193,10 +215,16 @@ export const AcknowledgmentService = {
         status: 'disputed',
       });
 
-      await AuditService.log(userId, 'dispute', 'entry', entryId, {
-        acknowledgmentId: ackId,
-        disputeId,
-        reason,
+      await AuditService.log({
+        action: 'dispute',
+        entityId: entryId,
+        entityType: 'entry',
+        metadata: {
+          acknowledgmentId: ackId,
+          disputeId,
+          reason,
+        },
+        userId,
       });
 
       const [created] = await db

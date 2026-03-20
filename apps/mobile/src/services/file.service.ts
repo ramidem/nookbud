@@ -1,15 +1,18 @@
-import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
+
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
 
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
 
@@ -17,13 +20,14 @@ function generateUUID(): string {
  * Get the app's documents directory for file storage
  */
 function getStorageDir(): string {
-  return Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.DocumentDirectoryPath;
+  return RNFS.DocumentDirectoryPath;
 }
 
 /**
  * Simple SHA-256 hash implementation using SubtleCrypto
  * Falls back to a basic hash if not available
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function sha256(data: string): Promise<string> {
   // In React Native, we need to use a native module or implement our own
   // For now, using react-native-fs's hash function
@@ -31,14 +35,18 @@ async function sha256(data: string): Promise<string> {
 
   // Temporary: return a hash-like string based on content
   // TODO: Replace with proper SHA-256 from react-native-quick-crypto or similar
+  const HASH_SHIFT = 5;
+  const HEX_RADIX = 16;
+  const HASH_PAD_LENGTH = 64;
+
   let hash = 0;
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data.length; i += 1) {
     const char = data.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
+    hash = (hash << HASH_SHIFT) - hash + char;
     hash = hash & hash;
   }
 
-  return Math.abs(hash).toString(16).padStart(64, '0');
+  return Math.abs(hash).toString(HEX_RADIX).padStart(HASH_PAD_LENGTH, '0');
 }
 
 /**
@@ -46,7 +54,7 @@ async function sha256(data: string): Promise<string> {
  */
 async function hashFile(filePath: string): Promise<string> {
   // react-native-fs has a built-in hash function
-  return await RNFS.hash(filePath, 'sha256');
+  return RNFS.hash(filePath, 'sha256');
 }
 
 export type SavedFile = {
@@ -59,6 +67,15 @@ export type SavedFile = {
 
 export const FileService = {
   /**
+   * Supported MIME types
+   */
+  SUPPORTED_TYPES: {
+    documents: ['application/pdf'],
+    images: ['image/jpeg', 'image/png', 'image/heic', 'image/heif', 'image/webp'],
+    videos: ['video/mp4', 'video/quicktime', 'video/mov'],
+  } as const,
+
+  /**
    * Delete a file from storage
    */
   async deleteFile(storagePath: string): Promise<void> {
@@ -69,25 +86,30 @@ export const FileService = {
     }
   },
 
-  
   /**
-   * Supported MIME types
-   */
-SUPPORTED_TYPES: {
-    documents: ['application/pdf'],
-    images: ['image/jpeg', 'image/png', 'image/heic', 'image/heif', 'image/webp'],
-    videos: ['video/mp4', 'video/quicktime', 'video/mov'],
-  } as const,
-
-  
-  
-/**
    * Check if a file exists
    */
-async exists(storagePath: string): Promise<boolean> {
+  async exists(storagePath: string): Promise<boolean> {
     const fullPath = this.getFullPath(storagePath);
 
     return RNFS.exists(fullPath);
+  },
+
+  /**
+   * Get file size
+   */
+  async getFileSize(storagePath: string): Promise<number> {
+    const fullPath = this.getFullPath(storagePath);
+    const stats = await RNFS.stat(fullPath);
+
+    return stats.size;
+  },
+
+  /**
+   * Get file:// URI for display
+   */
+  getFileUri(storagePath: string): string {
+    return `file://${this.getFullPath(storagePath)}`;
   },
 
   /**
@@ -99,22 +121,32 @@ async exists(storagePath: string): Promise<boolean> {
     return `${storageDir}/${storagePath}`;
   },
 
-  
   /**
-   * Get file size
+   * Check if a MIME type is supported
    */
-async getFileSize(storagePath: string): Promise<number> {
-    const fullPath = this.getFullPath(storagePath);
-    const stats = await RNFS.stat(fullPath);
+  isSupportedType(mimeType: string): boolean {
+    const allSupported = [
+      ...this.SUPPORTED_TYPES.images,
+      ...this.SUPPORTED_TYPES.documents,
+      ...this.SUPPORTED_TYPES.videos,
+    ];
 
-    return stats.size;
+    return allSupported.includes(mimeType as (typeof allSupported)[number]);
   },
 
-  
+  /**
+   * Read file as base64 (for export)
+   */
+  async readAsBase64(storagePath: string): Promise<string> {
+    const fullPath = this.getFullPath(storagePath);
+
+    return RNFS.readFile(fullPath, 'base64');
+  },
+
   /**
    * Save a file to app storage and compute its SHA-256 hash
    */
-async saveFile(
+  async saveFile(
     sourceUri: string,
     originalFilename: string,
     mimeType: string,
@@ -130,7 +162,8 @@ async saveFile(
 
     // Generate unique filename
     const ext = originalFilename.split('.').pop() || '';
-    const uniqueName = `${generateUUID()}${ext ? `.${ext}` : ''}`;
+    const extSuffix = ext ? `.${ext}` : '';
+    const uniqueName = `${generateUUID()}${extSuffix}`;
     const destPath = `${attachmentsDir}/${uniqueName}`;
 
     // Copy file to app storage
@@ -158,19 +191,10 @@ async saveFile(
     };
   },
 
-  
-  /**
-   * Get file:// URI for display
-   */
-getFileUri(storagePath: string): string {
-    return `file://${this.getFullPath(storagePath)}`;
-  },
-
-  
   /**
    * Verify file integrity by comparing current hash with stored hash
    */
-async verifyIntegrity(storagePath: string, expectedHash: string): Promise<boolean> {
+  async verifyIntegrity(storagePath: string, expectedHash: string): Promise<boolean> {
     const fullPath = this.getFullPath(storagePath);
 
     const exists = await RNFS.exists(fullPath);
@@ -181,27 +205,5 @@ async verifyIntegrity(storagePath: string, expectedHash: string): Promise<boolea
     const currentHash = await hashFile(fullPath);
 
     return currentHash === expectedHash;
-  },
-
-  /**
-   * Check if a MIME type is supported
-   */
-  isSupportedType(mimeType: string): boolean {
-    const allSupported = [
-      ...this.SUPPORTED_TYPES.images,
-      ...this.SUPPORTED_TYPES.documents,
-      ...this.SUPPORTED_TYPES.videos,
-    ];
-
-    return allSupported.includes(mimeType as (typeof allSupported)[number]);
-  },
-
-  /**
-   * Read file as base64 (for export)
-   */
-  async readAsBase64(storagePath: string): Promise<string> {
-    const fullPath = this.getFullPath(storagePath);
-
-    return RNFS.readFile(fullPath, 'base64');
   },
 };

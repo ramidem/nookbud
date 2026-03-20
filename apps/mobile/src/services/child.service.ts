@@ -6,15 +6,19 @@ import { UserService } from './user.service';
 import { db } from '@/database';
 import { children, type Child, type NewChild } from '@/database/schema';
 
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
+
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
 
@@ -48,9 +52,15 @@ export const ChildService = {
 
     await db.insert(children).values(newChild);
 
-    await AuditService.log(userId, 'create', 'child', id, {
-      name: data.name,
-      relationshipId: data.relationshipId,
+    await AuditService.log({
+      action: 'create',
+      entityId: id,
+      entityType: 'child',
+      metadata: {
+        name: data.name,
+        relationshipId: data.relationshipId,
+      },
+      userId,
     });
 
     const [child] = await db.select().from(children).where(eq(children.id, id));
@@ -96,12 +106,18 @@ export const ChildService = {
       })
       .where(eq(children.id, id));
 
-    await AuditService.log(userId, 'update', 'child', id, {
-      changes: data,
-      previous: {
-        dateOfBirth: existingChild.dateOfBirth,
-        name: existingChild.name,
+    await AuditService.log({
+      action: 'update',
+      entityId: id,
+      entityType: 'child',
+      metadata: {
+        changes: data,
+        previous: {
+          dateOfBirth: existingChild.dateOfBirth,
+          name: existingChild.name,
+        },
       },
+      userId,
     });
 
     const [updated] = await db.select().from(children).where(eq(children.id, id));

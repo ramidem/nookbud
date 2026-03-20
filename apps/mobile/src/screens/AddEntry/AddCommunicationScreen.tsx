@@ -92,8 +92,8 @@ export function AddCommunicationScreen({ navigation }: Props) {
         {/* Info banner */}
         <View style={tw`mb-6 rounded-xl bg-blue-50 p-4`}>
           <Text style={tw`text-sm text-blue-800`}>
-            💬 This creates a permanent, documented record of your message. It's not a chat — use it
-            for important communications.
+            💬 This creates a permanent, documented record of your message. It{"'"}s not a chat —
+            use it for important communications.
           </Text>
         </View>
 

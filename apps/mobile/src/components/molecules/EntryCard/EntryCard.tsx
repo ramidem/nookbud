@@ -32,13 +32,16 @@ const STATUS_COLORS = {
   pending: 'bg-amber-100 text-amber-800',
 };
 
+const MS_PER_DAY = 86400000;
+const DAYS_IN_WEEK = 7;
+
 function formatDate(date: Date): string {
   const now = new Date();
-  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / MS_PER_DAY);
 
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < DAYS_IN_WEEK) return `${diffDays} days ago`;
 
   return date.toLocaleDateString(undefined, {
     day: 'numeric',
@@ -79,11 +82,12 @@ function getEntrySubtitle(entry: TimelineEntry): string | null {
     const content = JSON.parse(entry.currentVersion.contentJson);
 
     switch (entry.type) {
-      case 'expense':
+      case 'expense': {
         const amount = content.amount / 100; // Convert from minor units
         const currency = content.currency || 'USD';
 
         return `${currency} ${amount.toFixed(2)}`;
+      }
       case 'event':
         if (content.startTime) {
           const date = new Date(content.startTime);

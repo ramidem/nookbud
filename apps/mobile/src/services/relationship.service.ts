@@ -6,26 +6,33 @@ import { UserService } from './user.service';
 import { db } from '@/database';
 import { relationships, type Relationship, type NewRelationship } from '@/database/schema';
 
+const UUID_RADIX = 16;
+const UUID_VARIANT_MASK = 0x3;
+const UUID_VARIANT_VALUE = 0x8;
+
 /**
  * Generate a UUID v4
  */
 function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * UUID_RADIX) | 0;
+    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
 
-    return v.toString(16);
+    return v.toString(UUID_RADIX);
   });
 }
+
+const INVITE_TOKEN_LENGTH = 8;
+const ENTITY_TYPE_RELATIONSHIP = 'relationship' as const;
+const ERROR_NO_CURRENT_USER = 'No current user';
 
 /**
  * Generate a random invite token
  */
 function generateInviteToken(): string {
-  // 8 character alphanumeric code
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removed ambiguous chars
   let token = '';
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < INVITE_TOKEN_LENGTH; i += 1) {
     token += chars.charAt(Math.floor(Math.random() * chars.length));
   }
 
@@ -38,7 +45,7 @@ export const RelationshipService = {
    */
   async acceptInvite(inviteToken: string): Promise<Relationship> {
     const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     const [relationship] = await db
       .select()
@@ -70,8 +77,14 @@ export const RelationshipService = {
       })
       .where(eq(relationships.id, relationship.id));
 
-    await AuditService.log(userId, 'update', 'relationship', relationship.id, {
-      action: 'accept_invite',
+    await AuditService.log({
+      action: 'update',
+      entityId: relationship.id,
+      entityType: ENTITY_TYPE_RELATIONSHIP,
+      metadata: {
+        action: 'accept_invite',
+      },
+      userId,
     });
 
     const [updated] = await db
@@ -87,7 +100,7 @@ export const RelationshipService = {
    */
   async create(): Promise<Relationship> {
     const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     const id = generateUUID();
     const inviteToken = generateInviteToken();
@@ -105,8 +118,14 @@ export const RelationshipService = {
     await db.insert(relationships).values(newRelationship);
 
     // Audit log
-    await AuditService.log(userId, 'create', 'relationship', id, {
-      inviteToken,
+    await AuditService.log({
+      action: 'create',
+      entityId: id,
+      entityType: ENTITY_TYPE_RELATIONSHIP,
+      metadata: {
+        inviteToken,
+      },
+      userId,
     });
 
     const [relationship] = await db.select().from(relationships).where(eq(relationships.id, id));
@@ -176,7 +195,7 @@ export const RelationshipService = {
    */
   async regenerateInvite(relationshipId: string): Promise<string> {
     const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     const inviteToken = generateInviteToken();
     const inviteExpiresAt = new Date();
@@ -187,9 +206,15 @@ export const RelationshipService = {
       .set({ inviteExpiresAt, inviteToken })
       .where(eq(relationships.id, relationshipId));
 
-    await AuditService.log(userId, 'update', 'relationship', relationshipId, {
-      action: 'regenerate_invite',
-      inviteToken,
+    await AuditService.log({
+      action: 'update',
+      entityId: relationshipId,
+      entityType: ENTITY_TYPE_RELATIONSHIP,
+      metadata: {
+        action: 'regenerate_invite',
+        inviteToken,
+      },
+      userId,
     });
 
     return inviteToken;

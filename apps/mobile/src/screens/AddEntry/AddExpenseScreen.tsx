@@ -20,6 +20,11 @@ import type { ExpenseCategory, SplitType } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddExpense'>;
 
+const ACTIVE_BG = 'bg-blue-600';
+const INACTIVE_BG = 'bg-gray-100';
+const ACTIVE_TEXT = ACTIVE_TEXT;
+const INACTIVE_TEXT = INACTIVE_TEXT;
+
 const CATEGORIES: { value: ExpenseCategory; label: string }[] = [
   { label: '👶 Childcare', value: 'childcare' },
   { label: '🏥 Medical', value: 'medical' },
@@ -142,12 +147,10 @@ export function AddExpenseScreen({ navigation }: Props) {
                   {CURRENCIES.map((c) => (
                     <Pressable
                       key={c}
-                      style={tw`mr-1 rounded-lg px-3 py-2 ${currency === c ? 'bg-blue-600' : 'bg-gray-100'}`}
+                      style={tw`mr-1 rounded-lg px-3 py-2 ${currency === c ? ACTIVE_BG : INACTIVE_BG}`}
                       onPress={() => setCurrency(c)}
                     >
-                      <Text
-                        style={tw`${currency === c ? 'text-white' : 'text-gray-700'} font-medium`}
-                      >
+                      <Text style={tw`${currency === c ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}>
                         {c}
                       </Text>
                     </Pressable>
@@ -185,10 +188,10 @@ export function AddExpenseScreen({ navigation }: Props) {
             {CATEGORIES.map((cat) => (
               <Pressable
                 key={cat.value}
-                style={tw`rounded-lg px-3 py-2 ${category === cat.value ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`rounded-lg px-3 py-2 ${category === cat.value ? ACTIVE_BG : INACTIVE_BG}`}
                 onPress={() => setCategory(cat.value)}
               >
-                <Text style={tw`${category === cat.value ? 'text-white' : 'text-gray-700'}`}>
+                <Text style={tw`${category === cat.value ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                   {cat.label}
                 </Text>
               </Pressable>
@@ -203,11 +206,11 @@ export function AddExpenseScreen({ navigation }: Props) {
             {SPLIT_OPTIONS.map((opt) => (
               <Pressable
                 key={opt.value}
-                style={tw`flex-1 rounded-lg py-3 ${splitType === opt.value ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`flex-1 rounded-lg py-3 ${splitType === opt.value ? ACTIVE_BG : INACTIVE_BG}`}
                 onPress={() => setSplitType(opt.value)}
               >
                 <Text
-                  style={tw`text-center ${splitType === opt.value ? 'text-white' : 'text-gray-700'} font-medium`}
+                  style={tw`text-center ${splitType === opt.value ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}
                 >
                   {opt.label}
                 </Text>
@@ -222,22 +225,20 @@ export function AddExpenseScreen({ navigation }: Props) {
             <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>For Child (optional)</Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
               <Pressable
-                style={tw`rounded-lg px-4 py-2 ${selectedChildId === null ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`rounded-lg px-4 py-2 ${selectedChildId === null ? ACTIVE_BG : INACTIVE_BG}`}
                 onPress={() => setSelectedChildId(null)}
               >
-                <Text style={tw`${selectedChildId === null ? 'text-white' : 'text-gray-700'}`}>
+                <Text style={tw`${selectedChildId === null ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                   All Children
                 </Text>
               </Pressable>
               {children.map((child) => (
                 <Pressable
                   key={child.id}
-                  style={tw`rounded-lg px-4 py-2 ${selectedChildId === child.id ? 'bg-blue-600' : 'bg-gray-100'}`}
+                  style={tw`rounded-lg px-4 py-2 ${selectedChildId === child.id ? ACTIVE_BG : INACTIVE_BG}`}
                   onPress={() => setSelectedChildId(child.id)}
                 >
-                  <Text
-                    style={tw`${selectedChildId === child.id ? 'text-white' : 'text-gray-700'}`}
-                  >
+                  <Text style={tw`${selectedChildId === child.id ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                     {child.name}
                   </Text>
                 </Pressable>

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator, Alert } from 'react-native';
 
-import type { Child, EntryType } from '@/database/schema';
-import { ENTRY_TYPES } from '@/database/schema';
+import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import {
   ExportService,
@@ -11,6 +10,11 @@ import {
   TimelineService,
   type ExportFilters,
 } from '@/services';
+
+const ACTIVE_BG = 'bg-blue-600';
+const INACTIVE_BG = 'bg-gray-100';
+const ACTIVE_TEXT = ACTIVE_TEXT;
+const INACTIVE_TEXT = INACTIVE_TEXT;
 
 const TYPE_LABELS: Record<EntryType, string> = {
   agreement: '🤝 Agreement',
@@ -177,13 +181,13 @@ export function ExportScreen() {
             <View style={tw`flex-row flex-wrap gap-2`}>
               <Pressable
                 style={tw`rounded-full px-4 py-2 ${
-                  selectedChildIds.length === 0 ? 'bg-blue-600' : 'bg-gray-100'
+                  selectedChildIds.length === 0 ? ACTIVE_BG : INACTIVE_BG
                 }`}
                 onPress={() => setSelectedChildIds([])}
               >
                 <Text
                   style={tw`font-medium ${
-                    selectedChildIds.length === 0 ? 'text-white' : 'text-gray-700'
+                    selectedChildIds.length === 0 ? ACTIVE_TEXT : INACTIVE_TEXT
                   }`}
                 >
                   All Children
@@ -193,13 +197,13 @@ export function ExportScreen() {
                 <Pressable
                   key={child.id}
                   style={tw`rounded-full px-4 py-2 ${
-                    selectedChildIds.includes(child.id) ? 'bg-blue-600' : 'bg-gray-100'
+                    selectedChildIds.includes(child.id) ? ACTIVE_BG : INACTIVE_BG
                   }`}
                   onPress={() => toggleChild(child.id)}
                 >
                   <Text
                     style={tw`font-medium ${
-                      selectedChildIds.includes(child.id) ? 'text-white' : 'text-gray-700'
+                      selectedChildIds.includes(child.id) ? ACTIVE_TEXT : INACTIVE_TEXT
                     }`}
                   >
                     {child.name}
@@ -218,14 +222,12 @@ export function ExportScreen() {
           <View style={tw`flex-row flex-wrap gap-2`}>
             <Pressable
               style={tw`rounded-full px-4 py-2 ${
-                selectedTypes.length === 0 ? 'bg-blue-600' : 'bg-gray-100'
+                selectedTypes.length === 0 ? ACTIVE_BG : INACTIVE_BG
               }`}
               onPress={() => setSelectedTypes([])}
             >
               <Text
-                style={tw`font-medium ${
-                  selectedTypes.length === 0 ? 'text-white' : 'text-gray-700'
-                }`}
+                style={tw`font-medium ${selectedTypes.length === 0 ? ACTIVE_TEXT : INACTIVE_TEXT}`}
               >
                 All Types
               </Text>
@@ -234,11 +236,11 @@ export function ExportScreen() {
               <Pressable
                 key={type}
                 style={tw`rounded-full px-4 py-2 ${
-                  selectedTypes.includes(type) ? 'bg-blue-600' : 'bg-gray-100'
+                  selectedTypes.includes(type) ? ACTIVE_BG : INACTIVE_BG
                 }`}
                 onPress={() => toggleType(type)}
               >
-                <Text style={tw`${selectedTypes.includes(type) ? 'text-white' : 'text-gray-700'}`}>
+                <Text style={tw`${selectedTypes.includes(type) ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                   {TYPE_LABELS[type]}
                 </Text>
               </Pressable>
@@ -259,7 +261,7 @@ export function ExportScreen() {
           <View style={tw`mb-6 rounded-xl bg-green-50 p-4`}>
             <Text style={tw`text-sm text-green-800`}>
               🔒 The evidence bundle includes SHA-256 hashes for all files. These can be used to
-              prove files haven't been modified.
+              prove files haven{"'"}t been modified.
             </Text>
           </View>
         )}

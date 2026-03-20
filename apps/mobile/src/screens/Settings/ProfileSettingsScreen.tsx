@@ -23,7 +23,7 @@ export function ProfileSettingsScreen({ navigation }: Props) {
   const tw = useTw();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [, setUser] = useState<User | null>(null);
 
   // Form state
   const [displayName, setDisplayName] = useState('');

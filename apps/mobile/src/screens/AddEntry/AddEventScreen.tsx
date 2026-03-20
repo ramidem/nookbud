@@ -12,12 +12,17 @@ import {
   Alert,
 } from 'react-native';
 
-import type { Child, User } from '@/database/schema';
+import type { Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService, ChildService, UserService } from '@/services';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddEvent'>;
+
+const ACTIVE_BG = 'bg-blue-600';
+const INACTIVE_BG = 'bg-gray-100';
+const ACTIVE_TEXT = ACTIVE_TEXT;
+const INACTIVE_TEXT = INACTIVE_TEXT;
 
 export function AddEventScreen({ navigation }: Props) {
   const tw = useTw();
@@ -163,21 +168,21 @@ export function AddEventScreen({ navigation }: Props) {
           <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Responsible Parent</Text>
           <View style={tw`flex-row gap-2`}>
             <Pressable
-              style={tw`flex-1 rounded-lg py-3 ${responsibleParent === userId ? 'bg-blue-600' : 'bg-gray-100'}`}
+              style={tw`flex-1 rounded-lg py-3 ${responsibleParent === userId ? ACTIVE_BG : INACTIVE_BG}`}
               onPress={() => setResponsibleParent(userId ?? '')}
             >
               <Text
-                style={tw`text-center ${responsibleParent === userId ? 'text-white' : 'text-gray-700'} font-medium`}
+                style={tw`text-center ${responsibleParent === userId ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}
               >
                 Me
               </Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 rounded-lg py-3 ${responsibleParent !== userId ? 'bg-blue-600' : 'bg-gray-100'}`}
+              style={tw`flex-1 rounded-lg py-3 ${responsibleParent !== userId ? ACTIVE_BG : INACTIVE_BG}`}
               onPress={() => setResponsibleParent('other')}
             >
               <Text
-                style={tw`text-center ${responsibleParent !== userId ? 'text-white' : 'text-gray-700'} font-medium`}
+                style={tw`text-center ${responsibleParent !== userId ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}
               >
                 Co-Parent
               </Text>
@@ -193,12 +198,10 @@ export function AddEventScreen({ navigation }: Props) {
               {children.map((child) => (
                 <Pressable
                   key={child.id}
-                  style={tw`rounded-lg px-4 py-2 ${selectedChildId === child.id ? 'bg-blue-600' : 'bg-gray-100'}`}
+                  style={tw`rounded-lg px-4 py-2 ${selectedChildId === child.id ? ACTIVE_BG : INACTIVE_BG}`}
                   onPress={() => setSelectedChildId(selectedChildId === child.id ? null : child.id)}
                 >
-                  <Text
-                    style={tw`${selectedChildId === child.id ? 'text-white' : 'text-gray-700'}`}
-                  >
+                  <Text style={tw`${selectedChildId === child.id ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                     {child.name}
                   </Text>
                 </Pressable>

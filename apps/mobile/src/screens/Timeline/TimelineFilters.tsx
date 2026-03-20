@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, Modal, ScrollView } from 'react-native';
 
-import type { Child } from '@/database/schema';
-import { ENTRY_TYPES, type EntryType } from '@/database/schema';
+import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { ChildService } from '@/services';
 

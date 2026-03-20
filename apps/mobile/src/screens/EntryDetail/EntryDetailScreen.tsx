@@ -18,12 +18,13 @@ import {
   EntryService,
   AcknowledgmentService,
   DisputeService,
-  UserService,
   type EntryWithVersion,
   type DisputeWithResponses,
 } from '@/services';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'EntryDetail'>;
+
+const HASH_PREVIEW_LENGTH = 16;
 
 const TYPE_LABELS = {
   agreement: '🤝 Agreement',
@@ -46,8 +47,6 @@ export function EntryDetailScreen({ navigation, route }: Props) {
   const [showVersions, setShowVersions] = useState(false);
   const [showDisputeModal, setShowDisputeModal] = useState(false);
   const [disputeReason, setDisputeReason] = useState('');
-
-  const userId = UserService.getCurrentUserId();
 
   useEffect(() => {
     loadEntry();
@@ -283,7 +282,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
               <View key={att.id} style={tw`mb-2 rounded-lg bg-gray-50 p-3`}>
                 <Text style={tw`text-gray-900`}>📎 {att.originalFilename}</Text>
                 <Text style={tw`mt-1 text-xs text-gray-500`}>
-                  Hash: {att.fileHash.substring(0, 16)}...
+                  Hash: {att.fileHash.substring(0, HASH_PREVIEW_LENGTH)}...
                 </Text>
               </View>
             ))}
@@ -356,7 +355,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
           </View>
           <View style={tw`p-4`}>
             <Text style={tw`mb-4 text-gray-600`}>
-              Explain why you're disputing this entry. Your co-parent will see this.
+              Explain why you{"'"}re disputing this entry. Your co-parent will see this.
             </Text>
             <TextInput
               autoFocus

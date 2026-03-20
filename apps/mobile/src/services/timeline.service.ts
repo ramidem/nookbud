@@ -5,8 +5,6 @@ import {
   entries,
   entryVersions,
   acknowledgments,
-  type Entry,
-  type EntryVersion,
   type EntryType,
   type EntryStatus,
   type AcknowledgmentStatus,
@@ -47,11 +45,18 @@ export type TimelineResult = {
   hasMore: boolean;
 };
 
+const DEFAULT_LIMIT = 20;
+const RECENT_LIMIT = 10;
+
 export const TimelineService = {
   /**
    * Get entries for a specific child
    */
-  async getByChild(relationshipId: string, childId: string, limit = 20): Promise<TimelineEntry[]> {
+  async getByChild(
+    relationshipId: string,
+    childId: string,
+    limit = DEFAULT_LIMIT,
+  ): Promise<TimelineEntry[]> {
     const result = await this.query({
       childId,
       limit,
@@ -64,7 +69,11 @@ export const TimelineService = {
   /**
    * Get entries by type
    */
-  async getByType(relationshipId: string, type: EntryType, limit = 20): Promise<TimelineEntry[]> {
+  async getByType(
+    relationshipId: string,
+    type: EntryType,
+    limit = DEFAULT_LIMIT,
+  ): Promise<TimelineEntry[]> {
     const result = await this.query({
       limit,
       relationshipId,
@@ -104,13 +113,25 @@ export const TimelineService = {
   /**
    * Get recent entries
    */
-  async getRecent(relationshipId: string, limit = 10): Promise<TimelineEntry[]> {
+  async getRecent(relationshipId: string, limit = RECENT_LIMIT): Promise<TimelineEntry[]> {
     const result = await this.query({
       limit,
       relationshipId,
     });
 
     return result.entries;
+  },
+
+  /**
+   * Parse content from timeline entry
+   */
+  parseContent<T = Record<string, unknown>>(entry: TimelineEntry): T | null {
+    if (!entry.currentVersion) return null;
+    try {
+      return JSON.parse(entry.currentVersion.contentJson) as T;
+    } catch {
+      return null;
+    }
   },
 
   /**
@@ -122,7 +143,7 @@ export const TimelineService = {
       dateFrom,
       dateTo,
       includeDeleted = false,
-      limit = 20,
+      limit = DEFAULT_LIMIT,
       offset = 0,
       relationshipId,
       status,
@@ -197,12 +218,12 @@ export const TimelineService = {
           .where(eq(acknowledgments.entryId, entry.id));
 
         return {
+          acknowledgmentStatus: (ack?.status as AcknowledgmentStatus) ?? null,
           childId: entry.childId,
           createdAt: entry.createdAt,
           createdBy: entry.createdBy,
-          acknowledgmentStatus: (ack?.status as AcknowledgmentStatus) ?? null,
-          id: entry.id,
           currentVersion,
+          id: entry.id,
           relationshipId: entry.relationshipId,
           status: entry.status as EntryStatus,
           type: entry.type as EntryType,
@@ -215,17 +236,5 @@ export const TimelineService = {
       hasMore: offset + entryResults.length < total,
       total,
     };
-  },
-
-  /**
-   * Parse content from timeline entry
-   */
-  parseContent<T = Record<string, unknown>>(entry: TimelineEntry): T | null {
-    if (!entry.currentVersion) return null;
-    try {
-      return JSON.parse(entry.currentVersion.contentJson) as T;
-    } catch {
-      return null;
-    }
   },
 };

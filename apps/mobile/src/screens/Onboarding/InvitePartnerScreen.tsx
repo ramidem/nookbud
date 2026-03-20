@@ -1,12 +1,14 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { View, Text, Pressable, Share, Alert } from 'react-native';
+import { View, Text, Pressable, Share } from 'react-native';
 
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'InvitePartner'>;
+
+const COPY_FEEDBACK_DURATION = 2000;
 
 export function InvitePartnerScreen({ navigation, route }: Props) {
   const tw = useTw();
@@ -16,7 +18,7 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
   const handleCopy = () => {
     Clipboard.setString(inviteToken);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION);
   };
 
   const handleShare = async () => {
@@ -29,15 +31,8 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
     }
   };
 
-  const handleSkip = () => {
-    // Navigate to main app
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'OnboardingDone' }],
-    });
-  };
-
   const handleDone = () => {
+    // Navigate to main app
     navigation.reset({
       index: 0,
       routes: [{ name: 'OnboardingDone' }],
@@ -74,7 +69,7 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
       <View style={tw`mb-8 rounded-xl bg-amber-50 p-4`}>
         <Text style={tw`text-sm text-amber-800`}>
           💡 You can start using CoParent right away. Your co-parent can join anytime using this
-          code, and they'll see all the records you've created.
+          code, and they{"'"}ll see all the records you{"'"}ve created.
         </Text>
       </View>
 
@@ -87,8 +82,8 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
           </Text>
         </Pressable>
 
-        <Pressable onPress={handleSkip}>
-          <Text style={tw`text-center text-base text-gray-500`}>I'll invite them later</Text>
+        <Pressable onPress={handleDone}>
+          <Text style={tw`text-center text-base text-gray-500`}>I{"'"}ll invite them later</Text>
         </Pressable>
       </View>
     </View>

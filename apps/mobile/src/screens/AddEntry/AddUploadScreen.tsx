@@ -22,6 +22,11 @@ import type { DocumentType } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddUpload'>;
 
+const ACTIVE_BG = 'bg-blue-600';
+const INACTIVE_BG = 'bg-gray-100';
+const ACTIVE_TEXT = ACTIVE_TEXT;
+const INACTIVE_TEXT = INACTIVE_TEXT;
+
 const DOC_TYPES: { value: DocumentType; label: string; icon: string }[] = [
   { icon: '🏥', label: 'Medical', value: 'medical' },
   { icon: '📚', label: 'School', value: 'school' },
@@ -187,10 +192,10 @@ export function AddUploadScreen({ navigation }: Props) {
             {DOC_TYPES.map((type) => (
               <Pressable
                 key={type.value}
-                style={tw`rounded-lg px-4 py-2 ${documentType === type.value ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`rounded-lg px-4 py-2 ${documentType === type.value ? ACTIVE_BG : INACTIVE_BG}`}
                 onPress={() => setDocumentType(type.value)}
               >
-                <Text style={tw`${documentType === type.value ? 'text-white' : 'text-gray-700'}`}>
+                <Text style={tw`${documentType === type.value ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                   {type.icon} {type.label}
                 </Text>
               </Pressable>
@@ -264,22 +269,20 @@ export function AddUploadScreen({ navigation }: Props) {
             <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Related Child</Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
               <Pressable
-                style={tw`rounded-lg px-4 py-2 ${selectedChildId === null ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`rounded-lg px-4 py-2 ${selectedChildId === null ? ACTIVE_BG : INACTIVE_BG}`}
                 onPress={() => setSelectedChildId(null)}
               >
-                <Text style={tw`${selectedChildId === null ? 'text-white' : 'text-gray-700'}`}>
+                <Text style={tw`${selectedChildId === null ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                   All
                 </Text>
               </Pressable>
               {children.map((child) => (
                 <Pressable
                   key={child.id}
-                  style={tw`rounded-lg px-4 py-2 ${selectedChildId === child.id ? 'bg-blue-600' : 'bg-gray-100'}`}
+                  style={tw`rounded-lg px-4 py-2 ${selectedChildId === child.id ? ACTIVE_BG : INACTIVE_BG}`}
                   onPress={() => setSelectedChildId(child.id)}
                 >
-                  <Text
-                    style={tw`${selectedChildId === child.id ? 'text-white' : 'text-gray-700'}`}
-                  >
+                  <Text style={tw`${selectedChildId === child.id ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
                     {child.name}
                   </Text>
                 </Pressable>
@@ -291,7 +294,7 @@ export function AddUploadScreen({ navigation }: Props) {
         {/* Info */}
         <View style={tw`rounded-xl bg-green-50 p-4`}>
           <Text style={tw`text-sm text-green-800`}>
-            🔒 Files are stored securely with SHA-256 verification. The hash proves they haven't
+            🔒 Files are stored securely with SHA-256 verification. The hash proves they haven{"'"}t
             been modified.
           </Text>
         </View>
