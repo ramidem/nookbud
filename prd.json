@@ -752,7 +752,7 @@
       "title": "Fix lint errors",
       "description": "Fix all existing lint errors in the codebase. Import ordering, key sorting, and any other style issues flagged by ESLint.",
       "priority": 31,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "yarn lint returns 0 errors",
         "No import ordering violations",
@@ -905,7 +905,7 @@
       "title": "End-to-end QA \u2014 Phase 2",
       "description": "Full QA pass for Phase 2 features. Fix bugs, polish UI, ensure all new flows work correctly on iOS and Android.",
       "priority": 37,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Lint passes with 0 errors",
         "Native date pickers work on iOS and Android",
