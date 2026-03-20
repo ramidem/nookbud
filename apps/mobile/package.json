@@ -1,5 +1,13 @@
 {
   "name": "mobile",
   "version": "0.0.1",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@op-engineering/op-sqlite": "^15.2.7",
+    "drizzle-orm": "^0.45.1"
+  },
+  "devDependencies": {
+    "babel-plugin-inline-import": "^3.0.0",
+    "drizzle-kit": "^0.31.10"
+  }
 }

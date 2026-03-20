@@ -1,6 +1,7 @@
 {
   "presets": ["module:@react-native/babel-preset"],
   "plugins": [
+    ["inline-import", { "extensions": [".sql"] }],
     "babel-plugin-transform-flow-enums",
     [
       "module:react-native-dotenv",
