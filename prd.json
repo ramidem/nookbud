@@ -547,7 +547,7 @@
       "title": "Entry detail screen",
       "description": "Create detail view for a single entry. Shows full content, attachments, version history, acknowledgment status, disputes.",
       "priority": 24,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Displays entry content based on type",
         "Shows all attachments with preview/download",
@@ -574,7 +574,7 @@
       "title": "PDF export — timeline report",
       "description": "Generate court-ready PDF export of timeline entries. Formatted for legal use.",
       "priority": 25,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "ExportService.generatePDF(filters, options)",
         "PDF includes: title page with export date, filters applied",
@@ -599,7 +599,7 @@
       "title": "Evidence bundle export (ZIP)",
       "description": "Generate comprehensive evidence bundle as ZIP file: JSON data, PDF summary, all attachments, hash manifest.",
       "priority": 26,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "ExportService.generateBundle(filters)",
         "ZIP contains: data.json, summary.pdf, attachments/, manifest.json",
@@ -623,7 +623,7 @@
       "title": "Export screen",
       "description": "Create UI for triggering exports. Filter selection and export type choice.",
       "priority": 27,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "ExportScreen accessible from settings/menu",
         "Export type selector: PDF Report / Evidence Bundle",
@@ -645,7 +645,7 @@
       "title": "Settings screen",
       "description": "Create settings screen with profile, preferences, and app info.",
       "priority": 28,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Profile section: name, timezone, currency (editable)",
         "Children section: list children, edit names/DOB",
@@ -669,7 +669,7 @@
       "title": "Main navigation structure",
       "description": "Set up tab navigation and stack navigators for the app.",
       "priority": 29,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Bottom tabs: Timeline, Calendar (placeholder), Export, Settings",
         "Timeline stack: TimelineScreen → EntryDetailScreen → Add screens",
@@ -696,7 +696,7 @@
       "title": "End-to-end QA and polish",
       "description": "Full app QA pass. Fix bugs, polish UI, ensure all flows work correctly.",
       "priority": 30,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Complete onboarding flow works",
         "All 5 entry types can be created",

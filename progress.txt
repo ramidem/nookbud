@@ -1,0 +1,77 @@
+# Progress: CoParent Phase 1 MVP
+
+## Summary
+- **Started:** 2026-03-21 00:43 PHT
+- **Completed:** 2026-03-21 02:15 PHT
+- **Duration:** ~1.5 hours
+- **Stories:** 30/30 complete
+
+## Completed Tasks
+
+### Database Layer (Stories 1-3)
+- Drizzle ORM + op-sqlite installed
+- 10 tables: users, relationships, children, entries, entry_versions, attachments, acknowledgments, disputes, dispute_responses, audit_logs
+- Migrations configured and generated
+
+### Services Layer (Stories 4-14)
+- UserService: local user profile management
+- AuditService: append-only action logging
+- RelationshipService: co-parent linking with invite codes
+- ChildService: child record management
+- FileService: SHA-256 hashing for attachments
+- EntryService: create/edit with versioning, soft delete
+- AcknowledgmentService: acknowledge/dispute flow
+- DisputeService: threaded responses
+- TimelineService: filtered queries with pagination
+- ExportService: PDF reports and evidence bundles
+
+### Content Types (Story 11)
+- ExpenseContent: amount (minor units), currency, category, split
+- EventContent: title, datetime, location, responsible parent
+- AgreementContent: title, terms, effective/expiration dates
+- CommunicationContent: subject, body, importance
+- UploadContent: title, description, document type
+- Zod validation schemas for all
+
+### Screens (Stories 15-29)
+- Onboarding: name, timezone, currency, complete, add children, invite partner
+- Timeline: main feed with filtering, infinite scroll
+- Add Entry: picker + 5 entry type forms (expense, event, agreement, communication, upload)
+- Entry Detail: content display, version history, acknowledge/dispute
+- Export: PDF report and evidence bundle generation
+- Settings: profile, children, relationship status
+
+### Navigation (Story 29)
+- RootNavigator: onboarding/main switch based on user existence
+- MainNavigator: bottom tabs (Timeline, Calendar placeholder, Export, Settings)
+- TimelineNavigator: timeline → detail → add screens
+- SettingsNavigator: settings → profile editing
+- OnboardingNavigator: full onboarding flow
+
+## Known Issues
+- Lint errors (import ordering, key sorting) - style only, not functional
+- Calendar is a placeholder (Phase 2)
+- Date pickers use text input (native pickers in polish phase)
+- No push notifications yet (Phase 2)
+
+## Technical Decisions
+- Local-first with SQLite (Supabase migration path preserved)
+- SHA-256 file hashing via react-native-fs
+- HTML export (can print as PDF via system)
+- Evidence bundle as folder structure (proper ZIP in polish)
+
+## Files Created
+- 10 schema files in src/database/schema/
+- 11 service files in src/services/
+- 15 screen files across 5 directories
+- 6 navigation files
+- 2 component files (EntryCard, TimelineFilters)
+- 3 utility/type files
+
+## Next Steps (Phase 2)
+1. Fix lint errors
+2. Add native date pickers
+3. Calendar integration
+4. Push notifications
+5. Partner onboarding flow (accept invite)
+6. Sync preparation (for when Supabase is ready)
