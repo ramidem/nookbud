@@ -1,0 +1,1 @@
+export { EntryDetailScreen } from './EntryDetailScreen';

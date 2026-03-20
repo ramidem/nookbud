@@ -16,3 +16,8 @@ export {
   type TimelineQueryParams,
   type TimelineResult,
 } from './timeline.service';
+export {
+  ExportService,
+  type ExportFilters,
+  type ExportResult,
+} from './export.service';

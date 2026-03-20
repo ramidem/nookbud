@@ -427,7 +427,7 @@
       "title": "Add expense entry screen",
       "description": "Create screen for adding expense entries. Multi-currency support.",
       "priority": 19,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Amount input with currency selector",
         "Currency stored as ISO 4217 code",
@@ -453,7 +453,7 @@
       "title": "Add event entry screen",
       "description": "Create screen for adding event entries (pickups, activities, appointments).",
       "priority": 20,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Title text input",
         "Start date/time picker",
@@ -477,7 +477,7 @@
       "title": "Add agreement entry screen",
       "description": "Create screen for recording agreements between co-parents.",
       "priority": 21,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Title text input",
         "Terms text area (multi-line)",
@@ -500,7 +500,7 @@
       "title": "Add communication entry screen",
       "description": "Create screen for structured communication entries. Not a chat — formal documented messages.",
       "priority": 22,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Subject line input",
         "Body text area",
@@ -522,7 +522,7 @@
       "title": "Add upload entry screen",
       "description": "Create screen for uploading documents (medical records, school reports, legal docs).",
       "priority": 23,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Title text input",
         "Description text area",
