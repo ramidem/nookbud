@@ -380,7 +380,7 @@
       "title": "Timeline screen — main feed",
       "description": "Create the main timeline screen showing all entries. This is the home screen of the app.",
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "TimelineScreen displays entries in reverse chronological order",
         "Each entry shows: type icon, title/description, date, child (if applicable), acknowledgment status",
@@ -403,7 +403,7 @@
       "title": "Timeline filters",
       "description": "Add filter UI to timeline: by child, by entry type, by date range.",
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Filter button in timeline header",
         "Bottom sheet with filter options",
