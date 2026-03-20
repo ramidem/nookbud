@@ -3,3 +3,8 @@ export { AuditService } from './audit.service';
 export { RelationshipService } from './relationship.service';
 export { ChildService } from './child.service';
 export { FileService, type SavedFile } from './file.service';
+export {
+  EntryService,
+  type EntryWithVersion,
+  type AttachmentInput,
+} from './entry.service';

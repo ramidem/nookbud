@@ -155,7 +155,7 @@
       "title": "File service with SHA-256 hashing",
       "description": "Create FileService for attachment handling. Files are copied to app storage and hashed with SHA-256. Hash is stored with attachment record for integrity verification.",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "FileService.saveFile(uri) copies file to app documents directory",
         "SHA-256 hash computed during save using expo-crypto or react-native-crypto",
