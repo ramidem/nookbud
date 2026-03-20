@@ -90,7 +90,7 @@ export function ToastManager() {
         style={[tw`mx-4 w-full max-w-sm`, { paddingBottom: insets.bottom + BOTTOM_PADDING_OFFSET }]}
       >
         <Pressable
-          style={tw`dark:border-dark-divider dark:bg-dark-sheet border-divider flex-row items-center rounded-xl border bg-white px-4 py-3.5 shadow-sm`}
+          style={tw`dark:border-dark-divider dark:bg-dark-sheet border-divider flex-row items-center rounded-full border bg-white px-4 py-3.5 shadow-sm`}
           onPress={handleDismiss}
         >
           <View style={tw`mr-3`}>

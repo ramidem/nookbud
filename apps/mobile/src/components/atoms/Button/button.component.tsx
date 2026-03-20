@@ -47,7 +47,7 @@ export function Button(props: Props) {
     <TouchableOpacity activeOpacity={activeOpacity} disabled={disabled} style={[style]} {...rest}>
       <View
         style={[
-          tw`bg-primary items-center justify-center rounded-xl px-6 py-2`,
+          tw`bg-primary items-center justify-center rounded-full px-6 py-2`,
           buttonStyle,
           disabledInputStyle(disabled),
         ]}

@@ -76,7 +76,7 @@ export function AlertManager() {
     <Modal isVisible={isVisible} onBackButtonPress={handleDismiss} onBackdropPress={handleDismiss}>
       <View pointerEvents="box-none" style={tw`flex-1 items-center justify-center`}>
         <View
-          style={tw`dark:border-dark-divider dark:bg-dark-sheet border-divider mx-8 w-[85%] rounded-2xl border bg-white p-6`}
+          style={tw`dark:border-dark-divider dark:bg-dark-sheet border-divider mx-8 w-[85%] rounded-3xl border bg-white p-6`}
         >
           {/* Icon */}
           {showIcon && (
@@ -88,7 +88,10 @@ export function AlertManager() {
           )}
 
           {/* Title */}
-          <Typography style={tw`dark:text-dark-foreground text-foreground text-lg font-semibold`}>
+          <Typography
+            style={tw`dark:text-dark-foreground text-foreground font-serif-semibold text-lg`}
+            variant="heading"
+          >
             {currentAlert.title}
           </Typography>
 
@@ -105,7 +108,7 @@ export function AlertManager() {
               action.variant === 'cancel' ? (
                 <Pressable
                   key={action.label}
-                  style={tw`dark:border-dark-divider dark:bg-dark-surface border-divider items-center rounded-xl border bg-neutral-50 py-3.5`}
+                  style={tw`dark:border-dark-divider dark:bg-dark-surface border-divider items-center rounded-full border bg-neutral-50 py-3.5`}
                   onPress={() => handleActionPress(action.onPress)}
                 >
                   <Typography
@@ -117,7 +120,7 @@ export function AlertManager() {
               ) : (
                 <Pressable
                   key={action.label}
-                  style={tw`items-center rounded-xl bg-neutral-950 py-3.5`}
+                  style={tw`items-center rounded-full bg-neutral-950 py-3.5`}
                   onPress={() => handleActionPress(action.onPress)}
                 >
                   <Typography style={tw`text-base font-semibold text-white`}>

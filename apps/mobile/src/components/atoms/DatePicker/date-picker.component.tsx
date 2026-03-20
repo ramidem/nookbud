@@ -24,7 +24,7 @@ export function DatePicker(props: Props) {
       buttonTextColorIOS={colors.neutral[950]}
       customCancelButtonIOS={({ onPress }) => (
         <TouchableHighlight
-          style={tw`dark:bg-dark-surface mt-2 items-center rounded-2xl bg-white py-4`}
+          style={tw`dark:bg-dark-surface mt-2 items-center rounded-full bg-white py-4`}
           underlayColor={isDark ? colors['dark-background'] : colors.neutral[100]}
           onPress={onPress}
         >
@@ -34,7 +34,7 @@ export function DatePicker(props: Props) {
         </TouchableHighlight>
       )}
       isDarkModeEnabled={isDark}
-      modalStyleIOS={tw`rounded-2xl pb-4`}
+      modalStyleIOS={tw`rounded-3xl pb-4`}
       pickerContainerStyleIOS={tw`dark:bg-dark-sheet items-center justify-center bg-white`}
       onCancel={onCancel}
       onConfirm={onConfirm}

@@ -51,9 +51,10 @@ export function ScreenHeader(props: Props) {
         {hasBackButton && <BackButton style={tw`z-10`} onPress={onBackPress} />}
         <Typography
           style={[
-            tw`dark:text-dark-foreground text-foreground absolute inset-x-0 top-4 text-center text-xl font-medium`,
+            tw`dark:text-dark-foreground text-foreground font-serif-medium absolute inset-x-0 top-4 text-center text-xl`,
             titleStyle,
           ]}
+          variant="heading"
         >
           {title}
         </Typography>

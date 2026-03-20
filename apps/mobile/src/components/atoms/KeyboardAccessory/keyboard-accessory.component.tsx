@@ -17,7 +17,7 @@ export function KeyboardAccessory(props: Props) {
     <InputAccessoryView nativeID={nativeID}>
       <View style={tw`dark:bg-kbd-surface flex-row items-center justify-end bg-neutral-100 px-2`}>
         <Button
-          buttonStyle={tw`dark:bg-kbd-button my-2 rounded-lg bg-neutral-200`}
+          buttonStyle={tw`dark:bg-kbd-button my-2 rounded-full bg-neutral-200`}
           onPress={() => Keyboard.dismiss()}
         >
           <KeyboardHideIcon style={tw`text-neutral-600 dark:text-white`} />

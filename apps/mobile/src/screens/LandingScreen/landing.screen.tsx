@@ -33,7 +33,11 @@ const DROPDOWN_OPTIONS = [
 ];
 
 function SectionTitle({ title }: { title: string }) {
-  return <Typography style={tw`mb-2 mt-6 text-lg font-semibold`}>{title}</Typography>;
+  return (
+    <Typography style={tw`font-serif-semibold mb-2 mt-6 text-lg`} variant="heading">
+      {title}
+    </Typography>
+  );
 }
 
 export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
@@ -72,8 +76,12 @@ export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
 
         {/* Typography */}
         <SectionTitle title="Typography" />
-        <Typography style={tw`text-2xl font-bold`}>Heading Bold</Typography>
-        <Typography style={tw`text-lg font-semibold`}>Subheading Semibold</Typography>
+        <Typography style={tw`font-serif-bold text-2xl`} variant="heading">
+          Heading Bold
+        </Typography>
+        <Typography style={tw`font-serif-semibold text-lg`} variant="heading">
+          Subheading Semibold
+        </Typography>
         <Typography style={tw`text-base`}>Body text regular</Typography>
         <Typography style={tw`text-subtitle text-sm`}>Caption text</Typography>
 
@@ -207,8 +215,10 @@ export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
         <Button title="Open Modal" onPress={showModal} />
         <Modal isVisible={isModalVisible} onBackButtonPress={hideModal} onBackdropPress={hideModal}>
           <View pointerEvents="box-none" style={tw`flex-1 items-center justify-center`}>
-            <View style={tw`dark:bg-dark-sheet mx-8 w-[85%] rounded-2xl bg-white p-6`}>
-              <Typography style={tw`text-lg font-semibold`}>Modal Title</Typography>
+            <View style={tw`dark:bg-dark-sheet mx-8 w-[85%] rounded-3xl bg-white p-6`}>
+              <Typography style={tw`font-serif-semibold text-lg`} variant="heading">
+                Modal Title
+              </Typography>
               <Typography style={tw`dark:text-subtitle text-subtitle mt-2 text-sm`}>
                 This is a custom modal with any content you want.
               </Typography>
@@ -228,7 +238,9 @@ export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
           snapPoints={['40%']}
         >
           <View style={tw`p-6`}>
-            <Typography style={tw`text-lg font-semibold`}>Bottom Sheet</Typography>
+            <Typography style={tw`font-serif-semibold text-lg`} variant="heading">
+              Bottom Sheet
+            </Typography>
             <Typography style={tw`dark:text-subtitle text-subtitle mt-2 text-sm`}>
               Swipe down or tap the backdrop to dismiss.
             </Typography>

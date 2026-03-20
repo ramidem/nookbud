@@ -153,7 +153,7 @@ export function SelectDropdown(props: Props) {
     return (
       <View
         style={[
-          tw`dark:border-dark-divider dark:bg-dark-sheet border-divider absolute z-50 max-h-80 rounded-xl border bg-white`,
+          tw`dark:border-dark-divider dark:bg-dark-sheet border-divider absolute z-50 max-h-80 overflow-hidden rounded-3xl border bg-white`,
           {
             elevation: 5,
             left: dropdownLayout.x,

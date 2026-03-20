@@ -111,11 +111,11 @@ export function BottomSheet(props: BottomSheetProps) {
       enablePanDownToClose={enablePanDownToClose}
       handleComponent={handleComponent}
       handleIndicatorStyle={tw`dark:bg-dark-divider bg-neutral-300`}
-      handleStyle={tw`rounded-tl-xl rounded-tr-xl`}
+      handleStyle={tw`rounded-tl-3xl rounded-tr-3xl`}
       keyboardBehavior="interactive"
       snapPoints={points}
       style={[
-        tw`rounded-md`,
+        tw`rounded-3xl`,
         {
           elevation: 10,
         },
