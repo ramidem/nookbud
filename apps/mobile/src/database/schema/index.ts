@@ -1,4 +1,11 @@
-// Schema exports - tables will be added in Story #2
-// This file exists to satisfy drizzle.config.ts
+// Schema exports for Drizzle ORM
 
-export {};
+export * from './users';
+export * from './relationships';
+export * from './children';
+export * from './entries';
+export * from './entry-versions';
+export * from './attachments';
+export * from './acknowledgments';
+export * from './disputes';
+export * from './audit-logs';

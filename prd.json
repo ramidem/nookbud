@@ -7,7 +7,7 @@
       "title": "Install Drizzle ORM + expo-sqlite",
       "description": "Add Drizzle ORM and expo-sqlite to the mobile app. Configure Drizzle for SQLite dialect. Create database initialization hook.",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "drizzle-orm and expo-sqlite installed in apps/mobile",
         "drizzle-kit installed as devDependency",
@@ -57,7 +57,9 @@
         "apps/mobile/src/database/schema/audit-logs.ts",
         "apps/mobile/src/database/schema/index.ts"
       ],
-      "dependencies": ["1"]
+      "dependencies": [
+        "1"
+      ]
     },
     {
       "id": "3",
@@ -78,7 +80,9 @@
         "apps/mobile/src/database/migrate.ts",
         "apps/mobile/drizzle/migrations/"
       ],
-      "dependencies": ["2"]
+      "dependencies": [
+        "2"
+      ]
     },
     {
       "id": "4",
@@ -98,7 +102,9 @@
         "apps/mobile/src/services/user.service.ts",
         "apps/mobile/src/services/index.ts"
       ],
-      "dependencies": ["3"]
+      "dependencies": [
+        "3"
+      ]
     },
     {
       "id": "5",
@@ -119,7 +125,9 @@
         "apps/mobile/src/services/relationship.service.ts",
         "apps/mobile/src/services/child.service.ts"
       ],
-      "dependencies": ["4"]
+      "dependencies": [
+        "4"
+      ]
     },
     {
       "id": "6",
@@ -138,7 +146,9 @@
       "files": [
         "apps/mobile/src/services/audit.service.ts"
       ],
-      "dependencies": ["3"]
+      "dependencies": [
+        "3"
+      ]
     },
     {
       "id": "7",
@@ -157,7 +167,9 @@
       "files": [
         "apps/mobile/src/services/file.service.ts"
       ],
-      "dependencies": ["1"]
+      "dependencies": [
+        "1"
+      ]
     },
     {
       "id": "8",
@@ -177,7 +189,10 @@
       "files": [
         "apps/mobile/src/services/entry.service.ts"
       ],
-      "dependencies": ["6", "7"]
+      "dependencies": [
+        "6",
+        "7"
+      ]
     },
     {
       "id": "9",
@@ -199,7 +214,9 @@
         "apps/mobile/src/services/entry.service.ts",
         "apps/mobile/src/utils/diff.util.ts"
       ],
-      "dependencies": ["8"]
+      "dependencies": [
+        "8"
+      ]
     },
     {
       "id": "10",
@@ -218,7 +235,9 @@
       "files": [
         "apps/mobile/src/services/entry.service.ts"
       ],
-      "dependencies": ["8"]
+      "dependencies": [
+        "8"
+      ]
     },
     {
       "id": "11",
@@ -239,7 +258,9 @@
         "apps/mobile/src/types/entry-content.types.ts",
         "apps/mobile/src/schemas/entry-content.schemas.ts"
       ],
-      "dependencies": ["1"]
+      "dependencies": [
+        "1"
+      ]
     },
     {
       "id": "12",
@@ -259,7 +280,9 @@
       "files": [
         "apps/mobile/src/services/acknowledgment.service.ts"
       ],
-      "dependencies": ["8"]
+      "dependencies": [
+        "8"
+      ]
     },
     {
       "id": "13",
@@ -278,7 +301,9 @@
       "files": [
         "apps/mobile/src/services/dispute.service.ts"
       ],
-      "dependencies": ["12"]
+      "dependencies": [
+        "12"
+      ]
     },
     {
       "id": "14",
@@ -297,7 +322,9 @@
       "files": [
         "apps/mobile/src/services/timeline.service.ts"
       ],
-      "dependencies": ["8"]
+      "dependencies": [
+        "8"
+      ]
     },
     {
       "id": "15",
@@ -321,7 +348,9 @@
         "apps/mobile/src/screens/Onboarding/OnboardingCompleteScreen.tsx",
         "apps/mobile/src/navigation/OnboardingNavigator.tsx"
       ],
-      "dependencies": ["4"]
+      "dependencies": [
+        "4"
+      ]
     },
     {
       "id": "16",
@@ -341,7 +370,10 @@
         "apps/mobile/src/screens/Onboarding/AddChildScreen.tsx",
         "apps/mobile/src/screens/Onboarding/InvitePartnerScreen.tsx"
       ],
-      "dependencies": ["5", "15"]
+      "dependencies": [
+        "5",
+        "15"
+      ]
     },
     {
       "id": "17",
@@ -362,7 +394,9 @@
         "apps/mobile/src/screens/Timeline/TimelineScreen.tsx",
         "apps/mobile/src/components/molecules/EntryCard/EntryCard.tsx"
       ],
-      "dependencies": ["14"]
+      "dependencies": [
+        "14"
+      ]
     },
     {
       "id": "18",
@@ -384,7 +418,9 @@
         "apps/mobile/src/screens/Timeline/TimelineFilters.tsx",
         "apps/mobile/src/components/molecules/FilterChip/FilterChip.tsx"
       ],
-      "dependencies": ["17"]
+      "dependencies": [
+        "17"
+      ]
     },
     {
       "id": "19",
@@ -407,7 +443,10 @@
       "files": [
         "apps/mobile/src/screens/AddEntry/AddExpenseScreen.tsx"
       ],
-      "dependencies": ["8", "11"]
+      "dependencies": [
+        "8",
+        "11"
+      ]
     },
     {
       "id": "20",
@@ -428,7 +467,10 @@
       "files": [
         "apps/mobile/src/screens/AddEntry/AddEventScreen.tsx"
       ],
-      "dependencies": ["8", "11"]
+      "dependencies": [
+        "8",
+        "11"
+      ]
     },
     {
       "id": "21",
@@ -448,7 +490,10 @@
       "files": [
         "apps/mobile/src/screens/AddEntry/AddAgreementScreen.tsx"
       ],
-      "dependencies": ["8", "11"]
+      "dependencies": [
+        "8",
+        "11"
+      ]
     },
     {
       "id": "22",
@@ -467,7 +512,10 @@
       "files": [
         "apps/mobile/src/screens/AddEntry/AddCommunicationScreen.tsx"
       ],
-      "dependencies": ["8", "11"]
+      "dependencies": [
+        "8",
+        "11"
+      ]
     },
     {
       "id": "23",
@@ -488,7 +536,11 @@
       "files": [
         "apps/mobile/src/screens/AddEntry/AddUploadScreen.tsx"
       ],
-      "dependencies": ["7", "8", "11"]
+      "dependencies": [
+        "7",
+        "8",
+        "11"
+      ]
     },
     {
       "id": "24",
@@ -511,7 +563,11 @@
         "apps/mobile/src/components/molecules/VersionHistory/VersionHistory.tsx",
         "apps/mobile/src/components/molecules/DisputeThread/DisputeThread.tsx"
       ],
-      "dependencies": ["9", "12", "13"]
+      "dependencies": [
+        "9",
+        "12",
+        "13"
+      ]
     },
     {
       "id": "25",
@@ -534,7 +590,9 @@
         "apps/mobile/src/services/export.service.ts",
         "apps/mobile/src/utils/pdf-generator.util.ts"
       ],
-      "dependencies": ["14"]
+      "dependencies": [
+        "14"
+      ]
     },
     {
       "id": "26",
@@ -556,7 +614,9 @@
         "apps/mobile/src/services/export.service.ts",
         "apps/mobile/src/utils/zip-generator.util.ts"
       ],
-      "dependencies": ["25"]
+      "dependencies": [
+        "25"
+      ]
     },
     {
       "id": "27",
@@ -576,7 +636,9 @@
       "files": [
         "apps/mobile/src/screens/Export/ExportScreen.tsx"
       ],
-      "dependencies": ["26"]
+      "dependencies": [
+        "26"
+      ]
     },
     {
       "id": "28",
@@ -597,7 +659,10 @@
         "apps/mobile/src/screens/Settings/ProfileSettingsScreen.tsx",
         "apps/mobile/src/screens/Settings/ChildrenSettingsScreen.tsx"
       ],
-      "dependencies": ["4", "5"]
+      "dependencies": [
+        "4",
+        "5"
+      ]
     },
     {
       "id": "29",
@@ -619,7 +684,12 @@
         "apps/mobile/src/navigation/SettingsNavigator.tsx",
         "apps/mobile/src/navigation/RootNavigator.tsx"
       ],
-      "dependencies": ["15", "17", "27", "28"]
+      "dependencies": [
+        "15",
+        "17",
+        "27",
+        "28"
+      ]
     },
     {
       "id": "30",
@@ -642,7 +712,9 @@
         "Tested on iOS and Android"
       ],
       "files": [],
-      "dependencies": ["29"]
+      "dependencies": [
+        "29"
+      ]
     }
   ]
 }
