@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 import { RelationshipService, ChildService } from '@/services';
@@ -20,21 +21,27 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, 'AddChild'>;
 type ChildInput = {
   id: string;
   name: string;
-  dateOfBirth: string; // YYYY-MM-DD format
+  dateOfBirth: Date | undefined;
 };
 
 export function AddChildScreen({ navigation }: Props) {
   const tw = useTw();
-  const [children, setChildren] = useState<ChildInput[]>([{ dateOfBirth: '', id: '1', name: '' }]);
+  const [children, setChildren] = useState<ChildInput[]>([
+    { dateOfBirth: undefined, id: '1', name: '' },
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const addChild = () => {
-    setChildren([...children, { dateOfBirth: '', id: String(Date.now()), name: '' }]);
+    setChildren([...children, { dateOfBirth: undefined, id: String(Date.now()), name: '' }]);
   };
 
-  const updateChild = (id: string, field: 'name' | 'dateOfBirth', value: string) => {
-    setChildren(children.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
+  const updateChildName = (id: string, value: string) => {
+    setChildren(children.map((c) => (c.id === id ? { ...c, name: value } : c)));
+  };
+
+  const updateChildDob = (id: string, value: Date) => {
+    setChildren(children.map((c) => (c.id === id ? { ...c, dateOfBirth: value } : c)));
   };
 
   const removeChild = (id: string) => {
@@ -59,7 +66,7 @@ export function AddChildScreen({ navigation }: Props) {
       // Add each valid child
       for (const child of validChildren) {
         await ChildService.create({
-          dateOfBirth: child.dateOfBirth ? new Date(child.dateOfBirth) : undefined,
+          dateOfBirth: child.dateOfBirth ?? undefined,
           name: child.name.trim(),
           relationshipId: relationship.id,
         });
@@ -103,16 +110,16 @@ export function AddChildScreen({ navigation }: Props) {
               placeholderTextColor="#9CA3AF"
               style={tw`mb-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-base`}
               value={child.name}
-              onChangeText={(value) => updateChild(child.id, 'name', value)}
+              onChangeText={(value) => updateChildName(child.id, value)}
             />
 
-            <TextInput
-              keyboardType="numbers-and-punctuation"
-              placeholder="Date of birth (YYYY-MM-DD)"
-              placeholderTextColor="#9CA3AF"
-              style={tw`rounded-lg border border-gray-300 bg-white px-4 py-3 text-base`}
+            <DatePickerInput
+              label="Date of Birth"
+              maximumDate={new Date()}
+              mode="date"
+              placeholder="Select date of birth"
               value={child.dateOfBirth}
-              onChangeText={(value) => updateChild(child.id, 'dateOfBirth', value)}
+              onChange={(value) => updateChildDob(child.id, value)}
             />
           </View>
         ))}

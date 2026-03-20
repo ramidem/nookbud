@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import dayjs from 'dayjs';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -12,6 +13,7 @@ import {
   Alert,
 } from 'react-native';
 
+import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useTw } from '@/hooks/useTw';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService } from '@/services';
@@ -26,8 +28,8 @@ export function AddAgreementScreen({ navigation }: Props) {
   // Form state
   const [title, setTitle] = useState('');
   const [termsText, setTermsText] = useState('');
-  const [effectiveDate, setEffectiveDate] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
+  const [effectiveDate, setEffectiveDate] = useState<Date | undefined>(undefined);
+  const [expirationDate, setExpirationDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     async function load() {
@@ -38,7 +40,7 @@ export function AddAgreementScreen({ navigation }: Props) {
   }, []);
 
   const canSave =
-    title.trim().length > 0 && termsText.trim().length > 0 && effectiveDate.trim().length > 0;
+    title.trim().length > 0 && termsText.trim().length > 0 && effectiveDate !== undefined;
 
   const handleSave = async () => {
     if (!canSave || !relationshipId) return;
@@ -47,8 +49,8 @@ export function AddAgreementScreen({ navigation }: Props) {
     try {
       await EntryService.create({
         content: {
-          effectiveDate: effectiveDate.trim(),
-          expirationDate: expirationDate.trim() || undefined,
+          effectiveDate: dayjs(effectiveDate).format('YYYY-MM-DD'),
+          expirationDate: expirationDate ? dayjs(expirationDate).format('YYYY-MM-DD') : undefined,
           termsText: termsText.trim(),
           title: title.trim(),
         },
@@ -127,26 +129,24 @@ export function AddAgreementScreen({ navigation }: Props) {
 
         {/* Dates */}
         <View style={tw`mb-6 flex-row`}>
-          <View style={tw`mr-2 flex-1`}>
-            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Effective Date *</Text>
-            <TextInput
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor="#9CA3AF"
-              style={tw`rounded-xl border border-gray-300 px-4 py-3`}
-              value={effectiveDate}
-              onChangeText={setEffectiveDate}
-            />
-          </View>
-          <View style={tw`ml-2 flex-1`}>
-            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Expires</Text>
-            <TextInput
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor="#9CA3AF"
-              style={tw`rounded-xl border border-gray-300 px-4 py-3`}
-              value={expirationDate}
-              onChangeText={setExpirationDate}
-            />
-          </View>
+          <DatePickerInput
+            isRequired
+            label="Effective Date"
+            mode="date"
+            placeholder="Select date"
+            style={tw`mr-2 flex-1`}
+            value={effectiveDate}
+            onChange={setEffectiveDate}
+          />
+          <DatePickerInput
+            label="Expires"
+            minimumDate={effectiveDate}
+            mode="date"
+            placeholder="Optional"
+            style={tw`ml-2 flex-1`}
+            value={expirationDate}
+            onChange={setExpirationDate}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -12,6 +12,7 @@ import {
   Alert,
 } from 'react-native';
 
+import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import type { Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
@@ -33,8 +34,8 @@ export function AddEventScreen({ navigation }: Props) {
 
   // Form state
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(''); // YYYY-MM-DD
-  const [time, setTime] = useState(''); // HH:MM
+  const [eventDate, setEventDate] = useState<Date | undefined>(undefined);
+  const [eventTime, setEventTime] = useState<Date | undefined>(undefined);
   const [location, setLocation] = useState('');
   const [responsibleParent, setResponsibleParent] = useState<string>('');
   const [notes, setNotes] = useState('');
@@ -55,17 +56,21 @@ export function AddEventScreen({ navigation }: Props) {
     load();
   }, []);
 
-  const canSave = title.trim().length > 0 && date.trim().length > 0;
+  const canSave = title.trim().length > 0 && eventDate !== undefined;
 
   const handleSave = async () => {
-    if (!canSave || !relationshipId || !userId) return;
+    if (!canSave || !relationshipId || !userId || !eventDate) return;
 
     setIsLoading(true);
     try {
-      // Build ISO datetime
-      const startTime = time
-        ? new Date(`${date}T${time}:00`).toISOString()
-        : new Date(`${date}T00:00:00`).toISOString();
+      // Build ISO datetime from Date objects
+      const combined = new Date(eventDate);
+      if (eventTime) {
+        combined.setHours(eventTime.getHours(), eventTime.getMinutes(), 0, 0);
+      } else {
+        combined.setHours(0, 0, 0, 0);
+      }
+      const startTime = combined.toISOString();
 
       await EntryService.create({
         childId: selectedChildId ?? undefined,
@@ -129,26 +134,23 @@ export function AddEventScreen({ navigation }: Props) {
 
         {/* Date & Time */}
         <View style={tw`mb-6 flex-row`}>
-          <View style={tw`mr-2 flex-1`}>
-            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Date *</Text>
-            <TextInput
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor="#9CA3AF"
-              style={tw`rounded-xl border border-gray-300 px-4 py-3`}
-              value={date}
-              onChangeText={setDate}
-            />
-          </View>
-          <View style={tw`ml-2 flex-1`}>
-            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Time</Text>
-            <TextInput
-              placeholder="HH:MM"
-              placeholderTextColor="#9CA3AF"
-              style={tw`rounded-xl border border-gray-300 px-4 py-3`}
-              value={time}
-              onChangeText={setTime}
-            />
-          </View>
+          <DatePickerInput
+            isRequired
+            label="Date"
+            mode="date"
+            placeholder="Select date"
+            style={tw`mr-2 flex-1`}
+            value={eventDate}
+            onChange={setEventDate}
+          />
+          <DatePickerInput
+            label="Time"
+            mode="time"
+            placeholder="Select time"
+            style={tw`ml-2 flex-1`}
+            value={eventTime}
+            onChange={setEventTime}
+          />
         </View>
 
         {/* Location */}

@@ -1,5 +1,5 @@
 {
-  "name": "CoParent Phase 1 — Core Evidence System (Local-First)",
+  "name": "CoParent \u2014 All Phases",
   "branchName": "feature/phase-1-mvp",
   "userStories": [
     {
@@ -21,11 +21,12 @@
         "apps/mobile/src/database/client.ts",
         "apps/mobile/src/database/index.ts",
         "apps/mobile/drizzle.config.ts"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "2",
-      "title": "Database schema — core tables",
+      "title": "Database schema \u2014 core tables",
       "description": "Define SQLite schema with Drizzle ORM: users, relationships, children, entries, entry_versions, attachments, acknowledgments, disputes, audit_logs. All tables support audit trail and immutability.",
       "priority": 2,
       "passes": true,
@@ -59,7 +60,8 @@
       ],
       "dependencies": [
         "1"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "3",
@@ -82,7 +84,8 @@
       ],
       "dependencies": [
         "2"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "4",
@@ -104,7 +107,8 @@
       ],
       "dependencies": [
         "3"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "5",
@@ -127,7 +131,8 @@
       ],
       "dependencies": [
         "4"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "6",
@@ -148,7 +153,8 @@
       ],
       "dependencies": [
         "3"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "7",
@@ -169,11 +175,12 @@
       ],
       "dependencies": [
         "1"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "8",
-      "title": "Entry service — create with versioning",
+      "title": "Entry service \u2014 create with versioning",
       "description": "Create EntryService for all entry types. Every entry starts at version 1. Content stored in entry_versions table. Entry table points to current_version_id.",
       "priority": 8,
       "passes": true,
@@ -192,11 +199,12 @@
       "dependencies": [
         "6",
         "7"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "9",
-      "title": "Entry service — edit with version history",
+      "title": "Entry service \u2014 edit with version history",
       "description": "Implement entry editing that creates new versions. Original content preserved. Diff computed and stored.",
       "priority": 9,
       "passes": true,
@@ -216,11 +224,12 @@
       ],
       "dependencies": [
         "8"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "10",
-      "title": "Entry service — soft delete",
+      "title": "Entry service \u2014 soft delete",
       "description": "Implement soft delete for entries. No hard deletes allowed. Soft-deleted entries visible in audit trail but hidden from default views.",
       "priority": 10,
       "passes": true,
@@ -237,11 +246,12 @@
       ],
       "dependencies": [
         "8"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "11",
-      "title": "Entry content schemas — all 5 types",
+      "title": "Entry content schemas \u2014 all 5 types",
       "description": "Define TypeScript types and Zod schemas for all 5 entry content types: expense, event, agreement, communication, upload.",
       "priority": 11,
       "passes": true,
@@ -260,7 +270,8 @@
       ],
       "dependencies": [
         "1"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "12",
@@ -282,7 +293,8 @@
       ],
       "dependencies": [
         "8"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "13",
@@ -303,11 +315,12 @@
       ],
       "dependencies": [
         "12"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "14",
-      "title": "Timeline service — query and filter",
+      "title": "Timeline service \u2014 query and filter",
       "description": "Create TimelineService for querying entries. Support filtering by date range, child, entry type, status. Paginated results.",
       "priority": 14,
       "passes": true,
@@ -324,11 +337,12 @@
       ],
       "dependencies": [
         "8"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "15",
-      "title": "Onboarding screens — profile setup",
+      "title": "Onboarding screens \u2014 profile setup",
       "description": "Create onboarding flow: name, timezone, currency. Minimal signup (no email/password yet since no backend).",
       "priority": 15,
       "passes": true,
@@ -350,11 +364,12 @@
       ],
       "dependencies": [
         "4"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "16",
-      "title": "Onboarding screens — relationship and children",
+      "title": "Onboarding screens \u2014 relationship and children",
       "description": "Continue onboarding: create relationship, add children. Support 'invite partner later' flow.",
       "priority": 16,
       "passes": true,
@@ -373,11 +388,12 @@
       "dependencies": [
         "5",
         "15"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "17",
-      "title": "Timeline screen — main feed",
+      "title": "Timeline screen \u2014 main feed",
       "description": "Create the main timeline screen showing all entries. This is the home screen of the app.",
       "priority": 17,
       "passes": true,
@@ -396,7 +412,8 @@
       ],
       "dependencies": [
         "14"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "18",
@@ -420,7 +437,8 @@
       ],
       "dependencies": [
         "17"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "19",
@@ -446,7 +464,8 @@
       "dependencies": [
         "8",
         "11"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "20",
@@ -470,7 +489,8 @@
       "dependencies": [
         "8",
         "11"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "21",
@@ -493,12 +513,13 @@
       "dependencies": [
         "8",
         "11"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "22",
       "title": "Add communication entry screen",
-      "description": "Create screen for structured communication entries. Not a chat — formal documented messages.",
+      "description": "Create screen for structured communication entries. Not a chat \u2014 formal documented messages.",
       "priority": 22,
       "passes": true,
       "acceptanceCriteria": [
@@ -515,7 +536,8 @@
       "dependencies": [
         "8",
         "11"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "23",
@@ -540,7 +562,8 @@
         "7",
         "8",
         "11"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "24",
@@ -567,11 +590,12 @@
         "9",
         "12",
         "13"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "25",
-      "title": "PDF export — timeline report",
+      "title": "PDF export \u2014 timeline report",
       "description": "Generate court-ready PDF export of timeline entries. Formatted for legal use.",
       "priority": 25,
       "passes": true,
@@ -592,7 +616,8 @@
       ],
       "dependencies": [
         "14"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "26",
@@ -616,7 +641,8 @@
       ],
       "dependencies": [
         "25"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "27",
@@ -638,7 +664,8 @@
       ],
       "dependencies": [
         "26"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "28",
@@ -662,7 +689,8 @@
       "dependencies": [
         "4",
         "5"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "29",
@@ -672,8 +700,8 @@
       "passes": true,
       "acceptanceCriteria": [
         "Bottom tabs: Timeline, Calendar (placeholder), Export, Settings",
-        "Timeline stack: TimelineScreen → EntryDetailScreen → Add screens",
-        "Settings stack: SettingsScreen → sub-settings screens",
+        "Timeline stack: TimelineScreen \u2192 EntryDetailScreen \u2192 Add screens",
+        "Settings stack: SettingsScreen \u2192 sub-settings screens",
         "Export stack: ExportScreen",
         "Root navigator switches between Onboarding and Main based on user state",
         "Deep linking structure defined"
@@ -689,7 +717,8 @@
         "17",
         "27",
         "28"
-      ]
+      ],
+      "phase": "1"
     },
     {
       "id": "30",
@@ -714,6 +743,184 @@
       "files": [],
       "dependencies": [
         "29"
+      ],
+      "phase": "1"
+    },
+    {
+      "id": "31",
+      "phase": "2",
+      "title": "Fix lint errors",
+      "description": "Fix all existing lint errors in the codebase. Import ordering, key sorting, and any other style issues flagged by ESLint.",
+      "priority": 31,
+      "passes": false,
+      "acceptanceCriteria": [
+        "yarn lint returns 0 errors",
+        "No import ordering violations",
+        "No key sorting violations",
+        "All files in apps/mobile/src pass lint"
+      ],
+      "files": [],
+      "dependencies": [
+        "30"
+      ]
+    },
+    {
+      "id": "32",
+      "phase": "2",
+      "title": "Native date/time pickers",
+      "description": "Replace all text-input date/time fields with native date pickers. Use @react-native-community/datetimepicker.",
+      "priority": 32,
+      "passes": true,
+      "acceptanceCriteria": [
+        "@react-native-community/datetimepicker installed",
+        "DatePicker reusable component created",
+        "AddEventScreen uses native date+time pickers",
+        "AddAgreementScreen uses native date pickers for effective/expiration dates",
+        "AddExpenseScreen: no date picker needed (uses created_at)",
+        "Onboarding child date-of-birth uses native date picker",
+        "Picker works on both iOS and Android",
+        "Displayed value formatted based on user locale"
+      ],
+      "files": [
+        "apps/mobile/src/components/molecules/DatePicker/DatePicker.tsx",
+        "apps/mobile/src/screens/AddEntry/AddEventScreen.tsx",
+        "apps/mobile/src/screens/AddEntry/AddAgreementScreen.tsx",
+        "apps/mobile/src/screens/Onboarding/AddChildScreen.tsx"
+      ],
+      "dependencies": [
+        "31"
+      ]
+    },
+    {
+      "id": "33",
+      "phase": "2",
+      "title": "Calendar screen \u2014 responsibility ledger",
+      "description": "Replace Calendar placeholder tab with a real calendar view. Show events by date. Each day shows assigned parent and event status (completed/missed).",
+      "priority": 33,
+      "passes": false,
+      "acceptanceCriteria": [
+        "react-native-calendars installed",
+        "CalendarScreen replaces placeholder",
+        "Month view with event dots per day",
+        "Tap a day to see events listed below calendar",
+        "Event items show: title, responsible parent, status chip (pending/completed/missed)",
+        "Mark event as completed or missed (creates audit log)",
+        "FAB to add new event directly from calendar",
+        "Navigate months forward/backward",
+        "Today highlighted"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Calendar/CalendarScreen.tsx",
+        "apps/mobile/src/navigation/MainNavigator.tsx"
+      ],
+      "dependencies": [
+        "32"
+      ]
+    },
+    {
+      "id": "34",
+      "phase": "2",
+      "title": "Partner invite \u2014 deep link accept flow",
+      "description": "Complete the partner onboarding flow. The inviting parent shares a link/code; the other parent installs the app, enters code, and gets linked to the same relationship.",
+      "priority": 34,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Invite code is a short alphanumeric string (6-8 chars) stored in relationship.invite_token",
+        "Share invite screen generates deep link: coparent://invite/{token}",
+        "expo-linking configured to handle coparent:// scheme",
+        "AcceptInviteScreen: enter invite code manually or via deep link",
+        "AcceptInviteScreen creates local user + links to existing relationship",
+        "RelationshipService.acceptInvite(token, newUserId) sets parent_b_id",
+        "Both parents now see shared timeline (same relationship_id)",
+        "Settings shows partner linked status",
+        "Invite link shown in Settings > Relationship after initial onboarding"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Onboarding/AcceptInviteScreen.tsx",
+        "apps/mobile/src/services/relationship.service.ts",
+        "apps/mobile/src/navigation/RootNavigator.tsx",
+        "apps/mobile/src/screens/Settings/SettingsScreen.tsx"
+      ],
+      "dependencies": [
+        "32"
+      ]
+    },
+    {
+      "id": "35",
+      "phase": "2",
+      "title": "Supabase sync \u2014 foundation",
+      "description": "Set up Supabase client and auth. Implement the migration path from local-first to cloud-synced. Data stays local-first; sync is additive.",
+      "priority": 35,
+      "passes": false,
+      "acceptanceCriteria": [
+        "@supabase/supabase-js installed",
+        "Supabase client configured with env vars (EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY)",
+        "AuthService: signUp, signIn, signOut, getCurrentSession",
+        "Supabase schema mirrors SQLite schema (migration SQL in docs/supabase/)",
+        "SyncService: pushEntry(entry), pullEntries(since) \u2014 basic up/down sync",
+        "Sync state tracked: last_synced_at per entity",
+        "Local data survives offline (SQLite is source of truth)",
+        "Auth screen: email + password sign up / sign in",
+        "Existing local user can link to Supabase account",
+        "No data loss if sync fails \u2014 local always wins"
+      ],
+      "files": [
+        "apps/mobile/src/services/auth.service.ts",
+        "apps/mobile/src/services/sync.service.ts",
+        "apps/mobile/src/screens/Auth/SignInScreen.tsx",
+        "apps/mobile/src/screens/Auth/SignUpScreen.tsx",
+        "docs/supabase/schema.sql"
+      ],
+      "dependencies": [
+        "34"
+      ]
+    },
+    {
+      "id": "36",
+      "phase": "2",
+      "title": "Push notifications",
+      "description": "Add push notifications for key events: partner added a new entry, entry acknowledged, entry disputed.",
+      "priority": 36,
+      "passes": false,
+      "acceptanceCriteria": [
+        "expo-notifications installed",
+        "NotificationService.requestPermissions() on first launch",
+        "Local notifications for: new entry by partner, acknowledgment received, dispute raised, dispute response added",
+        "Notification payload navigates to relevant entry on tap",
+        "Notification settings in app Settings (per-type toggle)",
+        "Notifications only trigger for the other parent's actions (not your own)",
+        "Notifications work on iOS and Android"
+      ],
+      "files": [
+        "apps/mobile/src/services/notification.service.ts",
+        "apps/mobile/src/screens/Settings/SettingsScreen.tsx"
+      ],
+      "dependencies": [
+        "35"
+      ]
+    },
+    {
+      "id": "37",
+      "phase": "2",
+      "title": "End-to-end QA \u2014 Phase 2",
+      "description": "Full QA pass for Phase 2 features. Fix bugs, polish UI, ensure all new flows work correctly on iOS and Android.",
+      "priority": 37,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Lint passes with 0 errors",
+        "Native date pickers work on iOS and Android",
+        "Calendar loads events correctly",
+        "Partner invite deep link works (tested on two simulators)",
+        "Supabase auth sign up and sign in work",
+        "Sync pushes and pulls entries correctly",
+        "Push notifications fire on correct events",
+        "No TypeScript errors",
+        "No console warnings in release build",
+        "All Phase 1 flows still work"
+      ],
+      "files": [],
+      "dependencies": [
+        "36"
       ]
     }
   ]
