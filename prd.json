@@ -176,7 +176,7 @@
       "title": "Entry service — create with versioning",
       "description": "Create EntryService for all entry types. Every entry starts at version 1. Content stored in entry_versions table. Entry table points to current_version_id.",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "EntryService.create(type, content, childId?, attachments?)",
         "Creates entry record with status=active",
@@ -199,7 +199,7 @@
       "title": "Entry service — edit with version history",
       "description": "Implement entry editing that creates new versions. Original content preserved. Diff computed and stored.",
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "EntryService.update(entryId, newContent, newAttachments?)",
         "Creates new entry_version with version_number incremented",
@@ -223,7 +223,7 @@
       "title": "Entry service — soft delete",
       "description": "Implement soft delete for entries. No hard deletes allowed. Soft-deleted entries visible in audit trail but hidden from default views.",
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "EntryService.softDelete(entryId)",
         "Sets entry.status = 'soft_deleted'",
