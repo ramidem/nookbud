@@ -267,7 +267,7 @@
       "title": "Acknowledgment service",
       "description": "Create AcknowledgmentService. Entries start as 'pending' for the other parent. They can acknowledge or dispute.",
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "AcknowledgmentService.acknowledge(entryId, comment?)",
         "AcknowledgmentService.dispute(entryId, reason)",
@@ -289,7 +289,7 @@
       "title": "Dispute service with responses",
       "description": "Create DisputeService for managing disputes. Either parent can respond to a dispute. Responses are append-only.",
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "DisputeService.getByEntry(entryId)",
         "DisputeService.respond(disputeId, responseText)",
@@ -310,7 +310,7 @@
       "title": "Timeline service — query and filter",
       "description": "Create TimelineService for querying entries. Support filtering by date range, child, entry type, status. Paginated results.",
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "TimelineService.query({ relationshipId, childId?, types?, dateFrom?, dateTo?, status?, limit, offset })",
         "Returns entries with current version content populated",
