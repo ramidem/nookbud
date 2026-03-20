@@ -10,16 +10,18 @@ type Props = {
   variant?: 'bottomSheet' | 'login' | 'welcome';
 };
 
+const DARK_BG = colors['dark-background'];
+
 const DARK_GRADIENTS: Record<string, string[]> = {
-  bottomSheet: [colors.sheet, colors.background],
-  login: [colors.secondary[950], colors.background, colors.secondary[950]],
-  welcome: [colors.background, colors.secondary[950], colors.background],
+  bottomSheet: [colors['dark-sheet'], DARK_BG],
+  login: [colors.neutral[950], DARK_BG, colors.neutral[950]],
+  welcome: [DARK_BG, colors.neutral[950], DARK_BG],
 };
 
 const LIGHT_GRADIENTS: Record<string, string[]> = {
-  bottomSheet: [colors.gray[100], colors.white],
-  login: [colors.gray[50], colors.white, colors.gray[50]],
-  welcome: [colors.white, colors.gray[50], colors.white],
+  bottomSheet: [colors.neutral[100], colors.white],
+  login: [colors.neutral[50], colors.white, colors.neutral[50]],
+  welcome: [colors.white, colors.neutral[50], colors.white],
 };
 
 export function GradientBackground(props: Props) {

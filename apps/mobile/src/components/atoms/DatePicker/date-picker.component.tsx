@@ -21,21 +21,21 @@ export function DatePicker(props: Props) {
   return (
     <DateTimePickerModal
       backdropStyleIOS={tw`bg-black/40`}
-      buttonTextColorIOS={colors.primary[500]}
+      buttonTextColorIOS={colors.neutral[950]}
       customCancelButtonIOS={({ onPress }) => (
         <TouchableHighlight
-          style={tw`dark:bg-surface mt-2 items-center rounded-2xl bg-white py-4`}
-          underlayColor={isDark ? colors.background : colors.gray[100]}
+          style={tw`dark:bg-dark-surface mt-2 items-center rounded-2xl bg-white py-4`}
+          underlayColor={isDark ? colors['dark-background'] : colors.neutral[100]}
           onPress={onPress}
         >
-          <Typography style={tw`dark:text-subtitle text-base font-semibold text-gray-500`}>
+          <Typography style={tw`dark:text-subtitle text-subtitle text-base font-semibold`}>
             Cancel
           </Typography>
         </TouchableHighlight>
       )}
       isDarkModeEnabled={isDark}
       modalStyleIOS={tw`rounded-2xl pb-4`}
-      pickerContainerStyleIOS={tw`dark:bg-sheet items-center justify-center bg-white`}
+      pickerContainerStyleIOS={tw`dark:bg-dark-sheet items-center justify-center bg-white`}
       onCancel={onCancel}
       onConfirm={onConfirm}
       {...rest}

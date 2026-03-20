@@ -56,7 +56,7 @@ export function ScreenContainer(props: Props) {
 
   if (!useSafeAreaView) {
     return (
-      <View style={[tw`dark:bg-background flex-1 bg-white`, style]}>
+      <View style={[tw`dark:bg-dark-background bg-background flex-1`, style]}>
         {hasScroll ? (
           <KeyboardAwareScrollView
             containerStyle={defaultContainerStyle}
@@ -79,7 +79,7 @@ export function ScreenContainer(props: Props) {
       : safeAreaViewEdges;
 
   return (
-    <SafeAreaView edges={edges} style={[tw`dark:bg-background flex-1 bg-white`, style]}>
+    <SafeAreaView edges={edges} style={[tw`dark:bg-dark-background bg-background flex-1`, style]}>
       {hasScroll ? (
         <KeyboardAwareScrollView
           containerStyle={defaultContainerStyle}

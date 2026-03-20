@@ -23,9 +23,9 @@ const ICON_SIZE = 24;
 
 const VARIANT_CONFIG: Record<AlertVariant, VariantConfig> = {
   error: { color: colors.error, icon: XCircleIcon },
-  info: { color: colors.secondary[500], icon: InfoIcon },
+  info: { color: colors.neutral[500], icon: InfoIcon },
   success: { color: colors.success, icon: CheckCircleIcon },
-  warning: { color: colors.primary[500], icon: AlertTriangleIcon },
+  warning: { color: colors.neutral[950], icon: AlertTriangleIcon },
 };
 
 export function AlertManager() {
@@ -76,25 +76,25 @@ export function AlertManager() {
     <Modal isVisible={isVisible} onBackButtonPress={handleDismiss} onBackdropPress={handleDismiss}>
       <View pointerEvents="box-none" style={tw`flex-1 items-center justify-center`}>
         <View
-          style={tw`dark:border-divider dark:bg-sheet mx-8 w-[85%] rounded-2xl border border-gray-200 bg-white p-6`}
+          style={tw`dark:border-dark-divider dark:bg-dark-sheet border-divider mx-8 w-[85%] rounded-2xl border bg-white p-6`}
         >
           {/* Icon */}
           {showIcon && (
             <View
-              style={tw`dark:bg-surface mb-4 h-10 w-10 items-center justify-center rounded-full bg-gray-100`}
+              style={tw`dark:bg-dark-surface mb-4 h-10 w-10 items-center justify-center rounded-full bg-neutral-100`}
             >
               <IconComponent color={config.color} height={ICON_SIZE} width={ICON_SIZE} />
             </View>
           )}
 
           {/* Title */}
-          <Typography style={tw`dark:text-foreground text-lg font-semibold text-gray-900`}>
+          <Typography style={tw`dark:text-dark-foreground text-foreground text-lg font-semibold`}>
             {currentAlert.title}
           </Typography>
 
           {/* Message */}
           {currentAlert.message ? (
-            <Typography style={tw`dark:text-subtitle mt-4 text-sm leading-relaxed text-gray-500`}>
+            <Typography style={tw`dark:text-subtitle text-subtitle mt-4 text-sm leading-relaxed`}>
               {currentAlert.message}
             </Typography>
           ) : null}
@@ -105,11 +105,11 @@ export function AlertManager() {
               action.variant === 'cancel' ? (
                 <Pressable
                   key={action.label}
-                  style={tw`dark:border-divider dark:bg-surface items-center rounded-xl border border-gray-200 bg-gray-50 py-3.5`}
+                  style={tw`dark:border-dark-divider dark:bg-dark-surface border-divider items-center rounded-xl border bg-neutral-50 py-3.5`}
                   onPress={() => handleActionPress(action.onPress)}
                 >
                   <Typography
-                    style={tw`dark:text-foreground text-base font-semibold text-gray-700`}
+                    style={tw`dark:text-dark-foreground text-base font-semibold text-neutral-700`}
                   >
                     {action.label}
                   </Typography>
@@ -117,7 +117,7 @@ export function AlertManager() {
               ) : (
                 <Pressable
                   key={action.label}
-                  style={tw`bg-primary-500 items-center rounded-xl py-3.5`}
+                  style={tw`items-center rounded-xl bg-neutral-950 py-3.5`}
                   onPress={() => handleActionPress(action.onPress)}
                 >
                   <Typography style={tw`text-base font-semibold text-white`}>

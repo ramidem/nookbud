@@ -36,7 +36,9 @@ export function Skeleton(props: Props) {
   }
 
   return (
-    <Animated.View style={[tw`dark:bg-surface rounded-lg bg-gray-200`, animatedStyle, style]}>
+    <Animated.View
+      style={[tw`dark:bg-dark-surface rounded-lg bg-neutral-200`, animatedStyle, style]}
+    >
       <View style={tw`opacity-0`}>{children}</View>
     </Animated.View>
   );

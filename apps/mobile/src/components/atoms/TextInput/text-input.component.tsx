@@ -83,7 +83,7 @@ export function TextInput(props: TextInputProps) {
     <View
       style={[
         defaultInputContainerStyle,
-        tw`dark:border-divider dark:bg-surface`,
+        tw`dark:border-dark-divider dark:bg-dark-surface`,
         focusedInputStyle(isFocused),
         disabledInputStyle(isDisabled),
         style,
@@ -92,13 +92,13 @@ export function TextInput(props: TextInputProps) {
       <RNTextInput
         {...DefaultNameInputProps}
         ref={textInputRef}
-        cursorColor={colors.primary[400]}
+        cursorColor={colors.neutral[500]}
         editable={!isDisabled}
         multiline={multiline}
         placeholder={placeholder}
-        placeholderTextColor={colorScheme === 'dark' ? colors.placeholder : colors.gray[400]}
-        selectionColor={colors.primary[400]}
-        style={[defaultInputTextStyle, tw`dark:text-foreground`, textStyle]}
+        placeholderTextColor={colorScheme === 'dark' ? colors.placeholder : colors.neutral[400]}
+        selectionColor={colors.neutral[500]}
+        style={[defaultInputTextStyle, tw`dark:text-dark-foreground`, textStyle]}
         value={value}
         onBlur={handleOnBlur}
         onChangeText={handleOnChangeText}
@@ -112,7 +112,7 @@ export function TextInput(props: TextInputProps) {
           testID="clear-button"
           onPress={handleOnClearPress}
         >
-          <CrossIcon style={tw`dark:text-subtitle text-gray-400`} />
+          <CrossIcon style={tw`dark:text-subtitle text-neutral-400`} />
         </Pressable>
       )}
     </View>

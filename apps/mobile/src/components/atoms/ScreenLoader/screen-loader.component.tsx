@@ -12,11 +12,11 @@ export function ScreenLoader(props: Props) {
   return (
     <View
       style={[
-        tw`dark:bg-background h-full w-full items-center justify-center bg-gray-50 p-8`,
+        tw`dark:bg-dark-background h-full w-full items-center justify-center bg-neutral-50 p-8`,
         style,
       ]}
     >
-      <ActivityIndicator color={colors.primary[400]} />
+      <ActivityIndicator color={colors.neutral[500]} />
     </View>
   );
 }

@@ -19,20 +19,20 @@ export function InputLayout(props: Props) {
   return (
     <View style={[style]}>
       {label && (
-        <Typography style={[tw`mb-2 text-gray-600 dark:text-gray-300`, textStyle]}>
+        <Typography style={[tw`mb-2 text-neutral-600 dark:text-neutral-300`, textStyle]}>
           {label}
-          {isRequired && <Typography style={tw`text-red-600`}>{isRequired && '*'}</Typography>}
+          {isRequired && <Typography style={tw`text-error`}>{isRequired && '*'}</Typography>}
         </Typography>
       )}
       {children}
       {!!error && (
         <View style={tw`mt-1 items-start`}>
-          <Typography style={tw`text-right text-xs text-red-500`}>{error}</Typography>
+          <Typography style={tw`text-error text-right text-xs`}>{error}</Typography>
         </View>
       )}
       {!!subtitle && !error && (
         <View style={tw`mt-1 items-start`}>
-          <Typography style={tw`dark:text-subtitle text-right text-xs text-gray-400`}>
+          <Typography style={tw`text-right text-xs text-neutral-400 dark:text-neutral-400`}>
             {subtitle}
           </Typography>
         </View>

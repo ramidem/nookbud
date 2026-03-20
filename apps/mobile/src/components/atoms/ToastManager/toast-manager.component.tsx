@@ -27,9 +27,9 @@ const BOTTOM_PADDING_OFFSET = 16;
 
 const VARIANT_CONFIG: Record<ToastVariant, VariantConfig> = {
   error: { color: colors.error, icon: XCircleIcon },
-  info: { color: colors.secondary[500], icon: InfoIcon },
+  info: { color: colors.neutral[500], icon: InfoIcon },
   success: { color: colors.success, icon: CheckCircleIcon },
-  warning: { color: colors.primary[500], icon: AlertTriangleIcon },
+  warning: { color: colors.neutral[950], icon: AlertTriangleIcon },
 };
 
 export function ToastManager() {
@@ -90,7 +90,7 @@ export function ToastManager() {
         style={[tw`mx-4 w-full max-w-sm`, { paddingBottom: insets.bottom + BOTTOM_PADDING_OFFSET }]}
       >
         <Pressable
-          style={tw`dark:border-divider dark:bg-sheet flex-row items-center rounded-xl border border-gray-200 bg-white px-4 py-3.5 shadow-sm`}
+          style={tw`dark:border-dark-divider dark:bg-dark-sheet border-divider flex-row items-center rounded-xl border bg-white px-4 py-3.5 shadow-sm`}
           onPress={handleDismiss}
         >
           <View style={tw`mr-3`}>
@@ -98,7 +98,7 @@ export function ToastManager() {
           </View>
           <Typography
             numberOfLines={2}
-            style={tw`dark:text-foreground flex-1 text-sm font-medium text-gray-800`}
+            style={tw`dark:text-dark-foreground flex-1 text-sm font-medium text-neutral-800`}
           >
             {currentToast.message}
           </Typography>

@@ -16,7 +16,7 @@ export function Typography(props: Props): JSX.Element {
   return (
     <RNText
       {...shouldTruncateTextProps}
-      style={[tw`dark:text-foreground font-sans text-base font-normal text-gray-900`, style]}
+      style={[tw`dark:text-dark-foreground text-foreground font-sans text-base font-normal`, style]}
       {...extraProps}
     />
   );

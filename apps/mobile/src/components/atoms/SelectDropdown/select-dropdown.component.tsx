@@ -46,7 +46,7 @@ function OptionItem(props: OptionItemProps) {
     <Pressable
       style={[
         tw`flex-row items-center justify-between px-4 py-3`,
-        !isLast && tw`dark:border-divider border-b border-gray-200`,
+        !isLast && tw`dark:border-dark-divider border-divider border-b`,
       ]}
       onPress={onPress}
     >
@@ -54,7 +54,9 @@ function OptionItem(props: OptionItemProps) {
         <Typography
           style={[
             tw`text-base`,
-            isSelected ? tw`text-primary-500 font-medium` : tw`dark:text-foreground text-gray-800`,
+            isSelected
+              ? tw`font-medium text-neutral-950`
+              : tw`dark:text-dark-foreground text-neutral-800`,
           ]}
         >
           {label}
@@ -151,11 +153,11 @@ export function SelectDropdown(props: Props) {
     return (
       <View
         style={[
-          tw`dark:border-divider dark:bg-sheet absolute z-50 max-h-80 rounded-xl border border-gray-200 bg-white`,
+          tw`dark:border-dark-divider dark:bg-dark-sheet border-divider absolute z-50 max-h-80 rounded-xl border bg-white`,
           {
             elevation: 5,
             left: dropdownLayout.x,
-            shadowColor: colors.gray[900],
+            shadowColor: colors.neutral[900],
             shadowOffset: {
               height: 2,
               width: 0,
@@ -177,7 +179,7 @@ export function SelectDropdown(props: Props) {
   return (
     <>
       {label && (
-        <Typography style={tw`mb-1 text-sm font-medium text-gray-700 dark:text-gray-300`}>
+        <Typography style={tw`mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-300`}>
           {label}
         </Typography>
       )}
@@ -185,7 +187,7 @@ export function SelectDropdown(props: Props) {
         ref={triggerRef}
         style={[
           defaultInputContainerStyle,
-          tw`dark:border-divider dark:bg-surface items-center justify-between`,
+          tw`dark:border-dark-divider dark:bg-dark-surface items-center justify-between`,
           style,
         ]}
         onPress={handleToggle}
@@ -194,17 +196,17 @@ export function SelectDropdown(props: Props) {
           <Typography
             style={[
               defaultInputTextStyle,
-              tw`dark:text-foreground`,
-              !selectedOption && tw`dark:text-placeholder text-gray-400`,
+              tw`dark:text-dark-foreground`,
+              !selectedOption && tw`dark:text-placeholder text-placeholder`,
             ]}
           >
             {selectedLabel}
           </Typography>
         </View>
         {isOpen ? (
-          <ChevronDownIcon height={20} style={tw`dark:text-subtitle text-gray-500`} width={20} />
+          <ChevronDownIcon height={20} style={tw`dark:text-subtitle text-subtitle`} width={20} />
         ) : (
-          <ChevronRightIcon height={20} style={tw`dark:text-subtitle text-gray-500`} width={20} />
+          <ChevronRightIcon height={20} style={tw`dark:text-subtitle text-subtitle`} width={20} />
         )}
       </Pressable>
 

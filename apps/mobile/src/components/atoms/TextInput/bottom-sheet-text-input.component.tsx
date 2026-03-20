@@ -88,7 +88,7 @@ export function BottomSheetTextInput(props: BottomSheetTextInputProps) {
     <View
       style={[
         defaultInputContainerStyle,
-        tw`dark:border-divider dark:bg-surface`,
+        tw`dark:border-dark-divider dark:bg-dark-surface`,
         focusedInputStyle(isFocused),
         disabledInputStyle(isDisabled),
         style,
@@ -100,9 +100,9 @@ export function BottomSheetTextInput(props: BottomSheetTextInputProps) {
         editable={!isDisabled}
         multiline={multiline}
         placeholder={placeholder}
-        placeholderTextColor={colors.gray[500]}
-        selectionColor={colors.primary[400]}
-        style={[defaultInputTextStyle, tw`dark:text-foreground`, textStyle]}
+        placeholderTextColor={colors.neutral[500]}
+        selectionColor={colors.neutral[500]}
+        style={[defaultInputTextStyle, tw`dark:text-dark-foreground`, textStyle]}
         value={value}
         onBlur={(e) => handleOnBlur(e as NativeSyntheticEvent<TextInputFocusEventData>)}
         onChangeText={handleOnChangeText}

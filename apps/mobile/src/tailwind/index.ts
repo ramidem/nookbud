@@ -14,7 +14,7 @@ export const tw = create({
     ...tailwindConfig.plugins,
     plugin(({ addUtilities }) => {
       addUtilities({
-        '.box': `border border-[#000]`,
+        '.box': `border border-black`,
         '.font-black-italic': `font-black-italic ${CONFIG.IS_IOS ? 'italic' : ''}`,
         '.font-bold-italic': `font-bold-italic ${CONFIG.IS_IOS ? 'italic' : ''}`,
         '.font-extrabold-italic': `font-extrabold-italic ${CONFIG.IS_IOS ? 'italic' : ''}`,
@@ -56,17 +56,18 @@ export const tw = create({
   },
 });
 
-export const errorContainerStyle = (err: boolean) => err && tw`border-red-600`;
+export const errorContainerStyle = (err: boolean) => err && tw`border-error`;
 
-export const disabledInputStyle = (isDisabled: boolean) => isDisabled && tw`opacity-50`;
+export const disabledInputStyle = (isDisabled: boolean) => isDisabled && tw`opacity-40`;
 
-export const focusedInputStyle = (isFocused: boolean) => isFocused && tw`border-primary-400`;
+export const focusedInputStyle = (isFocused: boolean) =>
+  isFocused && tw`border-primary dark:border-neutral-50`;
 
-export const errorTextStyle = (err: boolean) => err && tw`text-red-600`;
+export const errorTextStyle = (err: boolean) => err && tw`text-error`;
 
-export const defaultInputContainerStyle = tw`ios:px-4 ios:py-3.5 android:py-1 android:px-3 android:min-h-[50px] flex-row rounded-xl border border-gray-300 bg-white`;
+export const defaultInputContainerStyle = tw`bg-surface ios:px-4 ios:py-4 android:py-1 android:px-4 android:min-h-[56px] flex-row rounded-2xl border border-neutral-300`;
 export const defaultInputTextStyle = [
-  tw`flex-1 font-normal text-gray-900`,
+  tw`text-foreground flex-1 font-normal`,
   CONFIG.IS_ANDROID ? { textAlignVertical: 'center' } : null,
 ];
 

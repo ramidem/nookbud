@@ -145,9 +145,9 @@ export function DateTextInput(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = [
     defaultInputContainerStyle,
-    tw`dark:border-divider dark:bg-surface items-center`,
+    tw`dark:border-dark-divider dark:bg-dark-surface items-center`,
     focusedInputStyle(isFocused),
-    displayError && tw`border-red-500`,
+    displayError && tw`border-error`,
   ];
 
   const handleChangeText = useCallback(
@@ -200,7 +200,7 @@ export function DateTextInput(props: Props) {
         keyboardType="number-pad"
         style={[
           defaultInputTextStyle,
-          tw`dark:text-foreground`,
+          tw`dark:text-dark-foreground`,
           { ...fontFamily, opacity: 0, position: 'absolute' },
         ]}
         value={digits}
@@ -208,7 +208,7 @@ export function DateTextInput(props: Props) {
         onChangeText={handleChangeText}
         onFocus={handleFocus}
       />
-      <Typography style={[defaultInputTextStyle, tw`dark:text-foreground`, fontFamily]}>
+      <Typography style={[defaultInputTextStyle, tw`dark:text-dark-foreground`, fontFamily]}>
         {filledPortion}
         <Typography style={[tw`text-placeholder`, { ...fontFamily }]}>{guideSuffix}</Typography>
       </Typography>

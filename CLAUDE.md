@@ -22,10 +22,11 @@ Nx monorepo for a React Native mobile app (iOS, Android, Web).
 
 **WARNING**: Versions are pinned. Do NOT upgrade packages without coordinating with the mobile team.
 
+
 | Package                           | Version |
 | --------------------------------- | ------- |
 | react-native                      | 0.83.4  |
-| @react-navigation/\*              | 7.x     |
+| @react-navigation/                | 7.x     |
 | @tanstack/react-query             | 5.67.3  |
 | zustand                           | 5.0.5   |
 | jotai                             | 2.16.1  |
@@ -49,6 +50,7 @@ Nx monorepo for a React Native mobile app (iOS, Android, Web).
 | react-native-contacts             | 8.0.10  |
 | react-native-pdf                  | 7.0.3   |
 
+
 ---
 
 ## Common Commands
@@ -70,18 +72,20 @@ React Native has two parts that need to run together: the **native app** (on a s
 
 ### Starting the app
 
-| Command | What it does |
-|---------|--------------|
-| `yarn ios` | Builds the native iOS app, launches the Simulator, and starts Metro. Interactive — prompts you to pick a scheme and simulator/device. |
-| `yarn android` | Builds the native Android app, launches on an emulator/device, and starts Metro. Interactive — prompts you to pick a build variant and device. |
+
+| Command             | What it does                                                                                                                                                           |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `yarn ios`          | Builds the native iOS app, launches the Simulator, and starts Metro. Interactive — prompts you to pick a scheme and simulator/device.                                  |
+| `yarn android`      | Builds the native Android app, launches on an emulator/device, and starts Metro. Interactive — prompts you to pick a build variant and device.                         |
 | `yarn serve:mobile` | Starts Metro only. Use this to restart the JS bundler without rebuilding native code (e.g., if you closed the terminal but the simulator still has the app installed). |
+
 
 ### Typical flow
 
-1. Run **`yarn ios`** (or `yarn android`). The interactive picker will ask you to select a scheme/variant and a device.
+1. Run `**yarn ios`** (or `yarn android`). The interactive picker will ask you to select a scheme/variant and a device.
 2. The native app builds, installs on the simulator/device, and launches. Metro starts automatically.
 3. Edit your TypeScript/JSX files — **hot reload** updates the app instantly.
-4. If Metro crashes or you close its terminal, run **`yarn serve:mobile`** to restart it without a full native rebuild.
+4. If Metro crashes or you close its terminal, run `**yarn serve:mobile`** to restart it without a full native rebuild.
 5. You only need to re-run `yarn ios`/`yarn android` when you change native code (add a new RN package with native modules, modify `Info.plist`, change `build.gradle`, etc.).
 
 ### When to rebuild native
@@ -93,7 +97,7 @@ React Native has two parts that need to run together: the **native app** (on a s
 
 ### Common gotchas
 
-- **`nx run mobile` or `nx start mobile`** only starts Metro — no simulator. Use `yarn ios` or `yarn android` instead.
+- `**nx run mobile` or `nx start mobile**` only starts Metro — no simulator. Use `yarn ios` or `yarn android` instead.
 - **iOS Simulator not appearing?** Make sure you have Xcode and simulators installed (`xcode-select --install`, then open Xcode > Settings > Platforms to download simulators).
 - **Android emulator not listed?** Create one in Android Studio > Device Manager first, or connect a physical device with USB debugging enabled.
 - **Metro port conflict?** Metro runs on port 8081 by default. Kill any existing process on that port: `lsof -ti:8081 | xargs kill -9`.
@@ -160,11 +164,13 @@ components/
 
 Screen folders (`src/screens/ScreenName/`) should **ONLY** contain:
 
+
 | File Type     | Pattern                  | Example                  |
 | ------------- | ------------------------ | ------------------------ |
 | Main screen   | `screen-name.screen.tsx` | `home.screen.tsx`        |
 | Tabs/Steps    | `kebab-case.tab.tsx`     | `basic-identity.tab.tsx` |
 | Barrel export | `index.ts`               | `index.ts`               |
+
 
 **NOT allowed in screen folders:**
 
@@ -340,9 +346,9 @@ import { useDoSomething } from '@/hooks/mutations/useDoSomething.hook';
 ## Icons
 
 - **Source**: Download SVGs from [Lucide](https://lucide.dev) and place in `src/icons/`
-- **Format**: SVGs must use `currentColor` for stroke/fill so they can be colored via Tailwind's `text-*` utilities
+- **Format**: SVGs must use `currentColor` for stroke/fill so they can be colored via Tailwind's `text-`* utilities
 - **Registration**: Import in `src/icons/index.ts` and add to the barrel export
-- **Usage**: Color with `style={tw`text-<color>`}`, never use the `color` prop
+- **Usage**: Color with `style={tw`text-`}`, never use the `color` prop
 - **When implementing features that need icons**: Always check `src/icons/index.ts` for existing icons first. If no suitable icon exists, download the SVG from [Lucide](https://lucide.dev), place it in `src/icons/`, and register it in `src/icons/index.ts`. Never use icon libraries like `react-native-vector-icons` or inline SVG components — always use the project's SVG import pattern.
 
 ```typescript
@@ -414,9 +420,9 @@ import { LegendList } from '@legendapp/list';
 
 **Never use `.map()` to render lists of dynamic or unbounded data.** Use a virtualized list component instead — they recycle off-screen views, reduce memory usage, and keep scroll performance smooth.
 
-- **`LegendList`** (`@legendapp/list`) — default choice for all lists
-- **`FlashList`** (`@shopify/flash-list`) — alternative when `LegendList` doesn't fit the use case
-- **`FlatList`** — last resort only
+- `**LegendList`** (`@legendapp/list`) — default choice for all lists
+- `**FlashList**` (`@shopify/flash-list`) — alternative when `LegendList` doesn't fit the use case
+- `**FlatList**` — last resort only
 
 `.map()` is acceptable **only** for small, fixed-length collections (e.g., 3-5 static menu items, a handful of action buttons). If the list could grow or comes from an API, always virtualize.
 
@@ -454,7 +460,7 @@ import PagerView from 'react-native-pager-view';
 
 ### Animations and Gestures
 
-Use **`react-native-reanimated`** for all animations and **`react-native-gesture-handler`** for gesture interactions. Never use React Native's built-in `Animated` API or `PanResponder`.
+Use `**react-native-reanimated**` for all animations and `**react-native-gesture-handler**` for gesture interactions. Never use React Native's built-in `Animated` API or `PanResponder`.
 
 - Reanimated runs animations on the UI thread — no JS thread bottleneck
 - Use `useSharedValue`, `useAnimatedStyle`, `withTiming`, `withSpring` for declarative animations
@@ -470,7 +476,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 ### Graphics, Blur, and Gradients
 
-Use **`@shopify/react-native-skia`** for graphics like blur effects, gradients, custom shapes, and canvas drawing. Skia provides GPU-accelerated 2D rendering.
+Use `**@shopify/react-native-skia**` for graphics like blur effects, gradients, custom shapes, and canvas drawing. Skia provides GPU-accelerated 2D rendering.
 
 ```typescript
 import { Canvas, LinearGradient, RoundedRect, Blur } from '@shopify/react-native-skia';
@@ -494,14 +500,14 @@ const isDark = colorScheme === 'dark';
 ```
 
 - **Never** read `colorScheme` directly from the Zustand store when you also need to toggle — always use this hook so `twrnc` stays in sync
-- Use Tailwind's `dark:` prefix for conditional styles: `` tw`bg-white dark:bg-background` ``
+- Use Tailwind's `dark:` prefix for conditional styles: `tw`bg-white dark:bg-background``
 - **Light mode first**: Always write the light mode style as the base, then add the `dark:` variant. The default color scheme is `light`. Think in terms of light mode colors first (e.g., `text-gray-900 dark:text-foreground`, `bg-white dark:bg-surface`)
 
 ---
 
 ## Styling
 
-- Use `twrnc` (Tailwind React Native): `` tw`bg-primary-500 px-4 py-2` ``
+- Use `twrnc` (Tailwind React Native): `tw`bg-primary-500 px-4 py-2``
 - Access theme colors via `colors` export from `@/tailwind`
 - Platform-specific styles handled in tailwind config
 - **All form inputs must use shared input styles** from `@/tailwind`:
@@ -513,38 +519,54 @@ const isDark = colorScheme === 'dark';
 
 ### Semantic Color Tokens (defined in `tailwind.config.js`)
 
+#### Brand Colors
+
 | Token           | Hex       | Usage                                     |
 | --------------- | --------- | ----------------------------------------- |
-| `foreground`    | `#f8f9fa` | Primary text color                        |
-| `subtitle`      | `#8b92a0` | Secondary/subtitle text                   |
-| `placeholder`   | `#8b92a0` | Input placeholder text                    |
-| `muted`         | `#e1e4e8` | Muted/tertiary text                       |
-| `disabled`      | `#6b7280` | Disabled state text                       |
-| `surface`       | `#2a3544` | Elevated surfaces (cards, inputs, modals) |
-| `divider`       | `#3a4556` | Borders and dividers                      |
-| `sheet`         | `#1a2332` | Bottom sheet / dark background            |
-| `overlay`       | `#1e2d3d` | Modal / toast backgrounds                 |
-| `background`    | `#0f1419` | Darkest app background                    |
-| `underlay`      | `#131a26` | Dark underlays                            |
-| `error`         | `#ef4444` | Error states                              |
-| `success`       | `#22c55e` | Success states                            |
-| `primary-400`   | `#3ba1f5` | Primary accent (blue)                     |
-| `secondary-950` | `#1a2332` | Darkest secondary                         |
+| `primary`       | `#6F8F7B` | Sage Green — trust / structure            |
+| `accent`        | `#C97C5D` | Muted Terracotta — human / highlight      |
+| `accent-soft`   | `#D8A7A0` | Dusty Rose — empathy / subtle UI          |
+| `secondary`     | `#C8BFB6` | Warm Taupe — support / UI depth           |
+
+#### Semantic Colors (Light Mode)
+
+| Token           | Hex       | Usage                                     |
+| --------------- | --------- | ----------------------------------------- |
+| `background`    | `#F7F3EE` | Warm off-white app background             |
+| `foreground`    | `#2F2F2F` | Primary text color                        |
+| `surface`       | `#ffffff` | Cards, panels, inputs                     |
+| `divider`       | `#C8BFB6` | Borders and dividers                      |
+| `subtitle`      | `#6E6A66` | Secondary/subtitle text                   |
+| `placeholder`   | `#B0A99F` | Input placeholder text                    |
+| `muted`         | `#C8BFB6` | Muted/tertiary text                       |
+| `disabled`      | `#C8BFB6` | Disabled state                            |
+| `overlay`       | `#2F2F2F` | Modal/toast backdrop                      |
+| `sheet`         | `#ffffff` | Bottom sheet background                   |
+| `underlay`      | `#F7F3EE` | Pressable underlay                        |
+
+#### Feedback Colors
+
+| Token           | Hex       | Usage                                     |
+| --------------- | --------- | ----------------------------------------- |
+| `error`         | `#B76E6E` | Dispute / error states                    |
+| `success`       | `#7FAF8E` | Acknowledged / completed                  |
+| `warning`       | `#D9B86C` | Pending states                            |
+
 
 ```typescript
 // Correct — use semantic tokens
 tw`text-foreground bg-surface border-divider`;
 tw`text-subtitle`;
-tw`bg-overlay`;
+tw`bg-primary text-accent`;
 tw`text-error`;
 
 // Wrong — hardcoded hex
-tw`border-[#3a4556] bg-[#2a3544] text-[#f8f9fa]`;
+tw`border-[#C8BFB6] bg-[#ffffff] text-[#2F2F2F]`;
 ```
 
 ### Coloring SVG Icons
 
-Use `style={tw`text-<color>`}` to color SVG icons — the `currentColor` in SVGs resolves from the `color` style property set by Tailwind's `text-*` utilities. **Do NOT use the `color` prop with `colors['...']`**.
+Use `style={tw`text-`}` to color SVG icons — the `currentColor` in SVGs resolves from the `color` style property set by Tailwind's `text-*` utilities. **Do NOT use the `color` prop with `colors['...']`**.
 
 ```typescript
 // Correct — use style with tw
@@ -580,7 +602,7 @@ Use `style={tw`text-<color>`}` to color SVG icons — the `currentColor` in SVGs
 - **Always use the custom `Modal` component** from `@/components` (`atoms/Modal/modal.component.tsx`) — never use `react-native-modal` or React Native's built-in `Modal` directly
 - The custom `Modal` handles platform differences internally: `react-native-modal` on iOS, React Native's built-in `Modal` on Android
 - Key props: `isVisible`, `onBackdropPress`, `onBackButtonPress`, `containerStyle`, `style`
-- **`pointerEvents="box-none"` on full-screen `View` wrappers**: When using `<View style={tw`flex-1`}>` inside a Modal, add `pointerEvents="box-none"` so that taps on empty areas propagate through to the Modal's backdrop and trigger `onBackdropPress`. Without this, the `View` intercepts all touches and the backdrop dismiss stops working.
+- `**pointerEvents="box-none"` on full-screen `View` wrappers**: When using `<View style={tw`flex-1`}>` inside a Modal, add `pointerEvents="box-none"` so that taps on empty areas propagate through to the Modal's backdrop and trigger `onBackdropPress`. Without this, the `View` intercepts all touches and the backdrop dismiss stops working.
 
 ```typescript
 import { Modal, useModal } from '@/components';
@@ -709,7 +731,7 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 ## Text Inputs
 
-- **`TextInput` does NOT have a `label` prop** — always wrap it with `InputLayout` from `@/components` to add a label
+- `**TextInput` does NOT have a `label` prop** — always wrap it with `InputLayout` from `@/components` to add a label
 - `InputLayout` handles label, required indicator, error, and subtitle rendering
 
 ```typescript
@@ -832,6 +854,7 @@ useEffect(() => {
 
 ### Common Pitfalls to Avoid
 
+
 | Pitfall                                | Why it breaks                                                | Fix                                         |
 | -------------------------------------- | ------------------------------------------------------------ | ------------------------------------------- |
 | `useState` for animation values        | Causes re-renders on every frame                             | Use `useSharedValue`                        |
@@ -843,6 +866,7 @@ useEffect(() => {
 | `Animated.event` for scroll            | Deprecated v1 API                                            | Use `useAnimatedScrollHandler`              |
 | Missing `'worklet'` directive          | Function runs on JS thread causing frame drops               | Add `'worklet';` as first statement         |
 | `interpolate` without `CLAMP`          | Values can exceed intended range                             | Add `Extrapolation.CLAMP`                   |
+
 
 ### Android-Specific
 
@@ -870,4 +894,4 @@ npx nx run mobile:lint
 
 This covers both ESLint rules and Prettier formatting.
 
-**When creating new components or screens**, review the code for hardcoded hex color values (e.g., `#f8f9fa`, `#2a3544`). Replace them with semantic color tokens from `tailwind.config.js` (e.g., `text-foreground`, `bg-surface`). See the [Semantic Color Tokens](#semantic-color-tokens-defined-in-tailwindconfigjs) table for available tokens. If no token exists, add one to `tailwind.config.js` before using it.
+**When creating new components or screens**, review the code for hardcoded hex color values (e.g., `#2F2F2F`, `#C8BFB6`). Replace them with semantic color tokens from `tailwind.config.js` (e.g., `text-foreground`, `bg-surface`). See the [Semantic Color Tokens](#semantic-color-tokens-defined-in-tailwindconfigjs) table for available tokens. If no token exists, add one to `tailwind.config.js` before using it.

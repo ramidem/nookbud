@@ -106,11 +106,11 @@ export function BottomSheet(props: BottomSheetProps) {
       ref={sheetRef}
       android_keyboardInputMode="adjustResize"
       backdropComponent={renderBackdrop}
-      backgroundStyle={[tw`dark:bg-sheet bg-white`, backgroundStyle]}
+      backgroundStyle={[tw`dark:bg-dark-sheet bg-white`, backgroundStyle]}
       enableDynamicSizing={enableDynamicSizing}
       enablePanDownToClose={enablePanDownToClose}
       handleComponent={handleComponent}
-      handleIndicatorStyle={tw`dark:bg-divider bg-gray-300`}
+      handleIndicatorStyle={tw`dark:bg-dark-divider bg-neutral-300`}
       handleStyle={tw`rounded-tl-xl rounded-tr-xl`}
       keyboardBehavior="interactive"
       snapPoints={points}

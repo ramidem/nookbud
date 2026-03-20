@@ -75,7 +75,7 @@ export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
         <Typography style={tw`text-2xl font-bold`}>Heading Bold</Typography>
         <Typography style={tw`text-lg font-semibold`}>Subheading Semibold</Typography>
         <Typography style={tw`text-base`}>Body text regular</Typography>
-        <Typography style={tw`text-sm text-gray-500`}>Caption text</Typography>
+        <Typography style={tw`text-subtitle text-sm`}>Caption text</Typography>
 
         <Divider style={tw`mt-4`} />
 
@@ -207,9 +207,9 @@ export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
         <Button title="Open Modal" onPress={showModal} />
         <Modal isVisible={isModalVisible} onBackButtonPress={hideModal} onBackdropPress={hideModal}>
           <View pointerEvents="box-none" style={tw`flex-1 items-center justify-center`}>
-            <View style={tw`dark:bg-sheet mx-8 w-[85%] rounded-2xl bg-white p-6`}>
+            <View style={tw`dark:bg-dark-sheet mx-8 w-[85%] rounded-2xl bg-white p-6`}>
               <Typography style={tw`text-lg font-semibold`}>Modal Title</Typography>
-              <Typography style={tw`dark:text-subtitle mt-2 text-sm text-gray-500`}>
+              <Typography style={tw`dark:text-subtitle text-subtitle mt-2 text-sm`}>
                 This is a custom modal with any content you want.
               </Typography>
               <Button style={tw`mt-4`} title="Close" onPress={hideModal} />
@@ -223,13 +223,13 @@ export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
         <SectionTitle title="Bottom Sheet" />
         <Button title="Open Bottom Sheet" onPress={expandSheet} />
         <BottomSheet
-          backgroundStyle={tw`dark:bg-sheet bg-white`}
+          backgroundStyle={tw`dark:bg-dark-sheet bg-white`}
           sheetRef={sheetRef}
           snapPoints={['40%']}
         >
           <View style={tw`p-6`}>
             <Typography style={tw`text-lg font-semibold`}>Bottom Sheet</Typography>
-            <Typography style={tw`dark:text-subtitle mt-2 text-sm text-gray-500`}>
+            <Typography style={tw`dark:text-subtitle text-subtitle mt-2 text-sm`}>
               Swipe down or tap the backdrop to dismiss.
             </Typography>
             <Button style={tw`mt-4`} title="Close" onPress={closeSheet} />

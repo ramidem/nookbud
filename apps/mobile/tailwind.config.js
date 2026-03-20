@@ -8,7 +8,7 @@ module.exports = {
   plugins: [
     plugin(({ addUtilities }) => {
       addUtilities({
-        '.box': `border border-[#000]`,
+        '.box': `border border-black`,
       });
     }),
   ],
@@ -40,58 +40,57 @@ module.exports = {
       },
       colors: {
         white: '#ffffff',
-        background: '#0f1419',
-        disabled: '#6b7280',
-        divider: '#3a4556',
-        error: '#ef4444',
-        foreground: '#f8f9fa',
-        muted: '#e1e4e8',
-        overlay: '#1e2d3d',
-        placeholder: '#8b92a0',
-        sheet: '#1a2332',
-        subtitle: '#8b92a0',
-        success: '#22c55e',
-        surface: '#2a3544',
-        underlay: '#131a26',
-        // https://uicolors.app/create
-        gray: {
-          50: '#f7f8f8',
-          100: '#ebedee',
-          200: '#d9dade',
-          300: '#b8bac1',
-          400: '#91949f',
-          500: '#737784',
-          600: '#5d606c',
-          700: '#4c4e58',
-          800: '#41424b',
-          900: '#36373d',
-          950: '#26272b',
-        },
-        primary: {
-          50: '#f0f7ff',
-          100: '#e8f2f8',
-          200: '#bbddfc',
-          300: '#7fc0fa',
-          400: '#3ba1f5',
-          500: '#1185e6',
-          600: '#0567c4',
-          700: '#054f99',
-          800: '#094683',
-          900: '#0d3c6d',
-          950: '#092648',
-        },
-        secondary: {
-          50: '#f1fafe',
-          100: '#e3f3fb',
-          200: '#bde8f7',
-          300: '#88d8f1',
-          400: '#48c5e8',
-          500: '#21add6',
-          600: '#138db6',
-          700: '#107094',
-          800: '#125f7a',
-          900: '#144f66',
-          950: '#0e3243',
+        black: '#000000',
+
+        // Brand
+        primary: '#6F8F7B',             // Sage Green — trust / structure
+        accent: '#C97C5D',              // Muted Terracotta — human / highlight
+        'accent-soft': '#D8A7A0',       // Dusty Rose — empathy / subtle UI
+        secondary: '#C8BFB6',           // Warm Taupe — support / UI depth
+
+        // Semantic — light-first, dark: overrides
+        background: '#F7F3EE',          // Warm Off-White
+        foreground: '#2F2F2F',          // Primary text
+        surface: '#ffffff',             // Cards / panels
+        divider: '#C8BFB6',            // Warm Taupe borders
+        subtitle: '#6E6A66',            // Secondary text
+        placeholder: '#B0A99F',         // Muted warm placeholder
+        muted: '#C8BFB6',              // Tertiary text
+        disabled: '#C8BFB6',           // Disabled state
+        overlay: '#2F2F2F',            // Modal/toast backdrop
+        sheet: '#ffffff',              // Bottom sheet bg
+        underlay: '#F7F3EE',           // Pressable underlay
+
+        // Dark mode overrides (applied via dark: prefix)
+        'dark-background': '#1A1614',
+        'dark-foreground': '#F7F3EE',
+        'dark-surface': '#2A2522',
+        'dark-divider': '#3D3632',
+        'dark-sheet': '#2A2522',
+        'dark-underlay': '#1A1614',
+
+        // Feedback
+        error: '#B76E6E',              // Dispute
+        success: '#7FAF8E',            // Acknowledged / completed
+        warning: '#D9B86C',            // Pending
+
+        // Keyboard
+        'kbd-button': '#8A8279',
+        'kbd-surface': '#3D3632',
+
+        // Warm neutral scale
+        neutral: {
+          50: '#FAF8F5',
+          100: '#F7F3EE',
+          200: '#E8E2DA',
+          300: '#D4CCC3',
+          400: '#C8BFB6',
+          500: '#8A8279',
+          600: '#6E6A66',
+          700: '#524E4A',
+          800: '#3D3632',
+          900: '#2A2522',
+          950: '#1A1614',
         },
       },
     },

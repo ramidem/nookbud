@@ -34,8 +34,8 @@ export function DateModalInput(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = [
     defaultInputContainerStyle,
-    tw`dark:border-divider dark:bg-surface items-center`,
-    error && tw`border-red-500`,
+    tw`dark:border-dark-divider dark:bg-dark-surface items-center`,
+    error && tw`border-error`,
   ];
 
   return (
@@ -46,7 +46,11 @@ export function DateModalInput(props: Props) {
         onPress={() => setShowDatePicker(true)}
       >
         <Typography
-          style={[defaultInputTextStyle, tw`dark:text-foreground`, !value && tw`text-placeholder`]}
+          style={[
+            defaultInputTextStyle,
+            tw`dark:text-dark-foreground`,
+            !value && tw`text-placeholder`,
+          ]}
         >
           {value ? dayjs(value).format(format) : placeholder}
         </Typography>
