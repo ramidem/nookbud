@@ -9,7 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { persistOptions, queryClient } from './query-client';
 
 import { AlertManager, StorageManager, ThemeManager, ToastManager } from '@/components';
-import ApplicationRoutes from '@/routes';
+import { RootNavigator } from '@/navigation/RootNavigator';
 import { tw } from '@/tailwind';
 import 'react-native-url-polyfill/auto';
 
@@ -29,7 +29,7 @@ function Application() {
             <StorageManager>
               <>
                 <ThemeManager />
-                <ApplicationRoutes />
+                <RootNavigator />
                 <AlertManager />
                 <ToastManager />
               </>

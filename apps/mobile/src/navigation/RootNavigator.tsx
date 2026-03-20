@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackNavigationProp,
@@ -141,7 +141,7 @@ export function RootNavigator() {
   }
 
   return (
-    <>
+    <NavigationContainer>
       <DeepLinkHandler />
       <NotificationHandler />
       <Stack.Navigator
@@ -159,6 +159,6 @@ export function RootNavigator() {
           options={{ animation: 'slide_from_right' }}
         />
       </Stack.Navigator>
-    </>
+    </NavigationContainer>
   );
 }
