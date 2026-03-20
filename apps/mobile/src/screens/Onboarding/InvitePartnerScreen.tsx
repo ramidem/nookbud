@@ -24,7 +24,7 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Join me on CoParent to track our co-parenting activities. Use this invite code: ${inviteToken}`,
+        message: `Join me on CoParent! Use code: ${inviteToken}\n\nOr tap this link: coparent://invite/${inviteToken}`,
       });
     } catch (err) {
       // User cancelled or error

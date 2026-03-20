@@ -823,7 +823,7 @@
       "title": "Partner invite \u2014 deep link accept flow",
       "description": "Complete the partner onboarding flow. The inviting parent shares a link/code; the other parent installs the app, enters code, and gets linked to the same relationship.",
       "priority": 34,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Invite code is a short alphanumeric string (6-8 chars) stored in relationship.invite_token",
         "Share invite screen generates deep link: coparent://invite/{token}",

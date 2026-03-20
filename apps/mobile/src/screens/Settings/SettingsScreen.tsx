@@ -1,6 +1,7 @@
+import Clipboard from '@react-native-clipboard/clipboard';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, ScrollView, Alert, ActivityIndicator, Share } from 'react-native';
 
 import type { User, Relationship, Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
@@ -9,12 +10,15 @@ import { UserService, RelationshipService, ChildService } from '@/services';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
 
+const COPY_FEEDBACK_DURATION = 2000;
+
 export function SettingsScreen({ navigation }: Props) {
   const tw = useTw();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [relationship, setRelationship] = useState<Relationship | null>(null);
   const [children, setChildren] = useState<Child[]>([]);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -37,6 +41,25 @@ export function SettingsScreen({ navigation }: Props) {
       console.error('Failed to load settings:', err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCopyCode = () => {
+    if (relationship?.inviteToken) {
+      Clipboard.setString(relationship.inviteToken);
+      setCopied(true);
+      setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION);
+    }
+  };
+
+  const handleShareInvite = async () => {
+    if (!relationship?.inviteToken) return;
+    try {
+      await Share.share({
+        message: `Join me on CoParent! Use code: ${relationship.inviteToken}\n\nOr tap this link: coparent://invite/${relationship.inviteToken}`,
+      });
+    } catch {
+      // User cancelled or error
     }
   };
 
@@ -165,11 +188,31 @@ export function SettingsScreen({ navigation }: Props) {
                 <Text style={tw`mb-2 text-gray-700`}>
                   Your co-parent hasn{"'"}t joined yet. Share this code:
                 </Text>
-                <View style={tw`rounded-lg bg-gray-100 p-3`}>
+                <View style={tw`mb-3 rounded-lg bg-gray-100 p-3`}>
                   <Text style={tw`text-center font-mono text-xl font-bold text-gray-900`}>
                     {relationship?.inviteToken || 'No code'}
                   </Text>
                 </View>
+                {relationship?.inviteToken ? (
+                  <View style={tw`flex-row gap-3`}>
+                    <Pressable
+                      style={tw`flex-1 rounded-lg bg-gray-100 py-3`}
+                      onPress={handleCopyCode}
+                    >
+                      <Text style={tw`text-center text-sm font-medium text-gray-900`}>
+                        {copied ? 'Copied!' : 'Copy Code'}
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      style={tw`flex-1 rounded-lg bg-blue-600 py-3`}
+                      onPress={handleShareInvite}
+                    >
+                      <Text style={tw`text-center text-sm font-medium text-white`}>
+                        Share Invite
+                      </Text>
+                    </Pressable>
+                  </View>
+                ) : null}
               </View>
             )}
           </View>
