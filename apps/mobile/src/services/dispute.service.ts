@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import { AuditService } from './audit.service';
 import { FileService } from './file.service';
+import { NotificationService } from './notification.service';
 import { UserService } from './user.service';
 
 import { db } from '@/database';
@@ -218,6 +219,8 @@ export const DisputeService = {
     });
 
     const [response] = await db.select().from(disputeResponses).where(eq(disputeResponses.id, id));
+
+    NotificationService.notifyDisputeResponse(dispute).catch(() => {});
 
     return response;
   },

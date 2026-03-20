@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 
 import { AuditService } from './audit.service';
+import { NotificationService } from './notification.service';
 import { UserService } from './user.service';
 
 import { db } from '@/database';
@@ -84,6 +85,8 @@ export const AcknowledgmentService = {
         .from(acknowledgments)
         .where(eq(acknowledgments.id, existing.id));
 
+      NotificationService.notifyAcknowledged(entry).catch(() => {});
+
       return updated;
     } else {
       // Create new
@@ -108,6 +111,8 @@ export const AcknowledgmentService = {
       });
 
       const [created] = await db.select().from(acknowledgments).where(eq(acknowledgments.id, id));
+
+      NotificationService.notifyAcknowledged(entry).catch(() => {});
 
       return created;
     }
@@ -204,6 +209,8 @@ export const AcknowledgmentService = {
         .from(acknowledgments)
         .where(eq(acknowledgments.id, existing.id));
 
+      NotificationService.notifyDisputed(entry).catch(() => {});
+
       return updated;
     } else {
       const ackId = generateUUID();
@@ -231,6 +238,8 @@ export const AcknowledgmentService = {
         .select()
         .from(acknowledgments)
         .where(eq(acknowledgments.id, ackId));
+
+      NotificationService.notifyDisputed(entry).catch(() => {});
 
       return created;
     }

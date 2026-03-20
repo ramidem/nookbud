@@ -1,16 +1,52 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, ScrollView, Alert, ActivityIndicator, Share } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  Share,
+  Switch,
+  Linking,
+} from 'react-native';
 
 import type { User, Relationship, Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
-import { UserService, RelationshipService, ChildService } from '@/services';
+import {
+  UserService,
+  RelationshipService,
+  ChildService,
+  NotificationService,
+  type NotificationPrefs,
+} from '@/services';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
 
 const COPY_FEEDBACK_DURATION = 2000;
+
+const NOTIFICATION_TOGGLES: Array<{
+  key: keyof NotificationPrefs;
+  label: string;
+  description: string;
+}> = [
+  { description: 'When your partner adds a new entry', key: 'newEntry', label: 'New Entries' },
+  {
+    description: 'When your entry is acknowledged',
+    key: 'acknowledged',
+    label: 'Acknowledgments',
+  },
+  { description: 'When your entry is disputed', key: 'disputed', label: 'Disputes' },
+  {
+    description: 'When there is a new dispute response',
+    key: 'disputeResponse',
+    label: 'Dispute Responses',
+  },
+];
 
 export function SettingsScreen({ navigation }: Props) {
   const tw = useTw();
@@ -19,10 +55,19 @@ export function SettingsScreen({ navigation }: Props) {
   const [relationship, setRelationship] = useState<Relationship | null>(null);
   const [children, setChildren] = useState<Child[]>([]);
   const [copied, setCopied] = useState(false);
+  const [notifPrefs, setNotifPrefs] = useState<NotificationPrefs>(NotificationService.getPrefs());
+  const [permissionStatus, setPermissionStatus] =
+    useState<Notifications.PermissionStatus>('undetermined');
+
+  const loadPermissionStatus = useCallback(async () => {
+    const status = await NotificationService.getPermissionStatus();
+    setPermissionStatus(status);
+  }, []);
 
   useEffect(() => {
     loadData();
-  }, []);
+    loadPermissionStatus();
+  }, [loadPermissionStatus]);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -61,6 +106,12 @@ export function SettingsScreen({ navigation }: Props) {
     } catch {
       // User cancelled or error
     }
+  };
+
+  const handleToggleNotifPref = (key: keyof NotificationPrefs) => {
+    const updated = { ...notifPrefs, [key]: !notifPrefs[key] };
+    setNotifPrefs(updated);
+    NotificationService.savePrefs(updated);
   };
 
   const handleClearData = () => {
@@ -161,6 +212,50 @@ export function SettingsScreen({ navigation }: Props) {
           >
             <Text style={tw`font-medium text-blue-600`}>+ Add Child</Text>
           </Pressable>
+        </View>
+
+        {/* Notifications Section */}
+        <View style={tw`mb-4 rounded-xl bg-white`}>
+          <View style={tw`border-b border-gray-100 px-4 py-3`}>
+            <Text style={tw`text-sm font-medium uppercase tracking-wide text-gray-600`}>
+              Notifications
+            </Text>
+          </View>
+
+          {permissionStatus === 'denied' ? (
+            <View style={tw`p-4`}>
+              <Text style={tw`mb-2 text-sm text-gray-500`}>
+                Notifications are disabled. Enable them in your device settings.
+              </Text>
+              <Pressable
+                style={tw`rounded-lg bg-blue-600 py-3`}
+                onPress={() => Linking.openSettings()}
+              >
+                <Text style={tw`text-center text-sm font-medium text-white`}>
+                  Enable in Settings
+                </Text>
+              </Pressable>
+            </View>
+          ) : (
+            NOTIFICATION_TOGGLES.map((toggle, index) => (
+              <View
+                key={toggle.key}
+                style={tw`flex-row items-center justify-between px-4 py-3 ${
+                  index < NOTIFICATION_TOGGLES.length - 1 ? 'border-b border-gray-100' : ''
+                }`}
+              >
+                <View style={tw`mr-3 flex-1`}>
+                  <Text style={tw`text-base font-medium text-gray-900`}>{toggle.label}</Text>
+                  <Text style={tw`text-sm text-gray-500`}>{toggle.description}</Text>
+                </View>
+                <Switch
+                  trackColor={{ false: '#D1D5DB', true: '#6F8F7B' }}
+                  value={notifPrefs[toggle.key]}
+                  onValueChange={() => handleToggleNotifPref(toggle.key)}
+                />
+              </View>
+            ))
+          )}
         </View>
 
         {/* Relationship Section */}

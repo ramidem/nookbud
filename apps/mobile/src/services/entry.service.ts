@@ -2,6 +2,7 @@ import { eq, desc } from 'drizzle-orm';
 
 import { AuditService } from './audit.service';
 import { FileService } from './file.service';
+import { NotificationService } from './notification.service';
 import { UserService } from './user.service';
 
 import { db, opsqlite } from '@/database';
@@ -156,6 +157,9 @@ export const EntryService = {
       });
 
       const [entry] = await db.select().from(entries).where(eq(entries.id, entryId));
+
+      // Notify partner about the new entry (silently fails if permissions denied)
+      NotificationService.notifyNewEntry(entry).catch(() => {});
 
       return entry;
     } catch (error) {

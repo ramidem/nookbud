@@ -3,7 +3,8 @@ import {
   createNativeStackNavigator,
   type NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import React, { useState, useEffect, useCallback } from 'react';
+import * as Notifications from 'expo-notifications';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, ActivityIndicator, Linking } from 'react-native';
 
 import { MainNavigator } from './MainNavigator';
@@ -12,7 +13,7 @@ import { OnboardingNavigator } from './OnboardingNavigator';
 import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
-import { UserService } from '@/services';
+import { UserService, NotificationService } from '@/services';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -31,6 +32,28 @@ function extractInviteToken(url: string): string | null {
 
     return token.length >= MIN_TOKEN_LENGTH ? token.toUpperCase() : null;
   }
+
+  return null;
+}
+
+/**
+ * Handles notification tap navigation.
+ * Navigates to the Timeline tab > EntryDetail when a notification is tapped.
+ */
+function NotificationHandler() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const entryId = response.notification.request.content.data?.entryId as string | undefined;
+      if (entryId) {
+        // Navigate to Main, then the TimelineTab will handle EntryDetail
+        navigation.navigate('Main');
+      }
+    });
+
+    return () => subscription.remove();
+  }, [navigation]);
 
   return null;
 }
@@ -76,6 +99,7 @@ export function RootNavigator() {
   const { error: migrationError, success: migrationSuccess } = useDbMigrations();
   const [isLoading, setIsLoading] = useState(true);
   const [hasUser, setHasUser] = useState(false);
+  const permissionRequested = useRef(false);
 
   useEffect(() => {
     if (migrationSuccess) {
@@ -87,6 +111,12 @@ export function RootNavigator() {
     try {
       const exists = await UserService.hasUser();
       setHasUser(exists);
+
+      // Request notification permissions once after onboarding completes
+      if (exists && !permissionRequested.current && !NotificationService.hasRequestedPermission()) {
+        permissionRequested.current = true;
+        NotificationService.requestPermissions().catch(() => {});
+      }
     } catch (err) {
       console.error('Failed to check user:', err);
     } finally {
@@ -113,6 +143,7 @@ export function RootNavigator() {
   return (
     <>
       <DeepLinkHandler />
+      <NotificationHandler />
       <Stack.Navigator
         initialRouteName={hasUser ? 'Main' : 'Onboarding'}
         screenOptions={{

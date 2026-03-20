@@ -881,7 +881,7 @@
       "title": "Push notifications",
       "description": "Add push notifications for key events: partner added a new entry, entry acknowledged, entry disputed.",
       "priority": 36,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "expo-notifications installed",
         "NotificationService.requestPermissions() on first launch",
