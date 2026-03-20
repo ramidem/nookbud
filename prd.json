@@ -66,7 +66,7 @@
       "title": "Database migrations setup",
       "description": "Configure Drizzle migrations for SQLite. Create initial migration from schema. Add migration runner that executes on app startup.",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "drizzle-kit generate creates migration SQL files",
         "Migrations stored in apps/mobile/drizzle/migrations/",
