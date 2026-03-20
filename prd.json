@@ -797,7 +797,7 @@
       "title": "Calendar screen \u2014 responsibility ledger",
       "description": "Replace Calendar placeholder tab with a real calendar view. Show events by date. Each day shows assigned parent and event status (completed/missed).",
       "priority": 33,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "react-native-calendars installed",
         "CalendarScreen replaces placeholder",

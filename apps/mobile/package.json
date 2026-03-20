@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "@op-engineering/op-sqlite": "^15.2.7",
-    "drizzle-orm": "^0.45.1"
+    "drizzle-orm": "^0.45.1",
+    "react-native-calendars": "^1.1314.0"
   },
   "devDependencies": {
     "babel-plugin-inline-import": "^3.0.0",

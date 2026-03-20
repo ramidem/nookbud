@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 
 import { SettingsNavigator } from './SettingsNavigator';
 import { TimelineNavigator } from './TimelineNavigator';
 
 import { useTw } from '@/hooks/useTw';
+import { CalendarScreen } from '@/screens/Calendar';
 import { ExportScreen } from '@/screens/Export';
 
 export type MainTabParamList = {
@@ -16,19 +17,6 @@ export type MainTabParamList = {
 };
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
-
-// Placeholder Calendar screen
-function CalendarPlaceholder() {
-  const tw = useTw();
-
-  return (
-    <View style={tw`flex-1 items-center justify-center bg-white`}>
-      <Text style={tw`mb-4 text-6xl`}>📅</Text>
-      <Text style={tw`text-xl font-medium text-gray-900`}>Calendar</Text>
-      <Text style={tw`mt-2 text-gray-600`}>Coming in Phase 2</Text>
-    </View>
-  );
-}
 
 function TabIcon({ focused, icon }: { icon: string; focused: boolean }) {
   const tw = useTw();
@@ -58,7 +46,7 @@ export function MainNavigator() {
         }}
       />
       <Tab.Screen
-        component={CalendarPlaceholder}
+        component={CalendarScreen}
         name="CalendarTab"
         options={{
           tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon="📅" />,
