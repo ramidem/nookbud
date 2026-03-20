@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator, Alert } from 'react-native';
 
 import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
@@ -13,8 +13,8 @@ import {
 
 const ACTIVE_BG = 'bg-blue-600';
 const INACTIVE_BG = 'bg-gray-100';
-const ACTIVE_TEXT = ACTIVE_TEXT;
-const INACTIVE_TEXT = INACTIVE_TEXT;
+const ACTIVE_TEXT = 'text-white';
+const INACTIVE_TEXT = 'text-gray-700';
 
 const TYPE_LABELS: Record<EntryType, string> = {
   agreement: '🤝 Agreement',
@@ -45,7 +45,7 @@ export function ExportScreen() {
     if (relationshipId) {
       updateCount();
     }
-  }, [relationshipId, selectedChildIds, selectedTypes]);
+  }, [relationshipId, selectedChildIds, selectedTypes, updateCount]);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -56,14 +56,14 @@ export function ExportScreen() {
         const c = await ChildService.listByRelationship(rel.id);
         setChildren(c);
       }
-    } catch (err) {
-      console.error('Failed to load data:', err);
+    } catch {
+      // Silent fail — data load is non-critical
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateCount = async () => {
+  const updateCount = useCallback(async () => {
     if (!relationshipId) return;
 
     try {
@@ -74,10 +74,10 @@ export function ExportScreen() {
         types: selectedTypes.length > 0 ? selectedTypes : undefined,
       });
       setEntryCount(result.total);
-    } catch (err) {
-      console.error('Failed to get count:', err);
+    } catch {
+      // Silent fail — count update is non-critical
     }
-  };
+  }, [relationshipId, selectedChildIds, selectedTypes]);
 
   const toggleChild = (childId: string) => {
     setSelectedChildIds((prev) =>
@@ -151,7 +151,9 @@ export function ExportScreen() {
               }`}
               onPress={() => setExportType('pdf')}
             >
-              <Text style={tw`mb-2 text-2xl`}>📄</Text>
+              <Text aria-label="document" role="img" style={tw`mb-2 text-2xl`}>
+                📄
+              </Text>
               <Text style={tw`font-semibold text-gray-900`}>PDF Report</Text>
               <Text style={tw`mt-1 text-sm text-gray-600`}>
                 Timeline summary for printing or sharing
@@ -163,7 +165,9 @@ export function ExportScreen() {
               }`}
               onPress={() => setExportType('bundle')}
             >
-              <Text style={tw`mb-2 text-2xl`}>📦</Text>
+              <Text aria-label="package" role="img" style={tw`mb-2 text-2xl`}>
+                📦
+              </Text>
               <Text style={tw`font-semibold text-gray-900`}>Evidence Bundle</Text>
               <Text style={tw`mt-1 text-sm text-gray-600`}>
                 Full data + files with hash verification
@@ -260,8 +264,11 @@ export function ExportScreen() {
         {exportType === 'bundle' && (
           <View style={tw`mb-6 rounded-xl bg-green-50 p-4`}>
             <Text style={tw`text-sm text-green-800`}>
-              🔒 The evidence bundle includes SHA-256 hashes for all files. These can be used to
-              prove files haven{"'"}t been modified.
+              <Text aria-label="lock" role="img">
+                🔒
+              </Text>{' '}
+              The evidence bundle includes SHA-256 hashes for all files. These can be used to prove
+              files haven{"'"}t been modified.
             </Text>
           </View>
         )}

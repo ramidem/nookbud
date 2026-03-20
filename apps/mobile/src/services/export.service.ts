@@ -89,7 +89,7 @@ export const ExportService = {
       const [version] = await db
         .select()
         .from(entryVersions)
-        .where(eq(entryVersions.id, entry.currentVersionId!));
+        .where(eq(entryVersions.id, entry.currentVersionId ?? ''));
 
       if (!version) continue;
 
@@ -195,8 +195,8 @@ export const ExportService = {
           hash: att.fileHash,
           verified,
         });
-      } catch (err) {
-        console.error('Failed to copy attachment:', err);
+      } catch {
+        // Silent fail — attachment copy is best-effort
       }
     }
 

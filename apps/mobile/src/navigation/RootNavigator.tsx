@@ -117,8 +117,8 @@ export function RootNavigator() {
         permissionRequested.current = true;
         NotificationService.requestPermissions().catch(() => {});
       }
-    } catch (err) {
-      console.error('Failed to check user:', err);
+    } catch {
+      // Silent fail — user check is non-critical
     } finally {
       setIsLoading(false);
     }

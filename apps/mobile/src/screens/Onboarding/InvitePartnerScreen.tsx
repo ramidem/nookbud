@@ -68,8 +68,11 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
 
       <View style={tw`mb-8 rounded-xl bg-amber-50 p-4`}>
         <Text style={tw`text-sm text-amber-800`}>
-          💡 You can start using CoParent right away. Your co-parent can join anytime using this
-          code, and they{"'"}ll see all the records you{"'"}ve created.
+          <Text aria-label="light bulb" role="img">
+            💡
+          </Text>{' '}
+          You can start using CoParent right away. Your co-parent can join anytime using this code,
+          and they{"'"}ll see all the records you{"'"}ve created.
         </Text>
       </View>
 

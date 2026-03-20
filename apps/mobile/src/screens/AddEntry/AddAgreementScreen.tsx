@@ -96,7 +96,10 @@ export function AddAgreementScreen({ navigation }: Props) {
         {/* Info banner */}
         <View style={tw`mb-6 rounded-xl bg-amber-50 p-4`}>
           <Text style={tw`text-sm text-amber-800`}>
-            📝 Agreements become part of your permanent record. Both parents can see and acknowledge
+            <Text aria-label="memo" role="img">
+              📝
+            </Text>{' '}
+            Agreements become part of your permanent record. Both parents can see and acknowledge
             them.
           </Text>
         </View>

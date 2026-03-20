@@ -274,7 +274,7 @@ export const EntryService = {
     const [currentVersion] = await db
       .select()
       .from(entryVersions)
-      .where(eq(entryVersions.id, entry.currentVersionId!));
+      .where(eq(entryVersions.id, entry.currentVersionId ?? ''));
 
     if (!currentVersion) throw new Error('Current version not found');
 

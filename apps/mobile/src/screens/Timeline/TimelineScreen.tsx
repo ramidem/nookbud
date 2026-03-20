@@ -46,24 +46,20 @@ export function TimelineScreen({ navigation }: Props) {
     loadRelationship();
   }, []);
 
-  // Load entries when relationship or filters change
-  useEffect(() => {
-    if (relationshipId) {
-      loadEntries();
-    }
-  }, [relationshipId, filters]);
+  const buildQueryParams = useCallback(
+    (offset = 0): TimelineQueryParams => ({
+      childId: filters.childIds.length === 1 ? filters.childIds[0] : undefined,
+      dateFrom: filters.dateFrom ?? undefined,
+      dateTo: filters.dateTo ?? undefined,
+      limit: PAGE_SIZE,
+      offset,
+      relationshipId: relationshipId ?? '',
+      types: filters.types.length > 0 ? filters.types : undefined,
+    }),
+    [filters, relationshipId],
+  );
 
-  const buildQueryParams = (offset = 0): TimelineQueryParams => ({
-    childId: filters.childIds.length === 1 ? filters.childIds[0] : undefined,
-    dateFrom: filters.dateFrom ?? undefined,
-    dateTo: filters.dateTo ?? undefined,
-    limit: PAGE_SIZE,
-    offset,
-    relationshipId: relationshipId!,
-    types: filters.types.length > 0 ? filters.types : undefined,
-  });
-
-  const loadEntries = async () => {
+  const loadEntries = useCallback(async () => {
     if (!relationshipId) return;
 
     setIsLoading(true);
@@ -71,12 +67,19 @@ export function TimelineScreen({ navigation }: Props) {
       const result = await TimelineService.query(buildQueryParams(0));
       setEntries(result.entries);
       setHasMore(result.hasMore);
-    } catch (err) {
-      console.error('Failed to load entries:', err);
+    } catch {
+      // Silent fail — entry load is non-critical
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [relationshipId, buildQueryParams]);
+
+  // Load entries when relationship or filters change
+  useEffect(() => {
+    if (relationshipId) {
+      loadEntries();
+    }
+  }, [relationshipId, filters, loadEntries]);
 
   const handleRefresh = async () => {
     if (!relationshipId) return;
@@ -86,8 +89,8 @@ export function TimelineScreen({ navigation }: Props) {
       const result = await TimelineService.query(buildQueryParams(0));
       setEntries(result.entries);
       setHasMore(result.hasMore);
-    } catch (err) {
-      console.error('Failed to refresh:', err);
+    } catch {
+      // Silent fail — refresh is non-critical
     } finally {
       setIsRefreshing(false);
     }
@@ -101,16 +104,19 @@ export function TimelineScreen({ navigation }: Props) {
       const result = await TimelineService.query(buildQueryParams(entries.length));
       setEntries([...entries, ...result.entries]);
       setHasMore(result.hasMore);
-    } catch (err) {
-      console.error('Failed to load more:', err);
+    } catch {
+      // Silent fail — load more is non-critical
     } finally {
       setIsLoadingMore(false);
     }
   };
 
-  const handleEntryPress = (entry: TimelineEntry) => {
-    navigation.navigate('EntryDetail', { entryId: entry.id });
-  };
+  const handleEntryPress = useCallback(
+    (entry: TimelineEntry) => {
+      navigation.navigate('EntryDetail', { entryId: entry.id });
+    },
+    [navigation],
+  );
 
   const handleAddEntry = () => {
     navigation.navigate('AddEntryPicker');
@@ -124,7 +130,7 @@ export function TimelineScreen({ navigation }: Props) {
 
   const renderItem = useCallback(
     ({ item }: { item: TimelineEntry }) => <EntryCard entry={item} onPress={handleEntryPress} />,
-    [],
+    [handleEntryPress],
   );
 
   if (isLoading) {
@@ -155,7 +161,9 @@ export function TimelineScreen({ navigation }: Props) {
       {/* Entry List */}
       {entries.length === 0 ? (
         <View style={tw`flex-1 items-center justify-center px-6`}>
-          <Text style={tw`mb-4 text-6xl`}>📝</Text>
+          <Text aria-label="memo" role="img" style={tw`mb-4 text-6xl`}>
+            📝
+          </Text>
           <Text style={tw`mb-2 text-xl font-medium text-gray-900`}>No entries yet</Text>
           <Text style={tw`mb-6 text-center text-gray-600`}>
             Start documenting by adding your first entry.

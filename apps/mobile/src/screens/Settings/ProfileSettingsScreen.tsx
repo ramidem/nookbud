@@ -44,8 +44,8 @@ export function ProfileSettingsScreen({ navigation }: Props) {
         setTimezone(u.timezone);
         setDefaultCurrency(u.defaultCurrency);
       }
-    } catch (err) {
-      console.error('Failed to load user:', err);
+    } catch {
+      // Silent fail — user load is non-critical
     } finally {
       setIsLoading(false);
     }

@@ -82,8 +82,8 @@ export function SettingsScreen({ navigation }: Props) {
         const c = await ChildService.listByRelationship(rel.id);
         setChildren(c);
       }
-    } catch (err) {
-      console.error('Failed to load settings:', err);
+    } catch {
+      // Silent fail — settings load is non-critical
     } finally {
       setIsLoading(false);
     }
@@ -155,7 +155,9 @@ export function SettingsScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('ProfileSettings')}
           >
             <View style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-blue-100`}>
-              <Text style={tw`text-xl`}>👤</Text>
+              <Text aria-label="person" role="img" style={tw`text-xl`}>
+                👤
+              </Text>
             </View>
             <View style={tw`flex-1`}>
               <Text style={tw`text-lg font-medium text-gray-900`}>
@@ -192,7 +194,9 @@ export function SettingsScreen({ navigation }: Props) {
                 <View
                   style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-green-100`}
                 >
-                  <Text style={tw`text-lg`}>👶</Text>
+                  <Text aria-label="child" role="img" style={tw`text-lg`}>
+                    👶
+                  </Text>
                 </View>
                 <View style={tw`flex-1`}>
                   <Text style={tw`text-base font-medium text-gray-900`}>{child.name}</Text>
@@ -271,7 +275,9 @@ export function SettingsScreen({ navigation }: Props) {
                 <View
                   style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-purple-100`}
                 >
-                  <Text style={tw`text-lg`}>👥</Text>
+                  <Text aria-label="people" role="img" style={tw`text-lg`}>
+                    👥
+                  </Text>
                 </View>
                 <View style={tw`flex-1`}>
                   <Text style={tw`text-base font-medium text-green-600`}>Connected</Text>

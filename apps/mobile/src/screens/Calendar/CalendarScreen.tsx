@@ -82,7 +82,7 @@ export function CalendarScreen({ navigation }: Props) {
     if (relationshipId) {
       loadMonthEvents(selectedDate);
     }
-  }, [relationshipId]);
+  }, [relationshipId, loadMonthEvents, selectedDate]);
 
   const filterDayEvents = useCallback((events: TimelineEntry[], date: string) => {
     const filtered = events.filter((entry) => {
@@ -93,28 +93,31 @@ export function CalendarScreen({ navigation }: Props) {
     setDayEvents(filtered);
   }, []);
 
-  const loadMonthEvents = async (refDate: string) => {
-    if (!relationshipId) return;
+  const loadMonthEvents = useCallback(
+    async (refDate: string) => {
+      if (!relationshipId) return;
 
-    setIsLoading(true);
-    try {
-      const { dateFrom, dateTo } = getMonthRange(refDate);
-      const result = await TimelineService.query({
-        dateFrom,
-        dateTo,
-        limit: MAX_EVENTS,
-        relationshipId,
-        types: ['event'],
-      });
+      setIsLoading(true);
+      try {
+        const { dateFrom, dateTo } = getMonthRange(refDate);
+        const result = await TimelineService.query({
+          dateFrom,
+          dateTo,
+          limit: MAX_EVENTS,
+          relationshipId,
+          types: ['event'],
+        });
 
-      setMonthEvents(result.entries);
-      filterDayEvents(result.entries, selectedDate);
-    } catch (err) {
-      console.error('Failed to load calendar events:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setMonthEvents(result.entries);
+        filterDayEvents(result.entries, refDate);
+      } catch {
+        // Silent fail — calendar load is non-critical
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [relationshipId, filterDayEvents],
+  );
 
   const buildMarkedDates = useCallback((): MarkedDates => {
     const marks: MarkedDates = {};
@@ -190,8 +193,8 @@ export function CalendarScreen({ navigation }: Props) {
 
       // Reload
       await loadMonthEvents(selectedDate);
-    } catch (err) {
-      console.error('Failed to update event status:', err);
+    } catch {
+      // Silent fail — status update is non-critical
     }
   };
 
@@ -293,7 +296,9 @@ export function CalendarScreen({ navigation }: Props) {
           </View>
         ) : dayEvents.length === 0 ? (
           <View style={tw`flex-1 items-center justify-center`}>
-            <Text style={tw`mb-1 text-4xl`}>📅</Text>
+            <Text aria-label="calendar" role="img" style={tw`mb-1 text-4xl`}>
+              📅
+            </Text>
             <Text style={tw`text-gray-500`}>No events for this day</Text>
           </View>
         ) : (

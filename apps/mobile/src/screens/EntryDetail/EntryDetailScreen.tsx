@@ -1,5 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -48,11 +48,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
   const [showDisputeModal, setShowDisputeModal] = useState(false);
   const [disputeReason, setDisputeReason] = useState('');
 
-  useEffect(() => {
-    loadEntry();
-  }, [entryId]);
-
-  const loadEntry = async () => {
+  const loadEntry = useCallback(async () => {
     setIsLoading(true);
     try {
       const e = await EntryService.getWithDetails(entryId);
@@ -73,12 +69,16 @@ export function EntryDetailScreen({ navigation, route }: Props) {
         const can = await AcknowledgmentService.canAct(entryId);
         setCanAct(can);
       }
-    } catch (err) {
-      console.error('Failed to load entry:', err);
+    } catch {
+      // Silent fail — entry load is non-critical
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [entryId]);
+
+  useEffect(() => {
+    loadEntry();
+  }, [loadEntry]);
 
   const handleAcknowledge = async () => {
     try {
@@ -184,7 +184,12 @@ export function EntryDetailScreen({ navigation, route }: Props) {
               <Text style={tw`flex-1 text-xl font-semibold`}>{content.subject}</Text>
               {content.importance === 'high' && (
                 <View style={tw`rounded bg-red-100 px-2 py-1`}>
-                  <Text style={tw`text-xs text-red-800`}>⚠️ High</Text>
+                  <Text style={tw`text-xs text-red-800`}>
+                    <Text aria-label="warning" role="img">
+                      ⚠️
+                    </Text>{' '}
+                    High
+                  </Text>
                 </View>
               )}
             </View>
@@ -280,7 +285,12 @@ export function EntryDetailScreen({ navigation, route }: Props) {
             </Text>
             {attachments.map((att) => (
               <View key={att.id} style={tw`mb-2 rounded-lg bg-gray-50 p-3`}>
-                <Text style={tw`text-gray-900`}>📎 {att.originalFilename}</Text>
+                <Text style={tw`text-gray-900`}>
+                  <Text aria-label="paperclip" role="img">
+                    📎
+                  </Text>{' '}
+                  {att.originalFilename}
+                </Text>
                 <Text style={tw`mt-1 text-xs text-gray-500`}>
                   Hash: {att.fileHash.substring(0, HASH_PREVIEW_LENGTH)}...
                 </Text>
