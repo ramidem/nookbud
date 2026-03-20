@@ -1,0 +1,38 @@
+{
+  "presets": ["module:@react-native/babel-preset"],
+  "plugins": [
+    "babel-plugin-transform-flow-enums",
+    [
+      "module:react-native-dotenv",
+      {
+        "envName": "ENVFILE",
+        "moduleName": "@env",
+        "path": ".env"
+      }
+    ],
+    [
+      "module-resolver",
+      {
+        "root": ["."],
+        "extensions": [
+          ".ios.js",
+          ".android.js",
+          ".js",
+          ".ts",
+          ".tsx",
+          ".json",
+          ".png",
+          ".jpg",
+          ".jpeg",
+          ".gif",
+          ".svg",
+          ".webp"
+        ],
+        "alias": {
+          "@": "./src"
+        }
+      }
+    ],
+    "react-native-worklets/plugin"
+  ]
+}

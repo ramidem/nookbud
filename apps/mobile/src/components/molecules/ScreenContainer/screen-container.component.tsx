@@ -1,0 +1,97 @@
+import React, { ReactElement } from 'react';
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+  RefreshControlProps,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
+import { ScrollView as RNScrollView } from 'react-native-gesture-handler';
+import { Edge, SafeAreaProviderProps, SafeAreaView } from 'react-native-safe-area-context';
+
+import { KeyboardAwareScrollView } from '@/components';
+import { tw } from '@/tailwind';
+
+type Props = SafeAreaProviderProps & {
+  scrollViewRef?: React.RefObject<RNScrollView | null>;
+  containerStyle?: StyleProp<ViewStyle>;
+  excludedEdges?: Edge[];
+  extraBottomPadding?: number;
+  hasScroll?: boolean;
+  refreshControl?: ReactElement;
+  useSafeAreaView?: boolean;
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+};
+
+const defaultStyle = tw`grow`;
+
+const safeAreaViewEdges: Edge[] = Platform.select({
+  android: ['top', 'left', 'right', 'bottom'],
+  default: [],
+  ios: ['top', 'left', 'right', 'bottom'],
+});
+
+export function ScreenContainer(props: Props) {
+  const {
+    children,
+    containerStyle,
+    excludedEdges = [],
+    extraBottomPadding = 0,
+    hasScroll = true,
+    onScroll,
+    refreshControl,
+    scrollViewRef,
+    style,
+    useSafeAreaView = true,
+  } = props;
+
+  const defaultContainerStyle = [
+    defaultStyle,
+    containerStyle,
+    // eslint-disable-next-line no-magic-numbers
+    extraBottomPadding && tw`pb-[${extraBottomPadding + 50}px]`,
+  ];
+
+  if (!useSafeAreaView) {
+    return (
+      <View style={[tw`dark:bg-background flex-1 bg-white`, style]}>
+        {hasScroll ? (
+          <KeyboardAwareScrollView
+            containerStyle={defaultContainerStyle}
+            refreshControl={refreshControl as ReactElement<RefreshControlProps>}
+            scrollViewRef={scrollViewRef as React.RefObject<RNScrollView>}
+            onScroll={onScroll}
+          >
+            {children}
+          </KeyboardAwareScrollView>
+        ) : (
+          <View style={defaultContainerStyle}>{children}</View>
+        )}
+      </View>
+    );
+  }
+
+  const edges =
+    excludedEdges.length > 0
+      ? safeAreaViewEdges.filter((edge) => !excludedEdges.includes(edge))
+      : safeAreaViewEdges;
+
+  return (
+    <SafeAreaView edges={edges} style={[tw`dark:bg-background flex-1 bg-white`, style]}>
+      {hasScroll ? (
+        <KeyboardAwareScrollView
+          containerStyle={defaultContainerStyle}
+          refreshControl={refreshControl as ReactElement<RefreshControlProps>}
+          scrollViewRef={scrollViewRef as React.RefObject<RNScrollView>}
+          onScroll={onScroll}
+        >
+          {children}
+        </KeyboardAwareScrollView>
+      ) : (
+        <View style={defaultContainerStyle}>{children}</View>
+      )}
+    </SafeAreaView>
+  );
+}
