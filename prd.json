@@ -28,7 +28,7 @@
       "title": "Database schema — core tables",
       "description": "Define SQLite schema with Drizzle ORM: users, relationships, children, entries, entry_versions, attachments, acknowledgments, disputes, audit_logs. All tables support audit trail and immutability.",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Schema files under apps/mobile/src/database/schema/",
         "users: id, email, display_name, timezone, default_currency, created_at",
