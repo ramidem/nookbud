@@ -851,7 +851,7 @@
       "title": "Supabase sync \u2014 foundation",
       "description": "Set up Supabase client and auth. Implement the migration path from local-first to cloud-synced. Data stays local-first; sync is additive.",
       "priority": 35,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "@supabase/supabase-js installed",
         "Supabase client configured with env vars (EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY)",
