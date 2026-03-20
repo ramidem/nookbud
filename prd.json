@@ -1,0 +1,672 @@
+{
+  "name": "CoParent Phase 1 — Core Evidence System",
+  "branchName": "feature/phase-1-mvp",
+  "userStories": [
+    {
+      "id": "1",
+      "title": "Project setup and monorepo structure",
+      "description": "Initialize the React Native (Expo bare or Expo managed) project and NestJS backend. Configure TypeScript, ESLint, Prettier, and directory structure. Set up environment variable management.",
+      "priority": 1,
+      "passes": false,
+      "acceptanceCriteria": [
+        "React Native app runs on iOS simulator and Android emulator",
+        "NestJS backend starts with 'npm run start:dev'",
+        "TypeScript configured with strict mode in both app and backend",
+        "ESLint and Prettier pass with no errors",
+        "Environment variable templates (.env.example) exist for both app and backend",
+        "Basic README documents how to run both projects"
+      ],
+      "files": [
+        "apps/mobile/package.json",
+        "apps/mobile/tsconfig.json",
+        "apps/mobile/app.json",
+        "apps/backend/package.json",
+        "apps/backend/tsconfig.json",
+        "apps/backend/src/main.ts",
+        ".eslintrc.js",
+        ".prettierrc",
+        "README.md"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Database schema — core tables",
+      "description": "Create the PostgreSQL database schema with Drizzle ORM. Define all core tables: users, relationships, children, entries, entry_versions, attachments, acknowledgments, disputes, dispute_responses, audit_logs. Enforce immutability constraints at the schema level.",
+      "priority": 2,
+      "passes": false,
+      "acceptanceCriteria": [
+        "All tables defined in Drizzle schema files under src/database/schema/",
+        "users table: id (UUID), email, password_hash, display_name, timezone, default_currency, role (enum), created_at",
+        "relationships table: id, parent_a_id, parent_b_id (nullable), invite_token, invite_expires_at, created_at",
+        "children table: id, relationship_id, name, date_of_birth, created_at",
+        "entries table: id, relationship_id, child_id (nullable), type (enum: expense|event|agreement|communication|upload), created_by, created_at, status (enum: active|soft_deleted), current_version_id",
+        "entry_versions table: id, entry_id, version_number, content_json (JSONB), diff_json (nullable), created_by, created_at",
+        "attachments table: id, entry_version_id, original_filename, storage_path, file_hash (SHA-256 hex string), file_size_bytes, mime_type, uploaded_by, uploaded_at",
+        "acknowledgments table: id, entry_id, status (enum: pending|acknowledged|disputed), acted_by, created_at, comment (nullable)",
+        "disputes table: id, entry_id, raised_by, reason_text, created_at",
+        "dispute_responses table: id, dispute_id, responded_by, response_text, created_at",
+        "audit_logs table: id, user_id, action, entity_type, entity_id, metadata_json, created_at",
+        "All created_at and uploaded_at columns use DEFAULT NOW() and are set server-side only",
+        "Drizzle migrations generated and applied to local dev database",
+        "No TypeScript errors in schema files"
+      ],
+      "files": [
+        "apps/backend/src/database/schema/users.ts",
+        "apps/backend/src/database/schema/relationships.ts",
+        "apps/backend/src/database/schema/children.ts",
+        "apps/backend/src/database/schema/entries.ts",
+        "apps/backend/src/database/schema/entry-versions.ts",
+        "apps/backend/src/database/schema/attachments.ts",
+        "apps/backend/src/database/schema/acknowledgments.ts",
+        "apps/backend/src/database/schema/disputes.ts",
+        "apps/backend/src/database/schema/audit-logs.ts",
+        "apps/backend/src/database/schema/index.ts",
+        "apps/backend/drizzle.config.ts"
+      ],
+      "dependencies": ["1"]
+    },
+    {
+      "id": "3",
+      "title": "Authentication — registration and login",
+      "description": "Implement user registration (email + password), email verification, and login with JWT. Password must be hashed with Argon2id. Auth guards applied to all protected routes.",
+      "priority": 3,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/auth/register accepts email + password + display_name; creates user with password_hash (Argon2id); sends verification email",
+        "POST /v1/auth/verify-email accepts token from email; marks user as verified",
+        "POST /v1/auth/login accepts email + password; returns JWT access token and refresh token",
+        "POST /v1/auth/refresh accepts refresh token; returns new access token",
+        "POST /v1/auth/logout invalidates refresh token",
+        "Auth guard applied globally; @Public() decorator exempts public routes",
+        "Passwords never stored or returned in plaintext",
+        "Rate limiting applied to /register and /login (max 5 requests/min per IP)",
+        "All auth events logged to audit_logs",
+        "No TypeScript errors; unit tests for auth service pass"
+      ],
+      "files": [
+        "apps/backend/src/auth/auth.module.ts",
+        "apps/backend/src/auth/auth.service.ts",
+        "apps/backend/src/auth/auth.controller.ts",
+        "apps/backend/src/auth/strategies/jwt.strategy.ts",
+        "apps/backend/src/auth/guards/jwt-auth.guard.ts",
+        "apps/backend/src/auth/decorators/public.decorator.ts",
+        "apps/backend/src/auth/dto/register.dto.ts",
+        "apps/backend/src/auth/dto/login.dto.ts"
+      ],
+      "dependencies": ["2"]
+    },
+    {
+      "id": "4",
+      "title": "User profile and timezone/currency settings",
+      "description": "Implement user profile API: get and update display name, timezone (IANA string), and default currency (ISO 4217). Timezone and currency are used for display formatting but all timestamps are stored in UTC.",
+      "priority": 4,
+      "passes": false,
+      "acceptanceCriteria": [
+        "GET /v1/users/me returns current user profile (id, email, display_name, timezone, default_currency, role)",
+        "PATCH /v1/users/me accepts display_name, timezone, default_currency; validates IANA timezone string and ISO 4217 code",
+        "Timezone stored as IANA string (e.g., 'America/New_York', 'Europe/London', 'Asia/Manila')",
+        "Currency stored as ISO 4217 code (e.g., 'USD', 'GBP', 'PHP')",
+        "Profile updates logged to audit_logs",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/users/users.module.ts",
+        "apps/backend/src/users/users.service.ts",
+        "apps/backend/src/users/users.controller.ts",
+        "apps/backend/src/users/dto/update-profile.dto.ts"
+      ],
+      "dependencies": ["3"]
+    },
+    {
+      "id": "5",
+      "title": "Co-parent invitation and relationship setup",
+      "description": "Implement the invitation flow: Parent A invites Parent B via email. Parent B accepts (or declines) via a time-limited token link. Upon acceptance, a 'relationship' record is created linking both parents.",
+      "priority": 5,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/relationships/invite accepts co-parent email; creates relationship record with parent_a_id set, parent_b_id null; sends invitation email with secure token",
+        "Invitation token expires after 7 days",
+        "POST /v1/relationships/accept accepts token; creates or links existing user account as parent_b; sets parent_b_id on relationship",
+        "GET /v1/relationships/me returns current user's relationship (status, co-parent display name, children)",
+        "POST /v1/relationships/invite/resend re-sends invitation email with new token if original expired",
+        "Invitation token is cryptographically random (not guessable)",
+        "Email sent via configured email provider (SendGrid or Postmark)",
+        "All invitation and acceptance events logged to audit_logs",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/relationships/relationships.module.ts",
+        "apps/backend/src/relationships/relationships.service.ts",
+        "apps/backend/src/relationships/relationships.controller.ts",
+        "apps/backend/src/relationships/dto/invite.dto.ts",
+        "apps/backend/src/email/email.service.ts",
+        "apps/backend/src/email/templates/invitation.hbs"
+      ],
+      "dependencies": ["4"]
+    },
+    {
+      "id": "6",
+      "title": "Children management",
+      "description": "Implement CRUD for children within a relationship. Children are linked to a relationship_id and used to filter timeline entries. Only parents in the relationship can manage children.",
+      "priority": 6,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/children accepts name and date_of_birth; creates child linked to current user's relationship",
+        "GET /v1/children returns all children for the current relationship",
+        "PATCH /v1/children/:id accepts name and date_of_birth updates",
+        "DELETE /v1/children/:id soft-deletes (sets deleted_at); child remains in historical entry records",
+        "Only users in the same relationship can view/manage children",
+        "Child creation and updates logged to audit_logs",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/children/children.module.ts",
+        "apps/backend/src/children/children.service.ts",
+        "apps/backend/src/children/children.controller.ts",
+        "apps/backend/src/children/dto/create-child.dto.ts",
+        "apps/backend/src/children/dto/update-child.dto.ts"
+      ],
+      "dependencies": ["5"]
+    },
+    {
+      "id": "7",
+      "title": "File upload service with SHA-256 hashing",
+      "description": "Implement file upload to S3-compatible storage. Every file is SHA-256 hashed during upload streaming. Hash is stored in the attachments table alongside file metadata. Files are stored encrypted at rest.",
+      "priority": 7,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/uploads accepts multipart/form-data with a file; uploads to configured S3 bucket",
+        "SHA-256 hash computed during upload streaming (not from stored file); stored in attachments.file_hash",
+        "file_size_bytes, mime_type, original_filename, storage_path, uploaded_at stored on attachment record",
+        "Supported MIME types: image/jpeg, image/png, image/gif, application/pdf, video/mp4, video/quicktime",
+        "File size limit enforced: 50MB per file (configurable via env var)",
+        "Signed URLs returned for file access (time-limited: 15 minutes default)",
+        "Files stored in path format: uploads/{relationship_id}/{date}/{uuid}.{ext}",
+        "Upload events logged to audit_logs",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/uploads/uploads.module.ts",
+        "apps/backend/src/uploads/uploads.service.ts",
+        "apps/backend/src/uploads/uploads.controller.ts",
+        "apps/backend/src/uploads/storage/s3.service.ts",
+        "apps/backend/src/uploads/hash.util.ts"
+      ],
+      "dependencies": ["6"]
+    },
+    {
+      "id": "8",
+      "title": "Entry creation — expense type",
+      "description": "Implement the expense entry type. Expense entries capture: amount (integer in minor currency units), currency_code (ISO 4217), category, date, notes (optional), child_id (optional), and optional receipt file attachment. Every expense entry creates an entry_versions row as v1.",
+      "priority": 8,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/entries/expense accepts: amount_minor_units (integer), currency_code, category, date, notes (optional), child_id (optional), attachment_id (optional from prior upload)",
+        "Creates entry record with type='expense', created_by, created_at (server-set)",
+        "Creates entry_versions record as version_number=1 with content_json containing all expense fields",
+        "If attachment_id provided, links attachment to entry_version_id",
+        "Entry status set to 'active'; acknowledgment status set to 'pending'",
+        "Creates acknowledgment record with status='pending'",
+        "Event logged to audit_logs",
+        "GET /v1/entries/:id returns entry with current version content and acknowledgment status",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/entries/entries.module.ts",
+        "apps/backend/src/entries/entries.service.ts",
+        "apps/backend/src/entries/entries.controller.ts",
+        "apps/backend/src/entries/types/expense.type.ts",
+        "apps/backend/src/entries/dto/create-expense.dto.ts"
+      ],
+      "dependencies": ["7"]
+    },
+    {
+      "id": "9",
+      "title": "Entry creation — event, agreement, communication, upload types",
+      "description": "Implement the remaining 4 entry types using the same versioned entry architecture as expense. Each type has its own content_json schema.",
+      "priority": 9,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/entries/event accepts: event_type (pickup|dropoff|activity|medical|school|other), assigned_parent_id, datetime, child_id, notes, attachment_id (optional); creates entry + v1 version + pending acknowledgment",
+        "POST /v1/entries/agreement accepts: description, effective_date, child_ids (array), notes; creates entry + v1 version; acknowledgment required from both parents before status='acknowledged'",
+        "POST /v1/entries/communication accepts: subject, body, child_id (optional), attachment_id (optional); creates entry + v1 version + pending acknowledgment",
+        "POST /v1/entries/upload accepts: attachment_id, description, child_id (optional); creates entry + v1 version + pending acknowledgment",
+        "All entry types use same entry + entry_versions + acknowledgments pattern",
+        "All entry creates logged to audit_logs",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/entries/types/event.type.ts",
+        "apps/backend/src/entries/types/agreement.type.ts",
+        "apps/backend/src/entries/types/communication.type.ts",
+        "apps/backend/src/entries/types/upload.type.ts",
+        "apps/backend/src/entries/dto/create-event.dto.ts",
+        "apps/backend/src/entries/dto/create-agreement.dto.ts",
+        "apps/backend/src/entries/dto/create-communication.dto.ts",
+        "apps/backend/src/entries/dto/create-upload.dto.ts"
+      ],
+      "dependencies": ["8"]
+    },
+    {
+      "id": "10",
+      "title": "Entry versioning — amend an entry",
+      "description": "Implement the amend flow: a parent can amend an existing entry, which creates a new entry_versions row (not overwrite). The diff between versions is stored as diff_json. The original v1 is never modified.",
+      "priority": 10,
+      "passes": false,
+      "acceptanceCriteria": [
+        "PATCH /v1/entries/:id accepts updated content fields for the entry's type",
+        "Creates new entry_versions row: version_number = max(current) + 1, diff_json captures changed fields (old value → new value), created_by = requesting user, created_at = server-set",
+        "Updates entries.current_version_id to new version",
+        "Acknowledgment status reset to 'pending' on amendment",
+        "Amendment logged to audit_logs with diff summary",
+        "GET /v1/entries/:id/versions returns full version history in descending order (newest first)",
+        "Each version in history includes: version_number, created_by, created_at, diff_json",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/entries/entries.service.ts",
+        "apps/backend/src/entries/versioning.util.ts",
+        "apps/backend/src/entries/dto/amend-entry.dto.ts"
+      ],
+      "dependencies": ["9"]
+    },
+    {
+      "id": "11",
+      "title": "Acknowledgment system",
+      "description": "Implement the acknowledgment workflow: the co-parent can acknowledge or dispute any entry. Agreement entries require both parents to acknowledge before status moves to 'acknowledged'. All acknowledgment actions are immutable records.",
+      "priority": 11,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/entries/:id/acknowledge creates acknowledgment record with status='acknowledged', acted_by, created_at (server-set), optional comment",
+        "POST /v1/entries/:id/dispute creates acknowledgment record with status='disputed', plus creates disputes record with reason_text",
+        "Acknowledgment action can only be taken by the co-parent (not the entry creator)",
+        "For agreement entries: entry status remains 'pending' until both parents have acknowledged",
+        "Acknowledgment and dispute events logged to audit_logs",
+        "GET /v1/entries/:id returns current acknowledgment status and timestamp",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/acknowledgments/acknowledgments.module.ts",
+        "apps/backend/src/acknowledgments/acknowledgments.service.ts",
+        "apps/backend/src/acknowledgments/acknowledgments.controller.ts",
+        "apps/backend/src/acknowledgments/dto/acknowledge.dto.ts",
+        "apps/backend/src/acknowledgments/dto/dispute.dto.ts"
+      ],
+      "dependencies": ["10"]
+    },
+    {
+      "id": "12",
+      "title": "Dispute response layer",
+      "description": "Implement the dispute response flow: the entry creator can respond to a dispute with a written response and optional counter-evidence file. The full dispute thread (reason + response) is stored and included in exports.",
+      "priority": 12,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/disputes/:id/respond accepts response_text and optional attachment_id; creates dispute_responses record",
+        "Only the entry creator can respond to their own entry's dispute",
+        "Counter-evidence attachment is hashed and stored the same as any other attachment",
+        "Dispute thread retrievable via GET /v1/entries/:id which includes nested disputes and responses",
+        "Dispute response logged to audit_logs",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/disputes/disputes.module.ts",
+        "apps/backend/src/disputes/disputes.service.ts",
+        "apps/backend/src/disputes/disputes.controller.ts",
+        "apps/backend/src/disputes/dto/respond-dispute.dto.ts"
+      ],
+      "dependencies": ["11"]
+    },
+    {
+      "id": "13",
+      "title": "Timeline feed API",
+      "description": "Implement the timeline feed endpoint: paginated, cursor-based, chronological list of entries for the current relationship. Supports filtering by date range, child, entry type, and acknowledgment status.",
+      "priority": 13,
+      "passes": false,
+      "acceptanceCriteria": [
+        "GET /v1/timeline returns paginated list of entries (cursor-based pagination, default page size 20)",
+        "Each entry in response includes: id, type, created_by, created_at, current_version content summary, acknowledgment status, child name (if linked), attachment count",
+        "Query params: cursor (for pagination), child_id, type (multi-select), status (pending|acknowledged|disputed), from_date, to_date",
+        "Results ordered by created_at descending (newest first) by default",
+        "Response includes next_cursor for pagination",
+        "Only returns entries for the current user's relationship",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/timeline/timeline.module.ts",
+        "apps/backend/src/timeline/timeline.service.ts",
+        "apps/backend/src/timeline/timeline.controller.ts",
+        "apps/backend/src/timeline/dto/timeline-query.dto.ts"
+      ],
+      "dependencies": ["12"]
+    },
+    {
+      "id": "14",
+      "title": "Push notifications — acknowledgment and entry alerts",
+      "description": "Implement push notification delivery via Firebase Cloud Messaging (FCM) for Android and Apple Push Notification Service (APNs) for iOS. Notifications sent on: new entry by co-parent, acknowledgment received, dispute raised.",
+      "priority": 14,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Mobile app registers device push token on login and stores it server-side",
+        "POST /v1/notifications/device-token accepts push token and platform (ios|android)",
+        "Notification sent within 60 seconds when co-parent creates a new entry",
+        "Notification sent within 60 seconds when an entry is acknowledged or disputed",
+        "Notification payload includes: entry type, entry date, action (new|acknowledged|disputed)",
+        "Tapping notification deep-links to the relevant entry in the app",
+        "Notification delivery failures do not break the entry creation flow (async, non-blocking)",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/notifications/notifications.module.ts",
+        "apps/backend/src/notifications/notifications.service.ts",
+        "apps/backend/src/notifications/fcm.service.ts",
+        "apps/mobile/src/services/notifications.service.ts"
+      ],
+      "dependencies": ["13"]
+    },
+    {
+      "id": "15",
+      "title": "Mobile app — auth screens (login, register, verify email)",
+      "description": "Build the authentication screens in React Native: registration form, login form, and email verification screen. Uses the auth API from story #3.",
+      "priority": 15,
+      "passes": false,
+      "acceptanceCriteria": [
+        "RegisterScreen: email, password, display name fields; submit calls POST /v1/auth/register; shows success message to check email",
+        "LoginScreen: email + password fields; submit calls POST /v1/auth/login; stores JWT in secure storage (expo-secure-store or equivalent)",
+        "VerifyEmailScreen: displayed after registration; shows instructions; 'Resend email' button",
+        "Auth state managed in global store (Zustand or context); redirects to main app on valid JWT",
+        "Loading states and error messages displayed for all API call states",
+        "Screens pass TypeScript type checks",
+        "Screens render correctly on iOS and Android"
+      ],
+      "files": [
+        "apps/mobile/src/screens/auth/RegisterScreen.tsx",
+        "apps/mobile/src/screens/auth/LoginScreen.tsx",
+        "apps/mobile/src/screens/auth/VerifyEmailScreen.tsx",
+        "apps/mobile/src/stores/auth.store.ts",
+        "apps/mobile/src/services/auth.service.ts"
+      ],
+      "dependencies": ["14"]
+    },
+    {
+      "id": "16",
+      "title": "Mobile app — onboarding (invite co-parent, add children)",
+      "description": "Build the onboarding flow for new users: invite co-parent by email, add first child. New users who haven't completed onboarding are shown this flow before the timeline.",
+      "priority": 16,
+      "passes": false,
+      "acceptanceCriteria": [
+        "InviteCoParentScreen: email input; submit calls POST /v1/relationships/invite; shows confirmation",
+        "AddChildScreen: name and date of birth fields; submit calls POST /v1/children; allows adding multiple children",
+        "Skip option available for both screens (user can complete later from settings)",
+        "Onboarding completion state tracked in user profile or local store",
+        "Users who receive an invitation see a 'Accept Invitation' flow after registration",
+        "Screens render correctly on iOS and Android",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/mobile/src/screens/onboarding/InviteCoParentScreen.tsx",
+        "apps/mobile/src/screens/onboarding/AddChildScreen.tsx",
+        "apps/mobile/src/screens/onboarding/AcceptInvitationScreen.tsx",
+        "apps/mobile/src/navigation/OnboardingNavigator.tsx"
+      ],
+      "dependencies": ["15"]
+    },
+    {
+      "id": "17",
+      "title": "Mobile app — timeline feed screen",
+      "description": "Build the main Timeline screen in React Native. Displays the scrollable, paginated list of entries from GET /v1/timeline. Shows entry type, date, author, acknowledgment status badge, and child name.",
+      "priority": 17,
+      "passes": false,
+      "acceptanceCriteria": [
+        "TimelineScreen renders list of entries from GET /v1/timeline",
+        "Each entry row shows: entry type icon, date, author name, child name (if applicable), acknowledgment status badge (pending/acknowledged/disputed)",
+        "Infinite scroll: loads next page via cursor on scroll to bottom",
+        "Pull-to-refresh reloads timeline from beginning",
+        "Filter bar: filter by entry type (all/expense/event/agreement/communication/upload) and status (all/pending/disputed)",
+        "Empty state displayed when no entries",
+        "Tapping an entry navigates to EntryDetailScreen",
+        "Floating action button (FAB) opens entry type picker for creating a new entry",
+        "Neutral color scheme; no aggressive status colors",
+        "No TypeScript errors; renders on iOS and Android"
+      ],
+      "files": [
+        "apps/mobile/src/screens/timeline/TimelineScreen.tsx",
+        "apps/mobile/src/screens/timeline/EntryRow.tsx",
+        "apps/mobile/src/screens/timeline/StatusBadge.tsx",
+        "apps/mobile/src/screens/timeline/FilterBar.tsx",
+        "apps/mobile/src/services/timeline.service.ts"
+      ],
+      "dependencies": ["16"]
+    },
+    {
+      "id": "18",
+      "title": "Mobile app — entry detail screen",
+      "description": "Build the EntryDetailScreen showing full entry content, version history, acknowledgment status, and the dispute thread. Actions: acknowledge, dispute, amend (if owner), view attachments.",
+      "priority": 18,
+      "passes": false,
+      "acceptanceCriteria": [
+        "EntryDetailScreen shows: entry type, full content (all fields), created_by, server-side created_at (formatted for user's timezone), child name, acknowledgment status",
+        "Acknowledgment section: if status=pending and current user is co-parent, show 'Acknowledge' and 'Dispute' buttons",
+        "Dispute section: if status=disputed, shows dispute reason; entry creator sees 'Add Response' button",
+        "Version history section: collapsible list of all versions (version number, created_at, who changed it, diff summary)",
+        "Attachments section: thumbnail/icon list of attached files; tap to view full file",
+        "Amend button visible only to entry creator; opens AmendEntrySheet",
+        "All timestamps displayed in user's configured timezone",
+        "No TypeScript errors; renders on iOS and Android"
+      ],
+      "files": [
+        "apps/mobile/src/screens/entries/EntryDetailScreen.tsx",
+        "apps/mobile/src/screens/entries/VersionHistorySection.tsx",
+        "apps/mobile/src/screens/entries/AcknowledgmentSection.tsx",
+        "apps/mobile/src/screens/entries/DisputeSection.tsx",
+        "apps/mobile/src/screens/entries/AttachmentsSection.tsx"
+      ],
+      "dependencies": ["17"]
+    },
+    {
+      "id": "19",
+      "title": "Mobile app — create entry screens (all 5 types)",
+      "description": "Build the entry creation flows for all 5 entry types: expense, event, agreement, communication, upload. Each opens as a modal or bottom sheet from the timeline FAB. File picker integrated for receipt and attachment fields.",
+      "priority": 19,
+      "passes": false,
+      "acceptanceCriteria": [
+        "FAB on timeline opens entry type picker (bottom sheet): Expense, Event, Agreement, Communication, Upload",
+        "CreateExpenseSheet: amount field (numeric keypad), currency picker (defaults to user's preference), category picker, date picker, notes (optional), receipt photo button (camera or gallery)",
+        "CreateEventSheet: event type picker, assigned parent picker, date+time picker, child picker, notes (optional), attachment button",
+        "CreateAgreementSheet: description text area, effective date picker, child multi-select, notes (optional)",
+        "CreateCommunicationSheet: subject field, body text area, child picker (optional), attachment button",
+        "CreateUploadSheet: file picker (camera/gallery/file browser), description, child picker (optional)",
+        "File uploads trigger upload service (story #7) before entry submission; shows upload progress",
+        "All forms validate required fields before submission; inline error messages",
+        "Submission calls appropriate entry API endpoint; closes sheet on success; timeline refreshes",
+        "No TypeScript errors; works on iOS and Android"
+      ],
+      "files": [
+        "apps/mobile/src/screens/entries/create/CreateExpenseSheet.tsx",
+        "apps/mobile/src/screens/entries/create/CreateEventSheet.tsx",
+        "apps/mobile/src/screens/entries/create/CreateAgreementSheet.tsx",
+        "apps/mobile/src/screens/entries/create/CreateCommunicationSheet.tsx",
+        "apps/mobile/src/screens/entries/create/CreateUploadSheet.tsx",
+        "apps/mobile/src/screens/entries/create/EntryTypePicker.tsx",
+        "apps/mobile/src/services/entries.service.ts"
+      ],
+      "dependencies": ["18"]
+    },
+    {
+      "id": "20",
+      "title": "Court-ready PDF export generation",
+      "description": "Implement the Timeline Report PDF export on the backend. Filterable by date range, child, and entry type. PDF is structured with labeled sections, chronological entries, inline attachment references, and a cover page with case metadata.",
+      "priority": 20,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/exports/pdf accepts filters: from_date, to_date, child_ids (array), entry_types (array)",
+        "PDF includes cover page: relationship metadata, export generated_at (UTC + user timezone), filter summary, total entry count",
+        "PDF sections in order: Summary, Expenses, Events, Agreements, Communications, Uploads, Disputes, Version History",
+        "Each entry row in PDF includes: entry ID, type, date (formatted), author, child (if applicable), status, acknowledgment timestamp (if applicable)",
+        "Dispute entries include: dispute reason, response (if any), timestamps",
+        "Attachments listed per entry with original filename and SHA-256 hash",
+        "PDF generated within 60 seconds for ≤500 entries",
+        "PDF returned as downloadable file (Content-Disposition: attachment)",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/exports/exports.module.ts",
+        "apps/backend/src/exports/exports.service.ts",
+        "apps/backend/src/exports/exports.controller.ts",
+        "apps/backend/src/exports/pdf/pdf-generator.service.ts",
+        "apps/backend/src/exports/pdf/templates/timeline-report.tsx",
+        "apps/backend/src/exports/dto/export-filter.dto.ts"
+      ],
+      "dependencies": ["13"]
+    },
+    {
+      "id": "21",
+      "title": "Evidence bundle ZIP export (PDF + JSON + attachments + hash manifest)",
+      "description": "Implement the Evidence Bundle export: a ZIP file containing the PDF report, machine-readable JSON data, all relevant attachments, and a SHA-256 hash manifest file. This is the court-ready deliverable for lawyers.",
+      "priority": 21,
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /v1/exports/bundle accepts same filters as PDF export",
+        "ZIP contains: timeline-report.pdf, data.json, /attachments/ directory with all files, hash-manifest.txt",
+        "data.json is structured JSON with full entry data (all fields, all versions, all acknowledgments, all disputes) per the documented schema",
+        "hash-manifest.txt lists every file in /attachments/ with: original_filename, sha256_hash, upload_timestamp, entry_id",
+        "hash-manifest.txt includes plain-text verification instructions (how to run sha256sum to verify)",
+        "Attachment files in ZIP use original_filename (sanitized); collisions resolved with entry_id prefix",
+        "ZIP generated within 90 seconds for ≤500 entries",
+        "ZIP returned as downloadable file (Content-Disposition: attachment; filename=coparent-evidence-YYYYMMDD.zip)",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/exports/bundle/bundle-generator.service.ts",
+        "apps/backend/src/exports/bundle/hash-manifest.service.ts",
+        "apps/backend/src/exports/bundle/json-exporter.service.ts"
+      ],
+      "dependencies": ["20"]
+    },
+    {
+      "id": "22",
+      "title": "Mobile app — export screen",
+      "description": "Build the Export screen in the mobile app. User configures filters (date range, children, entry types), triggers PDF or Evidence Bundle export, and downloads the result.",
+      "priority": 22,
+      "passes": false,
+      "acceptanceCriteria": [
+        "ExportScreen accessible from main navigation (tab or settings menu)",
+        "Date range picker: from_date and to_date",
+        "Child filter: multi-select from children in the relationship",
+        "Entry type filter: multi-select (all selected by default)",
+        "Two export buttons: 'Download PDF Report' and 'Download Evidence Bundle'",
+        "Loading state shown during export generation",
+        "On success: file saved to device or share sheet opened (platform-appropriate)",
+        "On error: clear error message displayed",
+        "No TypeScript errors; works on iOS and Android"
+      ],
+      "files": [
+        "apps/mobile/src/screens/export/ExportScreen.tsx",
+        "apps/mobile/src/screens/export/ExportFilterForm.tsx",
+        "apps/mobile/src/services/export.service.ts"
+      ],
+      "dependencies": ["21"]
+    },
+    {
+      "id": "23",
+      "title": "Role-based access control and viewer role architecture",
+      "description": "Implement the full role model: parent_a, parent_b, viewer. Viewer role is read-only and cannot create, edit, or acknowledge entries. Viewer access is grantable and revocable by either parent. All role assignments are logged.",
+      "priority": 23,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Role enum in database: parent_a | parent_b | viewer",
+        "All entry creation, amendment, and acknowledgment endpoints reject viewer role with 403",
+        "POST /v1/relationships/viewers/invite accepts email; creates time-limited viewer access token (expires 30 days by default)",
+        "GET /v1/relationships/viewers returns list of current viewers (email, granted_at, expires_at)",
+        "DELETE /v1/relationships/viewers/:viewer_id revokes viewer access",
+        "Viewer can access GET /v1/timeline, GET /v1/entries/:id, GET /v1/children",
+        "Viewer cannot POST, PATCH, or DELETE any resource",
+        "All viewer grant/revoke events logged to audit_logs",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/backend/src/auth/guards/roles.guard.ts",
+        "apps/backend/src/auth/decorators/roles.decorator.ts",
+        "apps/backend/src/relationships/viewers.service.ts",
+        "apps/backend/src/relationships/viewers.controller.ts"
+      ],
+      "dependencies": ["6"]
+    },
+    {
+      "id": "24",
+      "title": "i18n framework setup and locale support",
+      "description": "Set up i18next (or equivalent) in the React Native app. Externalize all user-facing strings. Implement timezone-aware date/time display and locale-aware number/currency formatting. Phase 1 ships English only but architecture must support adding locales.",
+      "priority": 24,
+      "passes": false,
+      "acceptanceCriteria": [
+        "i18next (or react-i18next) installed and configured in React Native app",
+        "All user-facing strings in the app use t('key') translation calls; no hardcoded English strings",
+        "English translations in src/locales/en.json",
+        "All dates and times displayed using user's profile timezone (fetched from server)",
+        "All timestamps from server are UTC ISO 8601; converted to local timezone for display",
+        "Currency amounts formatted using Intl.NumberFormat with appropriate locale and currency code",
+        "Adding a new locale requires only a new JSON file in src/locales/ — no code changes",
+        "No TypeScript errors"
+      ],
+      "files": [
+        "apps/mobile/src/locales/en.json",
+        "apps/mobile/src/i18n/i18n.config.ts",
+        "apps/mobile/src/utils/date.util.ts",
+        "apps/mobile/src/utils/currency.util.ts"
+      ],
+      "dependencies": ["16"]
+    },
+    {
+      "id": "25",
+      "title": "Audit log completeness and security hardening",
+      "description": "Ensure the audit_log table captures all significant system events. Add rate limiting to all sensitive endpoints. Verify no hard-delete paths exist. Run a security checklist against the auth and file storage implementations.",
+      "priority": 25,
+      "passes": false,
+      "acceptanceCriteria": [
+        "audit_logs entries exist for: user registration, login, profile update, relationship invite, child create/update/delete, entry create/amend, acknowledgment, dispute, dispute response, file upload, export generation, viewer grant/revoke",
+        "No DELETE SQL queries that hard-delete any entry, entry_version, attachment, or audit_log record",
+        "Rate limiting applied: POST /v1/auth/register and /v1/auth/login (5 req/min per IP), POST /v1/uploads (10 req/min per user), POST /v1/exports/* (3 req/min per user)",
+        "All API inputs validated with class-validator DTOs; no raw request body access",
+        "Signed URL expiry enforced at storage provider level (not just app level)",
+        "JWT secret loaded from environment variable; not hardcoded",
+        "No secrets in version control; .gitignore covers all .env files",
+        "Security checklist documented and signed off in SECURITY.md"
+      ],
+      "files": [
+        "apps/backend/src/audit/audit.service.ts",
+        "apps/backend/src/common/interceptors/audit.interceptor.ts",
+        "apps/backend/src/common/guards/rate-limit.guard.ts",
+        "SECURITY.md"
+      ],
+      "dependencies": ["22", "23", "24"]
+    },
+    {
+      "id": "26",
+      "title": "End-to-end testing and pre-launch QA",
+      "description": "Run end-to-end tests covering the core user journeys: registration → invite co-parent → add child → log expense → acknowledge → dispute → export PDF → export bundle. Verify hash manifest integrity. Fix all critical bugs.",
+      "priority": 26,
+      "passes": false,
+      "acceptanceCriteria": [
+        "E2E test: User A registers, invites User B, User B accepts; both users can see the same timeline",
+        "E2E test: User A logs an expense with a receipt; User B receives notification; User B acknowledges; both users see status='acknowledged'",
+        "E2E test: User A logs an event; User B disputes it; User A adds a counter-response; dispute thread is complete in both users' views",
+        "E2E test: User A generates PDF export; PDF contains all logged entries with correct content, timestamps, and hash references",
+        "E2E test: User A generates evidence bundle ZIP; hash manifest verifies correctly against extracted attachments using sha256sum",
+        "Version history test: User A logs expense, amends it twice; version history shows 3 versions with correct diffs",
+        "Security test: User A cannot access User C's (different relationship) entries; returns 403",
+        "Viewer test: Viewer can see timeline but cannot create or acknowledge entries",
+        "All tests pass on iOS simulator and Android emulator",
+        "No P0 or P1 bugs open at launch"
+      ],
+      "files": [
+        "apps/mobile/e2e/registration.e2e.ts",
+        "apps/mobile/e2e/timeline.e2e.ts",
+        "apps/mobile/e2e/acknowledgment.e2e.ts",
+        "apps/mobile/e2e/export.e2e.ts",
+        "apps/backend/test/e2e/auth.e2e-spec.ts",
+        "apps/backend/test/e2e/entries.e2e-spec.ts",
+        "apps/backend/test/e2e/exports.e2e-spec.ts"
+      ],
+      "dependencies": ["25"]
+    }
+  ]
+}
