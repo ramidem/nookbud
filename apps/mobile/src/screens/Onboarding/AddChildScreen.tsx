@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import {
   View,
@@ -9,10 +10,10 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+
 import { useTw } from '@/hooks/useTw';
-import { RelationshipService, ChildService } from '@/services';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
+import { RelationshipService, ChildService } from '@/services';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'AddChild'>;
 
@@ -24,23 +25,16 @@ type ChildInput = {
 
 export function AddChildScreen({ navigation }: Props) {
   const tw = useTw();
-  const [children, setChildren] = useState<ChildInput[]>([
-    { id: '1', name: '', dateOfBirth: '' },
-  ]);
+  const [children, setChildren] = useState<ChildInput[]>([{ dateOfBirth: '', id: '1', name: '' }]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const addChild = () => {
-    setChildren([
-      ...children,
-      { id: String(Date.now()), name: '', dateOfBirth: '' },
-    ]);
+    setChildren([...children, { dateOfBirth: '', id: String(Date.now()), name: '' }]);
   };
 
   const updateChild = (id: string, field: 'name' | 'dateOfBirth', value: string) => {
-    setChildren(
-      children.map((c) => (c.id === id ? { ...c, [field]: value } : c))
-    );
+    setChildren(children.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
   };
 
   const removeChild = (id: string) => {
@@ -65,18 +59,16 @@ export function AddChildScreen({ navigation }: Props) {
       // Add each valid child
       for (const child of validChildren) {
         await ChildService.create({
-          relationshipId: relationship.id,
+          dateOfBirth: child.dateOfBirth ? new Date(child.dateOfBirth) : undefined,
           name: child.name.trim(),
-          dateOfBirth: child.dateOfBirth
-            ? new Date(child.dateOfBirth)
-            : undefined,
+          relationshipId: relationship.id,
         });
       }
 
       // Navigate to invite partner
       navigation.navigate('InvitePartner', {
-        relationshipId: relationship.id,
         inviteToken: relationship.inviteToken ?? '',
+        relationshipId: relationship.id,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add children');
@@ -87,76 +79,68 @@ export function AddChildScreen({ navigation }: Props) {
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1 bg-white`}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={tw`flex-1 bg-white`}
     >
-      <ScrollView contentContainerStyle={tw`px-6 pt-16 pb-8`}>
-        <Text style={tw`text-3xl font-bold text-gray-900 mb-2`}>
-          Add your children
-        </Text>
-        <Text style={tw`text-base text-gray-600 mb-8`}>
-          You can add more later in settings.
-        </Text>
+      <ScrollView contentContainerStyle={tw`px-6 pb-8 pt-16`}>
+        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Add your children</Text>
+        <Text style={tw`mb-8 text-base text-gray-600`}>You can add more later in settings.</Text>
 
         {children.map((child, index) => (
-          <View key={child.id} style={tw`mb-6 bg-gray-50 rounded-xl p-4`}>
-            <View style={tw`flex-row justify-between items-center mb-4`}>
-              <Text style={tw`text-sm font-medium text-gray-600`}>
-                Child {index + 1}
-              </Text>
+          <View key={child.id} style={tw`mb-6 rounded-xl bg-gray-50 p-4`}>
+            <View style={tw`mb-4 flex-row items-center justify-between`}>
+              <Text style={tw`text-sm font-medium text-gray-600`}>Child {index + 1}</Text>
               {children.length > 1 && (
                 <Pressable onPress={() => removeChild(child.id)}>
-                  <Text style={tw`text-red-500 text-sm`}>Remove</Text>
+                  <Text style={tw`text-sm text-red-500`}>Remove</Text>
                 </Pressable>
               )}
             </View>
 
             <TextInput
-              style={tw`border border-gray-300 rounded-lg px-4 py-3 text-base bg-white mb-3`}
+              autoCapitalize="words"
               placeholder="Child's name"
               placeholderTextColor="#9CA3AF"
+              style={tw`mb-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-base`}
               value={child.name}
               onChangeText={(value) => updateChild(child.id, 'name', value)}
-              autoCapitalize="words"
             />
 
             <TextInput
-              style={tw`border border-gray-300 rounded-lg px-4 py-3 text-base bg-white`}
+              keyboardType="numbers-and-punctuation"
               placeholder="Date of birth (YYYY-MM-DD)"
               placeholderTextColor="#9CA3AF"
+              style={tw`rounded-lg border border-gray-300 bg-white px-4 py-3 text-base`}
               value={child.dateOfBirth}
               onChangeText={(value) => updateChild(child.id, 'dateOfBirth', value)}
-              keyboardType="numbers-and-punctuation"
             />
           </View>
         ))}
 
         <Pressable
-          style={tw`border-2 border-dashed border-gray-300 rounded-xl py-4 mb-8`}
+          style={tw`mb-8 rounded-xl border-2 border-dashed border-gray-300 py-4`}
           onPress={addChild}
         >
-          <Text style={tw`text-blue-600 text-center text-base font-medium`}>
+          <Text style={tw`text-center text-base font-medium text-blue-600`}>
             + Add another child
           </Text>
         </Pressable>
 
         {error && (
-          <View style={tw`bg-red-50 rounded-xl p-4 mb-4`}>
+          <View style={tw`mb-4 rounded-xl bg-red-50 p-4`}>
             <Text style={tw`text-red-600`}>{error}</Text>
           </View>
         )}
 
         <Pressable
-          style={tw`${canContinue && !isLoading ? 'bg-blue-600' : 'bg-gray-300'} rounded-xl py-4 flex-row justify-center`}
-          onPress={handleContinue}
           disabled={!canContinue || isLoading}
+          style={tw`${canContinue && !isLoading ? 'bg-blue-600' : 'bg-gray-300'} flex-row justify-center rounded-xl py-4`}
+          onPress={handleContinue}
         >
           {isLoading ? (
             <ActivityIndicator color="white" />
           ) : (
-            <Text style={tw`text-white text-center text-lg font-semibold`}>
-              Continue
-            </Text>
+            <Text style={tw`text-center text-lg font-semibold text-white`}>Continue</Text>
           )}
         </Pressable>
       </ScrollView>

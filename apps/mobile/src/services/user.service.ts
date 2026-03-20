@@ -1,13 +1,14 @@
 import { eq } from 'drizzle-orm';
 import { createMMKV } from 'react-native-mmkv';
+
+import CONFIG from '@/config';
 import { db } from '@/database';
 import { users, type User, type NewUser } from '@/database/schema';
-import CONFIG from '@/config';
 
 // MMKV storage for quick key-value access
 const storage = createMMKV({
-  id: 'coparent-user',
   encryptionKey: CONFIG.STORAGE_KEY,
+  id: 'coparent-user',
 });
 
 const CURRENT_USER_ID_KEY = 'current_user_id';
@@ -19,6 +20,7 @@ function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
+
     return v.toString(16);
   });
 }
@@ -45,6 +47,13 @@ function getDeviceCurrency(): string {
 
 export const UserService = {
   /**
+   * Clear current user (for logout/reset)
+   */
+  clearCurrentUser(): void {
+    storage.delete(CURRENT_USER_ID_KEY);
+  },
+
+  /**
    * Create a new user
    */
   async createUser(data: {
@@ -55,11 +64,11 @@ export const UserService = {
   }): Promise<User> {
     const id = generateUUID();
     const newUser: NewUser = {
-      id,
+      defaultCurrency: data.defaultCurrency ?? getDeviceCurrency(),
       displayName: data.displayName,
       email: data.email,
+      id,
       timezone: data.timezone ?? getDeviceTimezone(),
-      defaultCurrency: data.defaultCurrency ?? getDeviceCurrency(),
     };
 
     await db.insert(users).values(newUser);
@@ -68,14 +77,8 @@ export const UserService = {
     storage.set(CURRENT_USER_ID_KEY, id);
 
     const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
-  },
 
-  /**
-   * Get current user ID from storage
-   */
-  getCurrentUserId(): string | null {
-    return storage.getString(CURRENT_USER_ID_KEY) ?? null;
+    return user;
   },
 
   /**
@@ -86,7 +89,36 @@ export const UserService = {
     if (!userId) return null;
 
     const [user] = await db.select().from(users).where(eq(users.id, userId));
+
     return user ?? null;
+  },
+
+  /**
+   * Get current user ID from storage
+   */
+  getCurrentUserId(): string | null {
+    return storage.getString(CURRENT_USER_ID_KEY) ?? null;
+  },
+
+  /**
+   * Get user by ID
+   */
+  async getUserById(id: string): Promise<User | null> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+
+    return user ?? null;
+  },
+
+  /**
+   * Check if user exists (for onboarding flow)
+   */
+  async hasUser(): Promise<boolean> {
+    const userId = this.getCurrentUserId();
+    if (!userId) return false;
+
+    const user = await this.getUserById(userId);
+
+    return user !== null;
   },
 
   /**
@@ -112,31 +144,5 @@ export const UserService = {
       .where(eq(users.id, userId));
 
     return this.getCurrentUser();
-  },
-
-  /**
-   * Get user by ID
-   */
-  async getUserById(id: string): Promise<User | null> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user ?? null;
-  },
-
-  /**
-   * Check if user exists (for onboarding flow)
-   */
-  async hasUser(): Promise<boolean> {
-    const userId = this.getCurrentUserId();
-    if (!userId) return false;
-
-    const user = await this.getUserById(userId);
-    return user !== null;
-  },
-
-  /**
-   * Clear current user (for logout/reset)
-   */
-  clearCurrentUser(): void {
-    storage.delete(CURRENT_USER_ID_KEY);
   },
 };

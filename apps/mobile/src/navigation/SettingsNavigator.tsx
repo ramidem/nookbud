@@ -1,5 +1,6 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+
 import { SettingsScreen, ProfileSettingsScreen } from '@/screens/Settings';
 
 export type SettingsStackParamList = {
@@ -18,8 +19,8 @@ export function SettingsNavigator() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="ProfileSettings" component={ProfileSettingsScreen} />
+      <Stack.Screen component={SettingsScreen} name="Settings" />
+      <Stack.Screen component={ProfileSettingsScreen} name="ProfileSettings" />
       {/* ChildSettings and AddChildSettings will be added later */}
     </Stack.Navigator>
   );

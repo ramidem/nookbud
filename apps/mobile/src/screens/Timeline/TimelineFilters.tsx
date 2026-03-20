@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, Modal, ScrollView } from 'react-native';
-import { useTw } from '@/hooks/useTw';
-import { ChildService } from '@/services';
+
 import type { Child } from '@/database/schema';
 import { ENTRY_TYPES, type EntryType } from '@/database/schema';
+import { useTw } from '@/hooks/useTw';
+import { ChildService } from '@/services';
 
 export type FilterState = {
   childIds: string[];
@@ -21,20 +22,14 @@ type Props = {
 };
 
 const TYPE_LABELS: Record<EntryType, string> = {
-  expense: '💰 Expense',
-  event: '📅 Event',
   agreement: '🤝 Agreement',
   communication: '💬 Communication',
+  event: '📅 Event',
+  expense: '💰 Expense',
   upload: '📎 Document',
 };
 
-export function TimelineFilters({
-  visible,
-  filters,
-  relationshipId,
-  onClose,
-  onApply,
-}: Props) {
+export function TimelineFilters({ filters, onApply, onClose, relationshipId, visible }: Props) {
   const tw = useTw();
   const [localFilters, setLocalFilters] = useState<FilterState>(filters);
   const [children, setChildren] = useState<Child[]>([]);
@@ -74,9 +69,9 @@ export function TimelineFilters({
   const clearFilters = () => {
     setLocalFilters({
       childIds: [],
-      types: [],
       dateFrom: null,
       dateTo: null,
+      types: [],
     });
   };
 
@@ -87,16 +82,18 @@ export function TimelineFilters({
     localFilters.dateTo !== null;
 
   return (
-    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
+    <Modal animationType="slide" presentationStyle="pageSheet" visible={visible}>
       <View style={tw`flex-1 bg-white`}>
         {/* Header */}
-        <View style={tw`flex-row items-center justify-between px-4 pt-4 pb-2 border-b border-gray-100`}>
+        <View
+          style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-2 pt-4`}
+        >
           <Pressable onPress={onClose}>
-            <Text style={tw`text-blue-600 text-base`}>Cancel</Text>
+            <Text style={tw`text-base text-blue-600`}>Cancel</Text>
           </Pressable>
           <Text style={tw`text-lg font-semibold text-gray-900`}>Filters</Text>
           <Pressable onPress={() => onApply(localFilters)}>
-            <Text style={tw`text-blue-600 text-base font-semibold`}>Apply</Text>
+            <Text style={tw`text-base font-semibold text-blue-600`}>Apply</Text>
           </Pressable>
         </View>
 
@@ -104,25 +101,21 @@ export function TimelineFilters({
           {/* Children filter */}
           {children.length > 0 && (
             <View style={tw`mb-6`}>
-              <Text style={tw`text-sm font-medium text-gray-600 uppercase tracking-wide mb-3`}>
+              <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
                 Children
               </Text>
               <View style={tw`flex-row flex-wrap gap-2`}>
                 {children.map((child) => (
                   <Pressable
                     key={child.id}
-                    style={tw`px-4 py-2 rounded-full ${
-                      localFilters.childIds.includes(child.id)
-                        ? 'bg-blue-600'
-                        : 'bg-gray-100'
+                    style={tw`rounded-full px-4 py-2 ${
+                      localFilters.childIds.includes(child.id) ? 'bg-blue-600' : 'bg-gray-100'
                     }`}
                     onPress={() => toggleChild(child.id)}
                   >
                     <Text
                       style={tw`font-medium ${
-                        localFilters.childIds.includes(child.id)
-                          ? 'text-white'
-                          : 'text-gray-700'
+                        localFilters.childIds.includes(child.id) ? 'text-white' : 'text-gray-700'
                       }`}
                     >
                       {child.name}
@@ -135,25 +128,21 @@ export function TimelineFilters({
 
           {/* Entry types filter */}
           <View style={tw`mb-6`}>
-            <Text style={tw`text-sm font-medium text-gray-600 uppercase tracking-wide mb-3`}>
+            <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
               Entry Types
             </Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
               {ENTRY_TYPES.map((type) => (
                 <Pressable
                   key={type}
-                  style={tw`px-4 py-2 rounded-full ${
-                    localFilters.types.includes(type)
-                      ? 'bg-blue-600'
-                      : 'bg-gray-100'
+                  style={tw`rounded-full px-4 py-2 ${
+                    localFilters.types.includes(type) ? 'bg-blue-600' : 'bg-gray-100'
                   }`}
                   onPress={() => toggleType(type)}
                 >
                   <Text
                     style={tw`${
-                      localFilters.types.includes(type)
-                        ? 'text-white'
-                        : 'text-gray-700'
+                      localFilters.types.includes(type) ? 'text-white' : 'text-gray-700'
                     }`}
                   >
                     {TYPE_LABELS[type]}
@@ -165,10 +154,10 @@ export function TimelineFilters({
 
           {/* Date range - simplified for MVP */}
           <View style={tw`mb-6`}>
-            <Text style={tw`text-sm font-medium text-gray-600 uppercase tracking-wide mb-3`}>
+            <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
               Date Range
             </Text>
-            <Text style={tw`text-gray-500 text-sm`}>
+            <Text style={tw`text-sm text-gray-500`}>
               Date picker coming soon. For now, all dates are included.
             </Text>
           </View>
@@ -176,12 +165,10 @@ export function TimelineFilters({
           {/* Clear button */}
           {hasFilters && (
             <Pressable
-              style={tw`border border-red-200 rounded-xl py-3 mt-4`}
+              style={tw`mt-4 rounded-xl border border-red-200 py-3`}
               onPress={clearFilters}
             >
-              <Text style={tw`text-red-600 text-center font-medium`}>
-                Clear All Filters
-              </Text>
+              <Text style={tw`text-center font-medium text-red-600`}>Clear All Filters</Text>
             </Pressable>
           )}
         </ScrollView>

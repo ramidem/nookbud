@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+
 import { users } from './users';
 
 // Audit action types
@@ -26,17 +27,23 @@ export const AUDIT_ENTITY_TYPES = [
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number];
 
 export const auditLogs = sqliteTable('audit_logs', {
-  id: text('id').primaryKey(), // UUID
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id),
   action: text('action').notNull().$type<AuditAction>(),
-  entityType: text('entity_type').notNull().$type<AuditEntityType>(),
-  entityId: text('entity_id').notNull(),
-  metadataJson: text('metadata_json'), // Additional context as JSON
+  // Additional context as JSON
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .$defaultFn(() => new Date()),
+
+  entityId: text('entity_id').notNull(),
+
+  entityType: text('entity_type').notNull().$type<AuditEntityType>(),
+
+  id: text('id').primaryKey(),
+
+  metadataJson: text('metadata_json'),
+  // UUID
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id),
 });
 
 export type AuditLog = typeof auditLogs.$inferSelect;

@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -10,37 +11,32 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useTw } from '@/hooks/useTw';
-import {
-  EntryService,
-  RelationshipService,
-  ChildService,
-  UserService,
-} from '@/services';
+
 import type { Child } from '@/database/schema';
-import type { ExpenseCategory, SplitType } from '@/types/entry-content.types';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useTw } from '@/hooks/useTw';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import { EntryService, RelationshipService, ChildService, UserService } from '@/services';
+import type { ExpenseCategory, SplitType } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddExpense'>;
 
 const CATEGORIES: { value: ExpenseCategory; label: string }[] = [
-  { value: 'childcare', label: '👶 Childcare' },
-  { value: 'medical', label: '🏥 Medical' },
-  { value: 'education', label: '📚 Education' },
-  { value: 'clothing', label: '👕 Clothing' },
-  { value: 'activities', label: '⚽ Activities' },
-  { value: 'food', label: '🍎 Food' },
-  { value: 'transportation', label: '🚗 Transport' },
-  { value: 'other', label: '📦 Other' },
+  { label: '👶 Childcare', value: 'childcare' },
+  { label: '🏥 Medical', value: 'medical' },
+  { label: '📚 Education', value: 'education' },
+  { label: '👕 Clothing', value: 'clothing' },
+  { label: '⚽ Activities', value: 'activities' },
+  { label: '🍎 Food', value: 'food' },
+  { label: '🚗 Transport', value: 'transportation' },
+  { label: '📦 Other', value: 'other' },
 ];
 
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'PHP', 'INR', 'SGD'];
 
 const SPLIT_OPTIONS: { value: SplitType; label: string }[] = [
-  { value: '50/50', label: '50/50 Split' },
-  { value: 'full', label: 'Full Amount' },
-  { value: 'custom', label: 'Custom %' },
+  { label: '50/50 Split', value: '50/50' },
+  { label: 'Full Amount', value: 'full' },
+  { label: 'Custom %', value: 'custom' },
 ];
 
 export function AddExpenseScreen({ navigation }: Props) {
@@ -82,22 +78,23 @@ export function AddExpenseScreen({ navigation }: Props) {
       const amountCents = Math.round(parseFloat(amount) * 100);
       if (isNaN(amountCents) || amountCents <= 0) {
         Alert.alert('Invalid Amount', 'Please enter a valid amount');
+
         return;
       }
 
       await EntryService.create({
-        relationshipId,
-        type: 'expense',
         childId: selectedChildId ?? undefined,
         content: {
           amount: amountCents,
+          category,
           currency,
           description: description.trim(),
-          category,
           paidBy: userId,
-          splitType,
           receiptAttached: false,
+          splitType,
         },
+        relationshipId,
+        type: 'expense',
       });
 
       navigation.goBack();
@@ -110,20 +107,24 @@ export function AddExpenseScreen({ navigation }: Props) {
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1 bg-white`}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={tw`flex-1 bg-white`}
     >
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-gray-100`}>
+      <View
+        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+      >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-blue-600 text-base`}>Cancel</Text>
+          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
         </Pressable>
         <Text style={tw`text-lg font-semibold text-gray-900`}>Add Expense</Text>
-        <Pressable onPress={handleSave} disabled={!canSave || isLoading}>
+        <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
-            <Text style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}>
+            <Text
+              style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}
+            >
               Save
             </Text>
           )}
@@ -133,7 +134,7 @@ export function AddExpenseScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Amount */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Amount</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Amount</Text>
           <View style={tw`flex-row items-center`}>
             <View style={tw`mr-2`}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -141,10 +142,12 @@ export function AddExpenseScreen({ navigation }: Props) {
                   {CURRENCIES.map((c) => (
                     <Pressable
                       key={c}
-                      style={tw`px-3 py-2 rounded-lg mr-1 ${currency === c ? 'bg-blue-600' : 'bg-gray-100'}`}
+                      style={tw`mr-1 rounded-lg px-3 py-2 ${currency === c ? 'bg-blue-600' : 'bg-gray-100'}`}
                       onPress={() => setCurrency(c)}
                     >
-                      <Text style={tw`${currency === c ? 'text-white' : 'text-gray-700'} font-medium`}>
+                      <Text
+                        style={tw`${currency === c ? 'text-white' : 'text-gray-700'} font-medium`}
+                      >
                         {c}
                       </Text>
                     </Pressable>
@@ -154,22 +157,22 @@ export function AddExpenseScreen({ navigation }: Props) {
             </View>
           </View>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-4 text-2xl font-semibold mt-2`}
+            keyboardType="decimal-pad"
             placeholder="0.00"
             placeholderTextColor="#9CA3AF"
+            style={tw`mt-2 rounded-xl border border-gray-300 px-4 py-4 text-2xl font-semibold`}
             value={amount}
             onChangeText={setAmount}
-            keyboardType="decimal-pad"
           />
         </View>
 
         {/* Description */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Description</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Description</Text>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-3`}
             placeholder="What was this expense for?"
             placeholderTextColor="#9CA3AF"
+            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
             value={description}
             onChangeText={setDescription}
           />
@@ -177,12 +180,12 @@ export function AddExpenseScreen({ navigation }: Props) {
 
         {/* Category */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Category</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Category</Text>
           <View style={tw`flex-row flex-wrap gap-2`}>
             {CATEGORIES.map((cat) => (
               <Pressable
                 key={cat.value}
-                style={tw`px-3 py-2 rounded-lg ${category === cat.value ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`rounded-lg px-3 py-2 ${category === cat.value ? 'bg-blue-600' : 'bg-gray-100'}`}
                 onPress={() => setCategory(cat.value)}
               >
                 <Text style={tw`${category === cat.value ? 'text-white' : 'text-gray-700'}`}>
@@ -195,15 +198,17 @@ export function AddExpenseScreen({ navigation }: Props) {
 
         {/* Split Type */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Split</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Split</Text>
           <View style={tw`flex-row gap-2`}>
             {SPLIT_OPTIONS.map((opt) => (
               <Pressable
                 key={opt.value}
-                style={tw`flex-1 py-3 rounded-lg ${splitType === opt.value ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`flex-1 rounded-lg py-3 ${splitType === opt.value ? 'bg-blue-600' : 'bg-gray-100'}`}
                 onPress={() => setSplitType(opt.value)}
               >
-                <Text style={tw`text-center ${splitType === opt.value ? 'text-white' : 'text-gray-700'} font-medium`}>
+                <Text
+                  style={tw`text-center ${splitType === opt.value ? 'text-white' : 'text-gray-700'} font-medium`}
+                >
                   {opt.label}
                 </Text>
               </Pressable>
@@ -214,10 +219,10 @@ export function AddExpenseScreen({ navigation }: Props) {
         {/* Child (optional) */}
         {children.length > 0 && (
           <View style={tw`mb-6`}>
-            <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>For Child (optional)</Text>
+            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>For Child (optional)</Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
               <Pressable
-                style={tw`px-4 py-2 rounded-lg ${selectedChildId === null ? 'bg-blue-600' : 'bg-gray-100'}`}
+                style={tw`rounded-lg px-4 py-2 ${selectedChildId === null ? 'bg-blue-600' : 'bg-gray-100'}`}
                 onPress={() => setSelectedChildId(null)}
               >
                 <Text style={tw`${selectedChildId === null ? 'text-white' : 'text-gray-700'}`}>
@@ -227,10 +232,12 @@ export function AddExpenseScreen({ navigation }: Props) {
               {children.map((child) => (
                 <Pressable
                   key={child.id}
-                  style={tw`px-4 py-2 rounded-lg ${selectedChildId === child.id ? 'bg-blue-600' : 'bg-gray-100'}`}
+                  style={tw`rounded-lg px-4 py-2 ${selectedChildId === child.id ? 'bg-blue-600' : 'bg-gray-100'}`}
                   onPress={() => setSelectedChildId(child.id)}
                 >
-                  <Text style={tw`${selectedChildId === child.id ? 'text-white' : 'text-gray-700'}`}>
+                  <Text
+                    style={tw`${selectedChildId === child.id ? 'text-white' : 'text-gray-700'}`}
+                  >
                     {child.name}
                   </Text>
                 </Pressable>

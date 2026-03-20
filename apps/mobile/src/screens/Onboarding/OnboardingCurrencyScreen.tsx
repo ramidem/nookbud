@@ -1,7 +1,8 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { View, Text, Pressable, FlatList } from 'react-native';
+
 import { useTw } from '@/hooks/useTw';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'OnboardingCurrency'>;
@@ -31,44 +32,38 @@ export function OnboardingCurrencyScreen({ navigation, route }: Props) {
 
   const handleContinue = () => {
     navigation.navigate('OnboardingComplete', {
+      defaultCurrency: selected,
       displayName,
       timezone,
-      defaultCurrency: selected,
     });
   };
 
   return (
     <View style={tw`flex-1 bg-white`}>
       <View style={tw`px-6 pt-16`}>
-        <Text style={tw`text-3xl font-bold text-gray-900 mb-2`}>
-          Default currency
-        </Text>
-        <Text style={tw`text-base text-gray-600 mb-4`}>
+        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Default currency</Text>
+        <Text style={tw`mb-4 text-base text-gray-600`}>
           Used for tracking expenses. You can use other currencies per expense.
         </Text>
       </View>
 
       <FlatList
+        contentContainerStyle={tw`px-6 pb-4`}
         data={CURRENCIES}
         keyExtractor={(item) => item.code}
-        contentContainerStyle={tw`px-6 pb-4`}
         renderItem={({ item }) => (
           <Pressable
-            style={tw`flex-row items-center py-4 border-b border-gray-100`}
+            style={tw`flex-row items-center border-b border-gray-100 py-4`}
             onPress={() => setSelected(item.code)}
           >
             <View
-              style={tw`w-6 h-6 rounded-full border-2 mr-4 items-center justify-center ${
+              style={tw`mr-4 h-6 w-6 items-center justify-center rounded-full border-2 ${
                 selected === item.code ? 'border-blue-600' : 'border-gray-300'
               }`}
             >
-              {selected === item.code && (
-                <View style={tw`w-3 h-3 rounded-full bg-blue-600`} />
-              )}
+              {selected === item.code && <View style={tw`h-3 w-3 rounded-full bg-blue-600`} />}
             </View>
-            <Text style={tw`w-12 text-lg font-medium text-gray-900`}>
-              {item.symbol}
-            </Text>
+            <Text style={tw`w-12 text-lg font-medium text-gray-900`}>{item.symbol}</Text>
             <View style={tw`flex-1`}>
               <Text style={tw`text-base text-gray-900`}>{item.name}</Text>
               <Text style={tw`text-sm text-gray-500`}>{item.code}</Text>
@@ -78,13 +73,8 @@ export function OnboardingCurrencyScreen({ navigation, route }: Props) {
       />
 
       <View style={tw`px-6 pb-8`}>
-        <Pressable
-          style={tw`bg-blue-600 rounded-xl py-4`}
-          onPress={handleContinue}
-        >
-          <Text style={tw`text-white text-center text-lg font-semibold`}>
-            Continue
-          </Text>
+        <Pressable style={tw`rounded-xl bg-blue-600 py-4`} onPress={handleContinue}>
+          <Text style={tw`text-center text-lg font-semibold text-white`}>Continue</Text>
         </Pressable>
       </View>
     </View>

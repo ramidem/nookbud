@@ -1,4 +1,9 @@
 import { eq, and, desc } from 'drizzle-orm';
+
+import { AuditService } from './audit.service';
+import { FileService, type SavedFile } from './file.service';
+import { UserService } from './user.service';
+
 import { db, opsqlite } from '@/database';
 import {
   entries,
@@ -12,9 +17,6 @@ import {
   type NewAttachment,
   type EntryType,
 } from '@/database/schema';
-import { AuditService } from './audit.service';
-import { FileService, type SavedFile } from './file.service';
-import { UserService } from './user.service';
 import { computeDiff } from '@/utils/diff.util';
 
 /**
@@ -24,6 +26,7 @@ function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
+
     return v.toString(16);
   });
 }
@@ -62,54 +65,53 @@ export const EntryService = {
     try {
       // Create entry
       const newEntry: NewEntry = {
+        childId: data.childId,
+        createdBy: userId,
+        currentVersionId: versionId,
         id: entryId,
         relationshipId: data.relationshipId,
-        childId: data.childId,
-        type: data.type,
-        createdBy: userId,
         status: 'active',
-        currentVersionId: versionId,
+        type: data.type,
       };
       await db.insert(entries).values(newEntry);
 
       // Create initial version
       const newVersion: NewEntryVersion = {
-        id: versionId,
-        entryId,
-        versionNumber: 1,
         contentJson: JSON.stringify(data.content),
-        diffJson: null, // No diff for first version
+        // No diff for first version
         createdBy: userId,
+
+        diffJson: null,
+
+        entryId,
+        id: versionId,
+        versionNumber: 1,
       };
       await db.insert(entryVersions).values(newVersion);
 
       // Process attachments if any
       if (data.attachmentInputs && data.attachmentInputs.length > 0) {
         for (const input of data.attachmentInputs) {
-          const saved = await FileService.saveFile(
-            input.sourceUri,
-            input.filename,
-            input.mimeType
-          );
+          const saved = await FileService.saveFile(input.sourceUri, input.filename, input.mimeType);
 
           const attachmentId = generateUUID();
           const newAttachment: NewAttachment = {
-            id: attachmentId,
             entryVersionId: versionId,
-            originalFilename: saved.originalFilename,
-            storagePath: saved.storagePath,
             fileHash: saved.fileHash,
             fileSizeBytes: saved.fileSize,
+            id: attachmentId,
             mimeType: saved.mimeType,
+            originalFilename: saved.originalFilename,
+            storagePath: saved.storagePath,
             uploadedBy: userId,
           };
           await db.insert(attachments).values(newAttachment);
 
           await AuditService.log(userId, 'create', 'attachment', attachmentId, {
             entryId,
-            versionId,
             filename: saved.originalFilename,
             hash: saved.fileHash,
+            versionId,
           });
         }
       }
@@ -117,32 +119,106 @@ export const EntryService = {
       // Create pending acknowledgment for other parent
       const ackId = generateUUID();
       await db.insert(acknowledgments).values({
-        id: ackId,
-        entryId,
-        status: 'pending',
         actedBy: null,
         comment: null,
+        entryId,
+        id: ackId,
+        status: 'pending',
       });
 
       await opsqlite.execute('COMMIT');
 
       // Audit log
       await AuditService.log(userId, 'create', 'entry', entryId, {
+        childId: data.childId,
+        relationshipId: data.relationshipId,
         type: data.type,
         versionId,
-        relationshipId: data.relationshipId,
-        childId: data.childId,
       });
 
-      const [entry] = await db
-        .select()
-        .from(entries)
-        .where(eq(entries.id, entryId));
+      const [entry] = await db.select().from(entries).where(eq(entries.id, entryId));
+
       return entry;
     } catch (error) {
       await opsqlite.execute('ROLLBACK');
       throw error;
     }
+  },
+
+  /**
+   * Get attachments for a version
+   */
+  async getAttachments(versionId: string) {
+    return db.select().from(attachments).where(eq(attachments.entryVersionId, versionId));
+  },
+
+  /**
+   * Get entry by ID
+   */
+  async getById(id: string): Promise<Entry | null> {
+    const [entry] = await db.select().from(entries).where(eq(entries.id, id));
+
+    return entry ?? null;
+  },
+
+  /**
+   * Get all versions of an entry
+   */
+  async getVersionHistory(entryId: string): Promise<EntryVersion[]> {
+    return db
+      .select()
+      .from(entryVersions)
+      .where(eq(entryVersions.entryId, entryId))
+      .orderBy(desc(entryVersions.versionNumber));
+  },
+
+  
+  /**
+   * Get entry with current version and acknowledgment status
+   */
+async getWithDetails(id: string): Promise<EntryWithVersion | null> {
+    const entry = await this.getById(id);
+    if (!entry) return null;
+
+    let currentVersion: EntryVersion | null = null;
+    if (entry.currentVersionId) {
+      const [version] = await db
+        .select()
+        .from(entryVersions)
+        .where(eq(entryVersions.id, entry.currentVersionId));
+      currentVersion = version ?? null;
+    }
+
+    const [ack] = await db.select().from(acknowledgments).where(eq(acknowledgments.entryId, id));
+
+    return {
+      ...entry,
+      acknowledgmentStatus: ack?.status ?? null,
+      currentVersion,
+    };
+  },
+
+  
+  
+/**
+   * Soft delete an entry
+   */
+async softDelete(entryId: string): Promise<Entry> {
+    const userId = UserService.getCurrentUserId();
+    if (!userId) throw new Error('No current user');
+
+    const entry = await this.getById(entryId);
+    if (!entry) throw new Error('Entry not found');
+
+    await db.update(entries).set({ status: 'soft_deleted' }).where(eq(entries.id, entryId));
+
+    await AuditService.log(userId, 'soft_delete', 'entry', entryId, {
+      previousStatus: entry.status,
+    });
+
+    const [updated] = await db.select().from(entries).where(eq(entries.id, entryId));
+
+    return updated;
   },
 
   /**
@@ -153,7 +229,7 @@ export const EntryService = {
     data: {
       content: Record<string, unknown>;
       attachmentInputs?: AttachmentInput[];
-    }
+    },
   ): Promise<Entry> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error('No current user');
@@ -181,12 +257,12 @@ export const EntryService = {
     try {
       // Create new version
       const newVersion: NewEntryVersion = {
-        id: newVersionId,
-        entryId,
-        versionNumber: newVersionNumber,
         contentJson: JSON.stringify(data.content),
-        diffJson: JSON.stringify(diff),
         createdBy: userId,
+        diffJson: JSON.stringify(diff),
+        entryId,
+        id: newVersionId,
+        versionNumber: newVersionNumber,
       };
       await db.insert(entryVersions).values(newVersion);
 
@@ -199,30 +275,26 @@ export const EntryService = {
       // Process new attachments if any
       if (data.attachmentInputs && data.attachmentInputs.length > 0) {
         for (const input of data.attachmentInputs) {
-          const saved = await FileService.saveFile(
-            input.sourceUri,
-            input.filename,
-            input.mimeType
-          );
+          const saved = await FileService.saveFile(input.sourceUri, input.filename, input.mimeType);
 
           const attachmentId = generateUUID();
           const newAttachment: NewAttachment = {
-            id: attachmentId,
             entryVersionId: newVersionId,
-            originalFilename: saved.originalFilename,
-            storagePath: saved.storagePath,
             fileHash: saved.fileHash,
             fileSizeBytes: saved.fileSize,
+            id: attachmentId,
             mimeType: saved.mimeType,
+            originalFilename: saved.originalFilename,
+            storagePath: saved.storagePath,
             uploadedBy: userId,
           };
           await db.insert(attachments).values(newAttachment);
 
           await AuditService.log(userId, 'create', 'attachment', attachmentId, {
             entryId,
-            versionId: newVersionId,
             filename: saved.originalFilename,
             hash: saved.fileHash,
+            versionId: newVersionId,
           });
         }
       }
@@ -230,104 +302,19 @@ export const EntryService = {
       await opsqlite.execute('COMMIT');
 
       await AuditService.log(userId, 'update', 'entry', entryId, {
-        previousVersionId: currentVersion.id,
-        newVersionId,
-        versionNumber: newVersionNumber,
         diff,
+        newVersionId,
+        previousVersionId: currentVersion.id,
+        versionNumber: newVersionNumber,
       });
 
-      const [updated] = await db
-        .select()
-        .from(entries)
-        .where(eq(entries.id, entryId));
+      const [updated] = await db.select().from(entries).where(eq(entries.id, entryId));
+
       return updated;
     } catch (error) {
       await opsqlite.execute('ROLLBACK');
       throw error;
     }
-  },
-
-  /**
-   * Soft delete an entry
-   */
-  async softDelete(entryId: string): Promise<Entry> {
-    const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
-
-    const entry = await this.getById(entryId);
-    if (!entry) throw new Error('Entry not found');
-
-    await db
-      .update(entries)
-      .set({ status: 'soft_deleted' })
-      .where(eq(entries.id, entryId));
-
-    await AuditService.log(userId, 'soft_delete', 'entry', entryId, {
-      previousStatus: entry.status,
-    });
-
-    const [updated] = await db
-      .select()
-      .from(entries)
-      .where(eq(entries.id, entryId));
-    return updated;
-  },
-
-  /**
-   * Get entry by ID
-   */
-  async getById(id: string): Promise<Entry | null> {
-    const [entry] = await db.select().from(entries).where(eq(entries.id, id));
-    return entry ?? null;
-  },
-
-  /**
-   * Get entry with current version and acknowledgment status
-   */
-  async getWithDetails(id: string): Promise<EntryWithVersion | null> {
-    const entry = await this.getById(id);
-    if (!entry) return null;
-
-    let currentVersion: EntryVersion | null = null;
-    if (entry.currentVersionId) {
-      const [version] = await db
-        .select()
-        .from(entryVersions)
-        .where(eq(entryVersions.id, entry.currentVersionId));
-      currentVersion = version ?? null;
-    }
-
-    const [ack] = await db
-      .select()
-      .from(acknowledgments)
-      .where(eq(acknowledgments.entryId, id));
-
-    return {
-      ...entry,
-      currentVersion,
-      acknowledgmentStatus: ack?.status ?? null,
-    };
-  },
-
-  /**
-   * Get all versions of an entry
-   */
-  async getVersionHistory(entryId: string): Promise<EntryVersion[]> {
-    return db
-      .select()
-      .from(entryVersions)
-      .where(eq(entryVersions.entryId, entryId))
-      .orderBy(desc(entryVersions.versionNumber));
-  },
-
-  /**
-   * Get attachments for a version
-   */
-  async getAttachments(versionId: string) {
-    return db
-      .select()
-      .from(attachments)
-      .where(eq(attachments.entryVersionId, versionId));
   },
 
   /**

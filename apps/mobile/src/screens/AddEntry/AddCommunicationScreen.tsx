@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -10,11 +11,11 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+
 import { useTw } from '@/hooks/useTw';
+import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService } from '@/services';
 import type { CommunicationImportance } from '@/types/entry-content.types';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddCommunication'>;
 
@@ -44,13 +45,13 @@ export function AddCommunicationScreen({ navigation }: Props) {
     setIsLoading(true);
     try {
       await EntryService.create({
-        relationshipId,
-        type: 'communication',
         content: {
-          subject: subject.trim(),
           body: body.trim(),
           importance,
+          subject: subject.trim(),
         },
+        relationshipId,
+        type: 'communication',
       });
 
       navigation.goBack();
@@ -63,20 +64,24 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1 bg-white`}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={tw`flex-1 bg-white`}
     >
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-gray-100`}>
+      <View
+        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+      >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-blue-600 text-base`}>Cancel</Text>
+          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
         </Pressable>
         <Text style={tw`text-lg font-semibold text-gray-900`}>Send Message</Text>
-        <Pressable onPress={handleSave} disabled={!canSave || isLoading}>
+        <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
-            <Text style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}>
+            <Text
+              style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}
+            >
               Send
             </Text>
           )}
@@ -85,19 +90,20 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Info banner */}
-        <View style={tw`bg-blue-50 rounded-xl p-4 mb-6`}>
-          <Text style={tw`text-blue-800 text-sm`}>
-            💬 This creates a permanent, documented record of your message. It's not a chat — use it for important communications.
+        <View style={tw`mb-6 rounded-xl bg-blue-50 p-4`}>
+          <Text style={tw`text-sm text-blue-800`}>
+            💬 This creates a permanent, documented record of your message. It's not a chat — use it
+            for important communications.
           </Text>
         </View>
 
         {/* Subject */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Subject *</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Subject *</Text>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-3`}
             placeholder="What is this about?"
             placeholderTextColor="#9CA3AF"
+            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
             value={subject}
             onChangeText={setSubject}
           />
@@ -105,35 +111,39 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
         {/* Body */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Message *</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Message *</Text>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-3 min-h-40`}
+            multiline
             placeholder="Write your message..."
             placeholderTextColor="#9CA3AF"
+            style={tw`min-h-40 rounded-xl border border-gray-300 px-4 py-3`}
+            textAlignVertical="top"
             value={body}
             onChangeText={setBody}
-            multiline
-            textAlignVertical="top"
           />
         </View>
 
         {/* Importance */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Priority</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Priority</Text>
           <View style={tw`flex-row gap-2`}>
             <Pressable
-              style={tw`flex-1 py-3 rounded-lg ${importance === 'normal' ? 'bg-blue-600' : 'bg-gray-100'}`}
+              style={tw`flex-1 rounded-lg py-3 ${importance === 'normal' ? 'bg-blue-600' : 'bg-gray-100'}`}
               onPress={() => setImportance('normal')}
             >
-              <Text style={tw`text-center ${importance === 'normal' ? 'text-white' : 'text-gray-700'} font-medium`}>
+              <Text
+                style={tw`text-center ${importance === 'normal' ? 'text-white' : 'text-gray-700'} font-medium`}
+              >
                 Normal
               </Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 py-3 rounded-lg ${importance === 'high' ? 'bg-red-600' : 'bg-gray-100'}`}
+              style={tw`flex-1 rounded-lg py-3 ${importance === 'high' ? 'bg-red-600' : 'bg-gray-100'}`}
               onPress={() => setImportance('high')}
             >
-              <Text style={tw`text-center ${importance === 'high' ? 'text-white' : 'text-gray-700'} font-medium`}>
+              <Text
+                style={tw`text-center ${importance === 'high' ? 'text-white' : 'text-gray-700'} font-medium`}
+              >
                 ⚠️ High Priority
               </Text>
             </Pressable>

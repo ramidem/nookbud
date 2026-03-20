@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -8,11 +9,11 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useTw } from '@/hooks/useTw';
-import { UserService } from '@/services';
+
 import type { User } from '@/database/schema';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useTw } from '@/hooks/useTw';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
+import { UserService } from '@/services';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'ProfileSettings'>;
 
@@ -53,15 +54,16 @@ export function ProfileSettingsScreen({ navigation }: Props) {
   const handleSave = async () => {
     if (!displayName.trim()) {
       Alert.alert('Error', 'Name is required');
+
       return;
     }
 
     setIsSaving(true);
     try {
       await UserService.updateUser({
+        defaultCurrency,
         displayName: displayName.trim(),
         timezone,
-        defaultCurrency,
       });
       navigation.goBack();
     } catch (err) {
@@ -73,8 +75,8 @@ export function ProfileSettingsScreen({ navigation }: Props) {
 
   if (isLoading) {
     return (
-      <View style={tw`flex-1 bg-white items-center justify-center`}>
-        <ActivityIndicator size="large" color="#2563EB" />
+      <View style={tw`flex-1 items-center justify-center bg-white`}>
+        <ActivityIndicator color="#2563EB" size="large" />
       </View>
     );
   }
@@ -82,16 +84,18 @@ export function ProfileSettingsScreen({ navigation }: Props) {
   return (
     <View style={tw`flex-1 bg-white`}>
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-gray-100`}>
+      <View
+        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+      >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-blue-600 text-base`}>Cancel</Text>
+          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
         </Pressable>
         <Text style={tw`text-lg font-semibold text-gray-900`}>Edit Profile</Text>
-        <Pressable onPress={handleSave} disabled={isSaving}>
+        <Pressable disabled={isSaving} onPress={handleSave}>
           {isSaving ? (
             <ActivityIndicator size="small" />
           ) : (
-            <Text style={tw`text-blue-600 text-base font-semibold`}>Save</Text>
+            <Text style={tw`text-base font-semibold text-blue-600`}>Save</Text>
           )}
         </Pressable>
       </View>
@@ -99,36 +103,36 @@ export function ProfileSettingsScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Name */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Display Name</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Display Name</Text>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-3`}
+            placeholder="Your name"
+            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
             value={displayName}
             onChangeText={setDisplayName}
-            placeholder="Your name"
           />
         </View>
 
         {/* Timezone */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Timezone</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Timezone</Text>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-3 bg-gray-50`}
-            value={timezone}
             editable={false}
+            style={tw`rounded-xl border border-gray-300 bg-gray-50 px-4 py-3`}
+            value={timezone}
           />
-          <Text style={tw`text-sm text-gray-500 mt-1`}>
+          <Text style={tw`mt-1 text-sm text-gray-500`}>
             Timezone cannot be changed from settings yet
           </Text>
         </View>
 
         {/* Currency */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Default Currency</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Default Currency</Text>
           <View style={tw`flex-row flex-wrap gap-2`}>
             {CURRENCIES.map((curr) => (
               <Pressable
                 key={curr}
-                style={tw`px-4 py-2 rounded-lg ${
+                style={tw`rounded-lg px-4 py-2 ${
                   defaultCurrency === curr ? 'bg-blue-600' : 'bg-gray-100'
                 }`}
                 onPress={() => setDefaultCurrency(curr)}

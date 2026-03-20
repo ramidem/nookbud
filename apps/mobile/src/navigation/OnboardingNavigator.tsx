@@ -1,11 +1,12 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { OnboardingNameScreen } from '@/screens/Onboarding/OnboardingNameScreen';
-import { OnboardingTimezoneScreen } from '@/screens/Onboarding/OnboardingTimezoneScreen';
-import { OnboardingCurrencyScreen } from '@/screens/Onboarding/OnboardingCurrencyScreen';
-import { OnboardingCompleteScreen } from '@/screens/Onboarding/OnboardingCompleteScreen';
+import React from 'react';
+
 import { AddChildScreen } from '@/screens/Onboarding/AddChildScreen';
 import { InvitePartnerScreen } from '@/screens/Onboarding/InvitePartnerScreen';
+import { OnboardingCompleteScreen } from '@/screens/Onboarding/OnboardingCompleteScreen';
+import { OnboardingCurrencyScreen } from '@/screens/Onboarding/OnboardingCurrencyScreen';
+import { OnboardingNameScreen } from '@/screens/Onboarding/OnboardingNameScreen';
+import { OnboardingTimezoneScreen } from '@/screens/Onboarding/OnboardingTimezoneScreen';
 
 export type OnboardingStackParamList = {
   OnboardingName: undefined;
@@ -35,16 +36,16 @@ export function OnboardingNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
         animation: 'slide_from_right',
+        headerShown: false,
       }}
     >
-      <Stack.Screen name="OnboardingName" component={OnboardingNameScreen} />
-      <Stack.Screen name="OnboardingTimezone" component={OnboardingTimezoneScreen} />
-      <Stack.Screen name="OnboardingCurrency" component={OnboardingCurrencyScreen} />
-      <Stack.Screen name="OnboardingComplete" component={OnboardingCompleteScreen} />
-      <Stack.Screen name="AddChild" component={AddChildScreen} />
-      <Stack.Screen name="InvitePartner" component={InvitePartnerScreen} />
+      <Stack.Screen component={OnboardingNameScreen} name="OnboardingName" />
+      <Stack.Screen component={OnboardingTimezoneScreen} name="OnboardingTimezone" />
+      <Stack.Screen component={OnboardingCurrencyScreen} name="OnboardingCurrency" />
+      <Stack.Screen component={OnboardingCompleteScreen} name="OnboardingComplete" />
+      <Stack.Screen component={AddChildScreen} name="AddChild" />
+      <Stack.Screen component={InvitePartnerScreen} name="InvitePartner" />
     </Stack.Navigator>
   );
 }

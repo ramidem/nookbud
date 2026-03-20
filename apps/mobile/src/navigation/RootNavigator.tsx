@@ -1,11 +1,13 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import { MainNavigator } from './MainNavigator';
+import { OnboardingNavigator } from './OnboardingNavigator';
+
+import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { UserService } from '@/services';
-import { useDbMigrations } from '@/database';
-import { OnboardingNavigator } from './OnboardingNavigator';
-import { MainNavigator } from './MainNavigator';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -16,7 +18,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
   const tw = useTw();
-  const { success: migrationSuccess, error: migrationError } = useDbMigrations();
+  const { error: migrationError, success: migrationSuccess } = useDbMigrations();
   const [isLoading, setIsLoading] = useState(true);
   const [hasUser, setHasUser] = useState(false);
 
@@ -40,14 +42,12 @@ export function RootNavigator() {
   // Show loading while migrations run or checking user
   if (!migrationSuccess || isLoading) {
     return (
-      <View style={tw`flex-1 bg-white items-center justify-center`}>
-        <ActivityIndicator size="large" color="#2563EB" />
+      <View style={tw`flex-1 items-center justify-center bg-white`}>
+        <ActivityIndicator color="#2563EB" size="large" />
         {migrationError && (
           <View style={tw`mt-4 px-6`}>
-            <View style={tw`bg-red-50 rounded-xl p-4`}>
-              <View style={tw`text-red-800`}>
-                Migration error: {migrationError.message}
-              </View>
+            <View style={tw`rounded-xl bg-red-50 p-4`}>
+              <View style={tw`text-red-800`}>Migration error: {migrationError.message}</View>
             </View>
           </View>
         )}
@@ -57,14 +57,14 @@ export function RootNavigator() {
 
   return (
     <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        animation: 'fade',
-      }}
       initialRouteName={hasUser ? 'Main' : 'Onboarding'}
+      screenOptions={{
+        animation: 'fade',
+        headerShown: false,
+      }}
     >
-      <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
-      <Stack.Screen name="Main" component={MainNavigator} />
+      <Stack.Screen component={OnboardingNavigator} name="Onboarding" />
+      <Stack.Screen component={MainNavigator} name="Main" />
     </Stack.Navigator>
   );
 }

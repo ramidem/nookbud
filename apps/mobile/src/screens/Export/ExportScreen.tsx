@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import { View, Text, Pressable, ScrollView, ActivityIndicator, Alert } from 'react-native';
+
+import type { Child, EntryType } from '@/database/schema';
+import { ENTRY_TYPES } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import {
   ExportService,
@@ -15,14 +11,12 @@ import {
   TimelineService,
   type ExportFilters,
 } from '@/services';
-import type { Child, EntryType } from '@/database/schema';
-import { ENTRY_TYPES } from '@/database/schema';
 
 const TYPE_LABELS: Record<EntryType, string> = {
-  expense: '💰 Expense',
-  event: '📅 Event',
   agreement: '🤝 Agreement',
   communication: '💬 Communication',
+  event: '📅 Event',
+  expense: '💰 Expense',
   upload: '📎 Document',
 };
 
@@ -70,10 +64,10 @@ export function ExportScreen() {
 
     try {
       const result = await TimelineService.query({
-        relationshipId,
         childId: selectedChildIds.length === 1 ? selectedChildIds[0] : undefined,
-        types: selectedTypes.length > 0 ? selectedTypes : undefined,
         limit: 1,
+        relationshipId,
+        types: selectedTypes.length > 0 ? selectedTypes : undefined,
       });
       setEntryCount(result.total);
     } catch (err) {
@@ -83,17 +77,13 @@ export function ExportScreen() {
 
   const toggleChild = (childId: string) => {
     setSelectedChildIds((prev) =>
-      prev.includes(childId)
-        ? prev.filter((id) => id !== childId)
-        : [...prev, childId]
+      prev.includes(childId) ? prev.filter((id) => id !== childId) : [...prev, childId],
     );
   };
 
   const toggleType = (type: EntryType) => {
     setSelectedTypes((prev) =>
-      prev.includes(type)
-        ? prev.filter((t) => t !== type)
-        : [...prev, type]
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
     );
   };
 
@@ -103,10 +93,10 @@ export function ExportScreen() {
     setIsExporting(true);
     try {
       const filters: ExportFilters = {
-        relationshipId,
         childIds: selectedChildIds.length > 0 ? selectedChildIds : undefined,
-        types: selectedTypes.length > 0 ? selectedTypes : undefined,
         includeDisputed: true,
+        relationshipId,
+        types: selectedTypes.length > 0 ? selectedTypes : undefined,
       };
 
       let result;
@@ -128,8 +118,8 @@ export function ExportScreen() {
 
   if (isLoading) {
     return (
-      <View style={tw`flex-1 bg-white items-center justify-center`}>
-        <ActivityIndicator size="large" color="#2563EB" />
+      <View style={tw`flex-1 items-center justify-center bg-white`}>
+        <ActivityIndicator color="#2563EB" size="large" />
       </View>
     );
   }
@@ -137,9 +127,9 @@ export function ExportScreen() {
   return (
     <View style={tw`flex-1 bg-white`}>
       {/* Header */}
-      <View style={tw`bg-white px-4 pt-14 pb-4 border-b border-gray-100`}>
+      <View style={tw`border-b border-gray-100 bg-white px-4 pb-4 pt-14`}>
         <Text style={tw`text-2xl font-bold text-gray-900`}>Export</Text>
-        <Text style={tw`text-gray-600 mt-1`}>
+        <Text style={tw`mt-1 text-gray-600`}>
           Generate court-ready reports and evidence bundles
         </Text>
       </View>
@@ -147,31 +137,31 @@ export function ExportScreen() {
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Export Type */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 uppercase tracking-wide mb-3`}>
+          <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
             Export Type
           </Text>
           <View style={tw`flex-row gap-3`}>
             <Pressable
-              style={tw`flex-1 p-4 rounded-xl border-2 ${
+              style={tw`flex-1 rounded-xl border-2 p-4 ${
                 exportType === 'pdf' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
               }`}
               onPress={() => setExportType('pdf')}
             >
-              <Text style={tw`text-2xl mb-2`}>📄</Text>
+              <Text style={tw`mb-2 text-2xl`}>📄</Text>
               <Text style={tw`font-semibold text-gray-900`}>PDF Report</Text>
-              <Text style={tw`text-sm text-gray-600 mt-1`}>
+              <Text style={tw`mt-1 text-sm text-gray-600`}>
                 Timeline summary for printing or sharing
               </Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 p-4 rounded-xl border-2 ${
+              style={tw`flex-1 rounded-xl border-2 p-4 ${
                 exportType === 'bundle' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
               }`}
               onPress={() => setExportType('bundle')}
             >
-              <Text style={tw`text-2xl mb-2`}>📦</Text>
+              <Text style={tw`mb-2 text-2xl`}>📦</Text>
               <Text style={tw`font-semibold text-gray-900`}>Evidence Bundle</Text>
-              <Text style={tw`text-sm text-gray-600 mt-1`}>
+              <Text style={tw`mt-1 text-sm text-gray-600`}>
                 Full data + files with hash verification
               </Text>
             </Pressable>
@@ -181,12 +171,12 @@ export function ExportScreen() {
         {/* Children Filter */}
         {children.length > 0 && (
           <View style={tw`mb-6`}>
-            <Text style={tw`text-sm font-medium text-gray-600 uppercase tracking-wide mb-3`}>
+            <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
               Filter by Child
             </Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
               <Pressable
-                style={tw`px-4 py-2 rounded-full ${
+                style={tw`rounded-full px-4 py-2 ${
                   selectedChildIds.length === 0 ? 'bg-blue-600' : 'bg-gray-100'
                 }`}
                 onPress={() => setSelectedChildIds([])}
@@ -202,7 +192,7 @@ export function ExportScreen() {
               {children.map((child) => (
                 <Pressable
                   key={child.id}
-                  style={tw`px-4 py-2 rounded-full ${
+                  style={tw`rounded-full px-4 py-2 ${
                     selectedChildIds.includes(child.id) ? 'bg-blue-600' : 'bg-gray-100'
                   }`}
                   onPress={() => toggleChild(child.id)}
@@ -222,12 +212,12 @@ export function ExportScreen() {
 
         {/* Entry Type Filter */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 uppercase tracking-wide mb-3`}>
+          <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
             Filter by Type
           </Text>
           <View style={tw`flex-row flex-wrap gap-2`}>
             <Pressable
-              style={tw`px-4 py-2 rounded-full ${
+              style={tw`rounded-full px-4 py-2 ${
                 selectedTypes.length === 0 ? 'bg-blue-600' : 'bg-gray-100'
               }`}
               onPress={() => setSelectedTypes([])}
@@ -243,16 +233,12 @@ export function ExportScreen() {
             {ENTRY_TYPES.map((type) => (
               <Pressable
                 key={type}
-                style={tw`px-4 py-2 rounded-full ${
+                style={tw`rounded-full px-4 py-2 ${
                   selectedTypes.includes(type) ? 'bg-blue-600' : 'bg-gray-100'
                 }`}
                 onPress={() => toggleType(type)}
               >
-                <Text
-                  style={tw`${
-                    selectedTypes.includes(type) ? 'text-white' : 'text-gray-700'
-                  }`}
-                >
+                <Text style={tw`${selectedTypes.includes(type) ? 'text-white' : 'text-gray-700'}`}>
                   {TYPE_LABELS[type]}
                 </Text>
               </Pressable>
@@ -261,42 +247,40 @@ export function ExportScreen() {
         </View>
 
         {/* Preview Count */}
-        <View style={tw`bg-gray-50 rounded-xl p-4 mb-6`}>
+        <View style={tw`mb-6 rounded-xl bg-gray-50 p-4`}>
           <Text style={tw`text-center text-gray-600`}>
-            <Text style={tw`text-2xl font-bold text-gray-900`}>{entryCount}</Text>
-            {' '}entries will be exported
+            <Text style={tw`text-2xl font-bold text-gray-900`}>{entryCount}</Text> entries will be
+            exported
           </Text>
         </View>
 
         {/* Info */}
         {exportType === 'bundle' && (
-          <View style={tw`bg-green-50 rounded-xl p-4 mb-6`}>
-            <Text style={tw`text-green-800 text-sm`}>
-              🔒 The evidence bundle includes SHA-256 hashes for all files.
-              These can be used to prove files haven't been modified.
+          <View style={tw`mb-6 rounded-xl bg-green-50 p-4`}>
+            <Text style={tw`text-sm text-green-800`}>
+              🔒 The evidence bundle includes SHA-256 hashes for all files. These can be used to
+              prove files haven't been modified.
             </Text>
           </View>
         )}
 
         {/* Export Button */}
         <Pressable
-          style={tw`bg-blue-600 rounded-xl py-4 flex-row justify-center items-center`}
-          onPress={handleExport}
           disabled={isExporting || entryCount === 0}
+          style={tw`flex-row items-center justify-center rounded-xl bg-blue-600 py-4`}
+          onPress={handleExport}
         >
           {isExporting ? (
             <ActivityIndicator color="white" />
           ) : (
-            <Text style={tw`text-white text-lg font-semibold`}>
+            <Text style={tw`text-lg font-semibold text-white`}>
               {exportType === 'pdf' ? 'Generate Report' : 'Create Evidence Bundle'}
             </Text>
           )}
         </Pressable>
 
         {entryCount === 0 && (
-          <Text style={tw`text-center text-gray-500 mt-4`}>
-            No entries match your filters
-          </Text>
+          <Text style={tw`mt-4 text-center text-gray-500`}>No entries match your filters</Text>
         )}
       </ScrollView>
     </View>

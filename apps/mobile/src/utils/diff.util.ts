@@ -14,12 +14,12 @@ export type DiffResult = {
  */
 export function computeDiff(
   oldObj: Record<string, unknown>,
-  newObj: Record<string, unknown>
+  newObj: Record<string, unknown>,
 ): DiffResult {
   const diff: DiffResult = {
     added: {},
-    removed: {},
     changed: {},
+    removed: {},
   };
 
   const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)]);
@@ -86,6 +86,7 @@ function deepEqual(a: unknown, b: unknown): boolean {
 
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
+
     return a.every((val, i) => deepEqual(val, b[i]));
   }
 

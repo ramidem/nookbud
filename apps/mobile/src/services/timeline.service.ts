@@ -1,4 +1,5 @@
 import { eq, and, gte, lte, desc, ne, inArray, sql } from 'drizzle-orm';
+
 import { db } from '@/database';
 import {
   entries,
@@ -48,19 +49,84 @@ export type TimelineResult = {
 
 export const TimelineService = {
   /**
+   * Get entries for a specific child
+   */
+  async getByChild(relationshipId: string, childId: string, limit = 20): Promise<TimelineEntry[]> {
+    const result = await this.query({
+      childId,
+      limit,
+      relationshipId,
+    });
+
+    return result.entries;
+  },
+
+  /**
+   * Get entries by type
+   */
+  async getByType(relationshipId: string, type: EntryType, limit = 20): Promise<TimelineEntry[]> {
+    const result = await this.query({
+      limit,
+      relationshipId,
+      types: [type],
+    });
+
+    return result.entries;
+  },
+
+  /**
+   * Get disputed entries
+   */
+  async getDisputed(relationshipId: string): Promise<TimelineEntry[]> {
+    const result = await this.query({
+      limit: 100,
+      relationshipId,
+    });
+
+    return result.entries.filter((entry) => entry.acknowledgmentStatus === 'disputed');
+  },
+
+  /**
+   * Get pending acknowledgments for current user
+   */
+  async getPendingForUser(relationshipId: string, userId: string): Promise<TimelineEntry[]> {
+    // Get entries created by the OTHER user that are pending
+    const allEntries = await this.query({
+      limit: 100,
+      relationshipId,
+    });
+
+    return allEntries.entries.filter(
+      (entry) => entry.createdBy !== userId && entry.acknowledgmentStatus === 'pending',
+    );
+  },
+
+  /**
+   * Get recent entries
+   */
+  async getRecent(relationshipId: string, limit = 10): Promise<TimelineEntry[]> {
+    const result = await this.query({
+      limit,
+      relationshipId,
+    });
+
+    return result.entries;
+  },
+
+  /**
    * Query timeline entries with filters
    */
   async query(params: TimelineQueryParams): Promise<TimelineResult> {
     const {
-      relationshipId,
       childId,
-      types,
       dateFrom,
       dateTo,
-      status,
       includeDeleted = false,
       limit = 20,
       offset = 0,
+      relationshipId,
+      status,
+      types,
     } = params;
 
     // Build conditions
@@ -114,10 +180,10 @@ export const TimelineService = {
         if (entry.currentVersionId) {
           const [version] = await db
             .select({
-              id: entryVersions.id,
-              versionNumber: entryVersions.versionNumber,
               contentJson: entryVersions.contentJson,
               createdAt: entryVersions.createdAt,
+              id: entryVersions.id,
+              versionNumber: entryVersions.versionNumber,
             })
             .from(entryVersions)
             .where(eq(entryVersions.id, entry.currentVersionId));
@@ -131,101 +197,24 @@ export const TimelineService = {
           .where(eq(acknowledgments.entryId, entry.id));
 
         return {
-          id: entry.id,
-          relationshipId: entry.relationshipId,
           childId: entry.childId,
-          type: entry.type as EntryType,
-          createdBy: entry.createdBy,
-          status: entry.status as EntryStatus,
           createdAt: entry.createdAt,
-          currentVersion,
+          createdBy: entry.createdBy,
           acknowledgmentStatus: (ack?.status as AcknowledgmentStatus) ?? null,
+          id: entry.id,
+          currentVersion,
+          relationshipId: entry.relationshipId,
+          status: entry.status as EntryStatus,
+          type: entry.type as EntryType,
         };
-      })
+      }),
     );
 
     return {
       entries: timelineEntries,
-      total,
       hasMore: offset + entryResults.length < total,
+      total,
     };
-  },
-
-  /**
-   * Get entries for a specific child
-   */
-  async getByChild(
-    relationshipId: string,
-    childId: string,
-    limit = 20
-  ): Promise<TimelineEntry[]> {
-    const result = await this.query({
-      relationshipId,
-      childId,
-      limit,
-    });
-    return result.entries;
-  },
-
-  /**
-   * Get entries by type
-   */
-  async getByType(
-    relationshipId: string,
-    type: EntryType,
-    limit = 20
-  ): Promise<TimelineEntry[]> {
-    const result = await this.query({
-      relationshipId,
-      types: [type],
-      limit,
-    });
-    return result.entries;
-  },
-
-  /**
-   * Get recent entries
-   */
-  async getRecent(relationshipId: string, limit = 10): Promise<TimelineEntry[]> {
-    const result = await this.query({
-      relationshipId,
-      limit,
-    });
-    return result.entries;
-  },
-
-  /**
-   * Get pending acknowledgments for current user
-   */
-  async getPendingForUser(
-    relationshipId: string,
-    userId: string
-  ): Promise<TimelineEntry[]> {
-    // Get entries created by the OTHER user that are pending
-    const allEntries = await this.query({
-      relationshipId,
-      limit: 100,
-    });
-
-    return allEntries.entries.filter(
-      (entry) =>
-        entry.createdBy !== userId &&
-        entry.acknowledgmentStatus === 'pending'
-    );
-  },
-
-  /**
-   * Get disputed entries
-   */
-  async getDisputed(relationshipId: string): Promise<TimelineEntry[]> {
-    const result = await this.query({
-      relationshipId,
-      limit: 100,
-    });
-
-    return result.entries.filter(
-      (entry) => entry.acknowledgmentStatus === 'disputed'
-    );
   },
 
   /**

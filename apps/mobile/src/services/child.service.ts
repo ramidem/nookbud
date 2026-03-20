@@ -1,8 +1,10 @@
 import { eq } from 'drizzle-orm';
-import { db } from '@/database';
-import { children, type Child, type NewChild } from '@/database/schema';
+
 import { AuditService } from './audit.service';
 import { UserService } from './user.service';
+
+import { db } from '@/database';
+import { children, type Child, type NewChild } from '@/database/schema';
 
 /**
  * Generate a UUID v4
@@ -11,28 +13,37 @@ function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
+
     return v.toString(16);
   });
 }
 
 export const ChildService = {
   /**
+   * Get children count for a relationship
+   */
+  async count(relationshipId: string): Promise<number> {
+    const result = await db
+      .select()
+      .from(children)
+      .where(eq(children.relationshipId, relationshipId));
+
+    return result.length;
+  },
+
+  /**
    * Create a new child record
    */
-  async create(data: {
-    relationshipId: string;
-    name: string;
-    dateOfBirth?: Date;
-  }): Promise<Child> {
+  async create(data: { relationshipId: string; name: string; dateOfBirth?: Date }): Promise<Child> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error('No current user');
 
     const id = generateUUID();
     const newChild: NewChild = {
-      id,
-      relationshipId: data.relationshipId,
-      name: data.name,
       dateOfBirth: data.dateOfBirth,
+      id,
+      name: data.name,
+      relationshipId: data.relationshipId,
     };
 
     await db.insert(children).values(newChild);
@@ -43,6 +54,7 @@ export const ChildService = {
     });
 
     const [child] = await db.select().from(children).where(eq(children.id, id));
+
     return child;
   },
 
@@ -51,6 +63,7 @@ export const ChildService = {
    */
   async getById(id: string): Promise<Child | null> {
     const [child] = await db.select().from(children).where(eq(children.id, id));
+
     return child ?? null;
   },
 
@@ -68,10 +81,7 @@ export const ChildService = {
   /**
    * Update a child's information
    */
-  async update(
-    id: string,
-    data: { name?: string; dateOfBirth?: Date | null }
-  ): Promise<Child> {
+  async update(id: string, data: { name?: string; dateOfBirth?: Date | null }): Promise<Child> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error('No current user');
 
@@ -89,26 +99,13 @@ export const ChildService = {
     await AuditService.log(userId, 'update', 'child', id, {
       changes: data,
       previous: {
-        name: existingChild.name,
         dateOfBirth: existingChild.dateOfBirth,
+        name: existingChild.name,
       },
     });
 
-    const [updated] = await db
-      .select()
-      .from(children)
-      .where(eq(children.id, id));
-    return updated;
-  },
+    const [updated] = await db.select().from(children).where(eq(children.id, id));
 
-  /**
-   * Get children count for a relationship
-   */
-  async count(relationshipId: string): Promise<number> {
-    const result = await db
-      .select()
-      .from(children)
-      .where(eq(children.relationshipId, relationshipId));
-    return result.length;
+    return updated;
   },
 };

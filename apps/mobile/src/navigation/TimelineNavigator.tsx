@@ -1,7 +1,6 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { TimelineScreen } from '@/screens/Timeline';
-import { EntryDetailScreen } from '@/screens/EntryDetail';
+import React from 'react';
+
 import {
   AddEntryPickerScreen,
   AddExpenseScreen,
@@ -10,6 +9,8 @@ import {
   AddCommunicationScreen,
   AddUploadScreen,
 } from '@/screens/AddEntry';
+import { EntryDetailScreen } from '@/screens/EntryDetail';
+import { TimelineScreen } from '@/screens/Timeline';
 
 export type TimelineStackParamList = {
   Timeline: undefined;
@@ -31,14 +32,14 @@ export function TimelineNavigator() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Timeline" component={TimelineScreen} />
-      <Stack.Screen name="EntryDetail" component={EntryDetailScreen} />
-      <Stack.Screen name="AddEntryPicker" component={AddEntryPickerScreen} />
-      <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
-      <Stack.Screen name="AddEvent" component={AddEventScreen} />
-      <Stack.Screen name="AddAgreement" component={AddAgreementScreen} />
-      <Stack.Screen name="AddCommunication" component={AddCommunicationScreen} />
-      <Stack.Screen name="AddUpload" component={AddUploadScreen} />
+      <Stack.Screen component={TimelineScreen} name="Timeline" />
+      <Stack.Screen component={EntryDetailScreen} name="EntryDetail" />
+      <Stack.Screen component={AddEntryPickerScreen} name="AddEntryPicker" />
+      <Stack.Screen component={AddExpenseScreen} name="AddExpense" />
+      <Stack.Screen component={AddEventScreen} name="AddEvent" />
+      <Stack.Screen component={AddAgreementScreen} name="AddAgreement" />
+      <Stack.Screen component={AddCommunicationScreen} name="AddCommunication" />
+      <Stack.Screen component={AddUploadScreen} name="AddUpload" />
     </Stack.Navigator>
   );
 }

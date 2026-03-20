@@ -1,12 +1,10 @@
 import { eq } from 'drizzle-orm';
-import { db } from '@/database';
-import {
-  relationships,
-  type Relationship,
-  type NewRelationship,
-} from '@/database/schema';
+
 import { AuditService } from './audit.service';
 import { UserService } from './user.service';
+
+import { db } from '@/database';
+import { relationships, type Relationship, type NewRelationship } from '@/database/schema';
 
 /**
  * Generate a UUID v4
@@ -15,6 +13,7 @@ function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
+
     return v.toString(16);
   });
 }
@@ -29,103 +28,11 @@ function generateInviteToken(): string {
   for (let i = 0; i < 8; i++) {
     token += chars.charAt(Math.floor(Math.random() * chars.length));
   }
+
   return token;
 }
 
 export const RelationshipService = {
-  /**
-   * Create a new relationship (parent A creates it)
-   */
-  async create(): Promise<Relationship> {
-    const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
-
-    const id = generateUUID();
-    const inviteToken = generateInviteToken();
-    const inviteExpiresAt = new Date();
-    inviteExpiresAt.setDate(inviteExpiresAt.getDate() + 30); // 30 day expiry
-
-    const newRelationship: NewRelationship = {
-      id,
-      parentAId: userId,
-      parentBId: null,
-      inviteToken,
-      inviteExpiresAt,
-    };
-
-    await db.insert(relationships).values(newRelationship);
-
-    // Audit log
-    await AuditService.log(userId, 'create', 'relationship', id, {
-      inviteToken,
-    });
-
-    const [relationship] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.id, id));
-    return relationship;
-  },
-
-  /**
-   * Get relationship by ID
-   */
-  async getById(id: string): Promise<Relationship | null> {
-    const [relationship] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.id, id));
-    return relationship ?? null;
-  },
-
-  /**
-   * Get current user's relationship
-   */
-  async getCurrentRelationship(): Promise<Relationship | null> {
-    const userId = UserService.getCurrentUserId();
-    if (!userId) return null;
-
-    // Check if user is parent A or parent B
-    const [relationship] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.parentAId, userId));
-
-    if (relationship) return relationship;
-
-    // Check if user is parent B
-    const [asParentB] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.parentBId, userId));
-
-    return asParentB ?? null;
-  },
-
-  /**
-   * Generate a new invite token for partner
-   */
-  async regenerateInvite(relationshipId: string): Promise<string> {
-    const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error('No current user');
-
-    const inviteToken = generateInviteToken();
-    const inviteExpiresAt = new Date();
-    inviteExpiresAt.setDate(inviteExpiresAt.getDate() + 30);
-
-    await db
-      .update(relationships)
-      .set({ inviteToken, inviteExpiresAt })
-      .where(eq(relationships.id, relationshipId));
-
-    await AuditService.log(userId, 'update', 'relationship', relationshipId, {
-      action: 'regenerate_invite',
-      inviteToken,
-    });
-
-    return inviteToken;
-  },
-
   /**
    * Accept an invite (parent B joins)
    */
@@ -157,9 +64,9 @@ export const RelationshipService = {
     await db
       .update(relationships)
       .set({
-        parentBId: userId,
-        inviteToken: null,
         inviteExpiresAt: null,
+        inviteToken: null,
+        parentBId: userId,
       })
       .where(eq(relationships.id, relationship.id));
 
@@ -171,15 +78,73 @@ export const RelationshipService = {
       .select()
       .from(relationships)
       .where(eq(relationships.id, relationship.id));
+
     return updated;
   },
 
   /**
-   * Check if current user is the other parent (not the creator)
+   * Create a new relationship (parent A creates it)
    */
-  isOtherParent(relationship: Relationship): boolean {
+  async create(): Promise<Relationship> {
     const userId = UserService.getCurrentUserId();
-    return relationship.parentBId === userId;
+    if (!userId) throw new Error('No current user');
+
+    const id = generateUUID();
+    const inviteToken = generateInviteToken();
+    const inviteExpiresAt = new Date();
+    inviteExpiresAt.setDate(inviteExpiresAt.getDate() + 30); // 30 day expiry
+
+    const newRelationship: NewRelationship = {
+      id,
+      inviteExpiresAt,
+      inviteToken,
+      parentAId: userId,
+      parentBId: null,
+    };
+
+    await db.insert(relationships).values(newRelationship);
+
+    // Audit log
+    await AuditService.log(userId, 'create', 'relationship', id, {
+      inviteToken,
+    });
+
+    const [relationship] = await db.select().from(relationships).where(eq(relationships.id, id));
+
+    return relationship;
+  },
+
+  /**
+   * Get relationship by ID
+   */
+  async getById(id: string): Promise<Relationship | null> {
+    const [relationship] = await db.select().from(relationships).where(eq(relationships.id, id));
+
+    return relationship ?? null;
+  },
+
+  /**
+   * Get current user's relationship
+   */
+  async getCurrentRelationship(): Promise<Relationship | null> {
+    const userId = UserService.getCurrentUserId();
+    if (!userId) return null;
+
+    // Check if user is parent A or parent B
+    const [relationship] = await db
+      .select()
+      .from(relationships)
+      .where(eq(relationships.parentAId, userId));
+
+    if (relationship) return relationship;
+
+    // Check if user is parent B
+    const [asParentB] = await db
+      .select()
+      .from(relationships)
+      .where(eq(relationships.parentBId, userId));
+
+    return asParentB ?? null;
   },
 
   /**
@@ -193,6 +158,40 @@ export const RelationshipService = {
     if (relationship.parentBId === userId) {
       return relationship.parentAId;
     }
+
     return null;
+  },
+
+  /**
+   * Check if current user is the other parent (not the creator)
+   */
+  isOtherParent(relationship: Relationship): boolean {
+    const userId = UserService.getCurrentUserId();
+
+    return relationship.parentBId === userId;
+  },
+
+  /**
+   * Generate a new invite token for partner
+   */
+  async regenerateInvite(relationshipId: string): Promise<string> {
+    const userId = UserService.getCurrentUserId();
+    if (!userId) throw new Error('No current user');
+
+    const inviteToken = generateInviteToken();
+    const inviteExpiresAt = new Date();
+    inviteExpiresAt.setDate(inviteExpiresAt.getDate() + 30);
+
+    await db
+      .update(relationships)
+      .set({ inviteExpiresAt, inviteToken })
+      .where(eq(relationships.id, relationshipId));
+
+    await AuditService.log(userId, 'update', 'relationship', relationshipId, {
+      action: 'regenerate_invite',
+      inviteToken,
+    });
+
+    return inviteToken;
   },
 };

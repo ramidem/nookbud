@@ -1,9 +1,11 @@
-import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
 import { Text, View } from 'react-native';
-import { useTw } from '@/hooks/useTw';
-import { TimelineNavigator } from './TimelineNavigator';
+
 import { SettingsNavigator } from './SettingsNavigator';
+import { TimelineNavigator } from './TimelineNavigator';
+
+import { useTw } from '@/hooks/useTw';
 import { ExportScreen } from '@/screens/Export';
 
 export type MainTabParamList = {
@@ -18,22 +20,20 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 // Placeholder Calendar screen
 function CalendarPlaceholder() {
   const tw = useTw();
+
   return (
-    <View style={tw`flex-1 bg-white items-center justify-center`}>
-      <Text style={tw`text-6xl mb-4`}>📅</Text>
+    <View style={tw`flex-1 items-center justify-center bg-white`}>
+      <Text style={tw`mb-4 text-6xl`}>📅</Text>
       <Text style={tw`text-xl font-medium text-gray-900`}>Calendar</Text>
-      <Text style={tw`text-gray-600 mt-2`}>Coming in Phase 2</Text>
+      <Text style={tw`mt-2 text-gray-600`}>Coming in Phase 2</Text>
     </View>
   );
 }
 
-function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
+function TabIcon({ focused, icon }: { icon: string; focused: boolean }) {
   const tw = useTw();
-  return (
-    <Text style={tw`text-2xl ${focused ? 'opacity-100' : 'opacity-50'}`}>
-      {icon}
-    </Text>
-  );
+
+  return <Text style={tw`text-2xl ${focused ? 'opacity-100' : 'opacity-50'}`}>{icon}</Text>;
 }
 
 export function MainNavigator() {
@@ -43,42 +43,42 @@ export function MainNavigator() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: tw`bg-white border-t border-gray-100 pt-2`,
-        tabBarLabelStyle: tw`text-xs mt-1`,
         tabBarActiveTintColor: '#2563EB',
         tabBarInactiveTintColor: '#9CA3AF',
+        tabBarLabelStyle: tw`mt-1 text-xs`,
+        tabBarStyle: tw`border-t border-gray-100 bg-white pt-2`,
       }}
     >
       <Tab.Screen
-        name="TimelineTab"
         component={TimelineNavigator}
+        name="TimelineTab"
         options={{
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon="📋" />,
           tabBarLabel: 'Timeline',
-          tabBarIcon: ({ focused }) => <TabIcon icon="📋" focused={focused} />,
         }}
       />
       <Tab.Screen
-        name="CalendarTab"
         component={CalendarPlaceholder}
+        name="CalendarTab"
         options={{
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon="📅" />,
           tabBarLabel: 'Calendar',
-          tabBarIcon: ({ focused }) => <TabIcon icon="📅" focused={focused} />,
         }}
       />
       <Tab.Screen
-        name="ExportTab"
         component={ExportScreen}
+        name="ExportTab"
         options={{
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon="📤" />,
           tabBarLabel: 'Export',
-          tabBarIcon: ({ focused }) => <TabIcon icon="📤" focused={focused} />,
         }}
       />
       <Tab.Screen
-        name="SettingsTab"
         component={SettingsNavigator}
+        name="SettingsTab"
         options={{
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon="⚙️" />,
           tabBarLabel: 'Settings',
-          tabBarIcon: ({ focused }) => <TabIcon icon="⚙️" focused={focused} />,
         }}
       />
     </Tab.Navigator>

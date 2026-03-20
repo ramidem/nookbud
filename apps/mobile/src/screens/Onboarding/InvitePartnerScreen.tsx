@@ -1,8 +1,9 @@
+import Clipboard from '@react-native-clipboard/clipboard';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { View, Text, Pressable, Share, Alert } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
+
 import { useTw } from '@/hooks/useTw';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'InvitePartner'>;
@@ -45,64 +46,49 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
 
   return (
     <View style={tw`flex-1 bg-white px-6 pt-16`}>
-      <Text style={tw`text-3xl font-bold text-gray-900 mb-2`}>
-        Invite your co-parent
-      </Text>
-      <Text style={tw`text-base text-gray-600 mb-8`}>
+      <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Invite your co-parent</Text>
+      <Text style={tw`mb-8 text-base text-gray-600`}>
         Share this code so they can join and see the same records.
       </Text>
 
-      <View style={tw`bg-gray-100 rounded-2xl p-6 mb-6 items-center`}>
-        <Text style={tw`text-sm text-gray-500 mb-2`}>Invite Code</Text>
-        <Text style={tw`text-3xl font-mono font-bold text-gray-900 tracking-widest`}>
+      <View style={tw`mb-6 items-center rounded-2xl bg-gray-100 p-6`}>
+        <Text style={tw`mb-2 text-sm text-gray-500`}>Invite Code</Text>
+        <Text style={tw`font-mono text-3xl font-bold tracking-widest text-gray-900`}>
           {inviteToken}
         </Text>
-        <Text style={tw`text-sm text-gray-500 mt-2`}>Valid for 30 days</Text>
+        <Text style={tw`mt-2 text-sm text-gray-500`}>Valid for 30 days</Text>
       </View>
 
-      <View style={tw`flex-row gap-3 mb-8`}>
-        <Pressable
-          style={tw`flex-1 bg-gray-100 rounded-xl py-4`}
-          onPress={handleCopy}
-        >
-          <Text style={tw`text-gray-900 text-center font-medium`}>
+      <View style={tw`mb-8 flex-row gap-3`}>
+        <Pressable style={tw`flex-1 rounded-xl bg-gray-100 py-4`} onPress={handleCopy}>
+          <Text style={tw`text-center font-medium text-gray-900`}>
             {copied ? '✓ Copied!' : 'Copy Code'}
           </Text>
         </Pressable>
 
-        <Pressable
-          style={tw`flex-1 bg-blue-600 rounded-xl py-4`}
-          onPress={handleShare}
-        >
-          <Text style={tw`text-white text-center font-medium`}>
-            Share
-          </Text>
+        <Pressable style={tw`flex-1 rounded-xl bg-blue-600 py-4`} onPress={handleShare}>
+          <Text style={tw`text-center font-medium text-white`}>Share</Text>
         </Pressable>
       </View>
 
-      <View style={tw`bg-amber-50 rounded-xl p-4 mb-8`}>
-        <Text style={tw`text-amber-800 text-sm`}>
-          💡 You can start using CoParent right away. Your co-parent can join
-          anytime using this code, and they'll see all the records you've created.
+      <View style={tw`mb-8 rounded-xl bg-amber-50 p-4`}>
+        <Text style={tw`text-sm text-amber-800`}>
+          💡 You can start using CoParent right away. Your co-parent can join anytime using this
+          code, and they'll see all the records you've created.
         </Text>
       </View>
 
       <View style={tw`flex-1`} />
 
       <View style={tw`pb-8`}>
-        <Pressable
-          style={tw`bg-blue-600 rounded-xl py-4 mb-3`}
-          onPress={handleDone}
-        >
-          <Text style={tw`text-white text-center text-lg font-semibold`}>
+        <Pressable style={tw`mb-3 rounded-xl bg-blue-600 py-4`} onPress={handleDone}>
+          <Text style={tw`text-center text-lg font-semibold text-white`}>
             Done — Start Using CoParent
           </Text>
         </Pressable>
 
         <Pressable onPress={handleSkip}>
-          <Text style={tw`text-gray-500 text-center text-base`}>
-            I'll invite them later
-          </Text>
+          <Text style={tw`text-center text-base text-gray-500`}>I'll invite them later</Text>
         </Pressable>
       </View>
     </View>

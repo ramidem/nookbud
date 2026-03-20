@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -9,7 +10,10 @@ import {
   TextInput,
   Modal,
 } from 'react-native';
+
+import type { EntryVersion, Attachment } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
+import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import {
   EntryService,
   AcknowledgmentService,
@@ -18,17 +22,14 @@ import {
   type EntryWithVersion,
   type DisputeWithResponses,
 } from '@/services';
-import type { EntryVersion, Attachment } from '@/database/schema';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'EntryDetail'>;
 
 const TYPE_LABELS = {
-  expense: '💰 Expense',
-  event: '📅 Event',
   agreement: '🤝 Agreement',
   communication: '💬 Communication',
+  event: '📅 Event',
+  expense: '💰 Expense',
   upload: '📎 Document',
 };
 
@@ -92,6 +93,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
   const handleDispute = async () => {
     if (!disputeReason.trim()) {
       Alert.alert('Error', 'Please provide a reason for disputing');
+
       return;
     }
 
@@ -113,22 +115,22 @@ export function EntryDetailScreen({ navigation, route }: Props) {
     switch (entry.type) {
       case 'expense':
         return (
-          <View style={tw`bg-gray-50 rounded-xl p-4 mb-4`}>
-            <View style={tw`flex-row justify-between mb-2`}>
+          <View style={tw`mb-4 rounded-xl bg-gray-50 p-4`}>
+            <View style={tw`mb-2 flex-row justify-between`}>
               <Text style={tw`text-gray-600`}>Amount</Text>
               <Text style={tw`text-xl font-bold`}>
                 {content.currency} {(content.amount / 100).toFixed(2)}
               </Text>
             </View>
-            <View style={tw`flex-row justify-between mb-2`}>
+            <View style={tw`mb-2 flex-row justify-between`}>
               <Text style={tw`text-gray-600`}>Category</Text>
               <Text style={tw`text-gray-900`}>{content.category}</Text>
             </View>
-            <View style={tw`flex-row justify-between mb-2`}>
+            <View style={tw`mb-2 flex-row justify-between`}>
               <Text style={tw`text-gray-600`}>Split</Text>
               <Text style={tw`text-gray-900`}>{content.splitType}</Text>
             </View>
-            <View style={tw`mt-2 pt-2 border-t border-gray-200`}>
+            <View style={tw`mt-2 border-t border-gray-200 pt-2`}>
               <Text style={tw`text-gray-900`}>{content.description}</Text>
             </View>
           </View>
@@ -136,22 +138,20 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
       case 'event':
         return (
-          <View style={tw`bg-gray-50 rounded-xl p-4 mb-4`}>
-            <Text style={tw`text-xl font-semibold mb-2`}>{content.title}</Text>
-            <View style={tw`flex-row justify-between mb-2`}>
+          <View style={tw`mb-4 rounded-xl bg-gray-50 p-4`}>
+            <Text style={tw`mb-2 text-xl font-semibold`}>{content.title}</Text>
+            <View style={tw`mb-2 flex-row justify-between`}>
               <Text style={tw`text-gray-600`}>When</Text>
-              <Text style={tw`text-gray-900`}>
-                {new Date(content.startTime).toLocaleString()}
-              </Text>
+              <Text style={tw`text-gray-900`}>{new Date(content.startTime).toLocaleString()}</Text>
             </View>
             {content.location && (
-              <View style={tw`flex-row justify-between mb-2`}>
+              <View style={tw`mb-2 flex-row justify-between`}>
                 <Text style={tw`text-gray-600`}>Where</Text>
                 <Text style={tw`text-gray-900`}>{content.location}</Text>
               </View>
             )}
             {content.notes && (
-              <View style={tw`mt-2 pt-2 border-t border-gray-200`}>
+              <View style={tw`mt-2 border-t border-gray-200 pt-2`}>
                 <Text style={tw`text-gray-900`}>{content.notes}</Text>
               </View>
             )}
@@ -160,19 +160,19 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
       case 'agreement':
         return (
-          <View style={tw`bg-gray-50 rounded-xl p-4 mb-4`}>
-            <Text style={tw`text-xl font-semibold mb-2`}>{content.title}</Text>
-            <View style={tw`flex-row justify-between mb-2`}>
+          <View style={tw`mb-4 rounded-xl bg-gray-50 p-4`}>
+            <Text style={tw`mb-2 text-xl font-semibold`}>{content.title}</Text>
+            <View style={tw`mb-2 flex-row justify-between`}>
               <Text style={tw`text-gray-600`}>Effective</Text>
               <Text style={tw`text-gray-900`}>{content.effectiveDate}</Text>
             </View>
             {content.expirationDate && (
-              <View style={tw`flex-row justify-between mb-2`}>
+              <View style={tw`mb-2 flex-row justify-between`}>
                 <Text style={tw`text-gray-600`}>Expires</Text>
                 <Text style={tw`text-gray-900`}>{content.expirationDate}</Text>
               </View>
             )}
-            <View style={tw`mt-2 pt-2 border-t border-gray-200`}>
+            <View style={tw`mt-2 border-t border-gray-200 pt-2`}>
               <Text style={tw`text-gray-900`}>{content.termsText}</Text>
             </View>
           </View>
@@ -180,12 +180,12 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
       case 'communication':
         return (
-          <View style={tw`bg-gray-50 rounded-xl p-4 mb-4`}>
-            <View style={tw`flex-row items-center mb-2`}>
-              <Text style={tw`text-xl font-semibold flex-1`}>{content.subject}</Text>
+          <View style={tw`mb-4 rounded-xl bg-gray-50 p-4`}>
+            <View style={tw`mb-2 flex-row items-center`}>
+              <Text style={tw`flex-1 text-xl font-semibold`}>{content.subject}</Text>
               {content.importance === 'high' && (
-                <View style={tw`bg-red-100 px-2 py-1 rounded`}>
-                  <Text style={tw`text-red-800 text-xs`}>⚠️ High</Text>
+                <View style={tw`rounded bg-red-100 px-2 py-1`}>
+                  <Text style={tw`text-xs text-red-800`}>⚠️ High</Text>
                 </View>
               )}
             </View>
@@ -195,14 +195,14 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
       case 'upload':
         return (
-          <View style={tw`bg-gray-50 rounded-xl p-4 mb-4`}>
-            <Text style={tw`text-xl font-semibold mb-2`}>{content.title}</Text>
-            <View style={tw`flex-row justify-between mb-2`}>
+          <View style={tw`mb-4 rounded-xl bg-gray-50 p-4`}>
+            <Text style={tw`mb-2 text-xl font-semibold`}>{content.title}</Text>
+            <View style={tw`mb-2 flex-row justify-between`}>
               <Text style={tw`text-gray-600`}>Type</Text>
-              <Text style={tw`text-gray-900 capitalize`}>{content.documentType}</Text>
+              <Text style={tw`capitalize text-gray-900`}>{content.documentType}</Text>
             </View>
             {content.description && (
-              <Text style={tw`text-gray-900 mt-2`}>{content.description}</Text>
+              <Text style={tw`mt-2 text-gray-900`}>{content.description}</Text>
             )}
           </View>
         );
@@ -214,15 +214,15 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
   if (isLoading) {
     return (
-      <View style={tw`flex-1 bg-white items-center justify-center`}>
-        <ActivityIndicator size="large" color="#2563EB" />
+      <View style={tw`flex-1 items-center justify-center bg-white`}>
+        <ActivityIndicator color="#2563EB" size="large" />
       </View>
     );
   }
 
   if (!entry) {
     return (
-      <View style={tw`flex-1 bg-white items-center justify-center`}>
+      <View style={tw`flex-1 items-center justify-center bg-white`}>
         <Text style={tw`text-gray-600`}>Entry not found</Text>
       </View>
     );
@@ -231,26 +231,26 @@ export function EntryDetailScreen({ navigation, route }: Props) {
   return (
     <View style={tw`flex-1 bg-white`}>
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-gray-100`}>
+      <View
+        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+      >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-blue-600 text-base`}>← Back</Text>
+          <Text style={tw`text-base text-blue-600`}>← Back</Text>
         </Pressable>
-        <Text style={tw`text-lg font-semibold text-gray-900`}>
-          {TYPE_LABELS[entry.type]}
-        </Text>
+        <Text style={tw`text-lg font-semibold text-gray-900`}>{TYPE_LABELS[entry.type]}</Text>
         <View style={tw`w-12`} />
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Status */}
-        <View style={tw`flex-row items-center mb-4`}>
+        <View style={tw`mb-4 flex-row items-center`}>
           <View
-            style={tw`px-3 py-1 rounded-full ${
+            style={tw`rounded-full px-3 py-1 ${
               entry.acknowledgmentStatus === 'acknowledged'
                 ? 'bg-green-100'
                 : entry.acknowledgmentStatus === 'disputed'
-                ? 'bg-red-100'
-                : 'bg-amber-100'
+                  ? 'bg-red-100'
+                  : 'bg-amber-100'
             }`}
           >
             <Text
@@ -258,8 +258,8 @@ export function EntryDetailScreen({ navigation, route }: Props) {
                 entry.acknowledgmentStatus === 'acknowledged'
                   ? 'text-green-800'
                   : entry.acknowledgmentStatus === 'disputed'
-                  ? 'text-red-800'
-                  : 'text-amber-800'
+                    ? 'text-red-800'
+                    : 'text-amber-800'
               }`}
             >
               {entry.acknowledgmentStatus === 'acknowledged' && '✓ Acknowledged'}
@@ -267,9 +267,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
               {entry.acknowledgmentStatus === 'pending' && '⏳ Pending'}
             </Text>
           </View>
-          <Text style={tw`text-gray-500 text-sm ml-3`}>
-            {entry.createdAt.toLocaleDateString()}
-          </Text>
+          <Text style={tw`ml-3 text-sm text-gray-500`}>{entry.createdAt.toLocaleDateString()}</Text>
         </View>
 
         {/* Content */}
@@ -278,13 +276,13 @@ export function EntryDetailScreen({ navigation, route }: Props) {
         {/* Attachments */}
         {attachments.length > 0 && (
           <View style={tw`mb-4`}>
-            <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>
+            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>
               Attachments ({attachments.length})
             </Text>
             {attachments.map((att) => (
-              <View key={att.id} style={tw`bg-gray-50 rounded-lg p-3 mb-2`}>
+              <View key={att.id} style={tw`mb-2 rounded-lg bg-gray-50 p-3`}>
                 <Text style={tw`text-gray-900`}>📎 {att.originalFilename}</Text>
-                <Text style={tw`text-gray-500 text-xs mt-1`}>
+                <Text style={tw`mt-1 text-xs text-gray-500`}>
                   Hash: {att.fileHash.substring(0, 16)}...
                 </Text>
               </View>
@@ -294,7 +292,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
         {/* Version History */}
         <Pressable
-          style={tw`flex-row items-center justify-between py-3 border-t border-gray-100`}
+          style={tw`flex-row items-center justify-between border-t border-gray-100 py-3`}
           onPress={() => setShowVersions(!showVersions)}
         >
           <Text style={tw`text-gray-600`}>Version History</Text>
@@ -306,11 +304,9 @@ export function EntryDetailScreen({ navigation, route }: Props) {
         {showVersions && (
           <View style={tw`mb-4`}>
             {versions.map((v) => (
-              <View key={v.id} style={tw`py-2 border-b border-gray-100`}>
+              <View key={v.id} style={tw`border-b border-gray-100 py-2`}>
                 <Text style={tw`text-gray-900`}>Version {v.versionNumber}</Text>
-                <Text style={tw`text-gray-500 text-sm`}>
-                  {v.createdAt.toLocaleString()}
-                </Text>
+                <Text style={tw`text-sm text-gray-500`}>{v.createdAt.toLocaleString()}</Text>
               </View>
             ))}
           </View>
@@ -318,15 +314,13 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
         {/* Dispute thread */}
         {dispute && (
-          <View style={tw`mb-4 bg-red-50 rounded-xl p-4`}>
-            <Text style={tw`font-semibold text-red-800 mb-2`}>Dispute</Text>
-            <Text style={tw`text-red-700 mb-2`}>{dispute.reasonText}</Text>
+          <View style={tw`mb-4 rounded-xl bg-red-50 p-4`}>
+            <Text style={tw`mb-2 font-semibold text-red-800`}>Dispute</Text>
+            <Text style={tw`mb-2 text-red-700`}>{dispute.reasonText}</Text>
             {dispute.responses.map((r) => (
-              <View key={r.id} style={tw`mt-2 pt-2 border-t border-red-200`}>
+              <View key={r.id} style={tw`mt-2 border-t border-red-200 pt-2`}>
                 <Text style={tw`text-red-800`}>{r.responseText}</Text>
-                <Text style={tw`text-red-500 text-xs mt-1`}>
-                  {r.createdAt.toLocaleString()}
-                </Text>
+                <Text style={tw`mt-1 text-xs text-red-500`}>{r.createdAt.toLocaleString()}</Text>
               </View>
             ))}
           </View>
@@ -334,52 +328,45 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
         {/* Actions */}
         {canAct && (
-          <View style={tw`flex-row gap-3 mt-4`}>
-            <Pressable
-              style={tw`flex-1 bg-green-600 rounded-xl py-4`}
-              onPress={handleAcknowledge}
-            >
-              <Text style={tw`text-white text-center font-semibold`}>
-                ✓ Acknowledge
-              </Text>
+          <View style={tw`mt-4 flex-row gap-3`}>
+            <Pressable style={tw`flex-1 rounded-xl bg-green-600 py-4`} onPress={handleAcknowledge}>
+              <Text style={tw`text-center font-semibold text-white`}>✓ Acknowledge</Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 bg-red-100 rounded-xl py-4`}
+              style={tw`flex-1 rounded-xl bg-red-100 py-4`}
               onPress={() => setShowDisputeModal(true)}
             >
-              <Text style={tw`text-red-600 text-center font-semibold`}>
-                Dispute
-              </Text>
+              <Text style={tw`text-center font-semibold text-red-600`}>Dispute</Text>
             </Pressable>
           </View>
         )}
       </ScrollView>
 
       {/* Dispute Modal */}
-      <Modal visible={showDisputeModal} animationType="slide" presentationStyle="pageSheet">
+      <Modal animationType="slide" presentationStyle="pageSheet" visible={showDisputeModal}>
         <View style={tw`flex-1 bg-white`}>
-          <View style={tw`flex-row items-center justify-between px-4 pt-4 pb-2`}>
+          <View style={tw`flex-row items-center justify-between px-4 pb-2 pt-4`}>
             <Pressable onPress={() => setShowDisputeModal(false)}>
               <Text style={tw`text-blue-600`}>Cancel</Text>
             </Pressable>
             <Text style={tw`text-lg font-semibold`}>Dispute Entry</Text>
             <Pressable onPress={handleDispute}>
-              <Text style={tw`text-red-600 font-semibold`}>Submit</Text>
+              <Text style={tw`font-semibold text-red-600`}>Submit</Text>
             </Pressable>
           </View>
           <View style={tw`p-4`}>
-            <Text style={tw`text-gray-600 mb-4`}>
+            <Text style={tw`mb-4 text-gray-600`}>
               Explain why you're disputing this entry. Your co-parent will see this.
             </Text>
             <TextInput
-              style={tw`border border-gray-300 rounded-xl px-4 py-3 h-40`}
+              autoFocus
+              multiline
               placeholder="Reason for dispute..."
               placeholderTextColor="#9CA3AF"
+              style={tw`h-40 rounded-xl border border-gray-300 px-4 py-3`}
+              textAlignVertical="top"
               value={disputeReason}
               onChangeText={setDisputeReason}
-              multiline
-              textAlignVertical="top"
-              autoFocus
             />
           </View>
         </View>

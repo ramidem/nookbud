@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -10,10 +11,10 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+
 import { useTw } from '@/hooks/useTw';
-import { EntryService, RelationshipService } from '@/services';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import { EntryService, RelationshipService } from '@/services';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddAgreement'>;
 
@@ -36,7 +37,8 @@ export function AddAgreementScreen({ navigation }: Props) {
     load();
   }, []);
 
-  const canSave = title.trim().length > 0 && termsText.trim().length > 0 && effectiveDate.trim().length > 0;
+  const canSave =
+    title.trim().length > 0 && termsText.trim().length > 0 && effectiveDate.trim().length > 0;
 
   const handleSave = async () => {
     if (!canSave || !relationshipId) return;
@@ -44,14 +46,14 @@ export function AddAgreementScreen({ navigation }: Props) {
     setIsLoading(true);
     try {
       await EntryService.create({
-        relationshipId,
-        type: 'agreement',
         content: {
-          title: title.trim(),
-          termsText: termsText.trim(),
           effectiveDate: effectiveDate.trim(),
           expirationDate: expirationDate.trim() || undefined,
+          termsText: termsText.trim(),
+          title: title.trim(),
         },
+        relationshipId,
+        type: 'agreement',
       });
 
       navigation.goBack();
@@ -64,20 +66,24 @@ export function AddAgreementScreen({ navigation }: Props) {
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1 bg-white`}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={tw`flex-1 bg-white`}
     >
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-gray-100`}>
+      <View
+        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+      >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-blue-600 text-base`}>Cancel</Text>
+          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
         </Pressable>
         <Text style={tw`text-lg font-semibold text-gray-900`}>Add Agreement</Text>
-        <Pressable onPress={handleSave} disabled={!canSave || isLoading}>
+        <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
-            <Text style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}>
+            <Text
+              style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}
+            >
               Save
             </Text>
           )}
@@ -86,19 +92,20 @@ export function AddAgreementScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Info banner */}
-        <View style={tw`bg-amber-50 rounded-xl p-4 mb-6`}>
-          <Text style={tw`text-amber-800 text-sm`}>
-            📝 Agreements become part of your permanent record. Both parents can see and acknowledge them.
+        <View style={tw`mb-6 rounded-xl bg-amber-50 p-4`}>
+          <Text style={tw`text-sm text-amber-800`}>
+            📝 Agreements become part of your permanent record. Both parents can see and acknowledge
+            them.
           </Text>
         </View>
 
         {/* Title */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Agreement Title *</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Agreement Title *</Text>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-3`}
             placeholder="e.g., Holiday Schedule 2026"
             placeholderTextColor="#9CA3AF"
+            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
             value={title}
             onChangeText={setTitle}
           />
@@ -106,36 +113,36 @@ export function AddAgreementScreen({ navigation }: Props) {
 
         {/* Terms */}
         <View style={tw`mb-6`}>
-          <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Terms *</Text>
+          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Terms *</Text>
           <TextInput
-            style={tw`border border-gray-300 rounded-xl px-4 py-3 min-h-40`}
+            multiline
             placeholder="Write the full terms of this agreement..."
             placeholderTextColor="#9CA3AF"
+            style={tw`min-h-40 rounded-xl border border-gray-300 px-4 py-3`}
+            textAlignVertical="top"
             value={termsText}
             onChangeText={setTermsText}
-            multiline
-            textAlignVertical="top"
           />
         </View>
 
         {/* Dates */}
-        <View style={tw`flex-row mb-6`}>
-          <View style={tw`flex-1 mr-2`}>
-            <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Effective Date *</Text>
+        <View style={tw`mb-6 flex-row`}>
+          <View style={tw`mr-2 flex-1`}>
+            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Effective Date *</Text>
             <TextInput
-              style={tw`border border-gray-300 rounded-xl px-4 py-3`}
               placeholder="YYYY-MM-DD"
               placeholderTextColor="#9CA3AF"
+              style={tw`rounded-xl border border-gray-300 px-4 py-3`}
               value={effectiveDate}
               onChangeText={setEffectiveDate}
             />
           </View>
-          <View style={tw`flex-1 ml-2`}>
-            <Text style={tw`text-sm font-medium text-gray-600 mb-2`}>Expires</Text>
+          <View style={tw`ml-2 flex-1`}>
+            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Expires</Text>
             <TextInput
-              style={tw`border border-gray-300 rounded-xl px-4 py-3`}
               placeholder="YYYY-MM-DD"
               placeholderTextColor="#9CA3AF"
+              style={tw`rounded-xl border border-gray-300 px-4 py-3`}
               value={expirationDate}
               onChangeText={setExpirationDate}
             />

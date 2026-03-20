@@ -1,6 +1,8 @@
 import { useMigrations } from 'drizzle-orm/op-sqlite/migrator';
-import { db } from './client';
+
 import migrations from '../../drizzle/migrations';
+
+import { db } from './client';
 
 /**
  * Hook to run database migrations on app startup.
