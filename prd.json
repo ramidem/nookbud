@@ -331,7 +331,7 @@
       "title": "Onboarding screens — profile setup",
       "description": "Create onboarding flow: name, timezone, currency. Minimal signup (no email/password yet since no backend).",
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "OnboardingNameScreen: display name input",
         "OnboardingTimezoneScreen: timezone picker (defaults to device)",
@@ -357,7 +357,7 @@
       "title": "Onboarding screens — relationship and children",
       "description": "Continue onboarding: create relationship, add children. Support 'invite partner later' flow.",
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "AddChildScreen: name, date of birth inputs",
         "Can add multiple children (list with add button)",
