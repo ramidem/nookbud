@@ -89,7 +89,7 @@
       "title": "Local user profile service",
       "description": "Create UserService for local user management. Since no backend yet, the 'current user' is stored locally. Support profile creation and update.",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "UserService with createUser, getCurrentUser, updateUser methods",
         "User stored in SQLite users table",
