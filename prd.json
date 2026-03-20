@@ -111,7 +111,7 @@
       "title": "Relationship and children services",
       "description": "Create RelationshipService and ChildService. A relationship links two co-parents (parent_b can be null initially). Children belong to a relationship.",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "RelationshipService: create, get, invitePartner, acceptInvite",
         "ChildService: create, update, list, getById",
@@ -134,7 +134,7 @@
       "title": "Audit service",
       "description": "Create AuditService that logs all data mutations. Every create/update/delete operation must create an audit_log entry. This is the foundation of legal defensibility.",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "AuditService.log(userId, action, entityType, entityId, metadata)",
         "Actions: create, update, soft_delete, acknowledge, dispute, respond",
