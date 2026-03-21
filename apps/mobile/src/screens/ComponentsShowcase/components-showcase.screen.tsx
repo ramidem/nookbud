@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
 
 import {
@@ -11,10 +11,11 @@ import {
   Field,
   InputLayout,
   Modal,
-  OutlinedButton,
   ScreenContainer,
   ScreenHeader,
+  SectionTitle,
   SelectDropdown,
+  SizeLabel,
   Skeleton,
   TextInput,
   TextInputArea,
@@ -32,20 +33,6 @@ const DROPDOWN_OPTIONS = [
   { id: '3', label: 'SwiftUI' },
   { id: '4', label: 'Jetpack Compose' },
 ];
-
-function SectionTitle({ title }: { title: string }) {
-  return (
-    <Typography style={tw`font-serif-semibold mb-2 mt-6 text-lg`} variant="heading">
-      {title}
-    </Typography>
-  );
-}
-
-function SizeLabel({ label }: { label: string }) {
-  return (
-    <Typography style={tw`text-subtitle mb-1 text-xs uppercase tracking-wide`}>{label}</Typography>
-  );
-}
 
 export function ComponentsShowcaseScreen() {
   const [textSm, setTextSm] = useState('');
@@ -114,9 +101,9 @@ export function ComponentsShowcaseScreen() {
 
         <SizeLabel label="Outlined — Sizes" />
         <View style={tw`mt-2 flex-row flex-wrap items-center gap-3`}>
-          <OutlinedButton size="sm" title="Small" onPress={() => {}} />
-          <OutlinedButton size="md" title="Medium" onPress={() => {}} />
-          <OutlinedButton size="lg" title="Large" onPress={() => {}} />
+          <Button size="sm" title="Small" variant="outlined" onPress={() => {}} />
+          <Button size="md" title="Medium" variant="outlined" onPress={() => {}} />
+          <Button size="lg" title="Large" variant="outlined" onPress={() => {}} />
         </View>
 
         <SizeLabel label="States" />
@@ -124,8 +111,8 @@ export function ComponentsShowcaseScreen() {
           <Button title="Default (md)" onPress={() => {}} />
           <Button isLoading title="Loading" onPress={() => {}} />
           <Button isDisabled title="Disabled" onPress={() => {}} />
-          <OutlinedButton title="Outlined Default" onPress={() => {}} />
-          <OutlinedButton isDisabled title="Outlined Disabled" onPress={() => {}} />
+          <Button title="Outlined Default" variant="outlined" onPress={() => {}} />
+          <Button isDisabled title="Outlined Disabled" variant="outlined" onPress={() => {}} />
         </View>
 
         <Divider style={tw`mt-4`} />

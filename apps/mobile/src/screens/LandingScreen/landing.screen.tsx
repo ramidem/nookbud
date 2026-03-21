@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image, View } from 'react-native';
 
 import {
@@ -10,9 +10,9 @@ import {
   Divider,
   InputLayout,
   Modal,
-  OutlinedButton,
   ScreenContainer,
   ScreenHeader,
+  SectionTitle,
   SelectDropdown,
   Skeleton,
   TextInput,
@@ -31,14 +31,6 @@ const DROPDOWN_OPTIONS = [
   { id: '3', label: 'SwiftUI' },
   { id: '4', label: 'Jetpack Compose' },
 ];
-
-function SectionTitle({ title }: { title: string }) {
-  return (
-    <Typography style={tw`font-serif-semibold mb-2 mt-6 text-lg`} variant="heading">
-      {title}
-    </Typography>
-  );
-}
 
 export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
   const [textValue, setTextValue] = useState('');
@@ -93,7 +85,7 @@ export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
           <Button title="Primary Button" onPress={() => {}} />
           <Button isLoading title="Loading Button" onPress={() => {}} />
           <Button isDisabled title="Disabled Button" onPress={() => {}} />
-          <OutlinedButton title="Outlined Button" onPress={() => {}} />
+          <Button title="Outlined Button" variant="outlined" onPress={() => {}} />
         </View>
 
         <Divider style={tw`mt-4`} />
