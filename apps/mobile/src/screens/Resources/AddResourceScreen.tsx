@@ -1,9 +1,18 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 
-import { Alert, ScreenContainer, ScreenHeader, TextInput, Toast, Typography } from '@/components';
+import {
+  Alert,
+  Button,
+  EmojiText,
+  ScreenContainer,
+  ScreenHeader,
+  TextInput,
+  Toast,
+  Typography,
+} from '@/components';
 import {
   RESOURCE_CATEGORIES,
   RESOURCE_CATEGORY_DISPLAY,
@@ -138,7 +147,7 @@ export function AddResourceScreen({ navigation }: Props) {
         {activeSpace && (
           <View style={tw`mb-4 self-start rounded-lg bg-neutral-200 px-3 py-1.5`}>
             <Text style={tw`text-foreground text-sm`}>
-              {activeSpace.emoji} {activeSpace.name}
+              <EmojiText>{activeSpace.emoji}</EmojiText> {activeSpace.name}
             </Text>
           </View>
         )}
@@ -271,21 +280,13 @@ export function AddResourceScreen({ navigation }: Props) {
         </View>
 
         {/* Upload button */}
-        <Pressable
-          disabled={!canSave || isLoading}
-          style={tw`flex-row items-center justify-center rounded-xl py-4 ${
-            canSave ? 'bg-primary' : 'bg-neutral-200'
-          }`}
+        <Button
+          isDisabled={!canSave}
+          isLoading={isLoading}
+          size="lg"
+          title="Upload Resource"
           onPress={handleUpload}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text style={tw`text-lg font-semibold ${canSave ? 'text-white' : 'text-placeholder'}`}>
-              Upload Resource
-            </Text>
-          )}
-        </Pressable>
+        />
       </ScrollView>
     </ScreenContainer>
   );

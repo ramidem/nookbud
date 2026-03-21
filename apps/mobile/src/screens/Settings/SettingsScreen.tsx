@@ -12,7 +12,7 @@ import {
   Linking,
 } from 'react-native';
 
-import { PageHeader } from '@/components';
+import { Button, PageHeader } from '@/components';
 import type { User, Child } from '@/database/schema';
 import { seedDatabase } from '@/database/seed';
 import { useTw } from '@/hooks/useTw';
@@ -212,14 +212,7 @@ export function SettingsScreen({ navigation }: Props) {
               <Text style={tw`text-subtitle mb-2 text-sm`}>
                 Notifications are disabled. Enable them in your device settings.
               </Text>
-              <Pressable
-                style={tw`bg-primary rounded-lg py-3`}
-                onPress={() => Linking.openSettings()}
-              >
-                <Text style={tw`text-center text-sm font-medium text-white`}>
-                  Enable in Settings
-                </Text>
-              </Pressable>
+              <Button title="Enable in Settings" onPress={() => Linking.openSettings()} />
             </View>
           ) : (
             NOTIFICATION_TOGGLES.map((toggle, index) => (

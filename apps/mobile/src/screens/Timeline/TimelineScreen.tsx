@@ -3,10 +3,11 @@ import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-t
 import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { View, Text, Pressable, RefreshControl, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, RefreshControl, Text, View } from 'react-native';
 
 import { TimelineFilters, type FilterState } from './TimelineFilters';
 
+import { Button } from '@/components';
 import { EntryCard, type SpaceInfo } from '@/components/molecules/EntryCard';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
@@ -180,9 +181,7 @@ export function TimelineScreen({ navigation }: Props) {
           <Text style={tw`text-subtitle mb-6 text-center`}>
             Start documenting by adding your first entry.
           </Text>
-          <Pressable style={tw`bg-primary rounded-xl px-6 py-3`} onPress={handleAddEntry}>
-            <Text style={tw`font-semibold text-white`}>Add Entry</Text>
-          </Pressable>
+          <Button title="Add Entry" onPress={handleAddEntry} />
         </View>
       ) : (
         <LegendList

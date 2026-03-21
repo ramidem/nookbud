@@ -1,7 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
 
+import { Button } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 import { UserService } from '@/services';
@@ -63,17 +64,7 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
       <View style={tw`flex-1`} />
 
       <View style={tw`pb-8`}>
-        <Pressable
-          disabled={isLoading}
-          style={tw`bg-primary flex-row items-center justify-center rounded-xl py-4`}
-          onPress={handleComplete}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text style={tw`text-center text-lg font-semibold text-white`}>Create Profile</Text>
-          )}
-        </Pressable>
+        <Button isLoading={isLoading} size="lg" title="Create Profile" onPress={handleComplete} />
 
         <Text style={tw`text-subtitle mt-4 text-center text-sm`}>Next: Create your Space</Text>
       </View>

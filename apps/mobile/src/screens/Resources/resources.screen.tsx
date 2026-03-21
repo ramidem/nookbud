@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
-import { ScreenContainer, ScreenHeader, Typography } from '@/components';
+import { Button, EmojiText, ScreenContainer, ScreenHeader, Typography } from '@/components';
 import {
   RESOURCE_CATEGORIES,
   RESOURCE_CATEGORY_DISPLAY,
@@ -76,7 +76,13 @@ export function ResourcesScreen({ navigation }: Props) {
 
   const headerTitle = useMemo(() => {
     if (isAllSpaces) return 'All Resources';
-    if (activeSpace) return `${activeSpace.emoji} Resources`;
+    if (activeSpace) {
+      return (
+        <>
+          <EmojiText>{activeSpace.emoji}</EmojiText> Resources
+        </>
+      );
+    }
 
     return 'Resources';
   }, [isAllSpaces, activeSpace]);
@@ -226,9 +232,7 @@ export function ResourcesScreen({ navigation }: Props) {
           <Text style={tw`text-subtitle mb-6 text-center`}>
             {'Add important documents here —\nmedical records, school forms, legal agreements.'}
           </Text>
-          <Pressable style={tw`bg-primary rounded-xl px-6 py-3`} onPress={handleAddResource}>
-            <Text style={tw`font-semibold text-white`}>Add Resource</Text>
-          </Pressable>
+          <Button title="Add Resource" onPress={handleAddResource} />
         </View>
       ) : (
         <LegendList
