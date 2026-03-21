@@ -152,7 +152,7 @@ The families who most need documentation — lower-income, OFW families, grandpa
 - **Job:** Operations Manager at a logistics firm
 - **Income:** ~$85,000/year
 - **Family situation:** Divorce finalized 18 months ago; shared custody of two kids (8 and 11); currently in a custody modification hearing due to relocation dispute
-- **Space setup:** 1 Space — Marcus + his ex-wife Denise
+- **Space setup:** 1 Space — Marcus (owner, label: 'co-parent') + Denise (editor, label: 'co-parent')
 
 **Backstory**
 
@@ -194,7 +194,7 @@ He's looking for something that would have let him press a button and produce a 
 - **Job:** Electrical technician on a 2-year contract
 - **Income:** SAR 4,500/month (~$1,200 USD); sends ~$800/month home
 - **Family situation:** Married, but wife Maricel and two children (6 and 9) are in Pampanga. His mother (Lola Cora) helps with daily care while Maricel works as a teacher.
-- **Space setup:** 1 Space — Jun + Maricel + Lola Cora (editor)
+- **Space setup:** 1 Space — Jun (owner, label: 'co-parent') + Maricel (editor, label: 'co-parent') + Lola Cora (editor, label: 'grandparent')
 
 **Backstory**
 
@@ -238,7 +238,7 @@ His bigger fear: what happens when he comes home after this contract. He's heard
 - **Job:** Retired government employee (SSS pension)
 - **Income:** ~PHP 12,000/month pension + remittance support from Jun
 - **Family situation:** Primary daily caregiver for her two grandchildren (6 and 9) while son Jun works in Saudi Arabia and daughter-in-law Maricel teaches full-time
-- **Space setup:** Member of Jun's Space as "editor" role
+- **Space setup:** Member of Jun's Space as editor role with label 'grandparent'
 
 **Backstory**
 
@@ -283,7 +283,7 @@ She doesn't need a co-parenting app. She needs a **shared care record** that doc
 - **Jobs:** Sarah — UX designer; David — civil engineer; Mia — nursing student
 - **Income:** Chen household ~$155,000/year; Mia — student income
 - **Family situation:** Lily (3 years old) was adopted at birth through a private domestic adoption. The openness agreement specifies: quarterly photo/milestone updates from the Chens to Mia, two in-person visits per year, and ongoing communication as Lily grows
-- **Space setup:** 1 Space — Sarah (owner) + David (editor) + Mia (editor)
+- **Space setup:** 1 Space — Sarah (owner, label: 'co-parent') + David (editor, label: 'co-parent') + Mia (editor, label: 'guardian')
 
 **Backstory**
 
@@ -331,9 +331,9 @@ She doesn't want a "co-parenting conflict" app. She wants a **shared record** of
 - **Job:** Project manager at a construction firm
 - **Income:** ~AUD $130,000/year (household with current partner: ~AUD $210,000)
 - **Family situation:** Remarried. Three children across two previous relationships, plus a step-daughter from current partner's previous relationship.
-  - **Space 1:** Camille + ex-husband Liam — their son Finn (12) and daughter Ava (9). Shared custody, alternating weeks. Mostly cooperative but Liam is inconsistent with expenses.
-  - **Space 2:** Camille + ex-partner James — their daughter Zoe (5). James has Zoe every other weekend. Relationship is tense; James has threatened to seek more custody time.
-  - **Space 3:** Camille's current partner Theo + his ex-wife Nadia — step-daughter Ella (8). Camille is not a formal member but helps coordinate Ella's schedule.
+  - **Space 1:** Camille (editor, label: 'co-parent') + ex-husband Liam (editor, label: 'co-parent') — their son Finn (12) and daughter Ava (9). Shared custody, alternating weeks. Mostly cooperative but Liam is inconsistent with expenses.
+  - **Space 2:** Camille (editor, label: 'co-parent') + ex-partner James (editor, label: 'co-parent') — their daughter Zoe (5). James has Zoe every other weekend. Relationship is tense; James has threatened to seek more custody time.
+  - **Space 3:** Theo (owner, label: 'co-parent') + ex-wife Nadia (editor, label: 'co-parent') + Camille (viewer, label: 'relative') — step-daughter Ella (8). Camille is not a formal member but helps coordinate Ella's schedule.
 - **Tech comfort:** Highly competent; manages complex project timelines at work
 
 **Backstory**

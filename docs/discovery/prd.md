@@ -225,7 +225,7 @@ Replace the `relationships` table with `spaces` and `space_members`. Migrate exi
 
 **Acceptance Criteria:**
 - [ ] `spaces` table created with: id (UUID), name, emoji, color, created_by (FK: users), created_at, updated_at
-- [ ] `space_members` table created with: id (UUID), space_id (FK: spaces), user_id (FK: users), role (enum: owner, editor, viewer), joined_at, invited_by (FK: users)
+- [ ] `space_members` table created with: id (UUID), space_id (FK: spaces), user_id (FK: users), role (enum: owner, editor, viewer), label (optional enum: co-parent, guardian, grandparent, relative, lawyer, social-worker, assistant, other — display-only, does not affect permissions), joined_at, invited_by (FK: users)
 - [ ] `children` table updated: `relationship_id` → `space_id` (FK: spaces)
 - [ ] `entries` table updated: `relationship_id` → `space_id` (FK: spaces)
 - [ ] All existing relationship data migrated: each relationship becomes a Space; parent_a becomes owner, parent_b becomes editor
@@ -582,7 +582,8 @@ space_members
   - id (UUID)
   - space_id (FK: spaces)
   - user_id (FK: users)
-  - role (enum: owner, editor, viewer)
+  - role (enum: owner, editor, viewer) — controls access/permissions
+  - label (optional enum: co-parent, guardian, grandparent, relative, lawyer, social-worker, assistant, other) — display-only, describes relationship; does not affect permissions
   - joined_at (server-set)
   - invited_by (FK: users, nullable)
   - left_at (nullable — soft leave)
@@ -688,7 +689,8 @@ space_members
   - id (UUID)
   - space_id (FK: spaces)
   - user_id (FK: users)
-  - role (owner | editor | viewer)
+  - role (owner | editor | viewer) — controls access
+  - label (optional: co-parent | guardian | grandparent | relative | lawyer | social-worker | assistant | other) — display-only relationship descriptor
   - joined_at
   - invited_by (FK: users, nullable)
   - left_at (nullable)
