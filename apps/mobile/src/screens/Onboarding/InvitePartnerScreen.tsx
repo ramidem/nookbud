@@ -86,9 +86,9 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
   };
 
   const handleDone = () => {
-    navigation.reset({
+    navigation.getParent()?.reset({
       index: 0,
-      routes: [{ name: 'OnboardingDone' }],
+      routes: [{ name: 'Main' }],
     });
   };
 

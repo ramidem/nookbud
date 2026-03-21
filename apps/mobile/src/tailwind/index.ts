@@ -51,6 +51,7 @@ export const focusedInputStyle = (isFocused: boolean) =>
 export const errorTextStyle = (err: boolean) => err && tw`text-error`;
 
 export const defaultInputContainerStyle = tw`bg-surface ios:px-4 ios:py-4 android:py-1 android:px-4 android:min-h-[56px] flex-row rounded-full border border-neutral-300`;
+export const defaultInputAreaContainerStyle = tw`bg-surface ios:px-4 ios:py-4 android:py-3 android:px-4 flex-row rounded-2xl border border-neutral-300`;
 export const defaultInputTextStyle = [
   tw`text-foreground flex-1 font-normal`,
   CONFIG.IS_ANDROID ? { textAlignVertical: 'center' } : null,
