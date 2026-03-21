@@ -1112,7 +1112,7 @@
       "title": "Settings \u2014 manage Spaces",
       "description": "My Spaces section in Settings. View all Spaces, manage members, invite new members, change roles, rename, update appearance, leave or delete.",
       "priority": 45,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Settings has 'My Spaces' section listing all user's Spaces (emoji, name, member count, role)",
         "Tapping a Space opens Space detail screen",

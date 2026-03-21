@@ -1,6 +1,6 @@
-import Clipboard from '@react-native-clipboard/clipboard';
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,35 +8,32 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
-  Share,
   Switch,
   Linking,
 } from 'react-native';
 
-import type { User, Relationship, Child } from '@/database/schema';
+import type { User, Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { BabyIcon, ChevronRightIcon, UserIcon, UsersIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import {
   UserService,
-  RelationshipService,
-  ChildService,
+  SpaceService,
   NotificationService,
   type NotificationPrefs,
   type PermissionStatus,
+  type SpaceWithRole,
 } from '@/services';
 import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
-
-const COPY_FEEDBACK_DURATION = 2000;
 
 const NOTIFICATION_TOGGLES: Array<{
   key: keyof NotificationPrefs;
   label: string;
   description: string;
 }> = [
-  { description: 'When your partner adds a new entry', key: 'newEntry', label: 'New Entries' },
+  { description: 'When a member adds a new entry', key: 'newEntry', label: 'New Entries' },
   {
     description: 'When your entry is acknowledged',
     key: 'acknowledged',
@@ -54,21 +51,22 @@ export function SettingsScreen({ navigation }: Props) {
   const tw = useTw();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [relationship, setRelationship] = useState<Relationship | null>(null);
+  const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
   const [children, setChildren] = useState<Child[]>([]);
-  const [copied, setCopied] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState<NotificationPrefs>(NotificationService.getPrefs());
   const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>('undetermined');
 
-  const loadPermissionStatus = useCallback(async () => {
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      loadPermissionStatus();
+    }, []),
+  );
+
+  const loadPermissionStatus = async () => {
     const status = await NotificationService.getPermissionStatus();
     setPermissionStatus(status);
-  }, []);
-
-  useEffect(() => {
-    loadData();
-    loadPermissionStatus();
-  }, [loadPermissionStatus]);
+  };
 
   const loadData = async () => {
     setIsLoading(true);
@@ -76,36 +74,22 @@ export function SettingsScreen({ navigation }: Props) {
       const u = await UserService.getCurrentUser();
       setUser(u);
 
-      const rel = await RelationshipService.getCurrentRelationship();
-      setRelationship(rel);
+      const spaceList = await SpaceService.listSpaces();
+      setSpaces(spaceList);
 
-      if (rel) {
-        const c = await ChildService.listByRelationship(rel.id);
-        setChildren(c);
+      // Gather children from all spaces
+      const allChildren: Child[] = [];
+      for (const space of spaceList) {
+        const details = await SpaceService.getSpaceById(space.id);
+        if (details) {
+          allChildren.push(...details.children);
+        }
       }
+      setChildren(allChildren);
     } catch {
       // Silent fail — settings load is non-critical
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleCopyCode = () => {
-    if (relationship?.inviteToken) {
-      Clipboard.setString(relationship.inviteToken);
-      setCopied(true);
-      setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION);
-    }
-  };
-
-  const handleShareInvite = async () => {
-    if (!relationship?.inviteToken) return;
-    try {
-      await Share.share({
-        message: `Join me on CoParent! Use code: ${relationship.inviteToken}\n\nOr tap this link: coparent://invite/${relationship.inviteToken}`,
-      });
-    } catch {
-      // User cancelled or error
     }
   };
 
@@ -123,7 +107,6 @@ export function SettingsScreen({ navigation }: Props) {
         { style: 'cancel', text: 'Cancel' },
         {
           onPress: async () => {
-            // In production, implement proper data clearing
             Alert.alert('Not Implemented', 'Data clearing will be implemented in a future update.');
           },
           style: 'destructive',
@@ -261,59 +244,25 @@ export function SettingsScreen({ navigation }: Props) {
           )}
         </View>
 
-        {/* Relationship Section */}
+        {/* My Spaces Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
-            <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
-              Co-Parent Connection
-            </Text>
-          </View>
-          <View style={tw`p-4`}>
-            {relationship?.parentBId ? (
-              <View style={tw`flex-row items-center`}>
-                <View
-                  style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
-                >
-                  <UsersIcon height={20} style={tw`text-accent`} width={20} />
-                </View>
-                <View style={tw`flex-1`}>
-                  <Text style={tw`text-success text-base font-medium`}>Connected</Text>
-                  <Text style={tw`text-subtitle text-sm`}>Your co-parent has joined</Text>
-                </View>
-              </View>
-            ) : (
-              <View>
-                <Text style={tw`text-foreground mb-2`}>
-                  Your co-parent hasn{"'"}t joined yet. Share this code:
-                </Text>
-                <View style={tw`mb-3 rounded-lg bg-neutral-200 p-3`}>
-                  <Text style={tw`text-foreground text-center font-mono text-xl font-bold`}>
-                    {relationship?.inviteToken || 'No code'}
-                  </Text>
-                </View>
-                {relationship?.inviteToken ? (
-                  <View style={tw`flex-row gap-3`}>
-                    <Pressable
-                      style={tw`flex-1 rounded-lg bg-neutral-200 py-3`}
-                      onPress={handleCopyCode}
-                    >
-                      <Text style={tw`text-foreground text-center text-sm font-medium`}>
-                        {copied ? 'Copied!' : 'Copy Code'}
-                      </Text>
-                    </Pressable>
-                    <Pressable
-                      style={tw`bg-primary flex-1 rounded-lg py-3`}
-                      onPress={handleShareInvite}
-                    >
-                      <Text style={tw`text-center text-sm font-medium text-white`}>
-                        Share Invite
-                      </Text>
-                    </Pressable>
-                  </View>
-                ) : null}
-              </View>
-            )}
-          </View>
+          <Pressable
+            style={tw`flex-row items-center p-4`}
+            onPress={() => navigation.navigate('SpacesSettings')}
+          >
+            <View
+              style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-neutral-200`}
+            >
+              <UsersIcon height={24} style={tw`text-accent`} width={24} />
+            </View>
+            <View style={tw`flex-1`}>
+              <Text style={tw`text-foreground text-lg font-medium`}>My Spaces</Text>
+              <Text style={tw`text-subtitle text-sm`}>
+                {spaces.length} {spaces.length === 1 ? 'Space' : 'Spaces'}
+              </Text>
+            </View>
+            <ChevronRightIcon height={20} style={tw`text-placeholder`} width={20} />
+          </Pressable>
         </View>
 
         {/* About Section */}
