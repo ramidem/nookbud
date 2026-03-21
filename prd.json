@@ -980,7 +980,7 @@
       "title": "SpaceMemberService \u2014 invite, accept, assign role, remove member",
       "description": "Manage Space membership. Owners generate invite codes/links with pre-assigned roles. Invited users accept to join. Owners can reassign roles and remove members.",
       "priority": 40,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "generateInviteCode(spaceId, role, userId) \u2014 6-char code, 7-day expiry, owner only",
         "generateInviteLink(spaceId, role, userId) \u2014 deep link coparent://invite/{code}",

@@ -12,6 +12,11 @@ export const AUDIT_ACTIONS = [
   'acknowledge',
   'dispute',
   'respond',
+  'generate_invite',
+  'accept_invite',
+  'assign_role',
+  'remove_member',
+  'transfer_ownership',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
