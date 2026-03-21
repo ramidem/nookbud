@@ -20,16 +20,14 @@ type RoleOption = {
 };
 
 const ROLE_OPTIONS: RoleOption[] = [
-  { description: 'Full access to all records and settings', label: 'Parent', value: 'parent' },
-  { description: 'Full access, acts on behalf of the child', label: 'Guardian', value: 'guardian' },
-  { description: 'View-only access for legal review', label: 'Lawyer', value: 'lawyer' },
-  { description: 'Can view records but not edit', label: 'Viewer', value: 'viewer' },
+  { description: 'Can add and view care records', label: 'Editor', value: 'editor' },
+  { description: 'Can view and export records only', label: 'Viewer', value: 'viewer' },
 ];
 
 export function InvitePartnerScreen({ navigation, route }: Props) {
   const tw = useTw();
   const { spaceId } = route.params;
-  const [selectedRole, setSelectedRole] = useState<SpaceRole>('parent');
+  const [selectedRole, setSelectedRole] = useState<SpaceRole>('editor');
   const [invite, setInvite] = useState<SpaceInvite | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);

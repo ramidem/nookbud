@@ -77,7 +77,7 @@ export function AddExpenseScreen({ navigation }: Props) {
 
       // Role permission check
       const role = await SpaceService.getUserRole(activeSpaceId);
-      if (role === 'lawyer' || role === 'viewer') {
+      if (role === 'viewer') {
         Alert.error({
           message: 'Your role in this Space does not allow creating entries.',
           title: 'Access Denied',

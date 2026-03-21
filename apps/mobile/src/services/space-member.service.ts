@@ -291,10 +291,10 @@ export const SpaceMemberService = {
     const newOwnerRole = await SpaceService.getUserRole(spaceId, newOwnerId);
     if (!newOwnerRole) throw new Error(ERROR_NEW_OWNER_NOT_MEMBER);
 
-    // Demote current owner to parent
+    // Demote current owner to editor
     await db
       .update(spaceMembers)
-      .set({ role: 'parent' })
+      .set({ role: 'editor' })
       .where(and(eq(spaceMembers.spaceId, spaceId), eq(spaceMembers.userId, userId)));
 
     // Promote new owner

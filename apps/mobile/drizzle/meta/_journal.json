@@ -15,6 +15,13 @@
       "when": 1774329600000,
       "tag": "0001_spaces_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1774310400000,
+      "tag": "0002_rbac_simplification",
+      "breakpoints": true
     }
   ]
 }

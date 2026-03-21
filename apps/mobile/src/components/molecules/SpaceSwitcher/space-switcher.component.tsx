@@ -17,10 +17,8 @@ const CHEVRON_SIZE = 16;
 const ALL_SPACES_ICON_SIZE = 16;
 
 const ROLE_LABELS: Record<string, string> = {
-  guardian: 'Guardian',
-  lawyer: 'Lawyer',
+  editor: 'Editor',
   owner: 'Owner',
-  parent: 'Parent',
   viewer: 'Viewer',
 };
 

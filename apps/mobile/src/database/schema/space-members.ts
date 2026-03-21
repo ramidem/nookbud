@@ -3,7 +3,7 @@ import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { spaces } from './spaces';
 import { users } from './users';
 
-export const SPACE_ROLES = ['owner', 'parent', 'guardian', 'lawyer', 'viewer'] as const;
+export const SPACE_ROLES = ['owner', 'editor', 'viewer'] as const;
 export type SpaceRole = (typeof SPACE_ROLES)[number];
 
 export const spaceMembers = sqliteTable('space_members', {
@@ -15,7 +15,7 @@ export const spaceMembers = sqliteTable('space_members', {
     .notNull()
     .$defaultFn(() => new Date()),
 
-  role: text('role').notNull().$type<SpaceRole>().default('parent'),
+  role: text('role').notNull().$type<SpaceRole>().default('editor'),
 
   spaceId: text('space_id')
     .notNull()

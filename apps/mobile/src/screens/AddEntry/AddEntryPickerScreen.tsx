@@ -79,7 +79,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
       }
 
       const role = await SpaceService.getUserRole(activeSpaceId);
-      if (role === 'lawyer' || role === 'viewer') {
+      if (role === 'viewer') {
         setCanCreate(false);
       }
     }

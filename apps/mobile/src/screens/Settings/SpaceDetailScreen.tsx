@@ -31,20 +31,14 @@ const COLOR_SWATCH_SIZE = 36;
 const COLOR_SWATCH_BORDER_PADDING = 4;
 const COLOR_SWATCH_BORDER_SIZE = COLOR_SWATCH_SIZE + COLOR_SWATCH_BORDER_PADDING;
 
-const FULL_ACCESS_DESCRIPTION = 'Full access to log and view care records';
-
 const INVITE_ROLES: Array<{ role: SpaceRole; label: string; description: string }> = [
-  { description: FULL_ACCESS_DESCRIPTION, label: 'Parent', role: 'parent' },
-  { description: FULL_ACCESS_DESCRIPTION, label: 'Guardian', role: 'guardian' },
-  { description: 'Read-only access and export', label: 'Lawyer', role: 'lawyer' },
-  { description: 'Read-only access', label: 'Viewer', role: 'viewer' },
+  { description: 'Can add and view care records', label: 'Editor', role: 'editor' },
+  { description: 'Can view and export records only', label: 'Viewer', role: 'viewer' },
 ];
 
 const ROLE_LABELS: Record<string, string> = {
-  guardian: 'Guardian',
-  lawyer: 'Lawyer',
+  editor: 'Editor',
   owner: 'Owner',
-  parent: 'Parent',
   viewer: 'Viewer',
 };
 
@@ -61,7 +55,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
 
   // Invite sheet
   const inviteSheet = useBottomSheet();
-  const [inviteRole, setInviteRole] = useState<SpaceRole>('parent');
+  const [inviteRole, setInviteRole] = useState<SpaceRole>('editor');
   const [invite, setInvite] = useState<SpaceInvite | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -140,7 +134,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
   const handleOpenInvite = () => {
     setInvite(null);
     setCopied(false);
-    setInviteRole('parent');
+    setInviteRole('editor');
     inviteSheet.expandSheet();
   };
 

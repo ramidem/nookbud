@@ -12,10 +12,8 @@ import { colors, tw } from '@/tailwind';
 type Props = NativeStackScreenProps<SettingsStackParamList, 'SpacesSettings'>;
 
 const ROLE_LABELS: Record<string, string> = {
-  guardian: 'Guardian',
-  lawyer: 'Lawyer',
+  editor: 'Editor',
   owner: 'Owner',
-  parent: 'Parent',
   viewer: 'Viewer',
 };
 
