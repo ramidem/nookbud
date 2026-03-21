@@ -7,6 +7,8 @@
  * eslint sort-keys disabled: seed data is intentionally ordered for readability.
  */
 
+import { count } from 'drizzle-orm';
+
 import { db } from './client';
 import {
   users,
@@ -81,18 +83,17 @@ const CHILD_SOFIA = 'child-sofia-002';
 export const SEED_USER_ID = USER_MED;
 export const SEED_SPACE_IDS = { felix: SPACE_FELIX, sofia: SPACE_SOFIA };
 
-export async function seedDatabase(): Promise<{ success: boolean; error?: string }> {
+export async function seedDatabase(): Promise<{
+  success: boolean;
+  skipped?: boolean;
+  error?: string;
+}> {
   try {
-    // Clear in FK-safe order
-    await db.delete(auditLogs);
-    await db.delete(acknowledgments);
-    await db.delete(resources);
-    await db.delete(entryVersions);
-    await db.delete(entries);
-    await db.delete(children);
-    await db.delete(spaceMembers);
-    await db.delete(spaces);
-    await db.delete(users);
+    // Guard: only seed on an empty database
+    const [existingUsers] = await db.select({ count: count() }).from(users);
+    if (existingUsers.count > 0) {
+      return { success: true, skipped: true };
+    }
 
     // ── Users ──────────────────────────────────────────────────────────────
     await db.insert(users).values([

@@ -315,13 +315,18 @@ export function SettingsScreen({ navigation }: Props) {
               onPress={async () => {
                 Alert.alert(
                   'Seed Database',
-                  'This will clear all existing data and insert sample records (2 Spaces, 2 children, 9 entries, 3 resources). Continue?',
+                  'Only runs on an empty database. If you already have data, nothing will change.',
                   [
                     { style: 'cancel', text: 'Cancel' },
                     {
                       onPress: async () => {
                         const result = await seedDatabase();
-                        if (result.success) {
+                        if (result.skipped) {
+                          Alert.alert(
+                            '⚠️ Already has data',
+                            'Seed only runs on an empty database. Clear all data first if you want sample data.',
+                          );
+                        } else if (result.success) {
                           Alert.alert(
                             '✅ Seeded',
                             'Sample data loaded. Restart the app to see all changes.',
