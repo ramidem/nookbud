@@ -1,4 +1,4 @@
-import * as Notifications from 'expo-notifications';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import { createMMKV } from 'react-native-mmkv';
 
 import { UserService } from './user.service';
@@ -21,6 +21,8 @@ export type NotificationPrefs = {
   disputeResponse: boolean;
 };
 
+export type PermissionStatus = 'granted' | 'denied' | 'undetermined';
+
 const DEFAULT_PREFS: NotificationPrefs = {
   acknowledged: true,
   disputeResponse: true,
@@ -36,19 +38,23 @@ const ENTRY_TYPE_LABELS: Record<EntryType, string> = {
   upload: 'Upload',
 };
 
-// Configure how notifications appear when app is in foreground
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+function mapAuthorizationStatus(status: AuthorizationStatus): PermissionStatus {
+  switch (status) {
+    case AuthorizationStatus.AUTHORIZED:
+    case AuthorizationStatus.PROVISIONAL:
+      return 'granted';
+    case AuthorizationStatus.DENIED:
+      return 'denied';
+    default:
+      return 'undetermined';
+  }
+}
 
 export const NotificationService = {
-  getPermissionStatus(): Promise<Notifications.PermissionStatus> {
-    return Notifications.getPermissionsAsync().then(({ status }) => status);
+  async getPermissionStatus(): Promise<PermissionStatus> {
+    const settings = await notifee.getNotificationSettings();
+
+    return mapAuthorizationStatus(settings.authorizationStatus);
   },
 
   getPrefs(): NotificationPrefs {
@@ -136,12 +142,12 @@ export const NotificationService = {
   async requestPermissions(): Promise<boolean> {
     storage.set(PERMISSION_REQUESTED_KEY, true);
 
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    if (existingStatus === 'granted') return true;
+    const settings = await notifee.getNotificationSettings();
+    if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) return true;
 
-    const { status } = await Notifications.requestPermissionsAsync();
+    const newSettings = await notifee.requestPermission();
 
-    return status === 'granted';
+    return newSettings.authorizationStatus === AuthorizationStatus.AUTHORIZED;
   },
 
   savePrefs(prefs: NotificationPrefs): void {
@@ -156,14 +162,10 @@ export const NotificationService = {
     const status = await this.getPermissionStatus();
     if (status !== 'granted') return;
 
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        body: content.body,
-        data: content.data,
-        sound: true,
-        title: content.title,
-      },
-      trigger: null, // Immediate
+    await notifee.displayNotification({
+      body: content.body,
+      data: content.data,
+      title: content.title,
     });
   },
 };

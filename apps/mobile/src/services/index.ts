@@ -15,4 +15,8 @@ export {
 export { ExportService, type ExportFilters, type ExportResult } from './export.service';
 export { AuthService } from './auth.service';
 export { SyncService } from './sync.service';
-export { NotificationService, type NotificationPrefs } from './notification.service';
+export {
+  NotificationService,
+  type NotificationPrefs,
+  type PermissionStatus,
+} from './notification.service';
