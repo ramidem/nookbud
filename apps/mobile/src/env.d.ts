@@ -3,8 +3,8 @@ declare module '@env' {
   export const IS_LIVE: any;
   export const STORAGE_KEY: any;
   export const API_BASE_URL: any;
-  export const EXPO_PUBLIC_SUPABASE_URL: any;
-  export const EXPO_PUBLIC_SUPABASE_ANON_KEY: any;
+  export const SUPABASE_URL: any;
+  export const SUPABASE_ANON_KEY: any;
 }
 declare module '*.svg' {
   import React from 'react';
