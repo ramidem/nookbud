@@ -120,7 +120,7 @@ function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
       {/* Floating tab bar */}
       <View
         style={[
-          tw`bg-surface flex-row items-center self-stretch rounded-full`,
+          tw`bg-surface flex-row items-center self-stretch rounded-b-3xl rounded-t-2xl`,
           {
             elevation: ANDROID_ELEVATION,
             marginHorizontal: TAB_BAR_MARGIN,
