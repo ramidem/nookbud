@@ -1475,6 +1475,187 @@
       "dependencies": [
         "53"
       ]
+    },
+    {
+      "id": "59",
+      "phase": "7",
+      "title": "SQLCipher encryption \u2014 react-native-keychain + op-sqlite",
+      "description": "Encrypt the local SQLite database at rest using SQLCipher. Store the encryption key in the device Keychain (iOS) / Keystore (Android) via react-native-keychain.",
+      "priority": 59,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Add 'op-sqlite': { 'sqlcipher': true } to package.json",
+        "Install react-native-keychain",
+        "getOrCreateDbKey() \u2014 generates 32-byte hex key on first launch, stores in Keychain with WHEN_UNLOCKED_THIS_DEVICE_ONLY",
+        "db client passes encryptionKey to op-sqlite open()",
+        "Database file is encrypted \u2014 cannot be read by SQLite Browser without key",
+        "Unit test: open DB with wrong key fails"
+      ],
+      "files": [
+        "apps/mobile/src/database/client.ts",
+        "apps/mobile/src/database/encryption.ts",
+        "package.json"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "60",
+      "phase": "7",
+      "title": "Encrypt existing unencrypted local database on upgrade",
+      "description": "One-time migration: detect unencrypted existing database on first launch after upgrade, re-encrypt using SQLCipher ATTACH export method.",
+      "priority": 60,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Detect if existing DB is unencrypted (try open with key \u2014 if fails, DB was encrypted; if succeeds with no key, it's plaintext)",
+        "If plaintext: use sqlcipher_export to create encrypted copy, replace original",
+        "Migration runs once on upgrade \u2014 tracked via AsyncStorage flag 'db_encrypted_v1'",
+        "On failure: app shows error, does not delete data",
+        "Test on device with existing unencrypted data"
+      ],
+      "files": [
+        "apps/mobile/src/database/encryption-migration.ts",
+        "apps/mobile/src/database/client.ts"
+      ],
+      "dependencies": [
+        "59"
+      ]
+    },
+    {
+      "id": "61",
+      "phase": "7",
+      "title": "Install PowerSync SDK",
+      "description": "Install @powersync/react-native, @powersync/op-sqlite, @powersync/drizzle-driver. Replace direct op-sqlite client with PowerSyncDatabase.",
+      "priority": 61,
+      "passes": false,
+      "acceptanceCriteria": [
+        "yarn add @powersync/react-native @powersync/op-sqlite @powersync/drizzle-driver",
+        "Replace open() in client.ts with OPSqliteOpenFactory",
+        "PowerSyncDatabase initialized with AppSchema",
+        "db = wrapPowerSyncWithDrizzle(powerSyncDb, { schema }) \u2014 all existing Drizzle queries work unchanged",
+        "App boots, migrations run, existing screens unaffected",
+        "npx tsc --noEmit passes, yarn lint:mobile passes"
+      ],
+      "files": [
+        "apps/mobile/src/database/client.ts",
+        "apps/mobile/src/database/schema/powersync-schema.ts",
+        "package.json"
+      ],
+      "dependencies": [
+        "59"
+      ]
+    },
+    {
+      "id": "62",
+      "phase": "7",
+      "title": "SupabaseConnector \u2014 fetchCredentials + uploadData",
+      "description": "Implement the PowerSync backend connector. fetchCredentials returns the PowerSync endpoint + Supabase JWT. uploadData flushes the local write queue to Supabase with correct upsert/conflict strategy.",
+      "priority": 62,
+      "passes": false,
+      "acceptanceCriteria": [
+        "SupabaseConnector.fetchCredentials() returns { endpoint: POWERSYNC_URL, token: supabase.auth.session.access_token }",
+        "SupabaseConnector.uploadData() processes CrudBatch \u2014 PUT = upsert, DELETE = set deleted_at",
+        "Entries/versions/acknowledgments use ON CONFLICT DO NOTHING (immutable)",
+        "Space members/disputes use ON CONFLICT DO UPDATE with updated_at guard (LWW)",
+        "Batch completes only on full success \u2014 retries on partial failure",
+        "POWERSYNC_URL read from EXPO_PUBLIC_POWERSYNC_URL env var"
+      ],
+      "files": [
+        "apps/mobile/src/database/supabase-connector.ts",
+        "apps/mobile/src/database/client.ts"
+      ],
+      "dependencies": [
+        "61"
+      ]
+    },
+    {
+      "id": "63",
+      "phase": "7",
+      "title": "Sync Rules \u2014 per-user Space partitioning",
+      "description": "Define PowerSync Sync Rules so each user only receives data for Spaces they are a member of. Upload rules to PowerSync dashboard.",
+      "priority": 63,
+      "passes": false,
+      "acceptanceCriteria": [
+        "sync_rules.yaml defines bucket per user \u2014 filters spaces, space_members, entries, entry_versions, acknowledgments, children, resources, audit_logs by space membership",
+        "User A cannot receive User B's data (verified with two test accounts)",
+        "Rules deployed to PowerSync project",
+        "Document in docs/powersync-sync-rules.md"
+      ],
+      "files": [
+        "apps/mobile/sync_rules.yaml",
+        "docs/powersync-sync-rules.md"
+      ],
+      "dependencies": [
+        "62"
+      ]
+    },
+    {
+      "id": "64",
+      "phase": "7",
+      "title": "Sync status UI \u2014 online/offline indicator",
+      "description": "Show sync status in the app: online/offline badge, pending write count, last synced timestamp.",
+      "priority": 64,
+      "passes": false,
+      "acceptanceCriteria": [
+        "useSyncStatus() hook wraps powerSyncDb.currentStatus",
+        "Offline indicator in header or status bar when disconnected",
+        "Pending changes badge (count of unsynced writes)",
+        "Last synced timestamp in Settings",
+        "Syncing spinner while upload queue is processing"
+      ],
+      "files": [
+        "apps/mobile/src/hooks/useSyncStatus.hook.ts",
+        "apps/mobile/src/components/molecules/SyncStatus/sync-status.component.tsx",
+        "apps/mobile/src/screens/Settings/SettingsScreen.tsx"
+      ],
+      "dependencies": [
+        "62"
+      ]
+    },
+    {
+      "id": "65",
+      "phase": "7",
+      "title": "Remove sync.service.ts stub, update SyncService",
+      "description": "Delete the stub sync service methods. SyncService becomes a thin wrapper exposing PowerSync status and manual sync trigger.",
+      "priority": 65,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Stub methods (pullEntries, pushEntry, etc.) removed",
+        "SyncService.getStatus() returns powerSyncDb.currentStatus",
+        "SyncService.connect() / disconnect() proxies to powerSyncDb",
+        "No broken imports anywhere"
+      ],
+      "files": [
+        "apps/mobile/src/services/sync.service.ts"
+      ],
+      "dependencies": [
+        "62"
+      ]
+    },
+    {
+      "id": "66",
+      "phase": "7",
+      "title": "Phase 7 QA \u2014 encryption, sync, offline cycle",
+      "description": "End-to-end QA of offline-first functionality.",
+      "priority": 66,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Encryption: DB file cannot be opened without key",
+        "Offline write: create entry with no connection \u2192 appears locally \u2192 syncs when reconnected",
+        "Multi-device: User A adds entry \u2192 User B (same Space) sees it after sync",
+        "Conflict: both users add entry offline \u2192 both entries appear after sync (no data loss)",
+        "Upgrade migration: existing unencrypted DB gets encrypted on first launch",
+        "ESLint passes, TypeScript compiles"
+      ],
+      "files": [],
+      "dependencies": [
+        "59",
+        "60",
+        "61",
+        "62",
+        "63",
+        "64",
+        "65"
+      ]
     }
   ]
 }
