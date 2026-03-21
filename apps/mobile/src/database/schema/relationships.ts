@@ -1,27 +1,15 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+/**
+ * @deprecated The relationships table has been replaced by spaces + space_members.
+ * This file is kept only for backward-compatible type exports until screens migrate (Story 39+).
+ */
 
-import { users } from './users';
+export type Relationship = {
+  id: string;
+  parentAId: string;
+  parentBId: string | null;
+  inviteToken: string | null;
+  inviteExpiresAt: Date | null;
+  createdAt: Date;
+};
 
-export const relationships = sqliteTable('relationships', {
-  createdAt: integer('created_at', { mode: 'timestamp' })
-    .notNull()
-    .$defaultFn(() => new Date()),
-
-  id: text('id').primaryKey(),
-
-  // For partner invitation
-  inviteExpiresAt: integer('invite_expires_at', { mode: 'timestamp' }),
-
-  // Nullable until partner joins
-  inviteToken: text('invite_token'),
-
-  // UUID
-  parentAId: text('parent_a_id')
-    .notNull()
-    .references(() => users.id),
-
-  parentBId: text('parent_b_id').references(() => users.id),
-});
-
-export type Relationship = typeof relationships.$inferSelect;
-export type NewRelationship = typeof relationships.$inferInsert;
+export type NewRelationship = Partial<Relationship> & { id: string; parentAId: string };

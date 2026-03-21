@@ -4,7 +4,14 @@ import { AuditService } from './audit.service';
 import { UserService } from './user.service';
 
 import { db } from '@/database';
-import { relationships, type Relationship, type NewRelationship } from '@/database/schema';
+import {
+  spaces,
+  spaceMembers,
+  type Space,
+  type NewSpace,
+  type NewSpaceMember,
+  type Relationship,
+} from '@/database/schema';
 
 const UUID_RADIX = 16;
 const UUID_VARIANT_MASK = 0x3;
@@ -23,7 +30,7 @@ function generateUUID(): string {
 }
 
 const INVITE_TOKEN_LENGTH = 8;
-const ENTITY_TYPE_RELATIONSHIP = 'relationship' as const;
+const ENTITY_TYPE_SPACE = 'space' as const;
 const ERROR_NO_CURRENT_USER = 'No current user';
 
 /**
@@ -39,131 +46,110 @@ function generateInviteToken(): string {
   return token;
 }
 
+/**
+ * Build a Relationship-compatible object from a Space + its members.
+ * This bridges the old 2-parent model until the UI migrates to Spaces (Story 39+).
+ */
+async function toRelationship(space: Space): Promise<Relationship> {
+  const members = await db.select().from(spaceMembers).where(eq(spaceMembers.spaceId, space.id));
+
+  const owner = members.find((m) => m.role === 'owner');
+  const otherMember = members.find((m) => m.role !== 'owner');
+
+  return {
+    createdAt: space.createdAt,
+    id: space.id,
+    inviteExpiresAt: null,
+    inviteToken: null,
+    parentAId: owner?.userId ?? space.createdBy,
+    parentBId: otherMember?.userId ?? null,
+  };
+}
+
 export const RelationshipService = {
   /**
-   * Accept an invite (parent B joins)
+   * Accept an invite — kept as stub for compatibility.
+   * Real invite flow will move to SpaceService in Story 39.
    */
-  async acceptInvite(inviteToken: string): Promise<Relationship> {
+  async acceptInvite(_inviteToken: string): Promise<Relationship> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
-    const [relationship] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.inviteToken, inviteToken));
-
-    if (!relationship) {
-      throw new Error('Invalid invite token');
-    }
-
-    if (relationship.inviteExpiresAt && relationship.inviteExpiresAt < new Date()) {
-      throw new Error('Invite token expired');
-    }
-
-    if (relationship.parentBId) {
-      throw new Error('Relationship already has a partner');
-    }
-
-    if (relationship.parentAId === userId) {
-      throw new Error('Cannot join your own relationship');
-    }
-
-    await db
-      .update(relationships)
-      .set({
-        inviteExpiresAt: null,
-        inviteToken: null,
-        parentBId: userId,
-      })
-      .where(eq(relationships.id, relationship.id));
-
-    await AuditService.log({
-      action: 'update',
-      entityId: relationship.id,
-      entityType: ENTITY_TYPE_RELATIONSHIP,
-      metadata: {
-        action: 'accept_invite',
-      },
-      userId,
-    });
-
-    const [updated] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.id, relationship.id));
-
-    return updated;
+    // Invite token matching is no longer stored in spaces table.
+    // This stub throws until Story 39 implements the new invite flow.
+    throw new Error('Invite flow not yet migrated to Spaces');
   },
 
   /**
-   * Create a new relationship (parent A creates it)
+   * Create a new space (parent A creates it)
    */
   async create(): Promise<Relationship> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     const id = generateUUID();
-    const inviteToken = generateInviteToken();
-    const inviteExpiresAt = new Date();
-    inviteExpiresAt.setDate(inviteExpiresAt.getDate() + 30); // 30 day expiry
 
-    const newRelationship: NewRelationship = {
+    const newSpace: NewSpace = {
+      createdBy: userId,
       id,
-      inviteExpiresAt,
-      inviteToken,
-      parentAId: userId,
-      parentBId: null,
+      name: 'My Space',
     };
 
-    await db.insert(relationships).values(newRelationship);
+    await db.insert(spaces).values(newSpace);
+
+    // Add creator as owner
+    const memberId = generateUUID();
+    const newMember: NewSpaceMember = {
+      id: memberId,
+      role: 'owner',
+      spaceId: id,
+      userId,
+    };
+    await db.insert(spaceMembers).values(newMember);
 
     // Audit log
     await AuditService.log({
       action: 'create',
       entityId: id,
-      entityType: ENTITY_TYPE_RELATIONSHIP,
-      metadata: {
-        inviteToken,
-      },
+      entityType: ENTITY_TYPE_SPACE,
+      metadata: {},
       userId,
     });
 
-    const [relationship] = await db.select().from(relationships).where(eq(relationships.id, id));
+    const [space] = await db.select().from(spaces).where(eq(spaces.id, id));
 
-    return relationship;
+    return toRelationship(space);
   },
 
   /**
-   * Get relationship by ID
+   * Get space by ID
    */
   async getById(id: string): Promise<Relationship | null> {
-    const [relationship] = await db.select().from(relationships).where(eq(relationships.id, id));
+    const [space] = await db.select().from(spaces).where(eq(spaces.id, id));
+    if (!space) return null;
 
-    return relationship ?? null;
+    return toRelationship(space);
   },
 
   /**
-   * Get current user's relationship
+   * Get current user's space (first one found)
    */
   async getCurrentRelationship(): Promise<Relationship | null> {
     const userId = UserService.getCurrentUserId();
     if (!userId) return null;
 
-    // Check if user is parent A or parent B
-    const [relationship] = await db
+    // Find any space where user is a member
+    const [membership] = await db
       .select()
-      .from(relationships)
-      .where(eq(relationships.parentAId, userId));
+      .from(spaceMembers)
+      .where(eq(spaceMembers.userId, userId));
 
-    if (relationship) return relationship;
+    if (!membership) return null;
 
-    // Check if user is parent B
-    const [asParentB] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.parentBId, userId));
+    const [space] = await db.select().from(spaces).where(eq(spaces.id, membership.spaceId));
+    if (!space) return null;
 
-    return asParentB ?? null;
+    return toRelationship(space);
   },
 
   /**
@@ -191,32 +177,14 @@ export const RelationshipService = {
   },
 
   /**
-   * Generate a new invite token for partner
+   * Generate a new invite token — stub until Story 39
    */
-  async regenerateInvite(relationshipId: string): Promise<string> {
+  async regenerateInvite(_spaceId: string): Promise<string> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
-    const inviteToken = generateInviteToken();
-    const inviteExpiresAt = new Date();
-    inviteExpiresAt.setDate(inviteExpiresAt.getDate() + 30);
-
-    await db
-      .update(relationships)
-      .set({ inviteExpiresAt, inviteToken })
-      .where(eq(relationships.id, relationshipId));
-
-    await AuditService.log({
-      action: 'update',
-      entityId: relationshipId,
-      entityType: ENTITY_TYPE_RELATIONSHIP,
-      metadata: {
-        action: 'regenerate_invite',
-        inviteToken,
-      },
-      userId,
-    });
-
-    return inviteToken;
+    // Invite tokens are no longer stored on the spaces table.
+    // Story 39 will implement the new invite mechanism.
+    return generateInviteToken();
   },
 };

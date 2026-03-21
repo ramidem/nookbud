@@ -18,7 +18,8 @@ type EntityType =
   | 'disputes'
   | 'entries'
   | 'entry_versions'
-  | 'relationships'
+  | 'spaces'
+  | 'space_members'
   | 'users';
 
 function entitySyncKey(entity: EntityType): string {

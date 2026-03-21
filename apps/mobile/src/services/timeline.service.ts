@@ -12,6 +12,8 @@ import {
 
 export type TimelineEntry = {
   id: string;
+  spaceId: string;
+  /** @deprecated Use spaceId — kept for screen compatibility until Story 39+ */
   relationshipId: string;
   childId: string | null;
   type: EntryType;
@@ -28,7 +30,9 @@ export type TimelineEntry = {
 };
 
 export type TimelineQueryParams = {
-  relationshipId: string;
+  spaceId?: string;
+  /** @deprecated Use spaceId — kept for screen compatibility until Story 39+ */
+  relationshipId?: string;
   childId?: string;
   types?: EntryType[];
   dateFrom?: Date;
@@ -53,14 +57,14 @@ export const TimelineService = {
    * Get entries for a specific child
    */
   async getByChild(
-    relationshipId: string,
+    spaceId: string,
     childId: string,
     limit = DEFAULT_LIMIT,
   ): Promise<TimelineEntry[]> {
     const result = await this.query({
       childId,
       limit,
-      relationshipId,
+      spaceId,
     });
 
     return result.entries;
@@ -70,13 +74,13 @@ export const TimelineService = {
    * Get entries by type
    */
   async getByType(
-    relationshipId: string,
+    spaceId: string,
     type: EntryType,
     limit = DEFAULT_LIMIT,
   ): Promise<TimelineEntry[]> {
     const result = await this.query({
       limit,
-      relationshipId,
+      spaceId,
       types: [type],
     });
 
@@ -86,10 +90,10 @@ export const TimelineService = {
   /**
    * Get disputed entries
    */
-  async getDisputed(relationshipId: string): Promise<TimelineEntry[]> {
+  async getDisputed(spaceId: string): Promise<TimelineEntry[]> {
     const result = await this.query({
       limit: 100,
-      relationshipId,
+      spaceId,
     });
 
     return result.entries.filter((entry) => entry.acknowledgmentStatus === 'disputed');
@@ -98,11 +102,11 @@ export const TimelineService = {
   /**
    * Get pending acknowledgments for current user
    */
-  async getPendingForUser(relationshipId: string, userId: string): Promise<TimelineEntry[]> {
+  async getPendingForUser(spaceId: string, userId: string): Promise<TimelineEntry[]> {
     // Get entries created by the OTHER user that are pending
     const allEntries = await this.query({
       limit: 100,
-      relationshipId,
+      spaceId,
     });
 
     return allEntries.entries.filter(
@@ -113,10 +117,10 @@ export const TimelineService = {
   /**
    * Get recent entries
    */
-  async getRecent(relationshipId: string, limit = RECENT_LIMIT): Promise<TimelineEntry[]> {
+  async getRecent(spaceId: string, limit = RECENT_LIMIT): Promise<TimelineEntry[]> {
     const result = await this.query({
       limit,
-      relationshipId,
+      spaceId,
     });
 
     return result.entries;
@@ -146,12 +150,15 @@ export const TimelineService = {
       limit = DEFAULT_LIMIT,
       offset = 0,
       relationshipId,
+      spaceId: spaceIdParam,
       status,
       types,
     } = params;
 
+    const spaceId = spaceIdParam ?? relationshipId ?? '';
+
     // Build conditions
-    const conditions = [eq(entries.relationshipId, relationshipId)];
+    const conditions = [eq(entries.spaceId, spaceId)];
 
     if (!includeDeleted) {
       conditions.push(ne(entries.status, 'soft_deleted'));
@@ -224,7 +231,8 @@ export const TimelineService = {
           createdBy: entry.createdBy,
           currentVersion,
           id: entry.id,
-          relationshipId: entry.relationshipId,
+          relationshipId: entry.spaceId,
+          spaceId: entry.spaceId,
           status: entry.status as EntryStatus,
           type: entry.type as EntryType,
         };

@@ -929,7 +929,7 @@
       "title": "Schema migration \u2014 spaces and space_members tables",
       "description": "Replace the relationships table with spaces and space_members. Migrate existing relationship data. Re-link all entries, children, and acknowledgments to Spaces.",
       "priority": 38,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "spaces table: id, name, emoji, color, created_by (FK users), created_at, updated_at",
         "space_members table: id, space_id (FK spaces), user_id (FK users), role (owner|parent|guardian|lawyer|viewer), joined_at, invited_by",

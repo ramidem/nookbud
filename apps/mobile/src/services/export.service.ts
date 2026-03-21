@@ -14,7 +14,9 @@ import {
 } from '@/database/schema';
 
 export type ExportFilters = {
-  relationshipId: string;
+  spaceId?: string;
+  /** @deprecated Use spaceId — kept for screen compatibility until Story 39+ */
+  relationshipId?: string;
   childIds?: string[];
   types?: EntryType[];
   dateFrom?: Date;
@@ -61,7 +63,8 @@ export const ExportService = {
    * Fetch entries with all related data
    */
   async fetchEntries(filters: ExportFilters) {
-    const conditions = [eq(entries.relationshipId, filters.relationshipId)];
+    const resolvedSpaceId = filters.spaceId ?? filters.relationshipId ?? '';
+    const conditions = [eq(entries.spaceId, resolvedSpaceId)];
     conditions.push(ne(entries.status, 'soft_deleted'));
 
     if (filters.types && filters.types.length > 0) {
@@ -167,7 +170,7 @@ export const ExportService = {
       filters: {
         dateFrom: filters.dateFrom?.toISOString(),
         dateTo: filters.dateTo?.toISOString(),
-        relationshipId: filters.relationshipId,
+        spaceId: filters.spaceId ?? filters.relationshipId,
         types: filters.types,
       },
     };

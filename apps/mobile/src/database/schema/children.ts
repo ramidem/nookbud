@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
-import { relationships } from './relationships';
+import { spaces } from './spaces';
 
 export const children = sqliteTable('children', {
   createdAt: integer('created_at', { mode: 'timestamp' })
@@ -12,9 +12,9 @@ export const children = sqliteTable('children', {
 
   name: text('name').notNull(),
   // UUID
-  relationshipId: text('relationship_id')
+  spaceId: text('space_id')
     .notNull()
-    .references(() => relationships.id),
+    .references(() => spaces.id),
 });
 
 export type Child = typeof children.$inferSelect;

@@ -1,6 +1,8 @@
 // Schema exports for Drizzle ORM
 
 export * from './users';
+export * from './spaces';
+export * from './space-members';
 export * from './relationships';
 export * from './children';
 export * from './entries';
