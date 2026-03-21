@@ -9,13 +9,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 
+import { Alert } from '@/components/atoms';
 import type { Child } from '@/database/schema';
+import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
-import { EntryService, RelationshipService, ChildService, UserService } from '@/services';
+import { EntryService, ChildService, UserService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 import type { ExpenseCategory, SplitType } from '@/types/entry-content.types';
 
@@ -47,10 +48,11 @@ const SPLIT_OPTIONS: { value: SplitType; label: string }[] = [
 
 export function AddExpenseScreen({ navigation }: Props) {
   const tw = useTw();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
   const [isLoading, setIsLoading] = useState(false);
   const [children, setChildren] = useState<Child[]>([]);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [hasPermission, setHasPermission] = useState(true);
 
   // Form state
   const [amount, setAmount] = useState('');
@@ -62,28 +64,50 @@ export function AddExpenseScreen({ navigation }: Props) {
 
   useEffect(() => {
     async function load() {
-      const rel = await RelationshipService.getCurrentRelationship();
-      if (rel) {
-        setRelationshipId(rel.id);
-        const c = await ChildService.listByRelationship(rel.id);
-        setChildren(c);
+      if (isAllSpaces || !activeSpaceId) {
+        Alert.error({
+          message:
+            'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
+          title: 'No Space Selected',
+        });
+        navigation.goBack();
+
+        return;
       }
+
+      // Role permission check
+      const role = await SpaceService.getUserRole(activeSpaceId);
+      if (role === 'lawyer' || role === 'viewer') {
+        Alert.error({
+          message: 'Your role in this Space does not allow creating entries.',
+          title: 'Access Denied',
+        });
+        setHasPermission(false);
+        navigation.goBack();
+
+        return;
+      }
+
+      const c = await ChildService.listBySpace(activeSpaceId);
+      setChildren(c);
+
       const uid = UserService.getCurrentUserId();
       setUserId(uid);
     }
     load();
-  }, []);
+  }, [activeSpaceId, isAllSpaces, navigation]);
 
-  const canSave = amount.trim().length > 0 && description.trim().length > 0;
+  const canSave =
+    amount.trim().length > 0 && description.trim().length > 0 && hasPermission && !isAllSpaces;
 
   const handleSave = async () => {
-    if (!canSave || !relationshipId || !userId) return;
+    if (!canSave || !activeSpaceId || !userId) return;
 
     setIsLoading(true);
     try {
       const amountCents = Math.round(parseFloat(amount) * 100);
       if (isNaN(amountCents) || amountCents <= 0) {
-        Alert.alert('Invalid Amount', 'Please enter a valid amount');
+        Alert.error({ message: 'Please enter a valid amount', title: 'Invalid Amount' });
 
         return;
       }
@@ -99,13 +123,16 @@ export function AddExpenseScreen({ navigation }: Props) {
           receiptAttached: false,
           splitType,
         },
-        relationshipId,
+        spaceId: activeSpaceId,
         type: 'expense',
       });
 
       navigation.goBack();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to save',
+        title: 'Error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -138,6 +165,15 @@ export function AddExpenseScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
+        {/* Space context pill */}
+        {activeSpace && (
+          <View style={tw`mb-4 self-start rounded-full bg-neutral-200 px-3 py-1.5`}>
+            <Text style={tw`text-foreground text-sm`}>
+              {activeSpace.emoji} {activeSpace.name}
+            </Text>
+          </View>
+        )}
+
         {/* Amount */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Amount</Text>

@@ -1141,7 +1141,7 @@
       "title": "Entry creation scoped to active Space",
       "description": "All entry creation forms scoped to active Space. If All Spaces is active, user must select a Space first. Role-based creation permissions enforced.",
       "priority": 46,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "All entry forms display active Space as context (shown, not editable)",
         "Created entries linked to active Space's space_id",

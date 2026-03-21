@@ -9,16 +9,17 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 
+import { Alert } from '@/components/atoms';
 import type { Child } from '@/database/schema';
+import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { CameraIcon, CrossIcon, FileTextIcon, ImageIcon, LockIcon, PaperclipIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
-import { EntryService, RelationshipService, ChildService, type AttachmentInput } from '@/services';
+import { EntryService, ChildService, SpaceService, type AttachmentInput } from '@/services';
 import { colors } from '@/tailwind';
 import type { DocumentType } from '@/types/entry-content.types';
 
@@ -40,9 +41,10 @@ const DOC_TYPES: { value: DocumentType; label: string }[] = [
 
 export function AddUploadScreen({ navigation }: Props) {
   const tw = useTw();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
   const [isLoading, setIsLoading] = useState(false);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
   const [children, setChildren] = useState<Child[]>([]);
+  const [hasPermission, setHasPermission] = useState(true);
 
   // Form state
   const [title, setTitle] = useState('');
@@ -53,17 +55,37 @@ export function AddUploadScreen({ navigation }: Props) {
 
   useEffect(() => {
     async function load() {
-      const rel = await RelationshipService.getCurrentRelationship();
-      if (rel) {
-        setRelationshipId(rel.id);
-        const c = await ChildService.listByRelationship(rel.id);
-        setChildren(c);
+      if (isAllSpaces || !activeSpaceId) {
+        Alert.error({
+          message:
+            'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
+          title: 'No Space Selected',
+        });
+        navigation.goBack();
+
+        return;
       }
+
+      // Role permission check
+      const role = await SpaceService.getUserRole(activeSpaceId);
+      if (role === 'lawyer' || role === 'viewer') {
+        Alert.error({
+          message: 'Your role in this Space does not allow creating entries.',
+          title: 'Access Denied',
+        });
+        setHasPermission(false);
+        navigation.goBack();
+
+        return;
+      }
+
+      const c = await ChildService.listBySpace(activeSpaceId);
+      setChildren(c);
     }
     load();
-  }, []);
+  }, [activeSpaceId, isAllSpaces, navigation]);
 
-  const canSave = title.trim().length > 0 && files.length > 0;
+  const canSave = title.trim().length > 0 && files.length > 0 && hasPermission && !isAllSpaces;
 
   const handlePickDocument = async () => {
     try {
@@ -81,7 +103,7 @@ export function AddUploadScreen({ navigation }: Props) {
       setFiles([...files, ...newFiles]);
     } catch (err) {
       if (!DocumentPicker.isCancel(err)) {
-        Alert.alert('Error', 'Failed to pick document');
+        Alert.error({ message: 'Failed to pick document', title: 'Error' });
       }
     }
   };
@@ -126,7 +148,7 @@ export function AddUploadScreen({ navigation }: Props) {
   };
 
   const handleSave = async () => {
-    if (!canSave || !relationshipId) return;
+    if (!canSave || !activeSpaceId) return;
 
     setIsLoading(true);
     try {
@@ -138,13 +160,16 @@ export function AddUploadScreen({ navigation }: Props) {
           documentType,
           title: title.trim(),
         },
-        relationshipId,
+        spaceId: activeSpaceId,
         type: 'upload',
       });
 
       navigation.goBack();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to save',
+        title: 'Error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -177,6 +202,15 @@ export function AddUploadScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
+        {/* Space context pill */}
+        {activeSpace && (
+          <View style={tw`mb-4 self-start rounded-full bg-neutral-200 px-3 py-1.5`}>
+            <Text style={tw`text-foreground text-sm`}>
+              {activeSpace.emoji} {activeSpace.name}
+            </Text>
+          </View>
+        )}
+
         {/* Title */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Title *</Text>
