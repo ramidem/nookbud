@@ -1,5 +1,7 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { type BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
+import { Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type SvgProps } from 'react-native-svg';
 
 import { ActivityNavigator } from './ActivityNavigator';
@@ -8,8 +10,7 @@ import { SettingsNavigator } from './SettingsNavigator';
 import { SpacesNavigator } from './SpacesNavigator';
 
 import { useTw } from '@/hooks/useTw';
-import { BookOpenIcon, ClipboardListIcon, GearIcon, LayersIcon } from '@/icons';
-import { colors } from '@/tailwind';
+import { BookOpenIcon, ClipboardListIcon, GearIcon, LayersIcon, PlusIcon } from '@/icons';
 
 export type MainTabParamList = {
   SpacesTab: undefined;
@@ -21,65 +22,143 @@ export type MainTabParamList = {
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const TAB_ICON_SIZE = 24;
+const FAB_SIZE = 56;
+const FAB_ICON_SIZE = 28;
+const DOT_SIZE = 4;
+const FAB_OVERLAP = 20;
+const TAB_BAR_MARGIN = 16;
+const TAB_BAR_PADDING = 12;
+const SHADOW_OFFSET = 4;
+const SHADOW_OPACITY = 0.1;
+const SHADOW_RADIUS = 12;
+const ANDROID_ELEVATION = 8;
 
-function TabIcon({ focused, Icon }: { Icon: React.FC<SvgProps>; focused: boolean }) {
+const TAB_ICONS: Record<string, React.FC<SvgProps>> = {
+  ActivityTab: ClipboardListIcon,
+  ResourcesTab: BookOpenIcon,
+  SettingsTab: GearIcon,
+  SpacesTab: LayersIcon,
+};
+
+function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
   const tw = useTw();
+  const insets = useSafeAreaInsets();
+
+  const handleFabPress = () => {
+    navigation.navigate('ActivityTab', { screen: 'AddEntryPicker' });
+  };
+
+  const tabBarBottom = insets.bottom > 0 ? insets.bottom : TAB_BAR_MARGIN;
+  const leftTabs = state.routes.slice(0, 2);
+  const rightTabs = state.routes.slice(2);
+
+  const renderTab = (route: (typeof state.routes)[number], index: number) => {
+    const { options } = descriptors[route.key];
+    const isFocused = state.index === state.routes.indexOf(route);
+    const Icon = TAB_ICONS[route.name];
+
+    const onPress = () => {
+      const event = navigation.emit({
+        canPreventDefault: true,
+        target: route.key,
+        type: 'tabPress',
+      });
+
+      if (!isFocused && !event.defaultPrevented) {
+        navigation.navigate(route.name);
+      }
+    };
+
+    return (
+      <Pressable
+        key={route.key}
+        accessibilityLabel={options.tabBarAccessibilityLabel}
+        accessibilityRole="tab"
+        accessibilityState={isFocused ? { selected: true } : {}}
+        style={tw`flex-1 items-center py-1`}
+        onPress={onPress}
+      >
+        {Icon && (
+          <Icon
+            height={TAB_ICON_SIZE}
+            style={tw`${isFocused ? 'text-primary' : 'text-subtitle'}`}
+            width={TAB_ICON_SIZE}
+          />
+        )}
+        <View
+          style={tw`mt-1.5 h-[${DOT_SIZE}px] w-[${DOT_SIZE}px] rounded-full ${isFocused ? 'bg-primary' : 'bg-transparent'}`}
+        />
+      </Pressable>
+    );
+  };
 
   return (
-    <Icon
-      height={TAB_ICON_SIZE}
-      style={tw`${focused ? 'text-primary' : 'text-subtitle'}`}
-      width={TAB_ICON_SIZE}
-    />
+    <View
+      pointerEvents="box-none"
+      style={[tw`absolute bottom-0 left-0 right-0 items-center`, { marginBottom: tabBarBottom }]}
+    >
+      {/* FAB */}
+      <Pressable
+        style={[
+          tw`bg-primary absolute z-10 items-center justify-center rounded-full`,
+          {
+            elevation: ANDROID_ELEVATION,
+            height: FAB_SIZE,
+            shadowColor: '#000',
+            shadowOffset: { height: 3, width: 0 },
+            shadowOpacity: 0.2,
+            shadowRadius: 6,
+            top: -FAB_OVERLAP,
+            width: FAB_SIZE,
+          },
+        ]}
+        onPress={handleFabPress}
+      >
+        <PlusIcon height={FAB_ICON_SIZE} style={tw`text-white`} width={FAB_ICON_SIZE} />
+      </Pressable>
+
+      {/* Floating tab bar */}
+      <View
+        style={[
+          tw`bg-surface flex-row items-center self-stretch rounded-full`,
+          {
+            elevation: ANDROID_ELEVATION,
+            marginHorizontal: TAB_BAR_MARGIN,
+            paddingVertical: TAB_BAR_PADDING,
+            shadowColor: '#000',
+            shadowOffset: { height: SHADOW_OFFSET, width: 0 },
+            shadowOpacity: SHADOW_OPACITY,
+            shadowRadius: SHADOW_RADIUS,
+          },
+        ]}
+      >
+        {/* Left tabs */}
+        {leftTabs.map(renderTab)}
+
+        {/* Center spacer for FAB */}
+        <View style={{ width: FAB_SIZE }} />
+
+        {/* Right tabs */}
+        {rightTabs.map(renderTab)}
+      </View>
+    </View>
   );
 }
 
 export function MainNavigator() {
-  const tw = useTw();
-
   return (
     <Tab.Navigator
       initialRouteName="ActivityTab"
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.subtitle,
-        tabBarLabelStyle: tw`mt-1 text-xs`,
-        tabBarStyle: tw`border-divider bg-surface border-t pt-2`,
+        tabBarShowLabel: false,
       }}
+      tabBar={(props) => <FloatingTabBar {...props} />}
     >
-      <Tab.Screen
-        component={SpacesNavigator}
-        name="SpacesTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={LayersIcon} />,
-          tabBarLabel: 'Spaces',
-        }}
-      />
-      <Tab.Screen
-        component={ActivityNavigator}
-        name="ActivityTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={ClipboardListIcon} />,
-          tabBarLabel: 'Activity',
-        }}
-      />
-      <Tab.Screen
-        component={ResourcesNavigator}
-        name="ResourcesTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={BookOpenIcon} />,
-          tabBarLabel: 'Resources',
-        }}
-      />
-      <Tab.Screen
-        component={SettingsNavigator}
-        name="SettingsTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={GearIcon} />,
-          tabBarLabel: 'Settings',
-        }}
-      />
+      <Tab.Screen component={SpacesNavigator} name="SpacesTab" />
+      <Tab.Screen component={ActivityNavigator} name="ActivityTab" />
+      <Tab.Screen component={ResourcesNavigator} name="ResourcesTab" />
+      <Tab.Screen component={SettingsNavigator} name="SettingsTab" />
     </Tab.Navigator>
   );
 }
