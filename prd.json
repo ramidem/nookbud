@@ -922,6 +922,305 @@
       "dependencies": [
         "36"
       ]
+    },
+    {
+      "id": "38",
+      "phase": "3",
+      "title": "Schema migration \u2014 spaces and space_members tables",
+      "description": "Replace the relationships table with spaces and space_members. Migrate existing relationship data. Re-link all entries, children, and acknowledgments to Spaces.",
+      "priority": 38,
+      "passes": false,
+      "acceptanceCriteria": [
+        "spaces table: id, name, emoji, color, created_by (FK users), created_at, updated_at",
+        "space_members table: id, space_id (FK spaces), user_id (FK users), role (owner|parent|guardian|lawyer|viewer), joined_at, invited_by",
+        "children.relationship_id \u2192 children.space_id (FK spaces)",
+        "entries.relationship_id \u2192 entries.space_id (FK spaces)",
+        "Existing relationships migrated: each becomes a Space; parent_a \u2192 owner, parent_b \u2192 parent",
+        "Migration is reversible (down migration exists)",
+        "All entries, children, acknowledgments correctly linked post-migration",
+        "relationships table dropped after verification"
+      ],
+      "files": [
+        "apps/mobile/drizzle/migrations/",
+        "apps/mobile/src/database/schema/spaces.ts",
+        "apps/mobile/src/database/schema/space-members.ts",
+        "apps/mobile/src/database/schema/index.ts"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "39",
+      "phase": "3",
+      "title": "SpaceService \u2014 create, list, getById, rename, delete, leave",
+      "description": "Core CRUD service for Spaces. A user can create a Space (becoming owner), list their Spaces, view details, rename, update appearance, soft-delete, or leave.",
+      "priority": 39,
+      "passes": false,
+      "acceptanceCriteria": [
+        "createSpace(name, emoji?, color?) \u2014 creates Space, adds creator as owner",
+        "listSpaces(userId) \u2014 all Spaces the user is a member of, with member count and role",
+        "getSpaceById(spaceId, userId) \u2014 Space details with members, children, user's role (members only)",
+        "renameSpace(spaceId, name, userId) \u2014 owner only",
+        "updateSpaceAppearance(spaceId, emoji?, color?, userId) \u2014 owner only",
+        "deleteSpace(spaceId, userId) \u2014 owner only, soft-delete, entries preserved in audit",
+        "leaveSpace(spaceId, userId) \u2014 non-owner only; owner must transfer ownership first",
+        "All operations logged in audit_logs",
+        "Authorization: only members can access their Spaces"
+      ],
+      "files": [
+        "apps/mobile/src/services/space.service.ts",
+        "apps/mobile/src/types/space.types.ts"
+      ],
+      "dependencies": [
+        "38"
+      ]
+    },
+    {
+      "id": "40",
+      "phase": "3",
+      "title": "SpaceMemberService \u2014 invite, accept, assign role, remove member",
+      "description": "Manage Space membership. Owners generate invite codes/links with pre-assigned roles. Invited users accept to join. Owners can reassign roles and remove members.",
+      "priority": 40,
+      "passes": false,
+      "acceptanceCriteria": [
+        "generateInviteCode(spaceId, role, userId) \u2014 6-char code, 7-day expiry, owner only",
+        "generateInviteLink(spaceId, role, userId) \u2014 deep link coparent://invite/{code}",
+        "acceptInvite(inviteCode, userId) \u2014 joins Space with pre-assigned role; code consumed",
+        "assignRole(spaceId, memberId, newRole, userId) \u2014 owner only, cannot change own role",
+        "removeMember(spaceId, memberId, userId) \u2014 owner only, cannot remove self",
+        "transferOwnership(spaceId, newOwnerId, userId) \u2014 current owner only",
+        "Invite codes: single-use, expire after 7 days",
+        "Cannot join a Space already a member of",
+        "All membership changes logged in audit_logs"
+      ],
+      "files": [
+        "apps/mobile/src/services/space-member.service.ts"
+      ],
+      "dependencies": [
+        "38",
+        "39"
+      ]
+    },
+    {
+      "id": "41",
+      "phase": "3",
+      "title": "Active Space context \u2014 useActiveSpace() hook, MMKV persistence",
+      "description": "Active Space determines which timeline, children, and members are shown. Persists across restarts. Supports 'All Spaces' mode.",
+      "priority": 41,
+      "passes": false,
+      "acceptanceCriteria": [
+        "useActiveSpace() returns: activeSpace, setActiveSpace, isAllSpaces",
+        "Active Space ID persisted in MMKV, restored on launch",
+        "Fallback to first available Space if persisted Space no longer exists",
+        "If user has no Spaces, redirect to Space creation flow",
+        "null activeSpace activates 'All Spaces' mode",
+        "All timeline queries, entry creation, child listing scoped to active Space",
+        "Active Space available app-wide via Zustand or Jotai atom"
+      ],
+      "files": [
+        "apps/mobile/src/hooks/useActiveSpace.ts",
+        "apps/mobile/src/stores/space.store.ts"
+      ],
+      "dependencies": [
+        "38",
+        "39"
+      ]
+    },
+    {
+      "id": "42",
+      "phase": "3",
+      "title": "Space switcher UI \u2014 header dropdown",
+      "description": "Space switcher in the app header. Shows current Space name + emoji. Tapping opens a bottom sheet listing all Spaces + All Spaces option.",
+      "priority": 42,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Header displays: active Space emoji + name (or 'All Spaces' icon)",
+        "Tapping opens BottomSheet listing all user's Spaces",
+        "Each Space shows: emoji, name, member count, role badge",
+        "'All Spaces' option at top with distinct visual treatment",
+        "Selecting a Space closes picker and switches active context immediately",
+        "Timeline and all scoped views update to reflect new active Space",
+        "Works with 1 Space (still shows switcher)",
+        "Smooth BottomSheet animation"
+      ],
+      "files": [
+        "apps/mobile/src/components/molecules/SpaceSwitcher/SpaceSwitcher.tsx",
+        "apps/mobile/src/navigation/MainNavigator.tsx"
+      ],
+      "dependencies": [
+        "39",
+        "41"
+      ]
+    },
+    {
+      "id": "43",
+      "phase": "3",
+      "title": "All Spaces timeline \u2014 merged feed with Space indicators",
+      "description": "When All Spaces is active, timeline merges entries from all user's Spaces. Each entry tagged with Space emoji and color.",
+      "priority": 43,
+      "passes": false,
+      "acceptanceCriteria": [
+        "All Spaces mode: timeline fetches entries from all user's Spaces",
+        "Each entry shows Space emoji + color indicator",
+        "Entries sorted chronologically across all Spaces",
+        "Tapping Space indicator switches active context to that Space",
+        "Entry type filters work across all Spaces",
+        "Pull-to-refresh fetches from all Spaces",
+        "Loads within 1 second for \u22645 Spaces, \u2264500 entries"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Timeline/TimelineScreen.tsx",
+        "apps/mobile/src/components/molecules/EntryCard/EntryCard.tsx",
+        "apps/mobile/src/services/timeline.service.ts"
+      ],
+      "dependencies": [
+        "41",
+        "42"
+      ]
+    },
+    {
+      "id": "44",
+      "phase": "3",
+      "title": "Onboarding update \u2014 create and name first Space",
+      "description": "Replace relationship-based onboarding with Space creation. Inclusive language. User names their Space, adds first child, optionally invites members with roles.",
+      "priority": 44,
+      "passes": false,
+      "acceptanceCriteria": [
+        "After profile setup, user is prompted to 'Create your first Space'",
+        "Space creation: name (required), emoji (optional), color (optional)",
+        "Inclusive copy: 'A Space is your care circle for a child or group of children.'",
+        "Example names shown: 'Finn & Ava's Space', 'Lola Cora's Care', 'Portland Family'",
+        "After Space creation, user adds first child (name, date of birth)",
+        "After child, user prompted to invite members with role selection (optional, skippable)",
+        "Role options: parent, guardian, lawyer, viewer (with brief descriptions)",
+        "Creator becomes owner of the Space",
+        "Existing users with migrated relationships see Space already set up \u2014 no re-onboarding"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Onboarding/CreateSpaceScreen.tsx",
+        "apps/mobile/src/screens/Onboarding/OnboardingNameScreen.tsx",
+        "apps/mobile/src/navigation/OnboardingNavigator.tsx"
+      ],
+      "dependencies": [
+        "38",
+        "39",
+        "40"
+      ]
+    },
+    {
+      "id": "45",
+      "phase": "3",
+      "title": "Settings \u2014 manage Spaces",
+      "description": "My Spaces section in Settings. View all Spaces, manage members, invite new members, change roles, rename, update appearance, leave or delete.",
+      "priority": 45,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Settings has 'My Spaces' section listing all user's Spaces (emoji, name, member count, role)",
+        "Tapping a Space opens Space detail screen",
+        "Space detail: name, emoji, color; all members with roles and join dates; children in Space",
+        "Owner actions: rename, change emoji/color, invite member, change role, remove member",
+        "Non-owner actions: leave Space (with confirmation)",
+        "'Create New Space' button at bottom of Spaces list",
+        "Invite flow: generate code or share link; select role for invitee",
+        "Role labels with descriptions (e.g. 'Lawyer \u2014 Read-only + export access')",
+        "Leave Space confirmation dialog",
+        "Delete Space (owner): confirmation with data preservation warning"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Settings/SpacesSettingsScreen.tsx",
+        "apps/mobile/src/screens/Settings/SpaceDetailScreen.tsx",
+        "apps/mobile/src/screens/Settings/SettingsScreen.tsx"
+      ],
+      "dependencies": [
+        "39",
+        "40"
+      ]
+    },
+    {
+      "id": "46",
+      "phase": "3",
+      "title": "Entry creation scoped to active Space",
+      "description": "All entry creation forms scoped to active Space. If All Spaces is active, user must select a Space first. Role-based creation permissions enforced.",
+      "priority": 46,
+      "passes": false,
+      "acceptanceCriteria": [
+        "All entry forms display active Space as context (shown, not editable)",
+        "Created entries linked to active Space's space_id",
+        "If All Spaces active, entry creation prompts Space selection first",
+        "Child dropdown shows only children in active Space",
+        "Acknowledgment notifications sent to members of entry's Space only",
+        "Role enforcement: owner, parent, guardian can create; lawyer and viewer cannot"
+      ],
+      "files": [
+        "apps/mobile/src/screens/AddEntry/AddExpenseScreen.tsx",
+        "apps/mobile/src/screens/AddEntry/AddEventScreen.tsx",
+        "apps/mobile/src/screens/AddEntry/AddAgreementScreen.tsx",
+        "apps/mobile/src/screens/AddEntry/AddCommunicationScreen.tsx",
+        "apps/mobile/src/screens/AddEntry/AddUploadScreen.tsx"
+      ],
+      "dependencies": [
+        "41"
+      ]
+    },
+    {
+      "id": "47",
+      "phase": "3",
+      "title": "Export scoped to Spaces",
+      "description": "Export supports single-Space or all-Spaces. Cover page includes Space name, members, roles. All Spaces export groups entries by Space with section headers.",
+      "priority": 47,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Export flow includes Space selection: specific Space or All Spaces",
+        "Single-Space PDF: Space name, members, and roles on cover page",
+        "All-Spaces PDF: entries grouped by Space with section headers",
+        "ZIP bundle includes Space metadata in JSON data file",
+        "Hash manifest includes Space context per file",
+        "Filters work within Space scope or across all Spaces",
+        "Audit report includes Space membership changes"
+      ],
+      "files": [
+        "apps/mobile/src/services/export.service.ts",
+        "apps/mobile/src/screens/Export/ExportScreen.tsx"
+      ],
+      "dependencies": [
+        "41"
+      ]
+    },
+    {
+      "id": "48",
+      "phase": "3",
+      "title": "Phase 3 QA pass",
+      "description": "Comprehensive QA: migration verification, Space CRUD, member management, invite flow, active Space context, Space switcher, All Spaces timeline, onboarding, settings, entry scoping, export scoping, role enforcement.",
+      "priority": 48,
+      "passes": false,
+      "acceptanceCriteria": [
+        "All migrated data verified: relationships \u2192 Spaces, entries linked, no data loss",
+        "Space CRUD: create, list, view, rename, customize, delete, leave",
+        "Member management: invite, accept, assign role, remove, transfer ownership",
+        "Active Space: persists across restart, handles edge cases",
+        "Space switcher: opens, lists, switches, updates timeline",
+        "All Spaces timeline: merged feed, Space indicators, correct ordering",
+        "Onboarding: new user creates Space + child + optional invite",
+        "Settings: view Spaces, manage members, invite flow, role display",
+        "Entry creation: scoped to active Space, role-based permissions enforced",
+        "Export: single-Space and all-Spaces produce correct output",
+        "Role enforcement: lawyer/viewer cannot create; guardian can; owner manages",
+        "No Phase 1/2 regressions",
+        "ESLint passes",
+        "TypeScript compiles"
+      ],
+      "files": [],
+      "dependencies": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44",
+        "45",
+        "46",
+        "47"
+      ]
     }
   ]
 }
