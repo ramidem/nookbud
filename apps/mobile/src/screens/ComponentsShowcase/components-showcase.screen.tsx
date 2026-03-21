@@ -8,6 +8,7 @@ import {
   DateModalInput,
   DateTextInput,
   Divider,
+  Field,
   InputLayout,
   Modal,
   OutlinedButton,
@@ -162,8 +163,49 @@ export function ComponentsShowcaseScreen() {
 
         <Divider style={tw`mt-4`} />
 
+        {/* Field — composite components */}
+        <SectionTitle title="Field (composite)" />
+        <View style={tw`gap-4`}>
+          <Field.Text
+            isRequired
+            label="Full Name"
+            placeholder="Enter your name"
+            value={textMd}
+            onChangeText={setTextMd}
+          />
+          <Field.Text
+            error="This field is required"
+            label="With Error"
+            placeholder="Something went wrong"
+            value=""
+            onChangeText={() => {}}
+          />
+          <Field.Area
+            label="Notes"
+            placeholder="Write something longer..."
+            value={textArea}
+            onChangeText={setTextArea}
+          />
+          <Field.Select
+            label="Framework"
+            options={DROPDOWN_OPTIONS}
+            placeholder="Choose a framework"
+            selectedId={selectedDropdown}
+            onSelect={setSelectedDropdown}
+          />
+          <Field.Date
+            label="Date of Birth"
+            mode="date"
+            placeholder="Pick a date"
+            value={dateModalValue}
+            onChange={setDateModalValue}
+          />
+        </View>
+
+        <Divider style={tw`mt-4`} />
+
         {/* Select Dropdown */}
-        <SectionTitle title="Select Dropdown" />
+        <SectionTitle title="Select Dropdown (raw)" />
         <InputLayout label="Framework">
           <SelectDropdown
             options={DROPDOWN_OPTIONS}
