@@ -111,7 +111,7 @@ CoParent provides **Spaces** — care circles where every member can log immutab
 ### Core Capabilities
 
 #### 3.1 Spaces (Care Circles)
-The organizing primitive. Each Space represents one care arrangement around one child or group of children. Members have roles (owner, parent, guardian, lawyer, viewer) that define their access level.
+The organizing primitive. Each Space represents one care arrangement around one child or group of children. Members have roles (owner, editor, viewer) that define their access level.
 
 #### 3.2 Immutable Care Feed (Timeline)
 Every action becomes a permanent, versioned entry within a Space. Entries are never deleted — only amended. Entry types: Expense, Event, Agreement, Communication, Upload.
@@ -134,7 +134,7 @@ Three formats, all filterable by date range, child, entry type, and Space:
 
 ### Unfair Advantages
 1. **Spaces model** — multi-arrangement support requires fundamental architecture decisions competitors can't bolt on
-2. **Role system** — owner/parent/guardian/lawyer/viewer is a product-level decision, not a permission flag
+2. **Role system** — owner/editor/viewer is a product-level decision, not a permission flag
 3. **Cryptographic evidence bundles** — first-mover on hash manifest creates case law association
 4. **Architecture-level immutability** — database design, not a UX feature
 5. **Inclusive positioning** — 3–5x larger addressable market than divorce-only competitors
@@ -148,7 +148,7 @@ Three formats, all filterable by date range, child, entry type, and Space:
 | 1 | Core Evidence System | Complete | Timeline, entries, audit trail, export, acknowledgment, dispute |
 | 2 | Native UX Improvements | Complete | Date pickers, calendar, partner invite, Supabase, notifications |
 | 3 | Spaces | Next | Multi-space, roles, Space switcher, All Spaces view, onboarding rewrite |
-| 4 | Collaboration | Planned | Lawyer/viewer portal, shared export links, read-only invite links |
+| 4 | Collaboration | Planned | Viewer portal, shared export links, read-only invite links |
 | 5 | Intelligence | Planned | Expense summaries, care pattern insights, reminders |
 
 ---
@@ -205,7 +205,7 @@ Phase 3 transforms CoParent from a 2-parent app into a **multi-Space, multi-role
 
 ### Key Changes
 - `relationships` table → `spaces` + `space_members` tables
-- Fixed "Parent A / Parent B" roles → flexible role system (owner, parent, guardian, lawyer, viewer)
+- Fixed "Parent A / Parent B" roles → flexible role system (owner, editor, viewer)
 - Single arrangement per user → multiple Spaces per user
 - No space context → active Space context with switcher
 - Single timeline → per-Space timeline + All Spaces merged view
@@ -225,10 +225,10 @@ Replace the `relationships` table with `spaces` and `space_members`. Migrate exi
 
 **Acceptance Criteria:**
 - [ ] `spaces` table created with: id (UUID), name, emoji, color, created_by (FK: users), created_at, updated_at
-- [ ] `space_members` table created with: id (UUID), space_id (FK: spaces), user_id (FK: users), role (enum: owner, parent, guardian, lawyer, viewer), joined_at, invited_by (FK: users)
+- [ ] `space_members` table created with: id (UUID), space_id (FK: spaces), user_id (FK: users), role (enum: owner, editor, viewer), joined_at, invited_by (FK: users)
 - [ ] `children` table updated: `relationship_id` → `space_id` (FK: spaces)
 - [ ] `entries` table updated: `relationship_id` → `space_id` (FK: spaces)
-- [ ] All existing relationship data migrated: each relationship becomes a Space; parent_a becomes owner, parent_b becomes parent
+- [ ] All existing relationship data migrated: each relationship becomes a Space; parent_a becomes owner, parent_b becomes editor
 - [ ] Migration is reversible (down migration exists)
 - [ ] All existing entries, children, and acknowledgments correctly linked to migrated Spaces
 - [ ] `relationships` table dropped after successful migration verification
@@ -363,7 +363,7 @@ Replace the current onboarding flow that creates a "relationship" with a flow th
 - [ ] Examples shown: "Finn & Ava's Space," "Lola Cora's Care," "Portland Family"
 - [ ] After Space creation, user adds first child (name, date of birth)
 - [ ] After child creation, user is prompted to invite members (optional, can skip)
-- [ ] Invite flow uses role selection: "What is this person's role?" with options: parent, guardian, lawyer, viewer
+- [ ] Invite flow uses role selection: "What is this person's role?" with options: editor, viewer
 - [ ] User becomes the `owner` of the created Space
 - [ ] Existing users with migrated relationships see their Space already set up (no re-onboarding)
 
@@ -390,7 +390,7 @@ Add a "My Spaces" section to Settings. Each Space shows its members, roles, and 
   - Any member: leave Space (non-owners only)
 - [ ] "Create New Space" button at the bottom of the Spaces list
 - [ ] Invite member flow: generate invite code or share invite link; select role for invitee
-- [ ] Role display uses human-readable labels with brief descriptions (e.g., "Guardian — Full access to log and view care records")
+- [ ] Role display uses human-readable labels with brief descriptions (e.g., "Editor — Can log and view all care records")
 - [ ] Leaving a Space requires confirmation dialog
 - [ ] Deleting a Space (owner only) requires confirmation with warning about data preservation
 
@@ -412,7 +412,7 @@ Ensure all entry creation flows (expense, event, agreement, communication, uploa
 - [ ] If active context is "All Spaces," entry creation prompts the user to select a target Space first
 - [ ] Child selection dropdown only shows children belonging to the active Space
 - [ ] Acknowledgment notifications are sent to members of the entry's Space (not all Spaces)
-- [ ] Entry creation respects role permissions: only owner, parent, and guardian roles can create entries; lawyer and viewer cannot
+- [ ] Entry creation respects role permissions: only owner and editor roles can create entries; viewer cannot
 
 **Files:** Entry creation forms, Space context integration, notification scoping
 **Dependencies:** S3-04
@@ -458,7 +458,7 @@ Comprehensive QA pass covering: schema migration verification, Space CRUD, membe
 - [ ] Settings: view Spaces, manage members, invite flow, role display
 - [ ] Entry creation: scoped to active Space, role-based creation permissions enforced
 - [ ] Export: single-Space and all-Spaces exports produce correct output
-- [ ] Role enforcement: lawyer and viewer cannot create entries; guardian can; owner manages membership
+- [ ] Role enforcement: viewer cannot create entries; editor can; owner manages membership
 - [ ] No regressions in Phase 1 and Phase 2 features
 - [ ] ESLint passes (`npx nx run mobile:lint`)
 - [ ] TypeScript compiles (`tsc --noEmit`)
@@ -474,7 +474,7 @@ Phase 4 extends Spaces with professional access and sharing capabilities.
 
 | Feature | Description |
 |---------|-------------|
-| Lawyer/viewer access portal | Read-only web portal for professionals to view client Spaces |
+| Viewer access portal | Read-only web portal for professionals to view client Spaces |
 | Shared export links | Generate time-limited, password-protected links to verified care reports |
 | Read-only invite links | Public invite links with viewer role for mediators, coordinators |
 | Professional tier pricing | Multi-Space subscription for lawyers managing multiple client Spaces |
@@ -582,7 +582,7 @@ space_members
   - id (UUID)
   - space_id (FK: spaces)
   - user_id (FK: users)
-  - role (enum: owner, parent, guardian, lawyer, viewer)
+  - role (enum: owner, editor, viewer)
   - joined_at (server-set)
   - invited_by (FK: users, nullable)
   - left_at (nullable — soft leave)
@@ -591,7 +591,7 @@ space_invites
   - id (UUID)
   - space_id (FK: spaces)
   - code (string, 6 chars, unique)
-  - role (enum: parent, guardian, lawyer, viewer)
+  - role (enum: editor, viewer)
   - created_by (FK: users)
   - created_at (server-set)
   - expires_at (server-set, +7 days)
@@ -621,19 +621,19 @@ entries
 
 ### Role Permissions Matrix
 
-| Permission | owner | parent | guardian | lawyer | viewer |
-|-----------|-------|--------|----------|--------|--------|
-| Create entries | ✅ | ✅ | ✅ | ❌ | ❌ |
-| View entries | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Acknowledge entries | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Dispute entries | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Export records | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Invite members | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Manage roles | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Remove members | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Rename/customize Space | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Delete Space | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Leave Space | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Permission | owner | editor | viewer |
+|-----------|-------|--------|--------|
+| Create entries | ✅ | ✅ | ❌ |
+| View entries | ✅ | ✅ | ✅ |
+| Acknowledge entries | ✅ | ✅ | ❌ |
+| Dispute entries | ✅ | ✅ | ❌ |
+| Export records | ✅ | ✅ | ✅ |
+| Invite members | ✅ | ❌ | ❌ |
+| Manage roles | ✅ | ❌ | ❌ |
+| Remove members | ✅ | ❌ | ❌ |
+| Rename/customize Space | ✅ | ❌ | ❌ |
+| Delete Space | ✅ | ❌ | ❌ |
+| Leave Space | ❌ | ✅ | ✅ |
 
 ### Supabase RLS Policy Requirements
 - All `spaces` queries filtered by `space_members` membership
@@ -688,7 +688,7 @@ space_members
   - id (UUID)
   - space_id (FK: spaces)
   - user_id (FK: users)
-  - role (owner | parent | guardian | lawyer | viewer)
+  - role (owner | editor | viewer)
   - joined_at
   - invited_by (FK: users, nullable)
   - left_at (nullable)
@@ -697,7 +697,7 @@ space_invites
   - id (UUID)
   - space_id (FK: spaces)
   - code (6 chars, unique)
-  - role (parent | guardian | lawyer | viewer)
+  - role (editor | viewer)
   - created_by (FK: users)
   - created_at
   - expires_at
@@ -780,7 +780,7 @@ CoParent Verified Care Report — Hash Manifest
 Generated: 2026-03-21T14:32:00Z
 Export ID: exp_01HXXXXX
 Space: "Finn & Ava's Space" (space_01HAAAAAA)
-Members: Camille Oduya (owner), Liam Byrne (parent)
+Members: Camille Oduya (owner), Liam Byrne (editor)
 Entries: 47
 Attachments: 23
 
@@ -833,7 +833,7 @@ Verification instructions:
 | Competitor | Their Moat | CoParent Advantage |
 |-----------|------------|-------------------|
 | OurFamilyWizard | Court brand (20+ years) | Spaces model, inclusive positioning, superior technical architecture |
-| TalkingParents | Communication immutability; free tier | Full-spectrum evidence (all types), multi-Space, guardian roles |
+| TalkingParents | Communication immutability; free tier | Full-spectrum evidence (all types), multi-Space, inclusive roles |
 | AppClose | Affordable; Certified Records (2025) | Architecture-first legal integrity; Spaces; 3–5x larger market |
 | 2Houses | International, one-sub model | Verified records; Spaces; role-based access |
 

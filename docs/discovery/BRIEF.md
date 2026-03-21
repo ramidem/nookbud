@@ -67,11 +67,9 @@ A **Space** is a care circle — one arrangement around a child or group of chil
 
 | Role | Access |
 |------|--------|
-| `owner` | Full control — created the Space, manages members |
-| `parent` | Full read/write — log entries, acknowledge, dispute |
-| `guardian` | Full read/write — same as parent, for non-parent caregivers |
-| `lawyer` | Read-only — view records, export, but cannot create entries |
-| `viewer` | Read-only — limited visibility, ideal for mediators or coordinators |
+| `owner` | Full access — can manage members and settings |
+| `editor` | Can log and view all care records |
+| `viewer` | Read-only access and export |
 
 A user can belong to **multiple Spaces** and switch between them. An "All Spaces" view merges timelines across arrangements.
 
@@ -176,7 +174,7 @@ Each file:
 | Passwords | Argon2 hashing |
 
 ### Access Control
-- Role-based: owner, parent, guardian, lawyer, viewer
+- Role-based: owner, editor, viewer
 - Scoped per Space — members only see Spaces they belong to
 - No deletion — soft delete only (visible in audit)
 - All actions logged
@@ -258,7 +256,7 @@ audit_logs
 - [ ] Space settings (rename, emoji/color, manage members)
 
 ### Later Phases
-- [ ] Lawyer/viewer access portal
+- [ ] Viewer access portal
 - [ ] Shared export links
 - [ ] Expense summaries and care pattern insights
 - [ ] Digital signatures (PKI)
@@ -309,7 +307,7 @@ Backend is complex. **Frontend must feel simple.**
 - Works for any care arrangement — not just divorce
 - Spaces model supports multiple caregivers with defined roles
 - Creates verified, defensible records — not just logs
-- Inclusive by design: guardians, lawyers, extended family are first-class members
+- Inclusive by design: all caregivers and extended family are first-class members with defined roles
 - Works in peace, proves when it matters
 
 ---
