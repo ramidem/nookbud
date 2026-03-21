@@ -31,7 +31,7 @@ const customConfig = {
   },
 };
 
-module.exports = withNxMetro(mergeConfig(defaultConfig, customConfig), {
+const nxConfig = withNxMetro(mergeConfig(defaultConfig, customConfig), {
   // Change this to true to see debugging info.
   // Useful if you have issues resolving modules
   debug: false,
@@ -40,3 +40,17 @@ module.exports = withNxMetro(mergeConfig(defaultConfig, customConfig), {
   // Specify folders to watch, in addition to Nx defaults (workspace libraries and node_modules)
   watchFolders: [],
 });
+
+// withNxMetro sets nodeModulesPaths to only the workspace root's node_modules.
+// Packages installed in apps/mobile/package.json (e.g. react-native-calendars)
+// live in apps/mobile/node_modules/ and need to be included for asset resolution.
+module.exports = nxConfig.then((config) => ({
+  ...config,
+  resolver: {
+    ...config.resolver,
+    nodeModulesPaths: [
+      path.resolve(__dirname, 'node_modules'),
+      ...(config.resolver?.nodeModulesPaths || []),
+    ],
+  },
+}));
