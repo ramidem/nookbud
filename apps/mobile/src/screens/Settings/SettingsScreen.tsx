@@ -6,13 +6,12 @@ import {
   Text,
   Pressable,
   ScrollView,
-  Alert,
   ActivityIndicator,
   Switch,
   Linking,
 } from 'react-native';
 
-import { Button, PageHeader } from '@/components';
+import { Alert, Button, PageHeader } from '@/components';
 import type { User, Child } from '@/database/schema';
 import { seedDatabase } from '@/database/seed';
 import { useTw } from '@/hooks/useTw';
@@ -102,20 +101,23 @@ export function SettingsScreen({ navigation }: Props) {
   };
 
   const handleClearData = () => {
-    Alert.alert(
-      'Clear All Data',
-      'This will delete all your local data including entries, children, and settings. This cannot be undone.',
-      [
-        { style: 'cancel', text: 'Cancel' },
+    Alert.warning({
+      actions: [
+        { label: 'Cancel', variant: 'cancel' },
         {
-          onPress: async () => {
-            Alert.alert('Not Implemented', 'Data clearing will be implemented in a future update.');
+          label: 'Clear Data',
+          onPress: () => {
+            Alert.info({
+              message: 'Data clearing will be implemented in a future update.',
+              title: 'Not Implemented',
+            });
           },
-          style: 'destructive',
-          text: 'Clear Data',
         },
       ],
-    );
+      message:
+        'This will delete all your local data including entries, children, and settings. This cannot be undone.',
+      title: 'Clear All Data',
+    });
   };
 
   if (isLoading) {
@@ -306,33 +308,37 @@ export function SettingsScreen({ navigation }: Props) {
             <Pressable
               style={tw`p-4`}
               onPress={async () => {
-                Alert.alert(
-                  'Seed Database',
-                  'Only runs on an empty database. If you already have data, nothing will change.',
-                  [
-                    { style: 'cancel', text: 'Cancel' },
+                Alert.warning({
+                  actions: [
+                    { label: 'Cancel', variant: 'cancel' },
                     {
+                      label: 'Seed',
                       onPress: async () => {
                         const result = await seedDatabase();
                         if (result.skipped) {
-                          Alert.alert(
-                            '⚠️ Already has data',
-                            'Seed only runs on an empty database. Clear all data first if you want sample data.',
-                          );
+                          Alert.warning({
+                            message:
+                              'Seed only runs on an empty database. Clear all data first if you want sample data.',
+                            title: 'Already Has Data',
+                          });
                         } else if (result.success) {
-                          Alert.alert(
-                            '✅ Seeded',
-                            'Sample data loaded. Restart the app to see all changes.',
-                          );
+                          Alert.success({
+                            message: 'Sample data loaded. Restart the app to see all changes.',
+                            title: 'Seeded Successfully',
+                          });
                         } else {
-                          Alert.alert('❌ Seed Failed', result.error ?? 'Unknown error');
+                          Alert.error({
+                            message: result.error ?? 'Unknown error',
+                            title: 'Seed Failed',
+                          });
                         }
                       },
-                      style: 'destructive',
-                      text: 'Seed',
                     },
                   ],
-                );
+                  message:
+                    'Only runs on an empty database. If you already have data, nothing will change.',
+                  title: 'Seed Database',
+                });
               }}
             >
               <Text style={tw`text-foreground font-medium`}>Seed Database</Text>
