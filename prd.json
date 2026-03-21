@@ -1167,7 +1167,7 @@
       "title": "Export scoped to Spaces",
       "description": "Export supports single-Space or all-Spaces. Cover page includes Space name, members, roles. All Spaces export groups entries by Space with section headers.",
       "priority": 47,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Export flow includes Space selection: specific Space or All Spaces",
         "Single-Space PDF: Space name, members, and roles on cover page",
