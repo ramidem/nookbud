@@ -12,9 +12,10 @@ import {
   Linking,
 } from 'react-native';
 
+import { PageHeader } from '@/components';
 import type { User, Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
-import { BabyIcon, ChevronRightIcon, UserIcon, UsersIcon } from '@/icons';
+import { BabyIcon, ChevronRightIcon, ShareIcon, UserIcon, UsersIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import {
   UserService,
@@ -126,10 +127,7 @@ export function SettingsScreen({ navigation }: Props) {
 
   return (
     <View style={tw`bg-background flex-1`}>
-      {/* Header */}
-      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
-        <Text style={tw`text-foreground font-serif-bold text-2xl`}>Settings</Text>
-      </View>
+      <PageHeader title="Settings" />
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Profile Section */}
@@ -259,6 +257,27 @@ export function SettingsScreen({ navigation }: Props) {
               <Text style={tw`text-foreground text-lg font-medium`}>My Spaces</Text>
               <Text style={tw`text-subtitle text-sm`}>
                 {spaces.length} {spaces.length === 1 ? 'Space' : 'Spaces'}
+              </Text>
+            </View>
+            <ChevronRightIcon height={20} style={tw`text-placeholder`} width={20} />
+          </Pressable>
+        </View>
+
+        {/* Export Section */}
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
+          <Pressable
+            style={tw`flex-row items-center p-4`}
+            onPress={() => navigation.navigate('Export')}
+          >
+            <View
+              style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-neutral-200`}
+            >
+              <ShareIcon height={24} style={tw`text-primary`} width={24} />
+            </View>
+            <View style={tw`flex-1`}>
+              <Text style={tw`text-foreground text-lg font-medium`}>Export</Text>
+              <Text style={tw`text-subtitle text-sm`}>
+                Generate court-ready reports and evidence bundles
               </Text>
             </View>
             <ChevronRightIcon height={20} style={tw`text-placeholder`} width={20} />

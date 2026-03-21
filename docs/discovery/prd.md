@@ -15,11 +15,12 @@
 5. [Phase 1 — Core Evidence System (Complete)](#5-phase-1--core-evidence-system-complete)
 6. [Phase 2 — Native UX Improvements (Complete)](#6-phase-2--native-ux-improvements-complete)
 7. [Phase 3 — Spaces (Next)](#7-phase-3--spaces-next)
-8. [Phase 4 — Collaboration](#8-phase-4--collaboration)
+8. [Phase 4 — Resources](#8-phase-4--resources)
 9. [Phase 5 — Intelligence](#9-phase-5--intelligence)
-10. [Success Metrics](#10-success-metrics)
-11. [Technical Constraints](#11-technical-constraints)
-12. [Appendix](#12-appendix)
+10. [Phase 6 — Collaboration (Web)](#10-phase-6--collaboration-web)
+11. [Success Metrics](#11-success-metrics)
+12. [Technical Constraints](#12-technical-constraints)
+13. [Appendix](#13-appendix)
 
 ---
 
@@ -43,17 +44,17 @@ CoParent is the first shared care records platform built for **every family stru
 ### Target Audience (Summary)
 - **Primary:** Separated/divorced parents needing defensible care records
 - **Expansion:** OFW families, grandparent guardians, blended families, open adoption arrangements
-- **B2B (Phase 4+):** Family law attorneys, mediators, parenting coordinators
+- **B2B (Phase 6+):** Family law attorneys, mediators, parenting coordinators
 - **Institutional:** Schools, hospitals, immigration agencies (as consumers of verified exports)
 
 ### Platform Strategy
 - **Phase 1–3:** React Native mobile app (iOS + Android)
-- **Phase 4+:** Web portal (PWA or dedicated web app)
+- **Phase 6+:** Web portal (PWA or dedicated web app)
 
 ### Business Model
 - Freemium: 1 Space free (covers basic arrangement)
 - Paid: Multiple Spaces, advanced exports, professional access
-- Professional tier for lawyers/mediators (Phase 4)
+- Professional tier for lawyers/mediators (Phase 6)
 - Free access for domestic violence survivors and financial hardship cases
 
 ---
@@ -148,8 +149,9 @@ Three formats, all filterable by date range, child, entry type, and Space:
 | 1 | Core Evidence System | Complete | Timeline, entries, audit trail, export, acknowledgment, dispute |
 | 2 | Native UX Improvements | Complete | Date pickers, calendar, partner invite, Supabase, notifications |
 | 3 | Spaces | Next | Multi-space, roles, Space switcher, All Spaces view, onboarding rewrite |
-| 4 | Collaboration | Planned | Viewer portal, shared export links, read-only invite links |
+| 4 | Resources | Planned | Reference documents per Space, integrity verification, Archive Space |
 | 5 | Intelligence | Planned | Expense summaries, care pattern insights, reminders |
+| 6 | Collaboration (Web) | Planned | Viewer portal, shared export links, read-only invite links, web portal |
 
 ---
 
@@ -468,24 +470,38 @@ Comprehensive QA pass covering: schema migration verification, Space CRUD, membe
 
 ---
 
-## 8. Phase 4 — Collaboration
+## 8. Phase 4 — Resources
 
-Phase 4 extends Spaces with professional access and sharing capabilities.
+Phase 4 adds a reference document layer to Spaces — distinct from the timeline, purpose-built for documents that need to exist and be accessible rather than recorded as events.
 
-| Feature | Description |
-|---------|-------------|
-| Viewer access portal | Read-only web portal for professionals to view client Spaces |
-| Shared export links | Generate time-limited, password-protected links to verified care reports |
-| Read-only invite links | Public invite links with viewer role for mediators, coordinators |
-| Professional tier pricing | Multi-Space subscription for lawyers managing multiple client Spaces |
-| Web portal (PWA) | Browser-based access for desktop users and professionals |
+### Core Concept
+Resources are **static reference documents** — not things that happened, but things you need to know or prove. A medical history summary, a school enrollment form, a custody order PDF. They belong to a Space (and optionally a child), are SHA-256 verified for integrity, and are accessible to all members based on their role.
 
-### Key Stories (Phase 4)
-- Professional can view all Spaces they've been invited to from a single dashboard
-- Lawyer can export records from a client's Space without client action
-- Shared export link expires after configurable period (7/30/90 days)
-- Professional can manage multiple client Spaces under one subscription
-- Parenting coordinator can be added as viewer to multiple Spaces across families
+### What makes Resources different from Uploads (timeline entries)
+| | Timeline Upload | Resource |
+|-|----------------|----------|
+| Purpose | Record that something happened | Reference material |
+| Acknowledgment | Yes — other parent can acknowledge | No |
+| Version history | Yes — edits create new versions | No |
+| Audit trail | Full | Upload/delete only |
+| Example | "Uploaded school report card on March 15" | "Felix's vaccination record" |
+
+### Categories
+medical · school · legal · financial · identity · insurance · other
+
+### Archive Space
+A simple toggle to hide an inactive Space from the switcher while preserving all its data. Useful when a custody arrangement ends, a child turns 18, or a guardianship closes. Archived Spaces remain fully readable and exportable.
+
+### Stories (Phase 4)
+- R-01: Resources schema
+- R-02: ResourceService
+- R-03: Resources tab + navigation
+- R-04: Resources list screen
+- R-05: Add Resource screen
+- R-06: Resource detail with integrity verification
+- R-07: Archive Space feature
+- R-08: Export includes Resources
+- R-09: Phase 4 QA
 
 ---
 
@@ -503,7 +519,28 @@ Phase 5 adds insights and automation on top of the verified record system.
 
 ---
 
-## 10. Success Metrics
+## 10. Phase 6 — Collaboration (Web)
+
+Phase 6 extends Spaces with professional access and sharing capabilities via a web portal.
+
+| Feature | Description |
+|---------|-------------|
+| Viewer access portal | Read-only web portal for professionals to view client Spaces |
+| Shared export links | Generate time-limited, password-protected links to verified care reports |
+| Read-only invite links | Public invite links with viewer role for mediators, coordinators |
+| Professional tier pricing | Multi-Space subscription for lawyers managing multiple client Spaces |
+| Web portal (PWA) | Browser-based access for desktop users and professionals |
+
+### Key Stories (Phase 6)
+- Professional can view all Spaces they've been invited to from a single dashboard
+- Lawyer can export records from a client's Space without client action
+- Shared export link expires after configurable period (7/30/90 days)
+- Professional can manage multiple client Spaces under one subscription
+- Parenting coordinator can be added as viewer to multiple Spaces across families
+
+---
+
+## 11. Success Metrics
 
 ### North Star Metric
 **Active Spaces per month** — This measures whether users are creating and maintaining care arrangements across family structures. A growing number of active Spaces validates both the core product and the inclusive positioning.
@@ -535,7 +572,7 @@ Phase 5 adds insights and automation on top of the verified record system.
 
 ---
 
-## 11. Technical Constraints
+## 12. Technical Constraints
 
 ### Platform Requirements
 
@@ -644,7 +681,7 @@ entries
 
 ---
 
-## 12. Appendix
+## 13. Appendix
 
 ### A. Neutral Language Guide
 
@@ -825,7 +862,7 @@ Verification instructions:
 | Free | $0 | 1 Space, 2 members, basic timeline, limited export (5/month) |
 | Plus | ~$9.99/mo | Unlimited Spaces, unlimited members, unlimited PDF exports |
 | Complete | ~$14.99/mo | Evidence bundle exports (ZIP + hash manifest), dispute tools, All Spaces view |
-| Professional | ~$79.99/mo | Lawyer portal, multi-Space management (Phase 4) |
+| Professional | ~$79.99/mo | Lawyer portal, multi-Space management (Phase 6) |
 
 *Per-account pricing — one subscription unlocks features across all Spaces.*
 *Free access for DV survivors and financial hardship cases.*

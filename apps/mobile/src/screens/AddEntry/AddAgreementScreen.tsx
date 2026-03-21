@@ -17,11 +17,11 @@ import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { PencilLineIcon } from '@/icons';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { EntryService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'AddAgreement'>;
+type Props = NativeStackScreenProps<ActivityStackParamList, 'AddAgreement'>;
 
 export function AddAgreementScreen({ navigation }: Props) {
   const tw = useTw();

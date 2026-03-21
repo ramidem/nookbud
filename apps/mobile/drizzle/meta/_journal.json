@@ -29,6 +29,20 @@
       "when": 1774396800000,
       "tag": "0003_member_label",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1774483200000,
+      "tag": "0004_resources",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1774569600000,
+      "tag": "0005_space_archived",
+      "breakpoints": true
     }
   ]
 }

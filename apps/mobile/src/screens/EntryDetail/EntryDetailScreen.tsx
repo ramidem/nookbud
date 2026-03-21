@@ -14,7 +14,7 @@ import {
 import type { EntryVersion, Attachment } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { AlertTriangleIcon, CheckCircleIcon, ClockIcon, PaperclipIcon } from '@/icons';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import {
   EntryService,
   AcknowledgmentService,
@@ -24,7 +24,7 @@ import {
 } from '@/services';
 import { colors } from '@/tailwind';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'EntryDetail'>;
+type Props = NativeStackScreenProps<ActivityStackParamList, 'EntryDetail'>;
 
 const HASH_PREVIEW_LENGTH = 16;
 const INLINE_ICON_SIZE = 14;

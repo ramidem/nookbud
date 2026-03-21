@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { BottomSheet, Divider, Typography, useBottomSheet } from '@/components';
@@ -8,7 +8,13 @@ import { SpaceService, type SpaceWithRole } from '@/services';
 import { tw } from '@/tailwind';
 import { DefaultComponentProps } from '@/types';
 
-type Props = DefaultComponentProps;
+type Props = DefaultComponentProps & {
+  showTrigger?: boolean;
+};
+
+export type SpaceSwitcherRef = {
+  expand: () => void;
+};
 
 const ICON_SIZE = 20;
 const EMOJI_SIZE = 28;
@@ -41,7 +47,7 @@ function SpaceRow({
 }) {
   return (
     <Pressable style={tw`flex-row items-center px-4 py-3`} onPress={onPress}>
-      <Typography style={tw`text-[${EMOJI_SIZE}px] mr-3`}>{space.emoji}</Typography>
+      <Typography style={tw`text-[${EMOJI_SIZE}px] mr-3`}>{space.emoji || '🏠'}</Typography>
       <View style={tw`flex-1`}>
         <Typography numberOfLines={1} style={tw`text-foreground text-base font-medium`}>
           {space.name}
@@ -60,11 +66,18 @@ function SpaceRow({
   );
 }
 
-export function SpaceSwitcher(props: Props) {
-  const { style } = props;
+export const SpaceSwitcher = forwardRef<SpaceSwitcherRef, Props>((props, ref) => {
+  const { showTrigger = true, style } = props;
   const { activeSpace, activeSpaceId, isAllSpaces, switchToSpace } = useActiveSpace();
   const { closeSheet, expandSheet, sheetRef } = useBottomSheet();
   const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
+
+  useImperativeHandle(ref, () => ({
+    expand: () => {
+      loadSpaces();
+      expandSheet();
+    },
+  }));
 
   const loadSpaces = useCallback(async () => {
     const result = await SpaceService.listSpaces();
@@ -91,21 +104,23 @@ export function SpaceSwitcher(props: Props) {
 
   return (
     <>
-      <Pressable style={[tw`flex-row items-center gap-1.5`, style]} onPress={handleOpenSheet}>
-        {isAllSpaces ? (
-          <UsersIcon height={ICON_SIZE} style={tw`text-primary`} width={ICON_SIZE} />
-        ) : (
-          <Typography style={tw`text-lg`}>{activeSpace?.emoji ?? '🏠'}</Typography>
-        )}
-        <Typography
-          numberOfLines={1}
-          style={tw`font-serif-semibold text-foreground max-w-[180px] text-lg`}
-          variant="heading"
-        >
-          {isAllSpaces ? 'All Spaces' : activeSpace?.name ?? 'Select Space'}
-        </Typography>
-        <ChevronDownIcon height={CHEVRON_SIZE} style={tw`text-subtitle`} width={CHEVRON_SIZE} />
-      </Pressable>
+      {showTrigger && (
+        <Pressable style={[tw`flex-row items-center gap-1.5`, style]} onPress={handleOpenSheet}>
+          {isAllSpaces ? (
+            <UsersIcon height={ICON_SIZE} style={tw`text-primary`} width={ICON_SIZE} />
+          ) : (
+            <Typography style={tw`text-lg`}>{activeSpace?.emoji || '🏠'}</Typography>
+          )}
+          <Typography
+            numberOfLines={1}
+            style={tw`font-serif-semibold text-foreground max-w-[180px] text-lg`}
+            variant="heading"
+          >
+            {isAllSpaces ? 'All Spaces' : activeSpace?.name ?? 'Select Space'}
+          </Typography>
+          <ChevronDownIcon height={CHEVRON_SIZE} style={tw`text-subtitle`} width={CHEVRON_SIZE} />
+        </Pressable>
+      )}
 
       <BottomSheet backgroundStyle={tw`bg-sheet`} sheetRef={sheetRef} snapPoints={['50%', '85%']}>
         <View style={tw`pb-8`}>
@@ -151,4 +166,4 @@ export function SpaceSwitcher(props: Props) {
       </BottomSheet>
     </>
   );
-}
+});

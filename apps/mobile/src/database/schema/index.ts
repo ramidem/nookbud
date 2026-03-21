@@ -11,3 +11,4 @@ export * from './attachments';
 export * from './acknowledgments';
 export * from './disputes';
 export * from './audit-logs';
+export * from './resources';

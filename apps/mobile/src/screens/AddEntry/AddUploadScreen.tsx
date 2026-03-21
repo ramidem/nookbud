@@ -18,12 +18,12 @@ import type { Child } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { CameraIcon, CrossIcon, FileTextIcon, ImageIcon, LockIcon, PaperclipIcon } from '@/icons';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { EntryService, ChildService, SpaceService, type AttachmentInput } from '@/services';
 import { colors } from '@/tailwind';
 import type { DocumentType } from '@/types/entry-content.types';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'AddUpload'>;
+type Props = NativeStackScreenProps<ActivityStackParamList, 'AddUpload'>;
 
 const ACTIVE_BG = 'bg-primary';
 const INACTIVE_BG = 'bg-neutral-200';

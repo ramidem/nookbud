@@ -1221,6 +1221,232 @@
         "46",
         "47"
       ]
+    },
+    {
+      "id": "49",
+      "phase": "4",
+      "title": "Schema: resources table",
+      "description": "Add resources table to the database. Resources are reference documents scoped to a Space (and optionally a child). Not timeline entries — no versioning, no acknowledgment.",
+      "priority": 49,
+      "passes": true,
+      "acceptanceCriteria": [
+        "resources table: id, space_id (FK spaces), child_id (FK children, nullable), title, description (nullable), category (enum), file_hash, storage_path, original_filename, file_size_bytes, mime_type, uploaded_by (FK users), created_at, deleted_at (nullable for soft delete)",
+        "RESOURCE_CATEGORIES const: medical | school | legal | financial | identity | insurance | other",
+        "ResourceCategory type exported",
+        "Schema exported from database/schema/index.ts",
+        "Migration file: 0004_resources.sql",
+        "migrations.js updated"
+      ],
+      "files": [
+        "apps/mobile/src/database/schema/resources.ts",
+        "apps/mobile/src/database/schema/index.ts",
+        "apps/mobile/drizzle/0004_resources.sql",
+        "apps/mobile/drizzle/migrations.js",
+        "apps/mobile/drizzle/meta/_journal.json"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "50",
+      "phase": "4",
+      "title": "ResourceService — upload, list, getById, softDelete",
+      "description": "Core service for managing resources. Upload copies file to storage and hashes it. List supports filtering by category and child.",
+      "priority": 50,
+      "passes": true,
+      "acceptanceCriteria": [
+        "ResourceService.upload(spaceId, file, metadata) — saves file via FileService, inserts resource record",
+        "ResourceService.listBySpace(spaceId, filters?) — filter by category, childId; excludes soft-deleted",
+        "ResourceService.getById(resourceId) — returns resource or null",
+        "ResourceService.softDelete(resourceId) — sets deleted_at, logs to audit",
+        "ResourceService.verifyIntegrity(resourceId) — re-hashes file, compares to stored hash",
+        "All operations logged to AuditService",
+        "Only owner and editor roles can upload/delete; viewer can read",
+        "ResourceService exported from services/index.ts"
+      ],
+      "files": [
+        "apps/mobile/src/services/resource.service.ts",
+        "apps/mobile/src/services/index.ts"
+      ],
+      "dependencies": [
+        "49"
+      ]
+    },
+    {
+      "id": "51",
+      "phase": "4",
+      "title": "Resources tab — main navigation",
+      "description": "Add Resources as a tab in the main bottom navigator. Replace or add alongside Export tab.",
+      "priority": 51,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Resources tab added to bottom tab navigator",
+        "Uses BookOpenIcon (or similar) from @/icons",
+        "Tapping navigates to ResourcesScreen",
+        "Tab label: 'Resources'",
+        "Export moved to Settings or kept as tab (your call — but 5 tabs max)"
+      ],
+      "files": [
+        "apps/mobile/src/navigation/MainNavigator.tsx",
+        "apps/mobile/src/navigation/ResourcesNavigator.tsx"
+      ],
+      "dependencies": [
+        "50"
+      ]
+    },
+    {
+      "id": "52",
+      "phase": "4",
+      "title": "Resources list screen",
+      "description": "Main resources screen showing all documents for the active Space. Filterable by category and child.",
+      "priority": 52,
+      "passes": true,
+      "acceptanceCriteria": [
+        "ResourcesScreen shows all resources for active Space (respects useActiveSpace)",
+        "Groups by category OR flat list with category chips filter",
+        "Each resource row: icon for category, title, child name (if applicable), date uploaded",
+        "Category filter chips: All, Medical, School, Legal, Financial, Identity, Insurance, Other",
+        "Child filter if Space has multiple children",
+        "Empty state: 'No resources yet. Add important documents here — medical records, school forms, legal agreements.'",
+        "FAB to add new resource",
+        "Pull to refresh",
+        "Tap row → ResourceDetailScreen"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Resources/ResourcesScreen.tsx",
+        "apps/mobile/src/screens/Resources/index.ts"
+      ],
+      "dependencies": [
+        "51"
+      ]
+    },
+    {
+      "id": "53",
+      "phase": "4",
+      "title": "Add Resource screen",
+      "description": "Screen for uploading a new resource document.",
+      "priority": 53,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Title input (required)",
+        "Description input (optional)",
+        "Category picker: Medical, School, Legal, Financial, Identity, Insurance, Other",
+        "Child selector (optional — which child does this relate to?)",
+        "File picker — supports images and PDFs (use existing document picker)",
+        "Preview of selected file",
+        "Upload button with loading state",
+        "On success: navigate back to ResourcesScreen",
+        "Uses ScreenContainer, ScreenHeader, Button, TextInput components",
+        "Uses design tokens"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Resources/AddResourceScreen.tsx"
+      ],
+      "dependencies": [
+        "50"
+      ]
+    },
+    {
+      "id": "54",
+      "phase": "4",
+      "title": "Resource detail screen",
+      "description": "View a single resource — file preview, metadata, integrity verification.",
+      "priority": 54,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Shows: title, description, category badge, child (if applicable), uploaded by, upload date",
+        "File preview: inline image or PDF viewer (use existing patterns from EntryDetail)",
+        "File metadata: original filename, size, MIME type",
+        "Integrity section: SHA-256 hash + 'Verify' button that re-hashes and shows ✓ Verified or ✗ Modified",
+        "Delete button (owner/editor only) with confirmation — soft delete only",
+        "Uses ScreenContainer, ScreenHeader with hasBackButton"
+      ],
+      "files": [
+        "apps/mobile/src/screens/Resources/ResourceDetailScreen.tsx"
+      ],
+      "dependencies": [
+        "52"
+      ]
+    },
+    {
+      "id": "55",
+      "phase": "4",
+      "title": "Archive Space feature",
+      "description": "Simple toggle in Space settings to archive a Space. Archived Spaces are hidden from the Space switcher but all data is preserved and accessible.",
+      "priority": 55,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Add archived_at (nullable timestamp) to spaces schema",
+        "Migration: 0005_space_archived.sql",
+        "SpaceService.archiveSpace(spaceId) — sets archived_at, only owner can archive",
+        "SpaceService.unarchiveSpace(spaceId) — clears archived_at",
+        "SpaceService.listSpaces() — excludes archived Spaces by default",
+        "SpaceService.listSpaces({ includeArchived: true }) — includes archived",
+        "SpaceSwitcher: excludes archived Spaces",
+        "Settings > SpaceDetail: 'Archive Space' button (owner only) with confirmation",
+        "Settings > SpacesSettings: 'Archived Spaces' section at bottom showing archived Spaces with Unarchive option",
+        "Archived Spaces still fully readable and exportable"
+      ],
+      "files": [
+        "apps/mobile/drizzle/0005_space_archived.sql",
+        "apps/mobile/src/services/space.service.ts",
+        "apps/mobile/src/screens/Settings/SpaceDetailScreen.tsx",
+        "apps/mobile/src/screens/Settings/SpacesSettingsScreen.tsx"
+      ],
+      "dependencies": [
+        "49"
+      ]
+    },
+    {
+      "id": "56",
+      "phase": "4",
+      "title": "Export includes Resources",
+      "description": "Update export to include Resources in the ZIP evidence bundle.",
+      "priority": 56,
+      "passes": true,
+      "acceptanceCriteria": [
+        "ZIP evidence bundle includes a resources/ folder with all resource files",
+        "resources.json in ZIP: list of all resources with metadata",
+        "Hash manifest includes resource files",
+        "PDF export includes a Resources section listing all documents (filename, category, date)",
+        "Export filters include option to include/exclude resources"
+      ],
+      "files": [
+        "apps/mobile/src/services/export.service.ts"
+      ],
+      "dependencies": [
+        "50"
+      ]
+    },
+    {
+      "id": "57",
+      "phase": "4",
+      "title": "Phase 4 QA pass",
+      "description": "Full QA pass for Phase 4: Resources feature, Archive Space, export integration.",
+      "priority": 57,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Upload resource — file saves, hash stored",
+        "List resources — filters work, All Spaces mode shows resources from all Spaces",
+        "View resource — metadata correct, integrity verification works",
+        "Delete resource — soft delete, not visible in list",
+        "Archive Space — hidden from switcher, data intact, unarchive works",
+        "Export ZIP includes resources folder",
+        "Role enforcement: viewer cannot upload/delete resources",
+        "ESLint passes",
+        "TypeScript compiles",
+        "No Phase 1-3 regressions"
+      ],
+      "files": [],
+      "dependencies": [
+        "49",
+        "50",
+        "51",
+        "52",
+        "53",
+        "54",
+        "55",
+        "56"
+      ]
     }
   ]
 }

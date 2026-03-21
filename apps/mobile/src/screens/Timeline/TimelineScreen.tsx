@@ -1,4 +1,6 @@
 import { LegendList } from '@legendapp/list';
+import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { View, Text, Pressable, RefreshControl, ActivityIndicator } from 'react-native';
@@ -9,7 +11,8 @@ import { EntryCard, type SpaceInfo } from '@/components/molecules/EntryCard';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { PencilLineIcon } from '@/icons';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
+import type { ActivityTopTabParamList } from '@/navigation/ActivityTopTabs';
 import {
   TimelineService,
   SpaceService,
@@ -19,20 +22,23 @@ import {
 } from '@/services';
 import { colors } from '@/tailwind';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'Timeline'>;
+type Props = CompositeScreenProps<
+  MaterialTopTabScreenProps<ActivityTopTabParamList, 'Timeline'>,
+  NativeStackScreenProps<ActivityStackParamList>
+>;
 
 const PAGE_SIZE = 20;
 
 export function TimelineScreen({ navigation }: Props) {
   const tw = useTw();
   const { activeSpaceId, isAllSpaces, switchToSpace } = useActiveSpace();
+  const [showFilters, setShowFilters] = useState(false);
   const [entries, setEntries] = useState<TimelineEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [allSpaces, setAllSpaces] = useState<SpaceWithRole[]>([]);
-  const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     childIds: [],
     dateFrom: null,
@@ -137,12 +143,6 @@ export function TimelineScreen({ navigation }: Props) {
     navigation.navigate('AddEntryPicker');
   };
 
-  const hasActiveFilters =
-    filters.childIds.length > 0 ||
-    filters.types.length > 0 ||
-    filters.dateFrom !== null ||
-    filters.dateTo !== null;
-
   const handleSpacePress = useCallback(
     (spaceInfo: SpaceInfo) => {
       switchToSpace(spaceInfo.id);
@@ -172,21 +172,6 @@ export function TimelineScreen({ navigation }: Props) {
 
   return (
     <View style={tw`bg-background flex-1`}>
-      {/* Header */}
-      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
-        <View style={tw`flex-row items-center justify-between`}>
-          <Text style={tw`text-foreground font-serif-bold text-2xl`}>Timeline</Text>
-          <Pressable
-            style={tw`${hasActiveFilters ? 'bg-primary/15' : 'bg-neutral-200'} rounded-lg px-3 py-2`}
-            onPress={() => setShowFilters(true)}
-          >
-            <Text style={tw`${hasActiveFilters ? 'text-primary' : 'text-subtitle'} font-medium`}>
-              {hasActiveFilters ? 'Filtered' : 'Filter'}
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-
       {/* Entry List */}
       {entries.length === 0 ? (
         <View style={tw`flex-1 items-center justify-center px-6`}>

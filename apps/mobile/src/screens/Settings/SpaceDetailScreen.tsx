@@ -21,7 +21,14 @@ import {
   type SpaceMemberLabel,
   type SpaceRole,
 } from '@/database/schema';
-import { ChevronRightIcon, PencilLineIcon, ShareIcon, UsersIcon } from '@/icons';
+import {
+  ArchiveIcon,
+  ArchiveRestoreIcon,
+  ChevronRightIcon,
+  PencilLineIcon,
+  ShareIcon,
+  UsersIcon,
+} from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { SpaceMemberService, SpaceService, type SpaceDetails, type SpaceInvite } from '@/services';
 import { useLocalStorageStore } from '@/stores';
@@ -235,6 +242,47 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
       message: `Remove ${name} from this Space? They will lose access to all records.`,
       title: 'Remove Member',
     });
+  };
+
+  // --- Archive / Unarchive ---
+
+  const handleArchiveSpace = () => {
+    Alert.warning({
+      actions: [
+        { label: 'Cancel', variant: 'cancel' },
+        {
+          label: 'Archive',
+          onPress: async () => {
+            try {
+              await SpaceService.archiveSpace(spaceId);
+              Toast.success('Space archived');
+              navigation.goBack();
+            } catch (err) {
+              Alert.error({
+                message: err instanceof Error ? err.message : 'Failed to archive Space',
+                title: 'Archive Failed',
+              });
+            }
+          },
+        },
+      ],
+      message:
+        'This Space will be hidden from your Space switcher. All records are preserved and you can unarchive at any time.',
+      title: 'Archive Space',
+    });
+  };
+
+  const handleUnarchiveSpace = async () => {
+    try {
+      await SpaceService.unarchiveSpace(spaceId);
+      Toast.success('Space unarchived');
+      await loadSpace();
+    } catch (err) {
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to unarchive Space',
+        title: 'Unarchive Failed',
+      });
+    }
   };
 
   // --- Leave / Delete ---
@@ -554,6 +602,36 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
               Danger Zone
             </Typography>
           </View>
+
+          {isOwner && !space.archivedAt && (
+            <Pressable
+              style={tw`border-divider flex-row items-center border-b p-4`}
+              onPress={handleArchiveSpace}
+            >
+              <ArchiveIcon height={18} style={tw`text-warning mr-3`} width={18} />
+              <View style={tw`flex-1`}>
+                <Typography style={tw`text-foreground font-medium`}>Archive Space</Typography>
+                <Typography style={tw`text-subtitle mt-1 text-sm`}>
+                  Hide from switcher — all records preserved
+                </Typography>
+              </View>
+            </Pressable>
+          )}
+
+          {isOwner && space.archivedAt && (
+            <Pressable
+              style={tw`border-divider flex-row items-center border-b p-4`}
+              onPress={handleUnarchiveSpace}
+            >
+              <ArchiveRestoreIcon height={18} style={tw`text-primary mr-3`} width={18} />
+              <View style={tw`flex-1`}>
+                <Typography style={tw`text-primary font-medium`}>Unarchive Space</Typography>
+                <Typography style={tw`text-subtitle mt-1 text-sm`}>
+                  Restore this Space to the switcher
+                </Typography>
+              </View>
+            </Pressable>
+          )}
 
           {isOwner ? (
             <Pressable style={tw`p-4`} onPress={handleDeleteSpace}>
