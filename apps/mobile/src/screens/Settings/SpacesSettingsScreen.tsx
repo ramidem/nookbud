@@ -84,7 +84,7 @@ export function SpacesSettingsScreen({ navigation }: Props) {
                 <Pressable
                   key={space.id}
                   style={tw`flex-row items-center p-4 ${
-                    index < spaces.length - 1 ? 'border-divider border-b' : ''
+                    index < spaces.length - 1 ? 'border-background border-b' : ''
                   }`}
                   onPress={() => navigation.navigate('SpaceDetail', { spaceId: space.id })}
                 >
@@ -137,7 +137,7 @@ export function SpacesSettingsScreen({ navigation }: Props) {
                   <View
                     key={space.id}
                     style={tw`flex-row items-center p-4 ${
-                      index < archivedSpaces.length - 1 ? 'border-divider border-b' : ''
+                      index < archivedSpaces.length - 1 ? 'border-background border-b' : ''
                     }`}
                   >
                     <View

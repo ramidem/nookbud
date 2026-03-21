@@ -264,25 +264,34 @@ audit_logs
 - [x] Supabase foundation
 - [x] Push notifications
 
-### Phase 3 (Next)
-- [ ] Spaces — multi-space support, roles, Space switcher
-- [ ] All Spaces timeline view
-- [ ] Onboarding rewrite (create first Space)
-- [ ] Space settings (rename, emoji/color, manage members)
+### Phase 3 (Complete)
+- [x] Spaces — multi-space support, roles, Space switcher
+- [x] RBAC simplified to owner | editor | viewer
+- [x] Member labels (co-parent, guardian, lawyer, etc.) — display only
+- [x] All Spaces timeline view
+- [x] Onboarding rewrite (create first Space)
+- [x] Space settings (rename, emoji/color, manage members)
 
-### Phase 4 — Resources
-- [ ] Resources — reference documents per Space (medical, school, legal, etc.)
-- [ ] Resource integrity verification (SHA-256)
-- [ ] Archive Space — hide inactive Spaces from switcher, preserve data
-- [ ] Export includes Resources
+### Phase 4 (Complete)
+- [x] Resources — reference documents per Space (medical, school, legal, etc.)
+- [x] Resource integrity verification (SHA-256)
+- [x] Archive Space — hide inactive Spaces from switcher, preserve data
+- [x] Export includes Resources
 
-### Later Phases
-- [ ] Expense summaries and care pattern insights (Phase 5)
-- [ ] Viewer access portal (Phase 6)
-- [ ] Shared export links (Phase 6)
-- [ ] Web portal / PWA (Phase 6)
+### Phase 5 (Planned)
+- [ ] Expense summaries and care pattern insights
+- [ ] Smart reminders
+- [ ] OCR document scanning (on-device, Google ML Kit)
+
+### Phase 6 (Planned — after web app)
+- [ ] Viewer access portal
+- [ ] Shared export links
+- [ ] Web portal / PWA
+
+### Later
 - [ ] Digital signatures (PKI)
 - [ ] Calendar sync (Google/Apple)
+- [ ] Supabase auth + real-time sync (multi-device, two co-parents live)
 
 ---
 

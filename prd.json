@@ -1475,6 +1475,107 @@
       "dependencies": [
         "53"
       ]
+    },
+    {
+      "id": "59",
+      "phase": "3",
+      "title": "Member label enum (co-parent|guardian|lawyer|...)",
+      "description": "Add optional label field to space_members. Labels are display-only, do not affect permissions. Enum: co-parent, guardian, grandparent, relative, lawyer, social-worker, assistant, other.",
+      "priority": 59,
+      "passes": true,
+      "acceptanceCriteria": [
+        "label field added to space_members schema (nullable)",
+        "Migration 0003_member_label.sql",
+        "InvitePartnerScreen: optional label picker after role selection",
+        "SpaceDetailScreen: shows name \u00b7 label \u00b7 role when label is set"
+      ],
+      "files": [
+        "apps/mobile/src/database/schema/space-members.ts",
+        "apps/mobile/drizzle/0003_member_label.sql",
+        "apps/mobile/src/services/space-member.service.ts",
+        "apps/mobile/src/screens/Settings/SpaceDetailScreen.tsx",
+        "apps/mobile/src/screens/Onboarding/InvitePartnerScreen.tsx"
+      ],
+      "dependencies": [
+        "40"
+      ]
+    },
+    {
+      "id": "60",
+      "phase": "ui",
+      "title": "Button component \u2014 size and variant system",
+      "description": "Extend Button with size (sm|md|lg) and variant (primary|outlined|ghost|danger) props. Single versatile component replaces all raw Pressable CTAs.",
+      "priority": 60,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Button accepts size: sm | md | lg",
+        "Button accepts variant: primary | outlined | ghost | danger",
+        "OutlinedButton kept as @deprecated alias for variant=outlined",
+        "All raw bg-primary Pressables replaced with Button across all screens"
+      ],
+      "files": [
+        "apps/mobile/src/components/atoms/Button/button.component.tsx"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "61",
+      "phase": "ui",
+      "title": "Field composite components (Text, Area, Select, Date)",
+      "description": "Self-contained form field components that wrap InputLayout + input atom. Medium size, consistent API. Field.Text, Field.Area, Field.Select, Field.Date.",
+      "priority": 61,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Field.Text \u2014 label + TextInput + error",
+        "Field.Area \u2014 label + TextInputArea + error",
+        "Field.Select \u2014 label + SelectDropdown + error",
+        "Field.Date \u2014 wraps DatePickerInput directly (already has InputLayout)",
+        "Exported from @/components"
+      ],
+      "files": [
+        "apps/mobile/src/components/molecules/Field/field.component.tsx",
+        "apps/mobile/src/components/molecules/Field/index.ts"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "62",
+      "phase": "ui",
+      "title": "Unified input field heights + rounded style system",
+      "description": "All input fields unified to min-h-[56px]. Buttons use rounded-full. Inputs, text areas, cards use rounded-xl. Text areas use rounded-xl (not rounded-full).",
+      "priority": 62,
+      "passes": true,
+      "acceptanceCriteria": [
+        "defaultInputContainerStyle: min-h-[56px] items-center rounded-xl",
+        "defaultInputAreaContainerStyle: rounded-xl",
+        "Button: rounded-full (unchanged)",
+        "Cards: rounded-xl (unchanged)"
+      ],
+      "files": [
+        "apps/mobile/src/tailwind/index.ts"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "63",
+      "phase": "dev",
+      "title": "Dev tooling \u2014 seed database + Components Showcase",
+      "description": "Seed database with realistic sample data (safe \u2014 only runs on empty DB). Components Showcase screen accessible from Settings Dev Tools in __DEV__ mode.",
+      "priority": 63,
+      "passes": true,
+      "acceptanceCriteria": [
+        "seedDatabase() checks for existing users before seeding \u2014 never clears data",
+        "Inserts: 3 users, 2 Spaces, 4 members, 2 children, 9 entries, 3 acknowledgments, 3 resources",
+        "Settings \u2192 Dev Tools \u2192 Seed Database button (__DEV__ only)",
+        "ComponentsShowcaseScreen shows all components with sizes/variants/states",
+        "Settings \u2192 Dev Tools \u2192 Components Showcase link (__DEV__ only)"
+      ],
+      "files": [
+        "apps/mobile/src/database/seed.ts",
+        "apps/mobile/src/screens/ComponentsShowcase/components-showcase.screen.tsx",
+        "apps/mobile/src/screens/Settings/SettingsScreen.tsx"
+      ],
+      "dependencies": []
     }
   ]
 }

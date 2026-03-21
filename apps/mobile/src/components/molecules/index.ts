@@ -5,5 +5,6 @@ export * from './Field';
 export * from './PageHeader';
 export * from './ScreenContainer';
 export * from './ScreenHeader';
+export * from './SectionTitle';
 export * from './SpaceSwitcher';
 export * from './StorageManager';

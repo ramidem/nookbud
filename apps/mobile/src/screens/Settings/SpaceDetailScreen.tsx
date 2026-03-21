@@ -358,14 +358,14 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
         {/* Space Appearance (owner only) */}
         {isOwner && (
           <View style={tw`bg-surface mb-4 rounded-xl`}>
-            <View style={tw`border-divider border-b px-4 py-3`}>
+            <View style={tw`border-background border-b px-4 py-3`}>
               <Typography style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
                 Appearance
               </Typography>
             </View>
 
             {/* Name */}
-            <View style={tw`border-divider border-b p-4`}>
+            <View style={tw`border-background border-b p-4`}>
               {isEditingName ? (
                 <View style={tw`flex-row items-center gap-2`}>
                   <TextInput
@@ -407,7 +407,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
             </View>
 
             {/* Emoji picker */}
-            <View style={tw`border-divider border-b p-4`}>
+            <View style={tw`border-background border-b p-4`}>
               <Typography style={tw`text-subtitle mb-2 text-sm font-medium`}>Icon</Typography>
               <ScrollView
                 horizontal
@@ -464,7 +464,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
 
         {/* Members Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Typography style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Members
             </Typography>
@@ -477,7 +477,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
             return (
               <View
                 key={member.id}
-                style={tw`p-4 ${!isLastMember ? 'border-divider border-b' : ''}`}
+                style={tw`p-4 ${!isLastMember ? 'border-background border-b' : ''}`}
               >
                 <View style={tw`flex-row items-center`}>
                   <View
@@ -546,7 +546,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
           {/* Invite member button (owner only) */}
           {isOwner && (
             <Pressable
-              style={tw`border-divider flex-row items-center justify-center border-t p-4`}
+              style={tw`border-background flex-row items-center justify-center border-t p-4`}
               onPress={handleOpenInvite}
             >
               <UsersIcon height={16} style={tw`text-primary mr-2`} width={16} />
@@ -557,7 +557,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
 
         {/* Children Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Typography style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Children
             </Typography>
@@ -572,7 +572,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
               <View
                 key={child.id}
                 style={tw`flex-row items-center p-4 ${
-                  index < space.children.length - 1 ? 'border-divider border-b' : ''
+                  index < space.children.length - 1 ? 'border-background border-b' : ''
                 }`}
               >
                 <View
@@ -597,7 +597,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
 
         {/* Danger Zone */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Typography style={tw`text-error text-sm font-medium uppercase tracking-wide`}>
               Danger Zone
             </Typography>
@@ -605,7 +605,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
 
           {isOwner && !space.archivedAt && (
             <Pressable
-              style={tw`border-divider flex-row items-center border-b p-4`}
+              style={tw`border-background flex-row items-center border-b p-4`}
               onPress={handleArchiveSpace}
             >
               <ArchiveIcon height={18} style={tw`text-warning mr-3`} width={18} />
@@ -620,7 +620,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
 
           {isOwner && space.archivedAt && (
             <Pressable
-              style={tw`border-divider flex-row items-center border-b p-4`}
+              style={tw`border-background flex-row items-center border-b p-4`}
               onPress={handleUnarchiveSpace}
             >
               <ArchiveRestoreIcon height={18} style={tw`text-primary mr-3`} width={18} />

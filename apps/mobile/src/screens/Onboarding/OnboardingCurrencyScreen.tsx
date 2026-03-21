@@ -1,6 +1,7 @@
+import { LegendList } from '@legendapp/list';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { View, Text, Pressable, FlatList } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
@@ -47,13 +48,15 @@ export function OnboardingCurrencyScreen({ navigation, route }: Props) {
         </Text>
       </View>
 
-      <FlatList
+      <LegendList
         contentContainerStyle={tw`px-6 pb-4`}
         data={CURRENCIES}
+        estimatedItemSize={72}
         keyExtractor={(item) => item.code}
+        maintainVisibleContentPosition={false}
         renderItem={({ item }) => (
           <Pressable
-            style={tw`border-divider flex-row items-center border-b py-4`}
+            style={tw`border-background flex-row items-center border-b py-4`}
             onPress={() => setSelected(item.code)}
           >
             <View

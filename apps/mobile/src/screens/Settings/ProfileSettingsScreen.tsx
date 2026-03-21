@@ -1,15 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 
+import { Alert } from '@/components';
 import type { User } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
@@ -54,7 +47,10 @@ export function ProfileSettingsScreen({ navigation }: Props) {
 
   const handleSave = async () => {
     if (!displayName.trim()) {
-      Alert.alert('Error', 'Name is required');
+      Alert.error({
+        message: 'Name is required',
+        title: 'Validation Error',
+      });
 
       return;
     }
@@ -68,7 +64,10 @@ export function ProfileSettingsScreen({ navigation }: Props) {
       });
       navigation.goBack();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to save',
+        title: 'Save Failed',
+      });
     } finally {
       setIsSaving(false);
     }
@@ -86,7 +85,7 @@ export function ProfileSettingsScreen({ navigation }: Props) {
     <View style={tw`bg-surface flex-1`}>
       {/* Header */}
       <View
-        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
+        style={tw`border-background flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={tw`text-primary text-base`}>Cancel</Text>

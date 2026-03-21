@@ -59,7 +59,7 @@ export function SpacesScreen({ navigation }: Props) {
           <View style={tw`bg-surface overflow-hidden rounded-xl`}>
             {/* All Spaces row */}
             <Pressable
-              style={tw`border-divider flex-row items-center border-b p-4`}
+              style={tw`border-background flex-row items-center border-b p-4`}
               onPress={() => switchToSpace(null)}
             >
               <View
@@ -82,7 +82,7 @@ export function SpacesScreen({ navigation }: Props) {
               <Pressable
                 key={space.id}
                 style={tw`flex-row items-center p-4 ${
-                  index < spaces.length - 1 ? 'border-divider border-b' : ''
+                  index < spaces.length - 1 ? 'border-background border-b' : ''
                 }`}
                 onPress={() => switchToSpace(space.id)}
               >

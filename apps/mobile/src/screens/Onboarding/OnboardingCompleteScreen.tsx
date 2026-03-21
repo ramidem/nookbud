@@ -41,11 +41,11 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
       <Text style={tw`text-subtitle mb-8 text-base`}>Here{"'"}s a summary of your profile.</Text>
 
       <View style={tw`bg-background mb-8 rounded-xl p-4`}>
-        <View style={tw`border-divider flex-row justify-between border-b py-3`}>
+        <View style={tw`border-background flex-row justify-between border-b py-3`}>
           <Text style={tw`text-subtitle`}>Name</Text>
           <Text style={tw`text-foreground font-medium`}>{displayName}</Text>
         </View>
-        <View style={tw`border-divider flex-row justify-between border-b py-3`}>
+        <View style={tw`border-background flex-row justify-between border-b py-3`}>
           <Text style={tw`text-subtitle`}>Timezone</Text>
           <Text style={tw`text-foreground font-medium`}>{timezone}</Text>
         </View>

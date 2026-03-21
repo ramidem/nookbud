@@ -1,6 +1,7 @@
+import { LegendList } from '@legendapp/list';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useMemo } from 'react';
-import { View, Text, Pressable, FlatList } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
@@ -63,13 +64,15 @@ export function OnboardingTimezoneScreen({ navigation, route }: Props) {
         <Text style={tw`text-subtitle mb-4 text-base`}>This helps us show times correctly.</Text>
       </View>
 
-      <FlatList
+      <LegendList
         contentContainerStyle={tw`px-6 pb-4`}
         data={TIMEZONES}
+        estimatedItemSize={72}
         keyExtractor={(item) => item.value}
+        maintainVisibleContentPosition={false}
         renderItem={({ item }) => (
           <Pressable
-            style={tw`border-divider flex-row items-center border-b py-4`}
+            style={tw`border-background flex-row items-center border-b py-4`}
             onPress={() => setSelected(item.value)}
           >
             <View

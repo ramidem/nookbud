@@ -6,13 +6,12 @@ import {
   Text,
   Pressable,
   ScrollView,
-  Alert,
   ActivityIndicator,
   Switch,
   Linking,
 } from 'react-native';
 
-import { Button, PageHeader } from '@/components';
+import { Alert, Button, PageHeader } from '@/components';
 import type { User, Child } from '@/database/schema';
 import { seedDatabase } from '@/database/seed';
 import { useTw } from '@/hooks/useTw';
@@ -102,20 +101,23 @@ export function SettingsScreen({ navigation }: Props) {
   };
 
   const handleClearData = () => {
-    Alert.alert(
-      'Clear All Data',
-      'This will delete all your local data including entries, children, and settings. This cannot be undone.',
-      [
-        { style: 'cancel', text: 'Cancel' },
+    Alert.warning({
+      actions: [
+        { label: 'Cancel', variant: 'cancel' },
         {
-          onPress: async () => {
-            Alert.alert('Not Implemented', 'Data clearing will be implemented in a future update.');
+          label: 'Clear Data',
+          onPress: () => {
+            Alert.info({
+              message: 'Data clearing will be implemented in a future update.',
+              title: 'Not Implemented',
+            });
           },
-          style: 'destructive',
-          text: 'Clear Data',
         },
       ],
-    );
+      message:
+        'This will delete all your local data including entries, children, and settings. This cannot be undone.',
+      title: 'Clear All Data',
+    });
   };
 
   if (isLoading) {
@@ -134,7 +136,7 @@ export function SettingsScreen({ navigation }: Props) {
         {/* Profile Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
           <Pressable
-            style={tw`border-divider flex-row items-center border-b p-4`}
+            style={tw`border-background flex-row items-center border-b p-4`}
             onPress={() => navigation.navigate('ProfileSettings')}
           >
             <View
@@ -156,7 +158,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* Children Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Children
             </Text>
@@ -170,7 +172,7 @@ export function SettingsScreen({ navigation }: Props) {
               <Pressable
                 key={child.id}
                 style={tw`flex-row items-center p-4 ${
-                  index < children.length - 1 ? 'border-divider border-b' : ''
+                  index < children.length - 1 ? 'border-background border-b' : ''
                 }`}
                 onPress={() => navigation.navigate('ChildSettings', { childId: child.id })}
               >
@@ -192,7 +194,7 @@ export function SettingsScreen({ navigation }: Props) {
             ))
           )}
           <Pressable
-            style={tw`border-divider flex-row items-center justify-center border-t p-4`}
+            style={tw`border-background flex-row items-center justify-center border-t p-4`}
             onPress={() => navigation.navigate('AddChildSettings')}
           >
             <Text style={tw`text-primary font-medium`}>+ Add Child</Text>
@@ -201,7 +203,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* Notifications Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Notifications
             </Text>
@@ -219,7 +221,7 @@ export function SettingsScreen({ navigation }: Props) {
               <View
                 key={toggle.key}
                 style={tw`flex-row items-center justify-between px-4 py-3 ${
-                  index < NOTIFICATION_TOGGLES.length - 1 ? 'border-divider border-b' : ''
+                  index < NOTIFICATION_TOGGLES.length - 1 ? 'border-background border-b' : ''
                 }`}
               >
                 <View style={tw`mr-3 flex-1`}>
@@ -280,7 +282,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* About Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>About</Text>
           </View>
           <View style={tw`p-4`}>
@@ -298,7 +300,7 @@ export function SettingsScreen({ navigation }: Props) {
         {/* Dev Tools — only in __DEV__ */}
         {__DEV__ && (
           <View style={tw`bg-surface mb-4 rounded-xl`}>
-            <View style={tw`border-divider border-b px-4 py-3`}>
+            <View style={tw`border-background border-b px-4 py-3`}>
               <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
                 Dev Tools
               </Text>
@@ -306,41 +308,39 @@ export function SettingsScreen({ navigation }: Props) {
             <Pressable
               style={tw`p-4`}
               onPress={async () => {
-                Alert.alert(
-                  'Seed Database',
-                  'Only runs on an empty database. If you already have data, nothing will change.',
-                  [
-                    { style: 'cancel', text: 'Cancel' },
+                Alert.warning({
+                  actions: [
+                    { label: 'Cancel', variant: 'cancel' },
                     {
+                      label: 'Seed',
                       onPress: async () => {
                         const result = await seedDatabase();
-                        if (result.skipped) {
-                          Alert.alert(
-                            '⚠️ Already has data',
-                            'Seed only runs on an empty database. Clear all data first if you want sample data.',
-                          );
-                        } else if (result.success) {
-                          Alert.alert(
-                            '✅ Seeded',
-                            'Sample data loaded. Restart the app to see all changes.',
-                          );
+                        if (result.success) {
+                          Alert.success({
+                            message: 'Sample data loaded. Restart the app to see all changes.',
+                            title: 'Seeded Successfully',
+                          });
                         } else {
-                          Alert.alert('❌ Seed Failed', result.error ?? 'Unknown error');
+                          Alert.error({
+                            message: result.error ?? 'Unknown error',
+                            title: 'Seed Failed',
+                          });
                         }
                       },
-                      style: 'destructive',
-                      text: 'Seed',
                     },
                   ],
-                );
+                  message:
+                    'Adds sample data without touching existing records. Safe to run multiple times.',
+                  title: 'Seed Database',
+                });
               }}
             >
               <Text style={tw`text-foreground font-medium`}>Seed Database</Text>
               <Text style={tw`text-subtitle mt-1 text-sm`}>
-                Load sample data — 2 Spaces, 2 children, 9 timeline entries, 3 resources
+                Add sample data — 2 Spaces, 2 children, 34 entries, 3 resources
               </Text>
             </Pressable>
-            <View style={tw`border-divider border-t`} />
+            <View style={tw`border-background border-t`} />
             <Pressable
               style={tw`flex-row items-center justify-between p-4`}
               onPress={() => navigation.navigate('ComponentsShowcase')}
@@ -358,7 +358,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* Danger Zone */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-error text-sm font-medium uppercase tracking-wide`}>
               Danger Zone
             </Text>

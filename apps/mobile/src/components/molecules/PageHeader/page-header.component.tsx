@@ -19,7 +19,7 @@ export function PageHeader(props: Props) {
 
   return (
     <View style={[tw`bg-surface px-4 pb-3`, { paddingTop: insets.top }, style]}>
-      <View style={tw`flex-row items-center justify-between`}>
+      <View style={tw`min-h-10 flex-row items-center justify-between`}>
         <View style={tw`flex-1 flex-row items-center`}>
           {leftAction}
           <Text style={tw`text-foreground font-serif-bold text-2xl`}>{title}</Text>

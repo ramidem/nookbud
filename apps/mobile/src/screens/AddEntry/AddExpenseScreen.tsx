@@ -145,7 +145,7 @@ export function AddExpenseScreen({ navigation }: Props) {
     >
       {/* Header */}
       <View
-        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
+        style={tw`border-background flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={tw`text-primary text-base`}>Cancel</Text>

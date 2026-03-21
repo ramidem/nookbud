@@ -208,7 +208,7 @@ export function EntryCard({ entry, onPress, onSpacePress, spaceInfo }: Props) {
 
       {/* Version indicator */}
       {entry.currentVersion && entry.currentVersion.versionNumber > 1 && (
-        <View style={tw`border-divider mt-2 border-t pt-2`}>
+        <View style={tw`border-background mt-2 border-t pt-2`}>
           <Text style={tw`text-placeholder text-xs`}>
             v{entry.currentVersion.versionNumber} • Edited
           </Text>

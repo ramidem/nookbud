@@ -1,16 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-  TextInput,
-  Modal,
-} from 'react-native';
+import { View, Text, Pressable, ScrollView, ActivityIndicator, TextInput } from 'react-native';
 
+import { Alert, Modal, useModal } from '@/components';
 import type { EntryVersion, Attachment } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { AlertTriangleIcon, CheckCircleIcon, ClockIcon, PaperclipIcon } from '@/icons';
@@ -48,7 +40,11 @@ export function EntryDetailScreen({ navigation, route }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [canAct, setCanAct] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
-  const [showDisputeModal, setShowDisputeModal] = useState(false);
+  const {
+    hideModal: hideDisputeModal,
+    isVisible: isDisputeVisible,
+    showModal: showDisputeModal,
+  } = useModal();
   const [disputeReason, setDisputeReason] = useState('');
 
   const loadEntry = useCallback(async () => {
@@ -88,24 +84,33 @@ export function EntryDetailScreen({ navigation, route }: Props) {
       await AcknowledgmentService.acknowledge(entryId);
       loadEntry();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to acknowledge');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to acknowledge',
+        title: 'Acknowledgment Failed',
+      });
     }
   };
 
   const handleDispute = async () => {
     if (!disputeReason.trim()) {
-      Alert.alert('Error', 'Please provide a reason for disputing');
+      Alert.error({
+        message: 'Please provide a reason for disputing',
+        title: 'Missing Reason',
+      });
 
       return;
     }
 
     try {
       await AcknowledgmentService.dispute(entryId, disputeReason.trim());
-      setShowDisputeModal(false);
+      hideDisputeModal();
       setDisputeReason('');
       loadEntry();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to dispute');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to dispute',
+        title: 'Dispute Failed',
+      });
     }
   };
 
@@ -132,7 +137,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
               <Text style={tw`text-subtitle`}>Split</Text>
               <Text style={tw`text-foreground`}>{content.splitType}</Text>
             </View>
-            <View style={tw`border-divider mt-2 border-t pt-2`}>
+            <View style={tw`border-background mt-2 border-t pt-2`}>
               <Text style={tw`text-foreground`}>{content.description}</Text>
             </View>
           </View>
@@ -155,7 +160,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
               </View>
             )}
             {content.notes && (
-              <View style={tw`border-divider mt-2 border-t pt-2`}>
+              <View style={tw`border-background mt-2 border-t pt-2`}>
                 <Text style={tw`text-foreground`}>{content.notes}</Text>
               </View>
             )}
@@ -176,7 +181,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
                 <Text style={tw`text-foreground`}>{content.expirationDate}</Text>
               </View>
             )}
-            <View style={tw`border-divider mt-2 border-t pt-2`}>
+            <View style={tw`border-background mt-2 border-t pt-2`}>
               <Text style={tw`text-foreground`}>{content.termsText}</Text>
             </View>
           </View>
@@ -241,7 +246,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
     <View style={tw`bg-surface flex-1`}>
       {/* Header */}
       <View
-        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
+        style={tw`border-background flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={tw`text-primary text-base`}>← Back</Text>
@@ -333,7 +338,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
         {/* Version History */}
         <Pressable
-          style={tw`border-divider flex-row items-center justify-between border-t py-3`}
+          style={tw`border-background flex-row items-center justify-between border-t py-3`}
           onPress={() => setShowVersions(!showVersions)}
         >
           <Text style={tw`text-subtitle`}>Version History</Text>
@@ -345,7 +350,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
         {showVersions && (
           <View style={tw`mb-4`}>
             {versions.map((v) => (
-              <View key={v.id} style={tw`border-divider border-b py-2`}>
+              <View key={v.id} style={tw`border-background border-b py-2`}>
                 <Text style={tw`text-foreground`}>Version {v.versionNumber}</Text>
                 <Text style={tw`text-subtitle text-sm`}>{v.createdAt.toLocaleString()}</Text>
               </View>
@@ -373,10 +378,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
             <Pressable style={tw`bg-success flex-1 rounded-xl py-4`} onPress={handleAcknowledge}>
               <Text style={tw`text-center font-semibold text-white`}>Acknowledge</Text>
             </Pressable>
-            <Pressable
-              style={tw`bg-error/15 flex-1 rounded-xl py-4`}
-              onPress={() => setShowDisputeModal(true)}
-            >
+            <Pressable style={tw`bg-error/15 flex-1 rounded-xl py-4`} onPress={showDisputeModal}>
               <Text style={tw`text-error text-center font-semibold`}>Dispute</Text>
             </Pressable>
           </View>
@@ -384,31 +386,37 @@ export function EntryDetailScreen({ navigation, route }: Props) {
       </ScrollView>
 
       {/* Dispute Modal */}
-      <Modal animationType="slide" presentationStyle="pageSheet" visible={showDisputeModal}>
-        <View style={tw`bg-surface flex-1`}>
-          <View style={tw`flex-row items-center justify-between px-4 pb-2 pt-4`}>
-            <Pressable onPress={() => setShowDisputeModal(false)}>
-              <Text style={tw`text-primary`}>Cancel</Text>
-            </Pressable>
-            <Text style={tw`font-serif-semibold text-lg`}>Dispute Entry</Text>
-            <Pressable onPress={handleDispute}>
-              <Text style={tw`text-error font-semibold`}>Submit</Text>
-            </Pressable>
-          </View>
-          <View style={tw`p-4`}>
-            <Text style={tw`text-subtitle mb-4`}>
-              Explain why you{"'"}re disputing this entry. Your co-parent will see this.
-            </Text>
-            <TextInput
-              autoFocus
-              multiline
-              placeholder="Reason for dispute..."
-              placeholderTextColor={colors.placeholder}
-              style={tw`border-divider text-foreground h-40 rounded-xl border px-4 py-3`}
-              textAlignVertical="top"
-              value={disputeReason}
-              onChangeText={setDisputeReason}
-            />
+      <Modal
+        isVisible={isDisputeVisible}
+        onBackButtonPress={hideDisputeModal}
+        onBackdropPress={hideDisputeModal}
+      >
+        <View pointerEvents="box-none" style={tw`flex-1 justify-end`}>
+          <View style={tw`bg-surface h-3/4 rounded-t-3xl`}>
+            <View style={tw`flex-row items-center justify-between px-4 pb-2 pt-4`}>
+              <Pressable onPress={hideDisputeModal}>
+                <Text style={tw`text-primary`}>Cancel</Text>
+              </Pressable>
+              <Text style={tw`font-serif-semibold text-lg`}>Dispute Entry</Text>
+              <Pressable onPress={handleDispute}>
+                <Text style={tw`text-error font-semibold`}>Submit</Text>
+              </Pressable>
+            </View>
+            <View style={tw`p-4`}>
+              <Text style={tw`text-subtitle mb-4`}>
+                Explain why you{"'"}re disputing this entry. Your co-parent will see this.
+              </Text>
+              <TextInput
+                autoFocus
+                multiline
+                placeholder="Reason for dispute..."
+                placeholderTextColor={colors.placeholder}
+                style={tw`border-divider text-foreground h-40 rounded-xl border px-4 py-3`}
+                textAlignVertical="top"
+                value={disputeReason}
+                onChangeText={setDisputeReason}
+              />
+            </View>
           </View>
         </View>
       </Modal>

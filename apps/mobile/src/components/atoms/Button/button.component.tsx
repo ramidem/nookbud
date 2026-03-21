@@ -55,7 +55,7 @@ export function Button(props: Props) {
     children,
     isDisabled = false,
     isLoading = false,
-    size = 'md',
+    size = 'sm',
     style,
     textStyle,
     title = 'Button',
