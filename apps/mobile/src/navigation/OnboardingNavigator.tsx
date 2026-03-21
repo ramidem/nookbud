@@ -30,7 +30,6 @@ export type OnboardingStackParamList = {
   InviteMembers: {
     spaceId: string;
   };
-  OnboardingDone: undefined;
 };
 
 const Stack = createNativeStackNavigator<OnboardingStackParamList>();

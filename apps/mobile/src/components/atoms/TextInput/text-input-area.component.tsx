@@ -10,6 +10,7 @@ import { DefaultTextAreaInputProps, TEXT_INPUT_MIN_HEIGHT } from './constants';
 import { TextInput } from './text-input.component';
 import { getTextInputHeightAdjustment } from './util';
 
+import { defaultInputAreaContainerStyle } from '@/tailwind';
 import { DefaultComponentProps } from '@/types/component.type';
 
 export type TextInputAreaProps = DefaultComponentProps &
@@ -53,6 +54,7 @@ export function TextInputArea(props: TextInputAreaProps) {
       multiline
       numberOfLines={numberOfLines}
       showClearButton={false}
+      style={defaultInputAreaContainerStyle}
       textStyle={[
         textStyle,
         {
