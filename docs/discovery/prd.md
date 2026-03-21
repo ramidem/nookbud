@@ -516,6 +516,7 @@ Phase 5 adds insights and automation on top of the verified record system.
 | Smart reminders | Configurable reminders for pending acknowledgments, overdue expenses, upcoming events |
 | Automated reports | Scheduled export generation (weekly/monthly) sent to designated members |
 | Compliance tracking | Track adherence to care agreements and court orders (referenced, not enforced) |
+| OCR document scanning | Scan physical documents (court orders, medical reports, school letters) — on-device OCR extracts dates, amounts, and names; offers to pre-fill timeline entries or save as Resources |
 
 ---
 

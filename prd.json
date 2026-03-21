@@ -1226,7 +1226,7 @@
       "id": "49",
       "phase": "4",
       "title": "Schema: resources table",
-      "description": "Add resources table to the database. Resources are reference documents scoped to a Space (and optionally a child). Not timeline entries — no versioning, no acknowledgment.",
+      "description": "Add resources table to the database. Resources are reference documents scoped to a Space (and optionally a child). Not timeline entries \u2014 no versioning, no acknowledgment.",
       "priority": 49,
       "passes": true,
       "acceptanceCriteria": [
@@ -1249,16 +1249,16 @@
     {
       "id": "50",
       "phase": "4",
-      "title": "ResourceService — upload, list, getById, softDelete",
+      "title": "ResourceService \u2014 upload, list, getById, softDelete",
       "description": "Core service for managing resources. Upload copies file to storage and hashes it. List supports filtering by category and child.",
       "priority": 50,
       "passes": true,
       "acceptanceCriteria": [
-        "ResourceService.upload(spaceId, file, metadata) — saves file via FileService, inserts resource record",
-        "ResourceService.listBySpace(spaceId, filters?) — filter by category, childId; excludes soft-deleted",
-        "ResourceService.getById(resourceId) — returns resource or null",
-        "ResourceService.softDelete(resourceId) — sets deleted_at, logs to audit",
-        "ResourceService.verifyIntegrity(resourceId) — re-hashes file, compares to stored hash",
+        "ResourceService.upload(spaceId, file, metadata) \u2014 saves file via FileService, inserts resource record",
+        "ResourceService.listBySpace(spaceId, filters?) \u2014 filter by category, childId; excludes soft-deleted",
+        "ResourceService.getById(resourceId) \u2014 returns resource or null",
+        "ResourceService.softDelete(resourceId) \u2014 sets deleted_at, logs to audit",
+        "ResourceService.verifyIntegrity(resourceId) \u2014 re-hashes file, compares to stored hash",
         "All operations logged to AuditService",
         "Only owner and editor roles can upload/delete; viewer can read",
         "ResourceService exported from services/index.ts"
@@ -1274,7 +1274,7 @@
     {
       "id": "51",
       "phase": "4",
-      "title": "Resources tab — main navigation",
+      "title": "Resources tab \u2014 main navigation",
       "description": "Add Resources as a tab in the main bottom navigator. Replace or add alongside Export tab.",
       "priority": 51,
       "passes": true,
@@ -1283,7 +1283,7 @@
         "Uses BookOpenIcon (or similar) from @/icons",
         "Tapping navigates to ResourcesScreen",
         "Tab label: 'Resources'",
-        "Export moved to Settings or kept as tab (your call — but 5 tabs max)"
+        "Export moved to Settings or kept as tab (your call \u2014 but 5 tabs max)"
       ],
       "files": [
         "apps/mobile/src/navigation/MainNavigator.tsx",
@@ -1306,10 +1306,10 @@
         "Each resource row: icon for category, title, child name (if applicable), date uploaded",
         "Category filter chips: All, Medical, School, Legal, Financial, Identity, Insurance, Other",
         "Child filter if Space has multiple children",
-        "Empty state: 'No resources yet. Add important documents here — medical records, school forms, legal agreements.'",
+        "Empty state: 'No resources yet. Add important documents here \u2014 medical records, school forms, legal agreements.'",
         "FAB to add new resource",
         "Pull to refresh",
-        "Tap row → ResourceDetailScreen"
+        "Tap row \u2192 ResourceDetailScreen"
       ],
       "files": [
         "apps/mobile/src/screens/Resources/ResourcesScreen.tsx",
@@ -1330,8 +1330,8 @@
         "Title input (required)",
         "Description input (optional)",
         "Category picker: Medical, School, Legal, Financial, Identity, Insurance, Other",
-        "Child selector (optional — which child does this relate to?)",
-        "File picker — supports images and PDFs (use existing document picker)",
+        "Child selector (optional \u2014 which child does this relate to?)",
+        "File picker \u2014 supports images and PDFs (use existing document picker)",
         "Preview of selected file",
         "Upload button with loading state",
         "On success: navigate back to ResourcesScreen",
@@ -1349,15 +1349,15 @@
       "id": "54",
       "phase": "4",
       "title": "Resource detail screen",
-      "description": "View a single resource — file preview, metadata, integrity verification.",
+      "description": "View a single resource \u2014 file preview, metadata, integrity verification.",
       "priority": 54,
       "passes": true,
       "acceptanceCriteria": [
         "Shows: title, description, category badge, child (if applicable), uploaded by, upload date",
         "File preview: inline image or PDF viewer (use existing patterns from EntryDetail)",
         "File metadata: original filename, size, MIME type",
-        "Integrity section: SHA-256 hash + 'Verify' button that re-hashes and shows ✓ Verified or ✗ Modified",
-        "Delete button (owner/editor only) with confirmation — soft delete only",
+        "Integrity section: SHA-256 hash + 'Verify' button that re-hashes and shows \u2713 Verified or \u2717 Modified",
+        "Delete button (owner/editor only) with confirmation \u2014 soft delete only",
         "Uses ScreenContainer, ScreenHeader with hasBackButton"
       ],
       "files": [
@@ -1377,10 +1377,10 @@
       "acceptanceCriteria": [
         "Add archived_at (nullable timestamp) to spaces schema",
         "Migration: 0005_space_archived.sql",
-        "SpaceService.archiveSpace(spaceId) — sets archived_at, only owner can archive",
-        "SpaceService.unarchiveSpace(spaceId) — clears archived_at",
-        "SpaceService.listSpaces() — excludes archived Spaces by default",
-        "SpaceService.listSpaces({ includeArchived: true }) — includes archived",
+        "SpaceService.archiveSpace(spaceId) \u2014 sets archived_at, only owner can archive",
+        "SpaceService.unarchiveSpace(spaceId) \u2014 clears archived_at",
+        "SpaceService.listSpaces() \u2014 excludes archived Spaces by default",
+        "SpaceService.listSpaces({ includeArchived: true }) \u2014 includes archived",
         "SpaceSwitcher: excludes archived Spaces",
         "Settings > SpaceDetail: 'Archive Space' button (owner only) with confirmation",
         "Settings > SpacesSettings: 'Archived Spaces' section at bottom showing archived Spaces with Unarchive option",
@@ -1425,11 +1425,11 @@
       "priority": 57,
       "passes": true,
       "acceptanceCriteria": [
-        "Upload resource — file saves, hash stored",
-        "List resources — filters work, All Spaces mode shows resources from all Spaces",
-        "View resource — metadata correct, integrity verification works",
-        "Delete resource — soft delete, not visible in list",
-        "Archive Space — hidden from switcher, data intact, unarchive works",
+        "Upload resource \u2014 file saves, hash stored",
+        "List resources \u2014 filters work, All Spaces mode shows resources from all Spaces",
+        "View resource \u2014 metadata correct, integrity verification works",
+        "Delete resource \u2014 soft delete, not visible in list",
+        "Archive Space \u2014 hidden from switcher, data intact, unarchive works",
         "Export ZIP includes resources folder",
         "Role enforcement: viewer cannot upload/delete resources",
         "ESLint passes",
@@ -1446,6 +1446,34 @@
         "54",
         "55",
         "56"
+      ]
+    },
+    {
+      "id": "58",
+      "phase": "5",
+      "title": "OCR document scanning",
+      "description": "Scan physical documents using on-device OCR (Google ML Kit). Extracts dates, amounts, and names. Offers to pre-fill timeline entries or save the document as a Resource.",
+      "priority": 58,
+      "passes": false,
+      "acceptanceCriteria": [
+        "react-native-ml-kit (or equivalent) installed for on-device text recognition",
+        "Camera scan option available in Add Entry picker and Add Resource screen",
+        "OCR runs on-device \u2014 no network required",
+        "Extracted dates highlighted \u2014 offer to create Event entry pre-filled with date",
+        "Extracted currency amounts highlighted \u2014 offer to create Expense entry pre-filled with amount",
+        "Extracted text shown in scrollable preview before saving",
+        "Full extracted text copyable to clipboard",
+        "Option to save scanned image as Resource alongside extracted text",
+        "Works on iOS and Android"
+      ],
+      "files": [
+        "apps/mobile/src/screens/AddEntry/ScanDocumentScreen.tsx",
+        "apps/mobile/src/services/ocr.service.ts",
+        "apps/mobile/src/screens/Resources/AddResourceScreen.tsx",
+        "apps/mobile/src/screens/AddEntry/AddEntryPickerScreen.tsx"
+      ],
+      "dependencies": [
+        "53"
       ]
     }
   ]
