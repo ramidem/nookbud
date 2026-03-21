@@ -315,13 +315,7 @@ export function SettingsScreen({ navigation }: Props) {
                       label: 'Seed',
                       onPress: async () => {
                         const result = await seedDatabase();
-                        if (result.skipped) {
-                          Alert.warning({
-                            message:
-                              'Seed only runs on an empty database. Clear all data first if you want sample data.',
-                            title: 'Already Has Data',
-                          });
-                        } else if (result.success) {
+                        if (result.success) {
                           Alert.success({
                             message: 'Sample data loaded. Restart the app to see all changes.',
                             title: 'Seeded Successfully',
@@ -336,14 +330,14 @@ export function SettingsScreen({ navigation }: Props) {
                     },
                   ],
                   message:
-                    'Only runs on an empty database. If you already have data, nothing will change.',
+                    'Adds sample data without touching existing records. Safe to run multiple times.',
                   title: 'Seed Database',
                 });
               }}
             >
               <Text style={tw`text-foreground font-medium`}>Seed Database</Text>
               <Text style={tw`text-subtitle mt-1 text-sm`}>
-                Load sample data — 2 Spaces, 2 children, 9 timeline entries, 3 resources
+                Add sample data — 2 Spaces, 2 children, 34 entries, 3 resources
               </Text>
             </Pressable>
             <View style={tw`border-background border-t`} />
