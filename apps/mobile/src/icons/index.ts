@@ -1,5 +1,7 @@
 import AlertTriangleIcon from './alert-triangle.svg';
 import AppleIcon from './apple.svg';
+import ArchiveRestoreIcon from './archive-restore.svg';
+import ArchiveIcon from './archive.svg';
 import ArrowLeftIcon from './arrow-left.svg';
 import BabyIcon from './baby.svg';
 import BookOpenIcon from './book-open.svg';
@@ -12,7 +14,9 @@ import ChevronDownIcon from './chevron-down.svg';
 import ChevronRightIcon from './chevron-right.svg';
 import ClipboardListIcon from './clipboard-list.svg';
 import ClockIcon from './clock.svg';
+import CopyIcon from './copy.svg';
 import CrossIcon from './cross.svg';
+import ExternalLinkIcon from './external-link.svg';
 import FileTextIcon from './file-text.svg';
 import GearIcon from './gear.svg';
 import HandshakeIcon from './handshake.svg';
@@ -29,8 +33,10 @@ import PaperclipIcon from './paperclip.svg';
 import PencilLineIcon from './pencil-line.svg';
 import ScaleIcon from './scale.svg';
 import ShareIcon from './share.svg';
+import ShieldCheckIcon from './shield-check.svg';
 import ShirtIcon from './shirt.svg';
 import SlidersHorizontalIcon from './sliders-horizontal.svg';
+import Trash2Icon from './trash-2.svg';
 import TrophyIcon from './trophy.svg';
 import UserIcon from './user.svg';
 import UsersIcon from './users.svg';
@@ -40,6 +46,8 @@ import XCircleIcon from './x-circle.svg';
 export {
   AlertTriangleIcon,
   AppleIcon,
+  ArchiveIcon,
+  ArchiveRestoreIcon,
   ArrowLeftIcon,
   BabyIcon,
   BookOpenIcon,
@@ -52,7 +60,9 @@ export {
   ChevronRightIcon,
   ClipboardListIcon,
   ClockIcon,
+  CopyIcon,
   CrossIcon,
+  ExternalLinkIcon,
   FileTextIcon,
   GearIcon,
   HandshakeIcon,
@@ -69,8 +79,10 @@ export {
   PencilLineIcon,
   ScaleIcon,
   ShareIcon,
+  ShieldCheckIcon,
   SlidersHorizontalIcon,
   ShirtIcon,
+  Trash2Icon,
   TrophyIcon,
   UserIcon,
   UsersIcon,

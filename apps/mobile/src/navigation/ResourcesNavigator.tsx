@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import { ResourcesScreen } from '@/screens/Resources';
+import { AddResourceScreen, ResourceDetailScreen, ResourcesScreen } from '@/screens/Resources';
 
 export type ResourcesStackParamList = {
   Resources: undefined;
@@ -19,6 +19,8 @@ export function ResourcesNavigator() {
       }}
     >
       <Stack.Screen component={ResourcesScreen} name="Resources" />
+      <Stack.Screen component={AddResourceScreen} name="AddResource" />
+      <Stack.Screen component={ResourceDetailScreen} name="ResourceDetail" />
     </Stack.Navigator>
   );
 }

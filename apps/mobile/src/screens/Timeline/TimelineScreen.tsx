@@ -12,7 +12,7 @@ import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { PencilLineIcon } from '@/icons';
 import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
-import { useActivityFilter, type ActivityTopTabParamList } from '@/navigation/ActivityTopTabs';
+import type { ActivityTopTabParamList } from '@/navigation/ActivityTopTabs';
 import {
   TimelineService,
   SpaceService,
@@ -32,7 +32,7 @@ const PAGE_SIZE = 20;
 export function TimelineScreen({ navigation }: Props) {
   const tw = useTw();
   const { activeSpaceId, isAllSpaces, switchToSpace } = useActiveSpace();
-  const { setHasActiveFilters, setShowFilters, showFilters } = useActivityFilter();
+  const [showFilters, setShowFilters] = useState(false);
   const [entries, setEntries] = useState<TimelineEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -45,17 +45,6 @@ export function TimelineScreen({ navigation }: Props) {
     dateTo: null,
     types: [],
   });
-
-  const hasActiveFilters =
-    filters.childIds.length > 0 ||
-    filters.types.length > 0 ||
-    filters.dateFrom !== null ||
-    filters.dateTo !== null;
-
-  // Sync filter active state to tab bar
-  useEffect(() => {
-    setHasActiveFilters(hasActiveFilters);
-  }, [hasActiveFilters, setHasActiveFilters]);
 
   // Load all user spaces when in All Spaces mode
   useEffect(() => {
