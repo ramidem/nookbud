@@ -3,7 +3,15 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 
-import { Alert, Button, ScreenContainer, ScreenHeader, Toast, Typography } from '@/components';
+import {
+  Alert,
+  Button,
+  EmojiText,
+  ScreenContainer,
+  ScreenHeader,
+  Toast,
+  Typography,
+} from '@/components';
 import { ArchiveRestoreIcon, ChevronRightIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { SpaceService, type SpaceWithRole } from '@/services';
@@ -86,7 +94,7 @@ export function SpacesSettingsScreen({ navigation }: Props) {
                       { backgroundColor: space.color ?? colors.primary },
                     ]}
                   >
-                    <Typography style={tw`text-lg`}>{space.emoji ?? '🏠'}</Typography>
+                    <EmojiText style={tw`text-lg`}>{space.emoji ?? '🏠'}</EmojiText>
                   </View>
                   <View style={tw`flex-1`}>
                     <Typography style={tw`text-foreground text-base font-medium`}>
@@ -138,7 +146,7 @@ export function SpacesSettingsScreen({ navigation }: Props) {
                         { backgroundColor: space.color ?? colors.primary },
                       ]}
                     >
-                      <Typography style={tw`text-lg`}>{space.emoji ?? '🏠'}</Typography>
+                      <EmojiText style={tw`text-lg`}>{space.emoji ?? '🏠'}</EmojiText>
                     </View>
                     <View style={tw`flex-1`}>
                       <Typography style={tw`text-foreground text-base font-medium`}>

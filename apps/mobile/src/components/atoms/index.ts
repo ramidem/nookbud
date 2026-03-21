@@ -5,6 +5,7 @@ export * from './DateModalInput';
 export * from './DatePicker';
 export * from './DateTextInput';
 export * from './Divider';
+export * from './EmojiText';
 export * from './ExcludedEdges';
 export * from './GradientBackground';
 export * from './InputLayout';

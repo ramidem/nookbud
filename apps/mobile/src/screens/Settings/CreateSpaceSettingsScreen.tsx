@@ -2,7 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
-import { Button, ScreenContainer, ScreenHeader, Typography } from '@/components';
+import { Button, EmojiText, ScreenContainer, ScreenHeader, Typography } from '@/components';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { SpaceService } from '@/services';
 import { useLocalStorageStore } from '@/stores';
@@ -99,7 +99,7 @@ export function CreateSpaceSettingsScreen({ navigation }: Props) {
               }`}
               onPress={() => setSelectedEmoji(emoji)}
             >
-              <Typography style={tw`text-2xl`}>{emoji}</Typography>
+              <EmojiText style={tw`text-2xl`}>{emoji}</EmojiText>
             </Pressable>
           ))}
         </ScrollView>
