@@ -137,7 +137,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
               <Text style={tw`text-subtitle`}>Split</Text>
               <Text style={tw`text-foreground`}>{content.splitType}</Text>
             </View>
-            <View style={tw`border-divider mt-2 border-t pt-2`}>
+            <View style={tw`border-background mt-2 border-t pt-2`}>
               <Text style={tw`text-foreground`}>{content.description}</Text>
             </View>
           </View>
@@ -160,7 +160,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
               </View>
             )}
             {content.notes && (
-              <View style={tw`border-divider mt-2 border-t pt-2`}>
+              <View style={tw`border-background mt-2 border-t pt-2`}>
                 <Text style={tw`text-foreground`}>{content.notes}</Text>
               </View>
             )}
@@ -181,7 +181,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
                 <Text style={tw`text-foreground`}>{content.expirationDate}</Text>
               </View>
             )}
-            <View style={tw`border-divider mt-2 border-t pt-2`}>
+            <View style={tw`border-background mt-2 border-t pt-2`}>
               <Text style={tw`text-foreground`}>{content.termsText}</Text>
             </View>
           </View>
@@ -246,7 +246,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
     <View style={tw`bg-surface flex-1`}>
       {/* Header */}
       <View
-        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
+        style={tw`border-background flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={tw`text-primary text-base`}>← Back</Text>
@@ -338,7 +338,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
 
         {/* Version History */}
         <Pressable
-          style={tw`border-divider flex-row items-center justify-between border-t py-3`}
+          style={tw`border-background flex-row items-center justify-between border-t py-3`}
           onPress={() => setShowVersions(!showVersions)}
         >
           <Text style={tw`text-subtitle`}>Version History</Text>
@@ -350,7 +350,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
         {showVersions && (
           <View style={tw`mb-4`}>
             {versions.map((v) => (
-              <View key={v.id} style={tw`border-divider border-b py-2`}>
+              <View key={v.id} style={tw`border-background border-b py-2`}>
                 <Text style={tw`text-foreground`}>Version {v.versionNumber}</Text>
                 <Text style={tw`text-subtitle text-sm`}>{v.createdAt.toLocaleString()}</Text>
               </View>

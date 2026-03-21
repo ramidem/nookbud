@@ -46,7 +46,7 @@ function OptionItem(props: OptionItemProps) {
     <Pressable
       style={[
         tw`flex-row items-center justify-between px-4 py-3`,
-        !isLast && tw`dark:border-dark-divider border-divider border-b`,
+        !isLast && tw`dark:border-dark-background border-background border-b`,
       ]}
       onPress={onPress}
     >

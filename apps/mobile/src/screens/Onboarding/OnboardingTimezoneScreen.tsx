@@ -72,7 +72,7 @@ export function OnboardingTimezoneScreen({ navigation, route }: Props) {
         maintainVisibleContentPosition={false}
         renderItem={({ item }) => (
           <Pressable
-            style={tw`border-divider flex-row items-center border-b py-4`}
+            style={tw`border-background flex-row items-center border-b py-4`}
             onPress={() => setSelected(item.value)}
           >
             <View

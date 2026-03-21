@@ -276,7 +276,7 @@ export function ResourceDetailScreen({ navigation, route }: Props) {
 
         {/* File section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Typography style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               File
             </Typography>
@@ -294,7 +294,7 @@ export function ResourceDetailScreen({ navigation, route }: Props) {
 
         {/* Integrity section */}
         <View style={tw`bg-surface rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Typography style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Integrity
             </Typography>

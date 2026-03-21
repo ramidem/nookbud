@@ -94,7 +94,7 @@ export function TimelineFilters({ filters, onApply, onClose, spaceId, spaceIds, 
       <View style={tw`bg-surface flex-1`}>
         {/* Header */}
         <View
-          style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-2 pt-4`}
+          style={tw`border-background flex-row items-center justify-between border-b px-4 pb-2 pt-4`}
         >
           <Pressable onPress={onClose}>
             <Text style={tw`text-primary text-base`}>Cancel</Text>

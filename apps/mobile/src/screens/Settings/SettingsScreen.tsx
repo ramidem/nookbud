@@ -136,7 +136,7 @@ export function SettingsScreen({ navigation }: Props) {
         {/* Profile Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
           <Pressable
-            style={tw`border-divider flex-row items-center border-b p-4`}
+            style={tw`border-background flex-row items-center border-b p-4`}
             onPress={() => navigation.navigate('ProfileSettings')}
           >
             <View
@@ -158,7 +158,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* Children Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Children
             </Text>
@@ -172,7 +172,7 @@ export function SettingsScreen({ navigation }: Props) {
               <Pressable
                 key={child.id}
                 style={tw`flex-row items-center p-4 ${
-                  index < children.length - 1 ? 'border-divider border-b' : ''
+                  index < children.length - 1 ? 'border-background border-b' : ''
                 }`}
                 onPress={() => navigation.navigate('ChildSettings', { childId: child.id })}
               >
@@ -194,7 +194,7 @@ export function SettingsScreen({ navigation }: Props) {
             ))
           )}
           <Pressable
-            style={tw`border-divider flex-row items-center justify-center border-t p-4`}
+            style={tw`border-background flex-row items-center justify-center border-t p-4`}
             onPress={() => navigation.navigate('AddChildSettings')}
           >
             <Text style={tw`text-primary font-medium`}>+ Add Child</Text>
@@ -203,7 +203,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* Notifications Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Notifications
             </Text>
@@ -221,7 +221,7 @@ export function SettingsScreen({ navigation }: Props) {
               <View
                 key={toggle.key}
                 style={tw`flex-row items-center justify-between px-4 py-3 ${
-                  index < NOTIFICATION_TOGGLES.length - 1 ? 'border-divider border-b' : ''
+                  index < NOTIFICATION_TOGGLES.length - 1 ? 'border-background border-b' : ''
                 }`}
               >
                 <View style={tw`mr-3 flex-1`}>
@@ -282,7 +282,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* About Section */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>About</Text>
           </View>
           <View style={tw`p-4`}>
@@ -300,7 +300,7 @@ export function SettingsScreen({ navigation }: Props) {
         {/* Dev Tools — only in __DEV__ */}
         {__DEV__ && (
           <View style={tw`bg-surface mb-4 rounded-xl`}>
-            <View style={tw`border-divider border-b px-4 py-3`}>
+            <View style={tw`border-background border-b px-4 py-3`}>
               <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
                 Dev Tools
               </Text>
@@ -346,7 +346,7 @@ export function SettingsScreen({ navigation }: Props) {
                 Load sample data — 2 Spaces, 2 children, 9 timeline entries, 3 resources
               </Text>
             </Pressable>
-            <View style={tw`border-divider border-t`} />
+            <View style={tw`border-background border-t`} />
             <Pressable
               style={tw`flex-row items-center justify-between p-4`}
               onPress={() => navigation.navigate('ComponentsShowcase')}
@@ -364,7 +364,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         {/* Danger Zone */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
-          <View style={tw`border-divider border-b px-4 py-3`}>
+          <View style={tw`border-background border-b px-4 py-3`}>
             <Text style={tw`text-error text-sm font-medium uppercase tracking-wide`}>
               Danger Zone
             </Text>
