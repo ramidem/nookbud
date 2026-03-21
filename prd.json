@@ -1325,7 +1325,7 @@
       "title": "Add Resource screen",
       "description": "Screen for uploading a new resource document.",
       "priority": 53,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Title input (required)",
         "Description input (optional)",
@@ -1351,7 +1351,7 @@
       "title": "Resource detail screen",
       "description": "View a single resource — file preview, metadata, integrity verification.",
       "priority": 54,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Shows: title, description, category badge, child (if applicable), uploaded by, upload date",
         "File preview: inline image or PDF viewer (use existing patterns from EntryDetail)",
@@ -1373,7 +1373,7 @@
       "title": "Archive Space feature",
       "description": "Simple toggle in Space settings to archive a Space. Archived Spaces are hidden from the Space switcher but all data is preserved and accessible.",
       "priority": 55,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Add archived_at (nullable timestamp) to spaces schema",
         "Migration: 0005_space_archived.sql",
@@ -1402,7 +1402,7 @@
       "title": "Export includes Resources",
       "description": "Update export to include Resources in the ZIP evidence bundle.",
       "priority": 56,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "ZIP evidence bundle includes a resources/ folder with all resource files",
         "resources.json in ZIP: list of all resources with metadata",
@@ -1423,7 +1423,7 @@
       "title": "Phase 4 QA pass",
       "description": "Full QA pass for Phase 4: Resources feature, Archive Space, export integration.",
       "priority": 57,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Upload resource — file saves, hash stored",
         "List resources — filters work, All Spaces mode shows resources from all Spaces",

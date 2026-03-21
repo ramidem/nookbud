@@ -3,6 +3,8 @@ import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { users } from './users';
 
 export const spaces = sqliteTable('spaces', {
+  archivedAt: integer('archived_at', { mode: 'timestamp' }),
+
   color: text('color').notNull().default('#6F8F7B'),
 
   createdAt: integer('created_at', { mode: 'timestamp' })

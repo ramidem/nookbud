@@ -5,6 +5,7 @@ import m0001 from './0001_spaces_migration.sql';
 import m0002 from './0002_rbac_simplification.sql';
 import m0003 from './0003_member_label.sql';
 import m0004 from './0004_resources.sql';
+import m0005 from './0005_space_archived.sql';
 import journal from './meta/_journal.json';
 
 export default {
@@ -15,5 +16,6 @@ export default {
     m0002,
     m0003,
     m0004,
+    m0005,
   },
 };

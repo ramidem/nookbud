@@ -1,8 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Pressable, ScrollView, ActivityIndicator } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, Pressable, ScrollView, ActivityIndicator, Switch } from 'react-native';
 
+import { PageHeader } from '@/components';
 import { Alert } from '@/components/atoms';
 import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
@@ -27,8 +27,6 @@ const ACTIVE_CARD = 'border-primary bg-primary/15';
 const INACTIVE_CARD = 'border-divider';
 
 const EXPORT_ICON_SIZE = 28;
-const HEADER_TOP_PADDING = 8;
-
 const TYPE_LABELS: Record<EntryType, string> = {
   agreement: 'Agreement',
   communication: 'Communication',
@@ -43,7 +41,6 @@ type Props = NativeStackScreenProps<SettingsStackParamList, 'Export'>;
 
 export function ExportScreen({ navigation }: Props) {
   const tw = useTw();
-  const insets = useSafeAreaInsets();
   const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -58,6 +55,7 @@ export function ExportScreen({ navigation }: Props) {
   const [exportType, setExportType] = useState<'pdf' | 'bundle'>('pdf');
   const [selectedChildIds, setSelectedChildIds] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<EntryType[]>([]);
+  const [includeResources, setIncludeResources] = useState(true);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -130,6 +128,7 @@ export function ExportScreen({ navigation }: Props) {
       const filters: ExportFilters = {
         childIds: selectedChildIds.length > 0 ? selectedChildIds : undefined,
         includeDisputed: true,
+        includeResources,
         types: selectedTypes.length > 0 ? selectedTypes : undefined,
       };
 
@@ -172,21 +171,15 @@ export function ExportScreen({ navigation }: Props) {
 
   return (
     <View style={tw`bg-surface flex-1`}>
-      {/* Header */}
-      <View
-        style={[
-          tw`border-divider bg-surface border-b px-4 pb-3`,
-          { paddingTop: insets.top + HEADER_TOP_PADDING },
-        ]}
-      >
-        <View style={tw`mb-2 flex-row items-center`}>
+      <PageHeader
+        leftAction={
           <Pressable style={tw`mr-3`} onPress={() => navigation.goBack()}>
             <ArrowLeftIcon height={24} style={tw`text-foreground`} width={24} />
           </Pressable>
-          <Text style={tw`text-foreground font-serif-bold text-2xl`}>Export</Text>
-        </View>
-        <Text style={tw`text-subtitle`}>Generate court-ready reports and evidence bundles</Text>
-      </View>
+        }
+        subtitle="Generate court-ready reports and evidence bundles"
+        title="Export"
+      />
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Space Scope Selector */}
@@ -335,6 +328,22 @@ export function ExportScreen({ navigation }: Props) {
               </Pressable>
             ))}
           </View>
+        </View>
+
+        {/* Include Resources Toggle */}
+        <View style={tw`mb-6 flex-row items-center justify-between rounded-xl bg-neutral-200 p-4`}>
+          <View style={tw`flex-1`}>
+            <Text style={tw`text-foreground font-medium`}>Include Resources</Text>
+            <Text style={tw`text-subtitle mt-0.5 text-sm`}>
+              Attach uploaded files to the export
+            </Text>
+          </View>
+          <Switch
+            thumbColor="white"
+            trackColor={{ false: colors.placeholder, true: colors.primary }}
+            value={includeResources}
+            onValueChange={setIncludeResources}
+          />
         </View>
 
         {/* Preview Count */}

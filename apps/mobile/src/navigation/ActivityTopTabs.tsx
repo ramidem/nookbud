@@ -3,9 +3,9 @@ import {
   type MaterialTopTabBarProps,
 } from '@react-navigation/material-top-tabs';
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Pressable, View } from 'react-native';
 
+import { PageHeader } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import { CalendarIcon, ClipboardListIcon } from '@/icons';
 import { CalendarScreen } from '@/screens/Calendar';
@@ -19,46 +19,48 @@ export type ActivityTopTabParamList = {
 
 const TopTab = createMaterialTopTabNavigator<ActivityTopTabParamList>();
 
-const HEADER_TOP_PADDING = 8;
-const TOGGLE_ICON_SIZE = 22;
-const TOGGLE_HIT_SLOP = 6;
+const TOGGLE_ICON_SIZE = 20;
 
 function ActivityTabBar({ navigation, state }: MaterialTopTabBarProps) {
   const tw = useTw();
   const isTimelineActive = state.index === 0;
 
   return (
-    <View
-      style={tw`border-divider bg-surface flex-row items-center justify-between border-b px-4 pb-3`}
-    >
-      <Text style={tw`text-foreground font-serif-bold text-2xl`}>Activity</Text>
-
-      <View style={tw`flex-row items-center gap-4`}>
-        <Pressable hitSlop={TOGGLE_HIT_SLOP} onPress={() => navigation.navigate('Timeline')}>
-          <ClipboardListIcon
-            height={TOGGLE_ICON_SIZE}
-            style={tw`${isTimelineActive ? 'text-primary' : 'text-subtitle'}`}
-            width={TOGGLE_ICON_SIZE}
-          />
-        </Pressable>
-        <Pressable hitSlop={TOGGLE_HIT_SLOP} onPress={() => navigation.navigate('Calendar')}>
-          <CalendarIcon
-            height={TOGGLE_ICON_SIZE}
-            style={tw`${!isTimelineActive ? 'text-primary' : 'text-subtitle'}`}
-            width={TOGGLE_ICON_SIZE}
-          />
-        </Pressable>
-      </View>
-    </View>
+    <PageHeader
+      rightAction={
+        <View style={tw`flex-row rounded-full bg-neutral-200 p-1`}>
+          <Pressable
+            style={tw`rounded-full p-2 ${isTimelineActive ? 'bg-surface shadow-sm' : ''}`}
+            onPress={() => navigation.navigate('Timeline')}
+          >
+            <ClipboardListIcon
+              height={TOGGLE_ICON_SIZE}
+              style={tw`${isTimelineActive ? 'text-foreground' : 'text-subtitle'}`}
+              width={TOGGLE_ICON_SIZE}
+            />
+          </Pressable>
+          <Pressable
+            style={tw`rounded-full p-2 ${!isTimelineActive ? 'bg-surface shadow-sm' : ''}`}
+            onPress={() => navigation.navigate('Calendar')}
+          >
+            <CalendarIcon
+              height={TOGGLE_ICON_SIZE}
+              style={tw`${!isTimelineActive ? 'text-foreground' : 'text-subtitle'}`}
+              width={TOGGLE_ICON_SIZE}
+            />
+          </Pressable>
+        </View>
+      }
+      title="Activity"
+    />
   );
 }
 
 export function ActivityTopTabs() {
   const tw = useTw();
-  const insets = useSafeAreaInsets();
 
   return (
-    <View style={[tw`bg-background flex-1`, { paddingTop: insets.top + HEADER_TOP_PADDING }]}>
+    <View style={tw`bg-background flex-1`}>
       <TopTab.Navigator
         screenOptions={{
           lazy: true,

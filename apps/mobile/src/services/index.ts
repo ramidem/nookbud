@@ -14,7 +14,12 @@ export {
 } from './timeline.service';
 export { ExportService, type ExportFilters, type ExportResult } from './export.service';
 export { ResourceService, type ResourceFilters } from './resource.service';
-export { SpaceService, type SpaceWithRole, type SpaceDetails } from './space.service';
+export {
+  SpaceService,
+  type ListSpacesOptions,
+  type SpaceWithRole,
+  type SpaceDetails,
+} from './space.service';
 export { SpaceMemberService, type SpaceInvite } from './space-member.service';
 export { AuthService } from './auth.service';
 export { SyncService } from './sync.service';

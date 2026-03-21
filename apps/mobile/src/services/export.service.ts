@@ -3,6 +3,7 @@ import { Share } from 'react-native';
 import RNFS from 'react-native-fs';
 
 import { FileService } from './file.service';
+import { ResourceService } from './resource.service';
 
 import { db } from '@/database';
 import {
@@ -14,6 +15,7 @@ import {
   spaceMembers,
   users,
   type EntryType,
+  type Resource,
 } from '@/database/schema';
 
 export type ExportFilters = {
@@ -24,6 +26,7 @@ export type ExportFilters = {
   dateFrom?: Date;
   dateTo?: Date;
   includeDisputed?: boolean;
+  includeResources?: boolean;
 };
 
 type SpaceMeta = {
@@ -276,6 +279,70 @@ export const ExportService = {
       }
     }
 
+    // Include resources if requested (default true)
+    if (filters.includeResources !== false) {
+      await RNFS.mkdir(`${bundleDir}/resources`);
+
+      const resourceList: Resource[] = [];
+      if (isMultiSpace && filters.spaceIds) {
+        const res = await ResourceService.listBySpaces(filters.spaceIds);
+        resourceList.push(...res);
+      } else if (filters.spaceId) {
+        const res = await ResourceService.listBySpace(filters.spaceId);
+        resourceList.push(...res);
+      }
+
+      const resourceMeta = [];
+      for (const resource of resourceList) {
+        const sourcePath = FileService.getFullPath(resource.storagePath);
+        const destFilename = `${resource.fileHash}_${resource.originalFilename}`;
+        const destPath = `${bundleDir}/resources/${destFilename}`;
+
+        try {
+          const exists = await RNFS.exists(sourcePath);
+          if (!exists) continue;
+
+          await RNFS.copyFile(sourcePath, destPath);
+          const verified = await FileService.verifyIntegrity(
+            resource.storagePath,
+            resource.fileHash,
+          );
+          const space = spaceMap.get(resource.spaceId);
+
+          manifest.push({
+            filename: `resources/${destFilename}`,
+            hash: resource.fileHash,
+            spaceId: resource.spaceId,
+            spaceName: space?.name ?? '',
+            verified,
+          });
+
+          resourceMeta.push({
+            bundlePath: `resources/${destFilename}`,
+            category: resource.category,
+            childId: resource.childId,
+            filename: resource.originalFilename,
+            hash: resource.fileHash,
+            id: resource.id,
+            mimeType: resource.mimeType,
+            size: resource.fileSizeBytes,
+            spaceId: resource.spaceId,
+            spaceName: space?.name ?? '',
+            title: resource.title,
+            uploadedAt: resource.createdAt.toISOString(),
+          });
+        } catch {
+          // Silent fail — resource copy is best-effort
+        }
+      }
+
+      await RNFS.writeFile(
+        `${bundleDir}/resources.json`,
+        JSON.stringify(resourceMeta, null, 2),
+        'utf8',
+      );
+    }
+
     // Generate manifest.json — includes Space context per file
     const manifestJson = {
       bundleId: generateUUID(),
@@ -313,6 +380,8 @@ Bundle ID: ${manifestJson.bundleId}
 - summary.html: Human-readable timeline report
 - manifest.json: File integrity verification data
 - attachments/: All attached files with SHA-256 hashes
+- resources/: Uploaded resource files with SHA-256 hashes
+- resources.json: Resource metadata
 
 ## Verification
 
@@ -454,6 +523,39 @@ at time of creation. Edit history is preserved in the application.
     } else {
       for (const entry of entryList) {
         html += this.renderEntryHTML(entry);
+      }
+    }
+
+    // Resources section
+    if (filters.includeResources !== false) {
+      const resourceList: Resource[] = [];
+      if (isMultiSpace && filters.spaceIds) {
+        const res = await ResourceService.listBySpaces(filters.spaceIds);
+        resourceList.push(...res);
+      } else if (filters.spaceId) {
+        const res = await ResourceService.listBySpace(filters.spaceId);
+        resourceList.push(...res);
+      }
+
+      if (resourceList.length > 0) {
+        html += `\n  <h2>Resources (${resourceList.length})</h2>\n`;
+        for (const resource of resourceList) {
+          const space = spaceMetas.find((s) => s.id === resource.spaceId);
+          html += `
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-type">📁 ${resource.title}</span>
+      <span class="entry-date">${formatDateTime(resource.createdAt)}</span>
+    </div>
+    <div class="entry-content">
+      <p><strong>Category:</strong> ${resource.category}</p>
+      <p><strong>File:</strong> ${resource.originalFilename}</p>
+      ${resource.childId ? `<p><strong>Child:</strong> ${resource.childId}</p>` : ''}
+      ${isMultiSpace && space ? `<p><strong>Space:</strong> ${space.emoji} ${space.name}</p>` : ''}
+    </div>
+    <div class="hash">SHA-256: ${resource.fileHash}</div>
+  </div>`;
+        }
       }
     }
 

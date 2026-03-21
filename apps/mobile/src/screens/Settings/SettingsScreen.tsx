@@ -11,8 +11,8 @@ import {
   Switch,
   Linking,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { PageHeader } from '@/components';
 import type { User, Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { BabyIcon, ChevronRightIcon, ShareIcon, UserIcon, UsersIcon } from '@/icons';
@@ -28,8 +28,6 @@ import {
 import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
-
-const HEADER_TOP_PADDING = 8;
 
 const NOTIFICATION_TOGGLES: Array<{
   key: keyof NotificationPrefs;
@@ -52,7 +50,6 @@ const NOTIFICATION_TOGGLES: Array<{
 
 export function SettingsScreen({ navigation }: Props) {
   const tw = useTw();
-  const insets = useSafeAreaInsets();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
@@ -130,15 +127,7 @@ export function SettingsScreen({ navigation }: Props) {
 
   return (
     <View style={tw`bg-background flex-1`}>
-      {/* Header */}
-      <View
-        style={[
-          tw`border-divider bg-surface border-b px-4 pb-3`,
-          { paddingTop: insets.top + HEADER_TOP_PADDING },
-        ]}
-      >
-        <Text style={tw`text-foreground font-serif-bold text-2xl`}>Settings</Text>
-      </View>
+      <PageHeader title="Settings" />
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Profile Section */}

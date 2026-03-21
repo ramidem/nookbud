@@ -27,6 +27,7 @@ const ERROR_NOT_A_MEMBER = 'You are not a member of this Space';
 const ERROR_ONLY_OWNER_RENAME = 'Only owner can rename this Space';
 const ERROR_ONLY_OWNER_APPEARANCE = 'Only owner can update Space appearance';
 const ERROR_ONLY_OWNER_DELETE = 'Only owner can delete this Space';
+const ERROR_ONLY_OWNER_ARCHIVE = 'Only owner can archive this Space';
 const ERROR_OWNER_CANNOT_LEAVE = 'Owner must transfer ownership before leaving';
 
 /**
@@ -52,7 +53,36 @@ export type SpaceDetails = Space & {
   userRole: SpaceRole;
 };
 
+export type ListSpacesOptions = {
+  includeArchived?: boolean;
+};
+
 export const SpaceService = {
+  /**
+   * Archive a Space (owner only). Sets archivedAt timestamp.
+   */
+  async archiveSpace(spaceId: string): Promise<void> {
+    const userId = UserService.getCurrentUserId();
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
+
+    const role = await SpaceService.getUserRole(spaceId, userId);
+    if (!role) throw new Error(ERROR_NOT_A_MEMBER);
+    if (role !== 'owner') throw new Error(ERROR_ONLY_OWNER_ARCHIVE);
+
+    await db
+      .update(spaces)
+      .set({ archivedAt: new Date(), updatedAt: new Date() })
+      .where(eq(spaces.id, spaceId));
+
+    await AuditService.log({
+      action: 'archive',
+      entityId: spaceId,
+      entityType: ENTITY_TYPE_SPACE,
+      metadata: {},
+      userId,
+    });
+  },
+
   /**
    * Create a new Space and add the creator as owner
    */
@@ -130,11 +160,12 @@ export const SpaceService = {
       const role = await SpaceService.getUserRole(activeId, userId);
       if (role) {
         const [space] = await db.select().from(spaces).where(eq(spaces.id, activeId));
-        if (space) return space;
+        // Fall back if active space is archived
+        if (space && !space.archivedAt) return space;
       }
     }
 
-    // Fall back to first Space
+    // Fall back to first non-archived Space
     const userSpaces = await SpaceService.listSpaces();
     if (userSpaces.length > 0) return userSpaces[0];
 
@@ -222,8 +253,8 @@ export const SpaceService = {
   /**
    * List all Spaces the user is a member of, with member count and role
    */
-  async listSpaces(userId?: string): Promise<SpaceWithRole[]> {
-    const uid = userId ?? UserService.getCurrentUserId();
+  async listSpaces(options?: ListSpacesOptions): Promise<SpaceWithRole[]> {
+    const uid = UserService.getCurrentUserId();
     if (!uid) return [];
 
     // Get all memberships for this user
@@ -237,6 +268,9 @@ export const SpaceService = {
       const [space] = await db.select().from(spaces).where(eq(spaces.id, membership.spaceId));
 
       if (!space) continue;
+
+      // Filter out archived unless explicitly included
+      if (!options?.includeArchived && space.archivedAt) continue;
 
       // Count members in this Space
       const allMembers = await db
@@ -289,6 +323,31 @@ export const SpaceService = {
    */
   setCurrentSpace(spaceId: string | null): void {
     useLocalStorageStore.getState().setActiveSpaceId(spaceId);
+  },
+
+  /**
+   * Unarchive a Space (owner only). Clears archivedAt timestamp.
+   */
+  async unarchiveSpace(spaceId: string): Promise<void> {
+    const userId = UserService.getCurrentUserId();
+    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
+
+    const role = await SpaceService.getUserRole(spaceId, userId);
+    if (!role) throw new Error(ERROR_NOT_A_MEMBER);
+    if (role !== 'owner') throw new Error(ERROR_ONLY_OWNER_ARCHIVE);
+
+    await db
+      .update(spaces)
+      .set({ archivedAt: null, updatedAt: new Date() })
+      .where(eq(spaces.id, spaceId));
+
+    await AuditService.log({
+      action: 'unarchive',
+      entityId: spaceId,
+      entityType: ENTITY_TYPE_SPACE,
+      metadata: {},
+      userId,
+    });
   },
 
   /**
