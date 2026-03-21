@@ -347,6 +347,19 @@ export function SettingsScreen({ navigation }: Props) {
                 Load sample data — 2 Spaces, 2 children, 9 timeline entries, 3 resources
               </Text>
             </Pressable>
+            <View style={tw`border-divider border-t`} />
+            <Pressable
+              style={tw`flex-row items-center justify-between p-4`}
+              onPress={() => navigation.navigate('ComponentsShowcase')}
+            >
+              <View>
+                <Text style={tw`text-foreground font-medium`}>Components Showcase</Text>
+                <Text style={tw`text-subtitle mt-1 text-sm`}>
+                  Preview all UI components and design tokens
+                </Text>
+              </View>
+              <ChevronRightIcon height={20} style={tw`text-subtitle`} width={20} />
+            </Pressable>
           </View>
         )}
 
