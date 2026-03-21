@@ -18,8 +18,7 @@
 8. [Phase 4 — Resources](#8-phase-4--resources)
 9. [Phase 5 — Intelligence](#9-phase-5--intelligence)
 10. [Phase 6 — Collaboration (Web)](#10-phase-6--collaboration-web)
-11. [Phase 7 — Offline-First + Sync](#11-phase-7--offline-first--sync)
-12. [Success Metrics](#12-success-metrics)
+11. [Success Metrics](#11-success-metrics)
 12. [Technical Constraints](#12-technical-constraints)
 13. [Appendix](#13-appendix)
 
@@ -153,7 +152,6 @@ Three formats, all filterable by date range, child, entry type, and Space:
 | 4 | Resources | Planned | Reference documents per Space, integrity verification, Archive Space |
 | 5 | Intelligence | Planned | Expense summaries, care pattern insights, reminders |
 | 6 | Collaboration (Web) | Planned | Viewer portal, shared export links, read-only invite links, web portal |
-| 7 | Offline-First + Sync | Planned | PowerSync + SQLCipher encryption, multi-device sync, offline write queue |
 
 ---
 
@@ -543,62 +541,7 @@ Phase 6 extends Spaces with professional access and sharing capabilities via a w
 
 ---
 
-## 11. Phase 7 — Offline-First + Sync
-
-Phase 7 makes CoParent fully functional without an internet connection and introduces real-time multi-device sync via PowerSync + Supabase.
-
-### Architecture Decision: PowerSync
-
-After evaluating WatermelonDB, ElectricSQL, PouchDB/CouchDB, and custom sync, **PowerSync** is the chosen approach. It is purpose-built for Supabase + SQLite, ships a first-party `@powersync/drizzle-driver`, and integrates with the existing `@op-engineering/op-sqlite` + Drizzle ORM stack without a schema rewrite. Full research in `OFFLINE.md`.
-
-### Core Principles
-
-| Principle | Implementation |
-|-----------|---------------|
-| **Local-first** | All reads/writes hit SQLite first; Supabase is the sync target, not the source of truth during a session |
-| **Offline by default** | App is fully functional with no connection; sync is additive |
-| **Encryption at rest** | SQLCipher via `@powersync/op-sqlite`; key stored in device Keychain/Keystore |
-| **Immutable sync** | Append-only entries = no CRDT needed; idempotent inserts, `ON CONFLICT DO NOTHING` |
-| **Per-Space partitioning** | Sync Rules filter data to only the Spaces the authenticated user belongs to |
-
-### Features
-
-| Feature | Description |
-|---------|-------------|
-| SQLCipher encryption | Full database encryption at rest; key in hardware-backed Keychain (iOS) / Keystore (Android) |
-| PowerSync integration | Replace `sync.service.ts` stub with PowerSync client + SupabaseConnector |
-| Sync Rules | Server-side SQL filters ensure users only receive their own Space data |
-| Offline write queue | Writes queued locally, flushed to Supabase on reconnect |
-| Sync status UI | Online/offline indicator; pending changes badge; last synced timestamp |
-| Multi-device support | Two co-parents on separate phones see each other's entries in real time |
-| Conflict resolution | LWW for mutable records; `ON CONFLICT DO NOTHING` for immutable entries |
-| Encryption migration | One-time migration to encrypt existing unencrypted databases on first upgrade |
-
-### Stories (Phase 7)
-
-- S7-01: Add `react-native-keychain` + SQLCipher encryption to op-sqlite database
-- S7-02: Encrypt existing unencrypted local database on first upgrade
-- S7-03: Install PowerSync SDK (`@powersync/react-native`, `@powersync/op-sqlite`, `@powersync/drizzle-driver`)
-- S7-04: Implement `SupabaseConnector` (fetchCredentials, uploadData with upsert/conflict strategy)
-- S7-05: Wrap Drizzle schema with `DrizzleAppSchema`; replace `db` client with PowerSync-wrapped Drizzle
-- S7-06: Configure Sync Rules in PowerSync dashboard (per-user Space partitioning)
-- S7-07: Sync status hook + UI (online/offline indicator, pending count, last synced)
-- S7-08: Delete `sync.service.ts` stub; update `SyncService` to expose PowerSync status
-- S7-09: Multi-device integration test (two users, one Space, live sync)
-- S7-10: Phase 7 QA — encryption verified, sync verified, offline write/reconnect cycle
-
-### What you need (env vars + external accounts)
-
-| Item | How to get it |
-|------|--------------|
-| `POWERSYNC_URL` | Create project at [app.powersync.com](https://app.powersync.com) — free tier |
-| `SUPABASE_URL` + `SUPABASE_ANON_KEY` | Already in `.env` (Phase 2) |
-| Supabase auth enabled | Supabase project must have Auth enabled with JWT secret accessible |
-| PowerSync Sync Rules | Defined in PowerSync dashboard → uploaded via CLI or web UI |
-
----
-
-## 12. Success Metrics
+## 11. Success Metrics
 
 ### North Star Metric
 **Active Spaces per month** — This measures whether users are creating and maintaining care arrangements across family structures. A growing number of active Spaces validates both the core product and the inclusive positioning.
@@ -640,7 +583,8 @@ After evaluating WatermelonDB, ElectricSQL, PouchDB/CouchDB, and custom sync, **
 | Language | TypeScript 5.8 (strict) | End-to-end type safety |
 | Backend | Supabase (PostgreSQL + Auth + Storage) | Foundation laid in Phase 2 |
 | State | Zustand + Jotai + React Query | Established in Phase 1–2 |
-| Local storage | MMKV | Active Space persistence, offline data |
+| Local storage | MMKV | Active Space persistence, UI prefs, invite codes |
+| Local DB | SQLite (op-sqlite + Drizzle) | Client-side cache; Supabase is source of truth |
 | File storage | Supabase Storage (S3-compatible) | Encrypted at rest |
 | Hashing | SHA-256 (crypto) | File integrity verification |
 | Navigation | React Navigation | Established in codebase |
