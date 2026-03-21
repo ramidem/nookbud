@@ -31,6 +31,7 @@ import MessageCircleIcon from './message-circle.svg';
 import PackageIcon from './package.svg';
 import PaperclipIcon from './paperclip.svg';
 import PencilLineIcon from './pencil-line.svg';
+import PlusIcon from './plus.svg';
 import ScaleIcon from './scale.svg';
 import ShareIcon from './share.svg';
 import ShieldCheckIcon from './shield-check.svg';
@@ -77,6 +78,7 @@ export {
   PackageIcon,
   PaperclipIcon,
   PencilLineIcon,
+  PlusIcon,
   ScaleIcon,
   ShareIcon,
   ShieldCheckIcon,

@@ -203,16 +203,6 @@ export function TimelineScreen({ navigation }: Props) {
         />
       )}
 
-      {/* FAB */}
-      {entries.length > 0 && (
-        <Pressable
-          style={tw`bg-primary absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full shadow-lg`}
-          onPress={handleAddEntry}
-        >
-          <Text style={tw`text-2xl font-light text-white`}>+</Text>
-        </Pressable>
-      )}
-
       {/* Filters Modal */}
       <TimelineFilters
         filters={filters}

@@ -168,10 +168,6 @@ export function CalendarScreen({ navigation }: Props) {
     navigation.navigate('EntryDetail', { entryId: entry.id });
   };
 
-  const handleAddEvent = () => {
-    navigation.navigate('AddEvent');
-  };
-
   const handleMarkStatus = async (entry: TimelineEntry, newStatus: EventStatus) => {
     if (!currentUserId) return;
 
@@ -298,14 +294,6 @@ export function CalendarScreen({ navigation }: Props) {
           <View>{dayEvents.map(renderEventItem)}</View>
         )}
       </View>
-
-      {/* FAB */}
-      <Pressable
-        style={tw`bg-primary absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full shadow-lg`}
-        onPress={handleAddEvent}
-      >
-        <Text style={tw`text-2xl font-light text-white`}>+</Text>
-      </Pressable>
     </View>
   );
 }
