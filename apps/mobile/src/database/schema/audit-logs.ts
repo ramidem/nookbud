@@ -17,6 +17,7 @@ export const AUDIT_ACTIONS = [
   'assign_role',
   'remove_member',
   'transfer_ownership',
+  'upload',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
@@ -31,6 +32,7 @@ export const AUDIT_ENTITY_TYPES = [
   'acknowledgment',
   'dispute',
   'dispute_response',
+  'resource',
 ] as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number];
 

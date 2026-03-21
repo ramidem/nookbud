@@ -173,7 +173,12 @@ export function ExportScreen({ navigation }: Props) {
   return (
     <View style={tw`bg-surface flex-1`}>
       {/* Header */}
-      <View style={[tw`px-4 pb-3`, { paddingTop: insets.top + HEADER_TOP_PADDING }]}>
+      <View
+        style={[
+          tw`border-divider bg-surface border-b px-4 pb-3`,
+          { paddingTop: insets.top + HEADER_TOP_PADDING },
+        ]}
+      >
         <View style={tw`mb-2 flex-row items-center`}>
           <Pressable style={tw`mr-3`} onPress={() => navigation.goBack()}>
             <ArrowLeftIcon height={24} style={tw`text-foreground`} width={24} />

@@ -240,7 +240,9 @@ export function EntryDetailScreen({ navigation, route }: Props) {
   return (
     <View style={tw`bg-surface flex-1`}>
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 pb-4 pt-14`}>
+      <View
+        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
+      >
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={tw`text-primary text-base`}>← Back</Text>
         </Pressable>

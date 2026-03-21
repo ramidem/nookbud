@@ -1228,7 +1228,7 @@
       "title": "Schema: resources table",
       "description": "Add resources table to the database. Resources are reference documents scoped to a Space (and optionally a child). Not timeline entries — no versioning, no acknowledgment.",
       "priority": 49,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "resources table: id, space_id (FK spaces), child_id (FK children, nullable), title, description (nullable), category (enum), file_hash, storage_path, original_filename, file_size_bytes, mime_type, uploaded_by (FK users), created_at, deleted_at (nullable for soft delete)",
         "RESOURCE_CATEGORIES const: medical | school | legal | financial | identity | insurance | other",
@@ -1252,7 +1252,7 @@
       "title": "ResourceService — upload, list, getById, softDelete",
       "description": "Core service for managing resources. Upload copies file to storage and hashes it. List supports filtering by category and child.",
       "priority": 50,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "ResourceService.upload(spaceId, file, metadata) — saves file via FileService, inserts resource record",
         "ResourceService.listBySpace(spaceId, filters?) — filter by category, childId; excludes soft-deleted",
@@ -1277,7 +1277,7 @@
       "title": "Resources tab — main navigation",
       "description": "Add Resources as a tab in the main bottom navigator. Replace or add alongside Export tab.",
       "priority": 51,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Resources tab added to bottom tab navigator",
         "Uses BookOpenIcon (or similar) from @/icons",
@@ -1299,7 +1299,7 @@
       "title": "Resources list screen",
       "description": "Main resources screen showing all documents for the active Space. Filterable by category and child.",
       "priority": 52,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "ResourcesScreen shows all resources for active Space (respects useActiveSpace)",
         "Groups by category OR flat list with category chips filter",

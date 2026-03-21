@@ -4,16 +4,18 @@ import { Pressable } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
 import { ActivityNavigator } from './ActivityNavigator';
+import { ResourcesNavigator } from './ResourcesNavigator';
 import { SettingsNavigator } from './SettingsNavigator';
 
 import { SpaceSwitcher, type SpaceSwitcherRef } from '@/components';
 import { useTw } from '@/hooks/useTw';
-import { ClipboardListIcon, GearIcon, LayersIcon } from '@/icons';
+import { BookOpenIcon, ClipboardListIcon, GearIcon, LayersIcon } from '@/icons';
 import { colors } from '@/tailwind';
 
 export type MainTabParamList = {
   SpacesTab: undefined;
   ActivityTab: undefined;
+  ResourcesTab: undefined;
   SettingsTab: undefined;
 };
 
@@ -74,6 +76,14 @@ export function MainNavigator() {
           options={{
             tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={ClipboardListIcon} />,
             tabBarLabel: 'Activity',
+          }}
+        />
+        <Tab.Screen
+          component={ResourcesNavigator}
+          name="ResourcesTab"
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={BookOpenIcon} />,
+            tabBarLabel: 'Resources',
           }}
         />
         <Tab.Screen
