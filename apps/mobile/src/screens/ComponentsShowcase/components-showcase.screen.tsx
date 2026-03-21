@@ -15,7 +15,6 @@ import {
   ScreenHeader,
   SectionTitle,
   SelectDropdown,
-  SizeLabel,
   Skeleton,
   TextInput,
   TextInputArea,
@@ -26,6 +25,12 @@ import {
 } from '@/components';
 import { requestPushNotification, useToggleDarkMode } from '@/hooks';
 import { tw } from '@/tailwind';
+
+function SizeLabel({ label }: { label: string }) {
+  return (
+    <Typography style={tw`text-subtitle mb-1 text-xs uppercase tracking-wide`}>{label}</Typography>
+  );
+}
 
 const DROPDOWN_OPTIONS = [
   { id: '1', label: 'React Native' },

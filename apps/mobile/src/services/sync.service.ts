@@ -1,3 +1,11 @@
+/**
+ * SyncService — tracks last-synced timestamps per entity type.
+ *
+ * Currently used to record when local data was last pushed/pulled from Supabase.
+ * Real sync implementation will be wired here when Supabase auth + real-time
+ * is connected in a future phase.
+ */
+
 import { createMMKV } from 'react-native-mmkv';
 
 import CONFIG from '@/config';
@@ -18,8 +26,9 @@ type EntityType =
   | 'disputes'
   | 'entries'
   | 'entry_versions'
-  | 'spaces'
+  | 'resources'
   | 'space_members'
+  | 'spaces'
   | 'users';
 
 function entitySyncKey(entity: EntityType): string {
@@ -37,16 +46,6 @@ export const SyncService = {
     const raw = syncStorage.getString(LAST_SYNCED_AT_KEY);
 
     return raw ? new Date(raw) : null;
-  },
-
-  async pullEntries(_since: Date): Promise<void> {
-    // Stub — real sync implementation in a later story.
-    // Will pull entries from Supabase where updated_at > since.
-  },
-
-  async pushEntry(_entryId: string): Promise<void> {
-    // Stub — real sync implementation in a later story.
-    // Will push a single entry (with versions, attachments, acknowledgments) to Supabase.
   },
 
   setEntityLastSyncedAt(entity: EntityType, date: Date): void {

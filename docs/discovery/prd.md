@@ -194,12 +194,12 @@ Phase 2 improved the native experience and laid the Supabase foundation for sync
 | Native date pickers | Platform-native date/time selection | Complete |
 | Calendar view | Responsibility ledger with schedule visualization | Complete |
 | Partner invite improvements | Improved invitation flow | Complete |
-| Supabase foundation | Client, auth service, sync infrastructure | Complete |
+| Supabase foundation | Client + auth service scaffolded; real-time sync wired in a future phase | Complete |
 | Push notifications | Local notifications for care events | Complete |
 
 ---
 
-## 7. Phase 3 — Spaces (Next)
+## 7. Phase 3 — Spaces (Complete)
 
 ### Overview
 

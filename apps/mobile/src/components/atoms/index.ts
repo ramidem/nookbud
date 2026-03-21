@@ -15,7 +15,6 @@ export * from './ListLoadingItem';
 export * from './Modal';
 export * from './ScreenLoader';
 export * from './SelectDropdown';
-export * from './SizeLabel';
 export * from './Skeleton';
 export * from './TextInput';
 export * from './ThemeManager';
