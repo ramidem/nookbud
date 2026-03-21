@@ -1,1 +1,1 @@
-export { EntryCard } from './EntryCard';
+export { EntryCard, type SpaceInfo } from './EntryCard';

@@ -1057,7 +1057,7 @@
       "title": "All Spaces timeline \u2014 merged feed with Space indicators",
       "description": "When All Spaces is active, timeline merges entries from all user's Spaces. Each entry tagged with Space emoji and color.",
       "priority": 43,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "All Spaces mode: timeline fetches entries from all user's Spaces",
         "Each entry shows Space emoji + color indicator",

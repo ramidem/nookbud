@@ -5,6 +5,7 @@ import {
   entries,
   entryVersions,
   acknowledgments,
+  spaces,
   type EntryType,
   type EntryStatus,
   type AcknowledgmentStatus,
@@ -13,8 +14,9 @@ import {
 export type TimelineEntry = {
   id: string;
   spaceId: string;
-  /** @deprecated Use spaceId — kept for screen compatibility until Story 39+ */
-  relationshipId: string;
+  spaceName?: string;
+  spaceEmoji?: string;
+  spaceColor?: string;
   childId: string | null;
   type: EntryType;
   createdBy: string;
@@ -31,8 +33,7 @@ export type TimelineEntry = {
 
 export type TimelineQueryParams = {
   spaceId?: string;
-  /** @deprecated Use spaceId — kept for screen compatibility until Story 39+ */
-  relationshipId?: string;
+  spaceIds?: string[];
   childId?: string;
   types?: EntryType[];
   dateFrom?: Date;
@@ -149,16 +150,20 @@ export const TimelineService = {
       includeDeleted = false,
       limit = DEFAULT_LIMIT,
       offset = 0,
-      relationshipId,
-      spaceId: spaceIdParam,
+      spaceId,
+      spaceIds,
       status,
       types,
     } = params;
 
-    const spaceId = spaceIdParam ?? relationshipId ?? '';
+    // Build conditions — multi-space (All Spaces) or single-space
+    const conditions = [];
 
-    // Build conditions
-    const conditions = [eq(entries.spaceId, spaceId)];
+    if (spaceIds && spaceIds.length > 0) {
+      conditions.push(inArray(entries.spaceId, spaceIds));
+    } else {
+      conditions.push(eq(entries.spaceId, spaceId ?? ''));
+    }
 
     if (!includeDeleted) {
       conditions.push(ne(entries.status, 'soft_deleted'));
@@ -200,6 +205,21 @@ export const TimelineService = {
       .limit(limit)
       .offset(offset);
 
+    // Pre-load space metadata when querying multiple spaces
+    const isMultiSpace = spaceIds && spaceIds.length > 0;
+    const spaceMap = new Map<string, { name: string; emoji: string; color: string }>();
+
+    if (isMultiSpace) {
+      const spaceRows = await db
+        .select({ color: spaces.color, emoji: spaces.emoji, id: spaces.id, name: spaces.name })
+        .from(spaces)
+        .where(inArray(spaces.id, spaceIds));
+
+      for (const row of spaceRows) {
+        spaceMap.set(row.id, { color: row.color, emoji: row.emoji, name: row.name });
+      }
+    }
+
     // Hydrate with versions and acknowledgments
     const timelineEntries: TimelineEntry[] = await Promise.all(
       entryResults.map(async (entry) => {
@@ -224,6 +244,8 @@ export const TimelineService = {
           .from(acknowledgments)
           .where(eq(acknowledgments.entryId, entry.id));
 
+        const spaceMeta = spaceMap.get(entry.spaceId);
+
         return {
           acknowledgmentStatus: (ack?.status as AcknowledgmentStatus) ?? null,
           childId: entry.childId,
@@ -231,8 +253,10 @@ export const TimelineService = {
           createdBy: entry.createdBy,
           currentVersion,
           id: entry.id,
-          relationshipId: entry.spaceId,
+          spaceColor: spaceMeta?.color,
+          spaceEmoji: spaceMeta?.emoji,
           spaceId: entry.spaceId,
+          spaceName: spaceMeta?.name,
           status: entry.status as EntryStatus,
           type: entry.type as EntryType,
         };
