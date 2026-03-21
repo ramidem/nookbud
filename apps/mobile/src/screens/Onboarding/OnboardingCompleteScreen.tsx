@@ -35,28 +35,28 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
   };
 
   return (
-    <View style={tw`flex-1 bg-white px-6 pt-16`}>
-      <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Ready to go!</Text>
-      <Text style={tw`mb-8 text-base text-gray-600`}>Here{"'"}s a summary of your profile.</Text>
+    <View style={tw`bg-surface flex-1 px-6 pt-16`}>
+      <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Ready to go!</Text>
+      <Text style={tw`text-subtitle mb-8 text-base`}>Here{"'"}s a summary of your profile.</Text>
 
-      <View style={tw`mb-8 rounded-xl bg-gray-50 p-4`}>
-        <View style={tw`flex-row justify-between border-b border-gray-200 py-3`}>
-          <Text style={tw`text-gray-600`}>Name</Text>
-          <Text style={tw`font-medium text-gray-900`}>{displayName}</Text>
+      <View style={tw`bg-background mb-8 rounded-xl p-4`}>
+        <View style={tw`border-divider flex-row justify-between border-b py-3`}>
+          <Text style={tw`text-subtitle`}>Name</Text>
+          <Text style={tw`text-foreground font-medium`}>{displayName}</Text>
         </View>
-        <View style={tw`flex-row justify-between border-b border-gray-200 py-3`}>
-          <Text style={tw`text-gray-600`}>Timezone</Text>
-          <Text style={tw`font-medium text-gray-900`}>{timezone}</Text>
+        <View style={tw`border-divider flex-row justify-between border-b py-3`}>
+          <Text style={tw`text-subtitle`}>Timezone</Text>
+          <Text style={tw`text-foreground font-medium`}>{timezone}</Text>
         </View>
         <View style={tw`flex-row justify-between py-3`}>
-          <Text style={tw`text-gray-600`}>Currency</Text>
-          <Text style={tw`font-medium text-gray-900`}>{defaultCurrency}</Text>
+          <Text style={tw`text-subtitle`}>Currency</Text>
+          <Text style={tw`text-foreground font-medium`}>{defaultCurrency}</Text>
         </View>
       </View>
 
       {error && (
-        <View style={tw`mb-4 rounded-xl bg-red-50 p-4`}>
-          <Text style={tw`text-red-600`}>{error}</Text>
+        <View style={tw`bg-error/15 mb-4 rounded-xl p-4`}>
+          <Text style={tw`text-error`}>{error}</Text>
         </View>
       )}
 
@@ -65,7 +65,7 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
       <View style={tw`pb-8`}>
         <Pressable
           disabled={isLoading}
-          style={tw`flex-row items-center justify-center rounded-xl bg-blue-600 py-4`}
+          style={tw`bg-primary flex-row items-center justify-center rounded-xl py-4`}
           onPress={handleComplete}
         >
           {isLoading ? (
@@ -75,7 +75,7 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
           )}
         </Pressable>
 
-        <Text style={tw`mt-4 text-center text-sm text-gray-500`}>Next: Add your children</Text>
+        <Text style={tw`text-subtitle mt-4 text-center text-sm`}>Next: Add your children</Text>
       </View>
     </View>
   );

@@ -57,10 +57,10 @@ export function OnboardingTimezoneScreen({ navigation, route }: Props) {
   };
 
   return (
-    <View style={tw`flex-1 bg-white`}>
+    <View style={tw`bg-surface flex-1`}>
       <View style={tw`px-6 pt-16`}>
-        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Your timezone</Text>
-        <Text style={tw`mb-4 text-base text-gray-600`}>This helps us show times correctly.</Text>
+        <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Your timezone</Text>
+        <Text style={tw`text-subtitle mb-4 text-base`}>This helps us show times correctly.</Text>
       </View>
 
       <FlatList
@@ -69,31 +69,31 @@ export function OnboardingTimezoneScreen({ navigation, route }: Props) {
         keyExtractor={(item) => item.value}
         renderItem={({ item }) => (
           <Pressable
-            style={tw`flex-row items-center border-b border-gray-100 py-4`}
+            style={tw`border-divider flex-row items-center border-b py-4`}
             onPress={() => setSelected(item.value)}
           >
             <View
               style={tw`mr-4 h-6 w-6 items-center justify-center rounded-full border-2 ${
-                selected === item.value ? 'border-blue-600' : 'border-gray-300'
+                selected === item.value ? 'border-primary' : 'border-divider'
               }`}
             >
-              {selected === item.value && <View style={tw`h-3 w-3 rounded-full bg-blue-600`} />}
+              {selected === item.value && <View style={tw`bg-primary h-3 w-3 rounded-full`} />}
             </View>
             <View style={tw`flex-1`}>
-              <Text style={tw`text-base text-gray-900`}>{item.label}</Text>
-              <Text style={tw`text-sm text-gray-500`}>{item.value}</Text>
+              <Text style={tw`text-foreground text-base`}>{item.label}</Text>
+              <Text style={tw`text-subtitle text-sm`}>{item.value}</Text>
             </View>
-            {item.value === deviceTz && <Text style={tw`text-sm text-blue-600`}>Device</Text>}
+            {item.value === deviceTz && <Text style={tw`text-primary text-sm`}>Device</Text>}
           </Pressable>
         )}
       />
 
       <View style={tw`px-6 pb-8`}>
-        <Pressable style={tw`mb-3 rounded-xl bg-blue-600 py-4`} onPress={handleContinue}>
+        <Pressable style={tw`bg-primary mb-3 rounded-xl py-4`} onPress={handleContinue}>
           <Text style={tw`text-center text-lg font-semibold text-white`}>Continue</Text>
         </Pressable>
         <Pressable onPress={handleSkip}>
-          <Text style={tw`text-center text-base text-blue-600`}>Use device timezone</Text>
+          <Text style={tw`text-primary text-center text-base`}>Use device timezone</Text>
         </Pressable>
       </View>
     </View>

@@ -16,12 +16,13 @@ import { useTw } from '@/hooks/useTw';
 import { AlertTriangleIcon, MessageCircleIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService } from '@/services';
+import { colors } from '@/tailwind';
 import type { CommunicationImportance } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddCommunication'>;
 
 const ACTIVE_TEXT = 'text-white';
-const INACTIVE_TEXT = 'text-gray-700';
+const INACTIVE_TEXT = 'text-foreground';
 
 export function AddCommunicationScreen({ navigation }: Props) {
   const tw = useTw();
@@ -69,22 +70,22 @@ export function AddCommunicationScreen({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`flex-1 bg-white`}
+      style={tw`bg-surface flex-1`}
     >
       {/* Header */}
       <View
-        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
+          <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
-        <Text style={tw`text-lg font-semibold text-gray-900`}>Send Message</Text>
+        <Text style={tw`text-foreground font-serif-semibold text-lg`}>Send Message</Text>
         <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
             <Text
-              style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}
+              style={tw`${canSave ? 'text-primary' : 'text-placeholder'} text-base font-semibold`}
             >
               Send
             </Text>
@@ -94,9 +95,9 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Info banner */}
-        <View style={tw`mb-6 flex-row rounded-xl bg-blue-50 p-4`}>
-          <MessageCircleIcon height={16} style={tw`mr-2 mt-0.5 text-blue-800`} width={16} />
-          <Text style={tw`flex-1 text-sm text-blue-800`}>
+        <View style={tw`bg-primary/15 mb-6 flex-row rounded-xl p-4`}>
+          <MessageCircleIcon height={16} style={tw`text-primary mr-2 mt-0.5`} width={16} />
+          <Text style={tw`text-primary flex-1 text-sm`}>
             This creates a permanent, documented record of your message. It{"'"}s not a chat — use
             it for important communications.
           </Text>
@@ -104,11 +105,11 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
         {/* Subject */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Subject *</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Subject *</Text>
           <TextInput
             placeholder="What is this about?"
-            placeholderTextColor="#9CA3AF"
-            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
             value={subject}
             onChangeText={setSubject}
           />
@@ -116,12 +117,12 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
         {/* Body */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Message *</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Message *</Text>
           <TextInput
             multiline
             placeholder="Write your message..."
-            placeholderTextColor="#9CA3AF"
-            style={tw`min-h-40 rounded-xl border border-gray-300 px-4 py-3`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground min-h-40 rounded-xl border px-4 py-3`}
             textAlignVertical="top"
             value={body}
             onChangeText={setBody}
@@ -130,10 +131,10 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
         {/* Importance */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Priority</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Priority</Text>
           <View style={tw`flex-row gap-2`}>
             <Pressable
-              style={tw`flex-1 rounded-lg py-3 ${importance === 'normal' ? 'bg-blue-600' : 'bg-gray-100'}`}
+              style={tw`flex-1 rounded-lg py-3 ${importance === 'normal' ? 'bg-primary' : 'bg-neutral-200'}`}
               onPress={() => setImportance('normal')}
             >
               <Text
@@ -143,7 +144,7 @@ export function AddCommunicationScreen({ navigation }: Props) {
               </Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 flex-row items-center justify-center rounded-lg py-3 ${importance === 'high' ? 'bg-red-600' : 'bg-gray-100'}`}
+              style={tw`flex-1 flex-row items-center justify-center rounded-lg py-3 ${importance === 'high' ? 'bg-error' : 'bg-neutral-200'}`}
               onPress={() => setImportance('high')}
             >
               <AlertTriangleIcon

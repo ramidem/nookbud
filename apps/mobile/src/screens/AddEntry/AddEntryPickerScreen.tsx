@@ -66,37 +66,37 @@ export function AddEntryPickerScreen({ navigation }: Props) {
   const tw = useTw();
 
   return (
-    <View style={tw`flex-1 bg-white`}>
+    <View style={tw`bg-surface flex-1`}>
       {/* Header */}
       <View style={tw`flex-row items-center justify-between px-4 pb-4 pt-14`}>
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
+          <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
-        <Text style={tw`text-lg font-semibold text-gray-900`}>New Entry</Text>
+        <Text style={tw`text-foreground font-serif-semibold text-lg`}>New Entry</Text>
         <View style={tw`w-12`} />
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
-        <Text style={tw`mb-6 text-gray-600`}>What would you like to record?</Text>
+        <Text style={tw`text-subtitle mb-6`}>What would you like to record?</Text>
 
         {ENTRY_OPTIONS.map((option) => (
           <Pressable
             key={option.type}
-            style={tw`mb-3 flex-row items-center rounded-xl bg-gray-50 p-4`}
+            style={tw`bg-background mb-3 flex-row items-center rounded-xl p-4`}
             onPress={() => navigation.navigate(option.screen as never)}
           >
-            <View style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-white`}>
+            <View style={tw`bg-surface mr-4 h-12 w-12 items-center justify-center rounded-full`}>
               <option.Icon
                 height={PICKER_ICON_SIZE}
-                style={tw`text-gray-700`}
+                style={tw`text-foreground`}
                 width={PICKER_ICON_SIZE}
               />
             </View>
             <View style={tw`flex-1`}>
-              <Text style={tw`text-base font-medium text-gray-900`}>{option.title}</Text>
-              <Text style={tw`text-sm text-gray-500`}>{option.description}</Text>
+              <Text style={tw`text-foreground text-base font-medium`}>{option.title}</Text>
+              <Text style={tw`text-subtitle text-sm`}>{option.description}</Text>
             </View>
-            <ChevronRightIcon height={20} style={tw`text-gray-400`} width={20} />
+            <ChevronRightIcon height={20} style={tw`text-placeholder`} width={20} />
           </Pressable>
         ))}
       </ScrollView>

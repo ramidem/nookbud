@@ -6,6 +6,7 @@ import { View, Text, Pressable, ActivityIndicator, TextInput } from 'react-nativ
 import { useTw } from '@/hooks/useTw';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { RelationshipService } from '@/services';
+import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AcceptInvite'>;
 
@@ -67,42 +68,42 @@ export function AcceptInviteScreen({ navigation, route }: Props) {
   };
 
   return (
-    <View style={tw`flex-1 bg-white px-6 pt-16`}>
-      <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Join your co-parent</Text>
-      <Text style={tw`mb-8 text-base text-gray-600`}>
+    <View style={tw`bg-surface flex-1 px-6 pt-16`}>
+      <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Join your co-parent</Text>
+      <Text style={tw`text-subtitle mb-8 text-base`}>
         Enter the invite code shared by your co-parent to connect your accounts.
       </Text>
 
       <View style={tw`mb-4`}>
-        <Text style={tw`mb-2 text-sm font-medium text-gray-700`}>Invite Code</Text>
+        <Text style={tw`text-foreground mb-2 text-sm font-medium`}>Invite Code</Text>
         <TextInput
           autoCapitalize="characters"
           autoCorrect={false}
           editable={!isLoading}
           maxLength={MAX_TOKEN_LENGTH}
           placeholder="ABCD1234"
-          placeholderTextColor="#9CA3AF"
-          style={tw`rounded-xl border border-gray-300 bg-white px-4 py-4 text-center font-mono text-2xl font-bold tracking-widest text-gray-900`}
+          placeholderTextColor={colors.placeholder}
+          style={tw`border-divider bg-surface text-foreground rounded-xl border px-4 py-4 text-center font-mono text-2xl font-bold tracking-widest`}
           value={code}
           onChangeText={handleCodeChange}
         />
       </View>
 
       {error ? (
-        <View style={tw`mb-4 rounded-xl bg-red-50 p-4`}>
-          <Text style={tw`text-sm text-red-700`}>{error}</Text>
+        <View style={tw`bg-error/15 mb-4 rounded-xl p-4`}>
+          <Text style={tw`text-error text-sm`}>{error}</Text>
         </View>
       ) : null}
 
       <Pressable
         disabled={!isCodeValid || isLoading}
         style={tw`mb-4 items-center rounded-xl py-4 ${
-          !isCodeValid || isLoading ? 'bg-blue-300' : 'bg-blue-600'
+          !isCodeValid || isLoading ? 'bg-disabled' : 'bg-primary'
         }`}
         onPress={handleJoin}
       >
         {isLoading ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color={colors.white} />
         ) : (
           <Text style={tw`text-lg font-semibold text-white`}>Join</Text>
         )}
@@ -112,7 +113,7 @@ export function AcceptInviteScreen({ navigation, route }: Props) {
 
       <View style={tw`pb-8`}>
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-center text-base text-gray-500`}>Go back</Text>
+          <Text style={tw`text-subtitle text-center text-base`}>Go back</Text>
         </Pressable>
       </View>
     </View>

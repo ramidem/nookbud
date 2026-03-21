@@ -285,21 +285,21 @@ at time of creation. Edit history is preserved in the application.
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CoParent Timeline Report</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
-    h1 { color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
-    .meta { color: #6b7280; font-size: 14px; margin-bottom: 20px; }
-    .entry { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; color: #2F2F2F; }
+    h1 { color: #2F2F2F; border-bottom: 2px solid #C8BFB6; padding-bottom: 10px; }
+    .meta { color: #6E6A66; font-size: 14px; margin-bottom: 20px; }
+    .entry { border: 1px solid #C8BFB6; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
     .entry-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-    .entry-type { font-weight: 600; color: #374151; }
-    .entry-date { color: #6b7280; font-size: 14px; }
+    .entry-type { font-weight: 600; color: #2F2F2F; }
+    .entry-date { color: #6E6A66; font-size: 14px; }
     .entry-content { margin-top: 12px; }
     .status { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-    .status-pending { background: #fef3c7; color: #92400e; }
-    .status-acknowledged { background: #d1fae5; color: #065f46; }
-    .status-disputed { background: #fee2e2; color: #991b1b; }
-    .attachment { background: #f3f4f6; padding: 8px; border-radius: 4px; margin-top: 8px; font-size: 14px; }
-    .hash { font-family: monospace; font-size: 12px; color: #6b7280; }
-    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; }
+    .status-pending { background: #FBF4E1; color: #D9B86C; }
+    .status-acknowledged { background: #E8F3EB; color: #7FAF8E; }
+    .status-disputed { background: #F5E5E5; color: #B76E6E; }
+    .attachment { background: #F7F3EE; padding: 8px; border-radius: 4px; margin-top: 8px; font-size: 14px; }
+    .hash { font-family: monospace; font-size: 12px; color: #6E6A66; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #C8BFB6; font-size: 12px; color: #6E6A66; }
   </style>
 </head>
 <body>

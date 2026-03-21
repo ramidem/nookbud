@@ -15,6 +15,7 @@ import {
   type TimelineEntry,
   type TimelineQueryParams,
 } from '@/services';
+import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'Timeline'>;
 
@@ -136,23 +137,23 @@ export function TimelineScreen({ navigation }: Props) {
 
   if (isLoading) {
     return (
-      <View style={tw`flex-1 items-center justify-center bg-gray-50`}>
-        <ActivityIndicator color="#2563EB" size="large" />
+      <View style={tw`bg-background flex-1 items-center justify-center`}>
+        <ActivityIndicator color={colors.primary} size="large" />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-gray-50`}>
+    <View style={tw`bg-background flex-1`}>
       {/* Header */}
-      <View style={tw`border-b border-gray-100 bg-white px-4 pb-4 pt-14`}>
+      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
         <View style={tw`flex-row items-center justify-between`}>
-          <Text style={tw`text-2xl font-bold text-gray-900`}>Timeline</Text>
+          <Text style={tw`text-foreground font-serif-bold text-2xl`}>Timeline</Text>
           <Pressable
-            style={tw`${hasActiveFilters ? 'bg-blue-100' : 'bg-gray-100'} rounded-lg px-3 py-2`}
+            style={tw`${hasActiveFilters ? 'bg-primary/15' : 'bg-neutral-200'} rounded-lg px-3 py-2`}
             onPress={() => setShowFilters(true)}
           >
-            <Text style={tw`${hasActiveFilters ? 'text-blue-600' : 'text-gray-600'} font-medium`}>
+            <Text style={tw`${hasActiveFilters ? 'text-primary' : 'text-subtitle'} font-medium`}>
               {hasActiveFilters ? 'Filtered' : 'Filter'}
             </Text>
           </Pressable>
@@ -162,12 +163,12 @@ export function TimelineScreen({ navigation }: Props) {
       {/* Entry List */}
       {entries.length === 0 ? (
         <View style={tw`flex-1 items-center justify-center px-6`}>
-          <PencilLineIcon height={48} style={tw`mb-4 text-gray-300`} width={48} />
-          <Text style={tw`mb-2 text-xl font-medium text-gray-900`}>No entries yet</Text>
-          <Text style={tw`mb-6 text-center text-gray-600`}>
+          <PencilLineIcon height={48} style={tw`text-placeholder mb-4`} width={48} />
+          <Text style={tw`text-foreground mb-2 text-xl font-medium`}>No entries yet</Text>
+          <Text style={tw`text-subtitle mb-6 text-center`}>
             Start documenting by adding your first entry.
           </Text>
-          <Pressable style={tw`rounded-xl bg-blue-600 px-6 py-3`} onPress={handleAddEntry}>
+          <Pressable style={tw`bg-primary rounded-xl px-6 py-3`} onPress={handleAddEntry}>
             <Text style={tw`font-semibold text-white`}>Add Entry</Text>
           </Pressable>
         </View>
@@ -179,7 +180,7 @@ export function TimelineScreen({ navigation }: Props) {
           ListFooterComponent={
             isLoadingMore ? (
               <View style={tw`py-4`}>
-                <ActivityIndicator color="#2563EB" />
+                <ActivityIndicator color={colors.primary} />
               </View>
             ) : null
           }
@@ -193,7 +194,7 @@ export function TimelineScreen({ navigation }: Props) {
       {/* FAB */}
       {entries.length > 0 && (
         <Pressable
-          style={tw`absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-lg`}
+          style={tw`bg-primary absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full shadow-lg`}
           onPress={handleAddEntry}
         >
           <Text style={tw`text-2xl font-light text-white`}>+</Text>

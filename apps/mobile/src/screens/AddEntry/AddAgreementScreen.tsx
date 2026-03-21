@@ -18,6 +18,7 @@ import { useTw } from '@/hooks/useTw';
 import { PencilLineIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService } from '@/services';
+import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddAgreement'>;
 
@@ -70,22 +71,22 @@ export function AddAgreementScreen({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`flex-1 bg-white`}
+      style={tw`bg-surface flex-1`}
     >
       {/* Header */}
       <View
-        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
+          <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
-        <Text style={tw`text-lg font-semibold text-gray-900`}>Add Agreement</Text>
+        <Text style={tw`text-foreground font-serif-semibold text-lg`}>Add Agreement</Text>
         <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
             <Text
-              style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}
+              style={tw`${canSave ? 'text-primary' : 'text-placeholder'} text-base font-semibold`}
             >
               Save
             </Text>
@@ -95,9 +96,9 @@ export function AddAgreementScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Info banner */}
-        <View style={tw`mb-6 flex-row rounded-xl bg-amber-50 p-4`}>
-          <PencilLineIcon height={16} style={tw`mr-2 mt-0.5 text-amber-800`} width={16} />
-          <Text style={tw`flex-1 text-sm text-amber-800`}>
+        <View style={tw`bg-warning/15 mb-6 flex-row rounded-xl p-4`}>
+          <PencilLineIcon height={16} style={tw`text-warning mr-2 mt-0.5`} width={16} />
+          <Text style={tw`text-warning flex-1 text-sm`}>
             Agreements become part of your permanent record. Both parents can see and acknowledge
             them.
           </Text>
@@ -105,11 +106,11 @@ export function AddAgreementScreen({ navigation }: Props) {
 
         {/* Title */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Agreement Title *</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Agreement Title *</Text>
           <TextInput
             placeholder="e.g., Holiday Schedule 2026"
-            placeholderTextColor="#9CA3AF"
-            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
             value={title}
             onChangeText={setTitle}
           />
@@ -117,12 +118,12 @@ export function AddAgreementScreen({ navigation }: Props) {
 
         {/* Terms */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Terms *</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Terms *</Text>
           <TextInput
             multiline
             placeholder="Write the full terms of this agreement..."
-            placeholderTextColor="#9CA3AF"
-            style={tw`min-h-40 rounded-xl border border-gray-300 px-4 py-3`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground min-h-40 rounded-xl border px-4 py-3`}
             textAlignVertical="top"
             value={termsText}
             onChangeText={setTermsText}

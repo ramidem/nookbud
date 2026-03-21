@@ -16,14 +16,15 @@ import type { Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService, ChildService, UserService } from '@/services';
+import { colors } from '@/tailwind';
 import type { ExpenseCategory, SplitType } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddExpense'>;
 
-const ACTIVE_BG = 'bg-blue-600';
-const INACTIVE_BG = 'bg-gray-100';
+const ACTIVE_BG = 'bg-primary';
+const INACTIVE_BG = 'bg-neutral-200';
 const ACTIVE_TEXT = 'text-white';
-const INACTIVE_TEXT = 'text-gray-700';
+const INACTIVE_TEXT = 'text-foreground';
 
 const CATEGORIES: { value: ExpenseCategory; label: string }[] = [
   { label: 'Childcare', value: 'childcare' },
@@ -113,22 +114,22 @@ export function AddExpenseScreen({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`flex-1 bg-white`}
+      style={tw`bg-surface flex-1`}
     >
       {/* Header */}
       <View
-        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
+          <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
-        <Text style={tw`text-lg font-semibold text-gray-900`}>Add Expense</Text>
+        <Text style={tw`text-foreground font-serif-semibold text-lg`}>Add Expense</Text>
         <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
             <Text
-              style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}
+              style={tw`${canSave ? 'text-primary' : 'text-placeholder'} text-base font-semibold`}
             >
               Save
             </Text>
@@ -139,7 +140,7 @@ export function AddExpenseScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Amount */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Amount</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Amount</Text>
           <View style={tw`flex-row items-center`}>
             <View style={tw`mr-2`}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -162,8 +163,8 @@ export function AddExpenseScreen({ navigation }: Props) {
           <TextInput
             keyboardType="decimal-pad"
             placeholder="0.00"
-            placeholderTextColor="#9CA3AF"
-            style={tw`mt-2 rounded-xl border border-gray-300 px-4 py-4 text-2xl font-semibold`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground mt-2 rounded-xl border px-4 py-4 text-2xl font-semibold`}
             value={amount}
             onChangeText={setAmount}
           />
@@ -171,11 +172,11 @@ export function AddExpenseScreen({ navigation }: Props) {
 
         {/* Description */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Description</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Description</Text>
           <TextInput
             placeholder="What was this expense for?"
-            placeholderTextColor="#9CA3AF"
-            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
             value={description}
             onChangeText={setDescription}
           />
@@ -183,7 +184,7 @@ export function AddExpenseScreen({ navigation }: Props) {
 
         {/* Category */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Category</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Category</Text>
           <View style={tw`flex-row flex-wrap gap-2`}>
             {CATEGORIES.map((cat) => (
               <Pressable
@@ -201,7 +202,7 @@ export function AddExpenseScreen({ navigation }: Props) {
 
         {/* Split Type */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Split</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Split</Text>
           <View style={tw`flex-row gap-2`}>
             {SPLIT_OPTIONS.map((opt) => (
               <Pressable
@@ -222,7 +223,7 @@ export function AddExpenseScreen({ navigation }: Props) {
         {/* Child (optional) */}
         {children.length > 0 && (
           <View style={tw`mb-6`}>
-            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>For Child (optional)</Text>
+            <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>For Child (optional)</Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
               <Pressable
                 style={tw`rounded-lg px-4 py-2 ${selectedChildId === null ? ACTIVE_BG : INACTIVE_BG}`}

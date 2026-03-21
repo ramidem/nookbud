@@ -19,14 +19,15 @@ import { useTw } from '@/hooks/useTw';
 import { CameraIcon, CrossIcon, FileTextIcon, ImageIcon, LockIcon, PaperclipIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService, ChildService, type AttachmentInput } from '@/services';
+import { colors } from '@/tailwind';
 import type { DocumentType } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddUpload'>;
 
-const ACTIVE_BG = 'bg-blue-600';
-const INACTIVE_BG = 'bg-gray-100';
+const ACTIVE_BG = 'bg-primary';
+const INACTIVE_BG = 'bg-neutral-200';
 const ACTIVE_TEXT = 'text-white';
-const INACTIVE_TEXT = 'text-gray-700';
+const INACTIVE_TEXT = 'text-foreground';
 const DOC_ICON_SIZE = 16;
 const BUTTON_ICON_SIZE = 24;
 
@@ -152,22 +153,22 @@ export function AddUploadScreen({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`flex-1 bg-white`}
+      style={tw`bg-surface flex-1`}
     >
       {/* Header */}
       <View
-        style={tw`flex-row items-center justify-between border-b border-gray-100 px-4 pb-4 pt-14`}
+        style={tw`border-divider flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
       >
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={tw`text-base text-blue-600`}>Cancel</Text>
+          <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
-        <Text style={tw`text-lg font-semibold text-gray-900`}>Upload Document</Text>
+        <Text style={tw`text-foreground font-serif-semibold text-lg`}>Upload Document</Text>
         <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
             <Text
-              style={tw`${canSave ? 'text-blue-600' : 'text-gray-400'} text-base font-semibold`}
+              style={tw`${canSave ? 'text-primary' : 'text-placeholder'} text-base font-semibold`}
             >
               Save
             </Text>
@@ -178,11 +179,11 @@ export function AddUploadScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Title */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Title *</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Title *</Text>
           <TextInput
             placeholder="e.g., Medical Report - March 2026"
-            placeholderTextColor="#9CA3AF"
-            style={tw`rounded-xl border border-gray-300 px-4 py-3`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
             value={title}
             onChangeText={setTitle}
           />
@@ -190,7 +191,7 @@ export function AddUploadScreen({ navigation }: Props) {
 
         {/* Document Type */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Type</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Type</Text>
           <View style={tw`flex-row flex-wrap gap-2`}>
             {DOC_TYPES.map((type) => (
               <Pressable
@@ -208,25 +209,28 @@ export function AddUploadScreen({ navigation }: Props) {
 
         {/* Files */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Files *</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Files *</Text>
 
           {/* File list */}
           {files.length > 0 && (
             <View style={tw`mb-4`}>
               {files.map((file, index) => (
-                <View key={index} style={tw`mb-2 flex-row items-center rounded-lg bg-gray-50 p-3`}>
+                <View
+                  key={index}
+                  style={tw`bg-background mb-2 flex-row items-center rounded-lg p-3`}
+                >
                   <PaperclipIcon
                     height={DOC_ICON_SIZE}
-                    style={tw`mr-1.5 text-gray-500`}
+                    style={tw`text-subtitle mr-1.5`}
                     width={DOC_ICON_SIZE}
                   />
-                  <Text numberOfLines={1} style={tw`flex-1 text-gray-700`}>
+                  <Text numberOfLines={1} style={tw`text-foreground flex-1`}>
                     {file.filename}
                   </Text>
                   <Pressable onPress={() => removeFile(index)}>
                     <CrossIcon
                       height={DOC_ICON_SIZE}
-                      style={tw`text-red-500`}
+                      style={tw`text-error`}
                       width={DOC_ICON_SIZE}
                     />
                   </Pressable>
@@ -238,49 +242,49 @@ export function AddUploadScreen({ navigation }: Props) {
           {/* Add file buttons */}
           <View style={tw`flex-row gap-2`}>
             <Pressable
-              style={tw`flex-1 items-center rounded-xl bg-gray-100 py-4`}
+              style={tw`flex-1 items-center rounded-xl bg-neutral-200 py-4`}
               onPress={handlePickDocument}
             >
               <FileTextIcon
                 height={BUTTON_ICON_SIZE}
-                style={tw`mb-1 text-gray-600`}
+                style={tw`text-subtitle mb-1`}
                 width={BUTTON_ICON_SIZE}
               />
-              <Text style={tw`text-sm text-gray-700`}>Document</Text>
+              <Text style={tw`text-foreground text-sm`}>Document</Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 items-center rounded-xl bg-gray-100 py-4`}
+              style={tw`flex-1 items-center rounded-xl bg-neutral-200 py-4`}
               onPress={handlePickImage}
             >
               <ImageIcon
                 height={BUTTON_ICON_SIZE}
-                style={tw`mb-1 text-gray-600`}
+                style={tw`text-subtitle mb-1`}
                 width={BUTTON_ICON_SIZE}
               />
-              <Text style={tw`text-sm text-gray-700`}>Gallery</Text>
+              <Text style={tw`text-foreground text-sm`}>Gallery</Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 items-center rounded-xl bg-gray-100 py-4`}
+              style={tw`flex-1 items-center rounded-xl bg-neutral-200 py-4`}
               onPress={handleTakePhoto}
             >
               <CameraIcon
                 height={BUTTON_ICON_SIZE}
-                style={tw`mb-1 text-gray-600`}
+                style={tw`text-subtitle mb-1`}
                 width={BUTTON_ICON_SIZE}
               />
-              <Text style={tw`text-sm text-gray-700`}>Camera</Text>
+              <Text style={tw`text-foreground text-sm`}>Camera</Text>
             </Pressable>
           </View>
         </View>
 
         {/* Description */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Description</Text>
+          <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Description</Text>
           <TextInput
             multiline
             placeholder="What is this document about?"
-            placeholderTextColor="#9CA3AF"
-            style={tw`h-24 rounded-xl border border-gray-300 px-4 py-3`}
+            placeholderTextColor={colors.placeholder}
+            style={tw`border-divider text-foreground h-24 rounded-xl border px-4 py-3`}
             textAlignVertical="top"
             value={description}
             onChangeText={setDescription}
@@ -290,7 +294,7 @@ export function AddUploadScreen({ navigation }: Props) {
         {/* Child */}
         {children.length > 0 && (
           <View style={tw`mb-6`}>
-            <Text style={tw`mb-2 text-sm font-medium text-gray-600`}>Related Child</Text>
+            <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Related Child</Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
               <Pressable
                 style={tw`rounded-lg px-4 py-2 ${selectedChildId === null ? ACTIVE_BG : INACTIVE_BG}`}
@@ -316,9 +320,9 @@ export function AddUploadScreen({ navigation }: Props) {
         )}
 
         {/* Info */}
-        <View style={tw`flex-row rounded-xl bg-green-50 p-4`}>
-          <LockIcon height={16} style={tw`mr-2 mt-0.5 text-green-800`} width={16} />
-          <Text style={tw`flex-1 text-sm text-green-800`}>
+        <View style={tw`bg-success/15 flex-row rounded-xl p-4`}>
+          <LockIcon height={16} style={tw`text-success mr-2 mt-0.5`} width={16} />
+          <Text style={tw`text-success flex-1 text-sm`}>
             Files are stored securely with SHA-256 verification. The hash proves they haven{"'"}t
             been modified.
           </Text>

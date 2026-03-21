@@ -25,6 +25,7 @@ import {
   type NotificationPrefs,
   type PermissionStatus,
 } from '@/services';
+import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
 
@@ -134,101 +135,103 @@ export function SettingsScreen({ navigation }: Props) {
 
   if (isLoading) {
     return (
-      <View style={tw`flex-1 items-center justify-center bg-white`}>
-        <ActivityIndicator color="#2563EB" size="large" />
+      <View style={tw`bg-surface flex-1 items-center justify-center`}>
+        <ActivityIndicator color={colors.primary} size="large" />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-gray-50`}>
+    <View style={tw`bg-background flex-1`}>
       {/* Header */}
-      <View style={tw`border-b border-gray-100 bg-white px-4 pb-4 pt-14`}>
-        <Text style={tw`text-2xl font-bold text-gray-900`}>Settings</Text>
+      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
+        <Text style={tw`text-foreground font-serif-bold text-2xl`}>Settings</Text>
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Profile Section */}
-        <View style={tw`mb-4 rounded-xl bg-white`}>
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
           <Pressable
-            style={tw`flex-row items-center border-b border-gray-100 p-4`}
+            style={tw`border-divider flex-row items-center border-b p-4`}
             onPress={() => navigation.navigate('ProfileSettings')}
           >
-            <View style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-blue-100`}>
-              <UserIcon height={24} style={tw`text-blue-600`} width={24} />
+            <View
+              style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-neutral-200`}
+            >
+              <UserIcon height={24} style={tw`text-primary`} width={24} />
             </View>
             <View style={tw`flex-1`}>
-              <Text style={tw`text-lg font-medium text-gray-900`}>
+              <Text style={tw`text-foreground text-lg font-medium`}>
                 {user?.displayName || 'Profile'}
               </Text>
-              <Text style={tw`text-sm text-gray-500`}>
+              <Text style={tw`text-subtitle text-sm`}>
                 {user?.timezone} • {user?.defaultCurrency}
               </Text>
             </View>
-            <ChevronRightIcon height={20} style={tw`text-gray-400`} width={20} />
+            <ChevronRightIcon height={20} style={tw`text-placeholder`} width={20} />
           </Pressable>
         </View>
 
         {/* Children Section */}
-        <View style={tw`mb-4 rounded-xl bg-white`}>
-          <View style={tw`border-b border-gray-100 px-4 py-3`}>
-            <Text style={tw`text-sm font-medium uppercase tracking-wide text-gray-600`}>
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
+          <View style={tw`border-divider border-b px-4 py-3`}>
+            <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Children
             </Text>
           </View>
           {children.length === 0 ? (
             <View style={tw`p-4`}>
-              <Text style={tw`text-gray-500`}>No children added</Text>
+              <Text style={tw`text-subtitle`}>No children added</Text>
             </View>
           ) : (
             children.map((child, index) => (
               <Pressable
                 key={child.id}
                 style={tw`flex-row items-center p-4 ${
-                  index < children.length - 1 ? 'border-b border-gray-100' : ''
+                  index < children.length - 1 ? 'border-divider border-b' : ''
                 }`}
                 onPress={() => navigation.navigate('ChildSettings', { childId: child.id })}
               >
                 <View
-                  style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-green-100`}
+                  style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
                 >
-                  <BabyIcon height={20} style={tw`text-green-600`} width={20} />
+                  <BabyIcon height={20} style={tw`text-success`} width={20} />
                 </View>
                 <View style={tw`flex-1`}>
-                  <Text style={tw`text-base font-medium text-gray-900`}>{child.name}</Text>
+                  <Text style={tw`text-foreground text-base font-medium`}>{child.name}</Text>
                   {child.dateOfBirth && (
-                    <Text style={tw`text-sm text-gray-500`}>
+                    <Text style={tw`text-subtitle text-sm`}>
                       DOB: {child.dateOfBirth.toLocaleDateString()}
                     </Text>
                   )}
                 </View>
-                <ChevronRightIcon height={16} style={tw`text-gray-400`} width={16} />
+                <ChevronRightIcon height={16} style={tw`text-placeholder`} width={16} />
               </Pressable>
             ))
           )}
           <Pressable
-            style={tw`flex-row items-center justify-center border-t border-gray-100 p-4`}
+            style={tw`border-divider flex-row items-center justify-center border-t p-4`}
             onPress={() => navigation.navigate('AddChildSettings')}
           >
-            <Text style={tw`font-medium text-blue-600`}>+ Add Child</Text>
+            <Text style={tw`text-primary font-medium`}>+ Add Child</Text>
           </Pressable>
         </View>
 
         {/* Notifications Section */}
-        <View style={tw`mb-4 rounded-xl bg-white`}>
-          <View style={tw`border-b border-gray-100 px-4 py-3`}>
-            <Text style={tw`text-sm font-medium uppercase tracking-wide text-gray-600`}>
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
+          <View style={tw`border-divider border-b px-4 py-3`}>
+            <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Notifications
             </Text>
           </View>
 
           {permissionStatus === 'denied' ? (
             <View style={tw`p-4`}>
-              <Text style={tw`mb-2 text-sm text-gray-500`}>
+              <Text style={tw`text-subtitle mb-2 text-sm`}>
                 Notifications are disabled. Enable them in your device settings.
               </Text>
               <Pressable
-                style={tw`rounded-lg bg-blue-600 py-3`}
+                style={tw`bg-primary rounded-lg py-3`}
                 onPress={() => Linking.openSettings()}
               >
                 <Text style={tw`text-center text-sm font-medium text-white`}>
@@ -241,15 +244,15 @@ export function SettingsScreen({ navigation }: Props) {
               <View
                 key={toggle.key}
                 style={tw`flex-row items-center justify-between px-4 py-3 ${
-                  index < NOTIFICATION_TOGGLES.length - 1 ? 'border-b border-gray-100' : ''
+                  index < NOTIFICATION_TOGGLES.length - 1 ? 'border-divider border-b' : ''
                 }`}
               >
                 <View style={tw`mr-3 flex-1`}>
-                  <Text style={tw`text-base font-medium text-gray-900`}>{toggle.label}</Text>
-                  <Text style={tw`text-sm text-gray-500`}>{toggle.description}</Text>
+                  <Text style={tw`text-foreground text-base font-medium`}>{toggle.label}</Text>
+                  <Text style={tw`text-subtitle text-sm`}>{toggle.description}</Text>
                 </View>
                 <Switch
-                  trackColor={{ false: '#D1D5DB', true: '#6F8F7B' }}
+                  trackColor={{ false: colors.disabled, true: colors.primary }}
                   value={notifPrefs[toggle.key]}
                   onValueChange={() => handleToggleNotifPref(toggle.key)}
                 />
@@ -259,9 +262,9 @@ export function SettingsScreen({ navigation }: Props) {
         </View>
 
         {/* Relationship Section */}
-        <View style={tw`mb-4 rounded-xl bg-white`}>
-          <View style={tw`border-b border-gray-100 px-4 py-3`}>
-            <Text style={tw`text-sm font-medium uppercase tracking-wide text-gray-600`}>
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
+          <View style={tw`border-divider border-b px-4 py-3`}>
+            <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
               Co-Parent Connection
             </Text>
           </View>
@@ -269,37 +272,37 @@ export function SettingsScreen({ navigation }: Props) {
             {relationship?.parentBId ? (
               <View style={tw`flex-row items-center`}>
                 <View
-                  style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-purple-100`}
+                  style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
                 >
-                  <UsersIcon height={20} style={tw`text-purple-600`} width={20} />
+                  <UsersIcon height={20} style={tw`text-accent`} width={20} />
                 </View>
                 <View style={tw`flex-1`}>
-                  <Text style={tw`text-base font-medium text-green-600`}>Connected</Text>
-                  <Text style={tw`text-sm text-gray-500`}>Your co-parent has joined</Text>
+                  <Text style={tw`text-success text-base font-medium`}>Connected</Text>
+                  <Text style={tw`text-subtitle text-sm`}>Your co-parent has joined</Text>
                 </View>
               </View>
             ) : (
               <View>
-                <Text style={tw`mb-2 text-gray-700`}>
+                <Text style={tw`text-foreground mb-2`}>
                   Your co-parent hasn{"'"}t joined yet. Share this code:
                 </Text>
-                <View style={tw`mb-3 rounded-lg bg-gray-100 p-3`}>
-                  <Text style={tw`text-center font-mono text-xl font-bold text-gray-900`}>
+                <View style={tw`mb-3 rounded-lg bg-neutral-200 p-3`}>
+                  <Text style={tw`text-foreground text-center font-mono text-xl font-bold`}>
                     {relationship?.inviteToken || 'No code'}
                   </Text>
                 </View>
                 {relationship?.inviteToken ? (
                   <View style={tw`flex-row gap-3`}>
                     <Pressable
-                      style={tw`flex-1 rounded-lg bg-gray-100 py-3`}
+                      style={tw`flex-1 rounded-lg bg-neutral-200 py-3`}
                       onPress={handleCopyCode}
                     >
-                      <Text style={tw`text-center text-sm font-medium text-gray-900`}>
+                      <Text style={tw`text-foreground text-center text-sm font-medium`}>
                         {copied ? 'Copied!' : 'Copy Code'}
                       </Text>
                     </Pressable>
                     <Pressable
-                      style={tw`flex-1 rounded-lg bg-blue-600 py-3`}
+                      style={tw`bg-primary flex-1 rounded-lg py-3`}
                       onPress={handleShareInvite}
                     >
                       <Text style={tw`text-center text-sm font-medium text-white`}>
@@ -314,32 +317,32 @@ export function SettingsScreen({ navigation }: Props) {
         </View>
 
         {/* About Section */}
-        <View style={tw`mb-4 rounded-xl bg-white`}>
-          <View style={tw`border-b border-gray-100 px-4 py-3`}>
-            <Text style={tw`text-sm font-medium uppercase tracking-wide text-gray-600`}>About</Text>
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
+          <View style={tw`border-divider border-b px-4 py-3`}>
+            <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>About</Text>
           </View>
           <View style={tw`p-4`}>
             <View style={tw`mb-2 flex-row justify-between`}>
-              <Text style={tw`text-gray-600`}>Version</Text>
-              <Text style={tw`text-gray-900`}>1.0.0</Text>
+              <Text style={tw`text-subtitle`}>Version</Text>
+              <Text style={tw`text-foreground`}>1.0.0</Text>
             </View>
             <View style={tw`flex-row justify-between`}>
-              <Text style={tw`text-gray-600`}>Build</Text>
-              <Text style={tw`text-gray-900`}>Phase 1 MVP</Text>
+              <Text style={tw`text-subtitle`}>Build</Text>
+              <Text style={tw`text-foreground`}>Phase 1 MVP</Text>
             </View>
           </View>
         </View>
 
         {/* Danger Zone */}
-        <View style={tw`mb-4 rounded-xl bg-white`}>
-          <View style={tw`border-b border-gray-100 px-4 py-3`}>
-            <Text style={tw`text-sm font-medium uppercase tracking-wide text-red-600`}>
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
+          <View style={tw`border-divider border-b px-4 py-3`}>
+            <Text style={tw`text-error text-sm font-medium uppercase tracking-wide`}>
               Danger Zone
             </Text>
           </View>
           <Pressable style={tw`p-4`} onPress={handleClearData}>
-            <Text style={tw`font-medium text-red-600`}>Clear All Local Data</Text>
-            <Text style={tw`mt-1 text-sm text-gray-500`}>Delete everything and start fresh</Text>
+            <Text style={tw`text-error font-medium`}>Clear All Local Data</Text>
+            <Text style={tw`text-subtitle mt-1 text-sm`}>Delete everything and start fresh</Text>
           </Pressable>
         </View>
       </ScrollView>

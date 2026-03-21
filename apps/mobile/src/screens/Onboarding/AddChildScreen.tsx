@@ -15,6 +15,7 @@ import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 import { RelationshipService, ChildService } from '@/services';
+import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'AddChild'>;
 
@@ -87,19 +88,19 @@ export function AddChildScreen({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`flex-1 bg-white`}
+      style={tw`bg-surface flex-1`}
     >
       <ScrollView contentContainerStyle={tw`px-6 pb-8 pt-16`}>
-        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Add your children</Text>
-        <Text style={tw`mb-8 text-base text-gray-600`}>You can add more later in settings.</Text>
+        <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Add your children</Text>
+        <Text style={tw`text-subtitle mb-8 text-base`}>You can add more later in settings.</Text>
 
         {children.map((child, index) => (
-          <View key={child.id} style={tw`mb-6 rounded-xl bg-gray-50 p-4`}>
+          <View key={child.id} style={tw`bg-background mb-6 rounded-xl p-4`}>
             <View style={tw`mb-4 flex-row items-center justify-between`}>
-              <Text style={tw`text-sm font-medium text-gray-600`}>Child {index + 1}</Text>
+              <Text style={tw`text-subtitle text-sm font-medium`}>Child {index + 1}</Text>
               {children.length > 1 && (
                 <Pressable onPress={() => removeChild(child.id)}>
-                  <Text style={tw`text-sm text-red-500`}>Remove</Text>
+                  <Text style={tw`text-error text-sm`}>Remove</Text>
                 </Pressable>
               )}
             </View>
@@ -107,8 +108,8 @@ export function AddChildScreen({ navigation }: Props) {
             <TextInput
               autoCapitalize="words"
               placeholder="Child's name"
-              placeholderTextColor="#9CA3AF"
-              style={tw`mb-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-base`}
+              placeholderTextColor={colors.placeholder}
+              style={tw`border-divider bg-surface text-foreground mb-3 rounded-lg border px-4 py-3 text-base`}
               value={child.name}
               onChangeText={(value) => updateChildName(child.id, value)}
             />
@@ -125,23 +126,23 @@ export function AddChildScreen({ navigation }: Props) {
         ))}
 
         <Pressable
-          style={tw`mb-8 rounded-xl border-2 border-dashed border-gray-300 py-4`}
+          style={tw`border-divider mb-8 rounded-xl border-2 border-dashed py-4`}
           onPress={addChild}
         >
-          <Text style={tw`text-center text-base font-medium text-blue-600`}>
+          <Text style={tw`text-primary text-center text-base font-medium`}>
             + Add another child
           </Text>
         </Pressable>
 
         {error && (
-          <View style={tw`mb-4 rounded-xl bg-red-50 p-4`}>
-            <Text style={tw`text-red-600`}>{error}</Text>
+          <View style={tw`bg-error/15 mb-4 rounded-xl p-4`}>
+            <Text style={tw`text-error`}>{error}</Text>
           </View>
         )}
 
         <Pressable
           disabled={!canContinue || isLoading}
-          style={tw`${canContinue && !isLoading ? 'bg-blue-600' : 'bg-gray-300'} flex-row justify-center rounded-xl py-4`}
+          style={tw`${canContinue && !isLoading ? 'bg-primary' : 'bg-disabled'} flex-row justify-center rounded-xl py-4`}
           onPress={handleContinue}
         >
           {isLoading ? (

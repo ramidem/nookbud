@@ -39,10 +39,10 @@ export function OnboardingCurrencyScreen({ navigation, route }: Props) {
   };
 
   return (
-    <View style={tw`flex-1 bg-white`}>
+    <View style={tw`bg-surface flex-1`}>
       <View style={tw`px-6 pt-16`}>
-        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Default currency</Text>
-        <Text style={tw`mb-4 text-base text-gray-600`}>
+        <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Default currency</Text>
+        <Text style={tw`text-subtitle mb-4 text-base`}>
           Used for tracking expenses. You can use other currencies per expense.
         </Text>
       </View>
@@ -53,27 +53,27 @@ export function OnboardingCurrencyScreen({ navigation, route }: Props) {
         keyExtractor={(item) => item.code}
         renderItem={({ item }) => (
           <Pressable
-            style={tw`flex-row items-center border-b border-gray-100 py-4`}
+            style={tw`border-divider flex-row items-center border-b py-4`}
             onPress={() => setSelected(item.code)}
           >
             <View
               style={tw`mr-4 h-6 w-6 items-center justify-center rounded-full border-2 ${
-                selected === item.code ? 'border-blue-600' : 'border-gray-300'
+                selected === item.code ? 'border-primary' : 'border-divider'
               }`}
             >
-              {selected === item.code && <View style={tw`h-3 w-3 rounded-full bg-blue-600`} />}
+              {selected === item.code && <View style={tw`bg-primary h-3 w-3 rounded-full`} />}
             </View>
-            <Text style={tw`w-12 text-lg font-medium text-gray-900`}>{item.symbol}</Text>
+            <Text style={tw`text-foreground w-12 text-lg font-medium`}>{item.symbol}</Text>
             <View style={tw`flex-1`}>
-              <Text style={tw`text-base text-gray-900`}>{item.name}</Text>
-              <Text style={tw`text-sm text-gray-500`}>{item.code}</Text>
+              <Text style={tw`text-foreground text-base`}>{item.name}</Text>
+              <Text style={tw`text-subtitle text-sm`}>{item.code}</Text>
             </View>
           </Pressable>
         )}
       />
 
       <View style={tw`px-6 pb-8`}>
-        <Pressable style={tw`rounded-xl bg-blue-600 py-4`} onPress={handleContinue}>
+        <Pressable style={tw`bg-primary rounded-xl py-4`} onPress={handleContinue}>
           <Text style={tw`text-center text-lg font-semibold text-white`}>Continue</Text>
         </Pressable>
       </View>

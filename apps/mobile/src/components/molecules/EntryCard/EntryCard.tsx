@@ -36,9 +36,9 @@ const TYPE_LABELS: Record<EntryType, string> = {
 };
 
 const STATUS_COLORS = {
-  acknowledged: 'bg-green-100 text-green-800',
-  disputed: 'bg-red-100 text-red-800',
-  pending: 'bg-amber-100 text-amber-800',
+  acknowledged: 'bg-success/15 text-success',
+  disputed: 'bg-error/15 text-error',
+  pending: 'bg-warning/15 text-warning',
 };
 
 const MS_PER_DAY = 86400000;
@@ -130,35 +130,35 @@ export function EntryCard({ entry, onPress }: Props) {
 
   return (
     <Pressable
-      style={tw`mb-3 rounded-xl border border-gray-100 bg-white p-4 shadow-sm`}
+      style={tw`border-divider bg-surface mb-3 rounded-xl border p-4 shadow-sm`}
       onPress={() => onPress(entry)}
     >
       <View style={tw`flex-row items-start`}>
         {/* Icon */}
-        <View style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-gray-100`}>
-          <Icon height={ENTRY_ICON_SIZE} style={tw`text-gray-600`} width={ENTRY_ICON_SIZE} />
+        <View style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}>
+          <Icon height={ENTRY_ICON_SIZE} style={tw`text-subtitle`} width={ENTRY_ICON_SIZE} />
         </View>
 
         {/* Content */}
         <View style={tw`flex-1`}>
           <View style={tw`mb-1 flex-row items-center`}>
-            <Text style={tw`text-xs uppercase tracking-wide text-gray-500`}>
+            <Text style={tw`text-subtitle text-xs uppercase tracking-wide`}>
               {TYPE_LABELS[entry.type]}
             </Text>
-            <Text style={tw`mx-2 text-gray-300`}>•</Text>
-            <Text style={tw`text-xs text-gray-500`}>{formatDate(entry.createdAt)}</Text>
+            <Text style={tw`text-placeholder mx-2`}>•</Text>
+            <Text style={tw`text-subtitle text-xs`}>{formatDate(entry.createdAt)}</Text>
           </View>
 
-          <Text numberOfLines={2} style={tw`mb-1 text-base font-medium text-gray-900`}>
+          <Text numberOfLines={2} style={tw`text-foreground mb-1 text-base font-medium`}>
             {title}
           </Text>
 
           {subtitle && (
             <View style={tw`flex-row items-center`}>
               {entry.type === 'communication' && subtitle === 'High priority' && (
-                <AlertTriangleIcon height={12} style={tw`mr-1 text-amber-600`} width={12} />
+                <AlertTriangleIcon height={12} style={tw`text-warning mr-1`} width={12} />
               )}
-              <Text style={tw`text-sm text-gray-600`}>{subtitle}</Text>
+              <Text style={tw`text-subtitle text-sm`}>{subtitle}</Text>
             </View>
           )}
         </View>
@@ -177,8 +177,8 @@ export function EntryCard({ entry, onPress }: Props) {
 
       {/* Version indicator */}
       {entry.currentVersion && entry.currentVersion.versionNumber > 1 && (
-        <View style={tw`mt-2 border-t border-gray-100 pt-2`}>
-          <Text style={tw`text-xs text-gray-400`}>
+        <View style={tw`border-divider mt-2 border-t pt-2`}>
+          <Text style={tw`text-placeholder text-xs`}>
             v{entry.currentVersion.versionNumber} • Edited
           </Text>
         </View>

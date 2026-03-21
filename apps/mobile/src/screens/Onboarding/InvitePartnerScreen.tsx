@@ -41,36 +41,36 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
   };
 
   return (
-    <View style={tw`flex-1 bg-white px-6 pt-16`}>
-      <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>Invite your co-parent</Text>
-      <Text style={tw`mb-8 text-base text-gray-600`}>
+    <View style={tw`bg-surface flex-1 px-6 pt-16`}>
+      <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Invite your co-parent</Text>
+      <Text style={tw`text-subtitle mb-8 text-base`}>
         Share this code so they can join and see the same records.
       </Text>
 
-      <View style={tw`mb-6 items-center rounded-2xl bg-gray-100 p-6`}>
-        <Text style={tw`mb-2 text-sm text-gray-500`}>Invite Code</Text>
-        <Text style={tw`font-mono text-3xl font-bold tracking-widest text-gray-900`}>
+      <View style={tw`mb-6 items-center rounded-2xl bg-neutral-200 p-6`}>
+        <Text style={tw`text-subtitle mb-2 text-sm`}>Invite Code</Text>
+        <Text style={tw`text-foreground font-mono text-3xl font-bold tracking-widest`}>
           {inviteToken}
         </Text>
-        <Text style={tw`mt-2 text-sm text-gray-500`}>Valid for 30 days</Text>
+        <Text style={tw`text-subtitle mt-2 text-sm`}>Valid for 30 days</Text>
       </View>
 
       <View style={tw`mb-8 flex-row gap-3`}>
-        <Pressable style={tw`flex-1 rounded-xl bg-gray-100 py-4`} onPress={handleCopy}>
+        <Pressable style={tw`flex-1 rounded-xl bg-neutral-200 py-4`} onPress={handleCopy}>
           <View style={tw`flex-row items-center justify-center`}>
-            {copied && <CheckCircleIcon height={16} style={tw`mr-1 text-green-600`} width={16} />}
-            <Text style={tw`font-medium text-gray-900`}>{copied ? 'Copied!' : 'Copy Code'}</Text>
+            {copied && <CheckCircleIcon height={16} style={tw`text-success mr-1`} width={16} />}
+            <Text style={tw`text-foreground font-medium`}>{copied ? 'Copied!' : 'Copy Code'}</Text>
           </View>
         </Pressable>
 
-        <Pressable style={tw`flex-1 rounded-xl bg-blue-600 py-4`} onPress={handleShare}>
+        <Pressable style={tw`bg-primary flex-1 rounded-xl py-4`} onPress={handleShare}>
           <Text style={tw`text-center font-medium text-white`}>Share</Text>
         </Pressable>
       </View>
 
-      <View style={tw`mb-8 flex-row rounded-xl bg-amber-50 p-4`}>
-        <LightbulbIcon height={16} style={tw`mr-2 mt-0.5 text-amber-800`} width={16} />
-        <Text style={tw`flex-1 text-sm text-amber-800`}>
+      <View style={tw`bg-warning/15 mb-8 flex-row rounded-xl p-4`}>
+        <LightbulbIcon height={16} style={tw`text-warning mr-2 mt-0.5`} width={16} />
+        <Text style={tw`text-warning flex-1 text-sm`}>
           You can start using CoParent right away. Your co-parent can join anytime using this code,
           and they{"'"}ll see all the records you{"'"}ve created.
         </Text>
@@ -79,14 +79,14 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
       <View style={tw`flex-1`} />
 
       <View style={tw`pb-8`}>
-        <Pressable style={tw`mb-3 rounded-xl bg-blue-600 py-4`} onPress={handleDone}>
+        <Pressable style={tw`bg-primary mb-3 rounded-xl py-4`} onPress={handleDone}>
           <Text style={tw`text-center text-lg font-semibold text-white`}>
             Done — Start Using CoParent
           </Text>
         </Pressable>
 
         <Pressable onPress={handleDone}>
-          <Text style={tw`text-center text-base text-gray-500`}>I{"'"}ll invite them later</Text>
+          <Text style={tw`text-subtitle text-center text-base`}>I{"'"}ll invite them later</Text>
         </Pressable>
       </View>
     </View>

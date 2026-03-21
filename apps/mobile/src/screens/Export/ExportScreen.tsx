@@ -11,11 +11,12 @@ import {
   TimelineService,
   type ExportFilters,
 } from '@/services';
+import { colors } from '@/tailwind';
 
-const ACTIVE_BG = 'bg-blue-600';
-const INACTIVE_BG = 'bg-gray-100';
+const ACTIVE_BG = 'bg-primary';
+const INACTIVE_BG = 'bg-neutral-200';
 const ACTIVE_TEXT = 'text-white';
-const INACTIVE_TEXT = 'text-gray-700';
+const INACTIVE_TEXT = 'text-foreground';
 
 const EXPORT_ICON_SIZE = 28;
 
@@ -125,18 +126,18 @@ export function ExportScreen() {
 
   if (isLoading) {
     return (
-      <View style={tw`flex-1 items-center justify-center bg-white`}>
-        <ActivityIndicator color="#2563EB" size="large" />
+      <View style={tw`bg-surface flex-1 items-center justify-center`}>
+        <ActivityIndicator color={colors.primary} size="large" />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-white`}>
+    <View style={tw`bg-surface flex-1`}>
       {/* Header */}
-      <View style={tw`border-b border-gray-100 bg-white px-4 pb-4 pt-14`}>
-        <Text style={tw`text-2xl font-bold text-gray-900`}>Export</Text>
-        <Text style={tw`mt-1 text-gray-600`}>
+      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
+        <Text style={tw`text-foreground font-serif-bold text-2xl`}>Export</Text>
+        <Text style={tw`text-subtitle mt-1`}>
           Generate court-ready reports and evidence bundles
         </Text>
       </View>
@@ -144,39 +145,39 @@ export function ExportScreen() {
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Export Type */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
+          <Text style={tw`text-subtitle mb-3 text-sm font-medium uppercase tracking-wide`}>
             Export Type
           </Text>
           <View style={tw`flex-row gap-3`}>
             <Pressable
               style={tw`flex-1 rounded-xl border-2 p-4 ${
-                exportType === 'pdf' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
+                exportType === 'pdf' ? 'border-primary bg-primary/15' : 'border-divider'
               }`}
               onPress={() => setExportType('pdf')}
             >
               <FileTextIcon
                 height={EXPORT_ICON_SIZE}
-                style={tw`mb-2 text-gray-700`}
+                style={tw`text-foreground mb-2`}
                 width={EXPORT_ICON_SIZE}
               />
-              <Text style={tw`font-semibold text-gray-900`}>PDF Report</Text>
-              <Text style={tw`mt-1 text-sm text-gray-600`}>
+              <Text style={tw`text-foreground font-semibold`}>PDF Report</Text>
+              <Text style={tw`text-subtitle mt-1 text-sm`}>
                 Timeline summary for printing or sharing
               </Text>
             </Pressable>
             <Pressable
               style={tw`flex-1 rounded-xl border-2 p-4 ${
-                exportType === 'bundle' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
+                exportType === 'bundle' ? 'border-primary bg-primary/15' : 'border-divider'
               }`}
               onPress={() => setExportType('bundle')}
             >
               <PackageIcon
                 height={EXPORT_ICON_SIZE}
-                style={tw`mb-2 text-gray-700`}
+                style={tw`text-foreground mb-2`}
                 width={EXPORT_ICON_SIZE}
               />
-              <Text style={tw`font-semibold text-gray-900`}>Evidence Bundle</Text>
-              <Text style={tw`mt-1 text-sm text-gray-600`}>
+              <Text style={tw`text-foreground font-semibold`}>Evidence Bundle</Text>
+              <Text style={tw`text-subtitle mt-1 text-sm`}>
                 Full data + files with hash verification
               </Text>
             </Pressable>
@@ -186,7 +187,7 @@ export function ExportScreen() {
         {/* Children Filter */}
         {children.length > 0 && (
           <View style={tw`mb-6`}>
-            <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
+            <Text style={tw`text-subtitle mb-3 text-sm font-medium uppercase tracking-wide`}>
               Filter by Child
             </Text>
             <View style={tw`flex-row flex-wrap gap-2`}>
@@ -227,7 +228,7 @@ export function ExportScreen() {
 
         {/* Entry Type Filter */}
         <View style={tw`mb-6`}>
-          <Text style={tw`mb-3 text-sm font-medium uppercase tracking-wide text-gray-600`}>
+          <Text style={tw`text-subtitle mb-3 text-sm font-medium uppercase tracking-wide`}>
             Filter by Type
           </Text>
           <View style={tw`flex-row flex-wrap gap-2`}>
@@ -260,18 +261,18 @@ export function ExportScreen() {
         </View>
 
         {/* Preview Count */}
-        <View style={tw`mb-6 rounded-xl bg-gray-50 p-4`}>
-          <Text style={tw`text-center text-gray-600`}>
-            <Text style={tw`text-2xl font-bold text-gray-900`}>{entryCount}</Text> entries will be
+        <View style={tw`bg-background mb-6 rounded-xl p-4`}>
+          <Text style={tw`text-subtitle text-center`}>
+            <Text style={tw`text-foreground text-2xl font-bold`}>{entryCount}</Text> entries will be
             exported
           </Text>
         </View>
 
         {/* Info */}
         {exportType === 'bundle' && (
-          <View style={tw`mb-6 flex-row rounded-xl bg-green-50 p-4`}>
-            <LockIcon height={16} style={tw`mr-2 mt-0.5 text-green-800`} width={16} />
-            <Text style={tw`flex-1 text-sm text-green-800`}>
+          <View style={tw`bg-success/15 mb-6 flex-row rounded-xl p-4`}>
+            <LockIcon height={16} style={tw`text-success mr-2 mt-0.5`} width={16} />
+            <Text style={tw`text-success flex-1 text-sm`}>
               The evidence bundle includes SHA-256 hashes for all files. These can be used to prove
               files haven{"'"}t been modified.
             </Text>
@@ -281,7 +282,7 @@ export function ExportScreen() {
         {/* Export Button */}
         <Pressable
           disabled={isExporting || entryCount === 0}
-          style={tw`flex-row items-center justify-center rounded-xl bg-blue-600 py-4`}
+          style={tw`bg-primary flex-row items-center justify-center rounded-xl py-4`}
           onPress={handleExport}
         >
           {isExporting ? (
@@ -294,7 +295,7 @@ export function ExportScreen() {
         </Pressable>
 
         {entryCount === 0 && (
-          <Text style={tw`mt-4 text-center text-gray-500`}>No entries match your filters</Text>
+          <Text style={tw`text-subtitle mt-4 text-center`}>No entries match your filters</Text>
         )}
       </ScrollView>
     </View>

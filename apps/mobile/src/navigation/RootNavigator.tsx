@@ -1,11 +1,11 @@
+import notifee, { EventType } from '@notifee/react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, ActivityIndicator, Linking } from 'react-native';
+import { View, Text, ActivityIndicator, Linking } from 'react-native';
 
 import { MainNavigator } from './MainNavigator';
 import { OnboardingNavigator } from './OnboardingNavigator';
@@ -14,6 +14,7 @@ import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
 import { UserService, NotificationService } from '@/services';
+import { colors } from '@/tailwind';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -43,17 +44,18 @@ function extractInviteToken(url: string): string | null {
 function NotificationHandler() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      const entryId = response.notification.request.content.data?.entryId as string | undefined;
-      if (entryId) {
-        // Navigate to Main, then the TimelineTab will handle EntryDetail
-        navigation.navigate('Main');
-      }
-    });
-
-    return () => subscription.remove();
-  }, [navigation]);
+  useEffect(
+    () =>
+      notifee.onForegroundEvent(({ detail, type }) => {
+        if (type === EventType.PRESS) {
+          const entryId = detail.notification?.data?.entryId as string | undefined;
+          if (entryId) {
+            navigation.navigate('Main');
+          }
+        }
+      }),
+    [navigation],
+  );
 
   return null;
 }
@@ -127,12 +129,12 @@ export function RootNavigator() {
   // Show loading while migrations run or checking user
   if (!migrationSuccess || isLoading) {
     return (
-      <View style={tw`flex-1 items-center justify-center bg-white`}>
-        <ActivityIndicator color="#2563EB" size="large" />
+      <View style={tw`bg-surface flex-1 items-center justify-center`}>
+        <ActivityIndicator color={colors.primary} size="large" />
         {migrationError && (
           <View style={tw`mt-4 px-6`}>
-            <View style={tw`rounded-xl bg-red-50 p-4`}>
-              <View style={tw`text-red-800`}>Migration error: {migrationError.message}</View>
+            <View style={tw`bg-error/15 rounded-xl p-4`}>
+              <Text style={tw`text-error`}>Migration error: {migrationError.message}</Text>
             </View>
           </View>
         )}

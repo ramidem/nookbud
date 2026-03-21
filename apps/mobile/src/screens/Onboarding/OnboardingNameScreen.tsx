@@ -4,6 +4,7 @@ import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform } from
 
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
+import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'OnboardingName'>;
 
@@ -22,11 +23,11 @@ export function OnboardingNameScreen({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`flex-1 bg-white`}
+      style={tw`bg-surface flex-1`}
     >
       <View style={tw`flex-1 px-6 pt-16`}>
-        <Text style={tw`mb-2 text-3xl font-bold text-gray-900`}>What{"'"}s your name?</Text>
-        <Text style={tw`mb-8 text-base text-gray-600`}>
+        <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>What{"'"}s your name?</Text>
+        <Text style={tw`text-subtitle mb-8 text-base`}>
           This is how you{"'"}ll appear to your co-parent.
         </Text>
 
@@ -35,8 +36,8 @@ export function OnboardingNameScreen({ navigation }: Props) {
           autoCapitalize="words"
           autoCorrect={false}
           placeholder="Your name"
-          placeholderTextColor="#9CA3AF"
-          style={tw`rounded-xl border border-gray-300 bg-gray-50 px-4 py-4 text-lg`}
+          placeholderTextColor={colors.placeholder}
+          style={tw`border-divider bg-background text-foreground rounded-xl border px-4 py-4 text-lg`}
           value={name}
           onChangeText={setName}
         />
@@ -46,7 +47,7 @@ export function OnboardingNameScreen({ navigation }: Props) {
         <View style={tw`pb-8`}>
           <Pressable
             disabled={!canContinue}
-            style={tw`${canContinue ? 'bg-blue-600' : 'bg-gray-300'} rounded-xl py-4`}
+            style={tw`${canContinue ? 'bg-primary' : 'bg-disabled'} rounded-xl py-4`}
             onPress={handleContinue}
           >
             <Text style={tw`text-center text-lg font-semibold text-white`}>Continue</Text>

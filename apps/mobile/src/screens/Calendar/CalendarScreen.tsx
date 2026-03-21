@@ -14,6 +14,7 @@ import {
   UserService,
   type TimelineEntry,
 } from '@/services';
+import { colors } from '@/tailwind';
 import type { EventContent } from '@/types/entry-content.types';
 
 type Props = BottomTabScreenProps<MainTabParamList, 'CalendarTab'>;
@@ -47,11 +48,11 @@ function getStatusStyle(
 ): { bg: object; text: object; label: string } {
   switch (status) {
     case 'completed':
-      return { bg: tw`bg-green-100`, label: 'Completed', text: tw`text-green-800` };
+      return { bg: tw`bg-success/15`, label: 'Completed', text: tw`text-success` };
     case 'missed':
-      return { bg: tw`bg-red-100`, label: 'Missed', text: tw`text-red-800` };
+      return { bg: tw`bg-error/15`, label: 'Missed', text: tw`text-error` };
     default:
-      return { bg: tw`bg-gray-100`, label: 'Pending', text: tw`text-gray-800` };
+      return { bg: tw`bg-neutral-200`, label: 'Pending', text: tw`text-foreground` };
   }
 }
 
@@ -127,14 +128,14 @@ export function CalendarScreen({ navigation }: Props) {
       const content = TimelineService.parseContent<EventContent>(entry);
       if (content?.startTime) {
         const day = content.startTime.substring(0, DATE_SUBSTRING_LENGTH);
-        marks[day] = { dotColor: '#6F8F7B', marked: true };
+        marks[day] = { dotColor: colors.primary, marked: true };
       }
     }
 
     marks[selectedDate] = {
       ...(marks[selectedDate] ?? {}),
       selected: true,
-      selectedColor: '#6F8F7B',
+      selectedColor: colors.primary,
     };
 
     return marks;
@@ -215,18 +216,18 @@ export function CalendarScreen({ navigation }: Props) {
     return (
       <View key={entry.id}>
         <Pressable
-          style={tw`mb-2 rounded-xl bg-white p-4 shadow-sm`}
+          style={tw`bg-surface mb-2 rounded-xl p-4 shadow-sm`}
           onLongPress={() => handleLongPress(entry.id)}
           onPress={() => handleEventPress(entry)}
         >
           <View style={tw`flex-row items-center justify-between`}>
             <View style={tw`flex-1 pr-3`}>
-              <Text style={tw`text-base font-semibold text-gray-900`}>{content.title}</Text>
-              <Text style={tw`mt-1 text-sm text-gray-500`}>
+              <Text style={tw`text-foreground text-base font-semibold`}>{content.title}</Text>
+              <Text style={tw`text-subtitle mt-1 text-sm`}>
                 {isYou ? 'You' : 'Partner'} {content.location ? `\u00B7 ${content.location}` : ''}
               </Text>
               {content.startTime && (
-                <Text style={tw`mt-0.5 text-xs text-gray-400`}>
+                <Text style={tw`text-placeholder mt-0.5 text-xs`}>
                   {new Date(content.startTime).toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
@@ -243,13 +244,13 @@ export function CalendarScreen({ navigation }: Props) {
         {showActions && (
           <View style={tw`mb-3 flex-row gap-2 px-2`}>
             <Pressable
-              style={tw`flex-1 rounded-lg bg-green-600 py-3`}
+              style={tw`bg-success flex-1 rounded-lg py-3`}
               onPress={() => handleMarkStatus(entry, 'completed')}
             >
               <Text style={tw`text-center text-sm font-semibold text-white`}>Mark Completed</Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 rounded-lg bg-red-500 py-3`}
+              style={tw`bg-error flex-1 rounded-lg py-3`}
               onPress={() => handleMarkStatus(entry, 'missed')}
             >
               <Text style={tw`text-center text-sm font-semibold text-white`}>Mark Missed</Text>
@@ -261,25 +262,25 @@ export function CalendarScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={tw`flex-1 bg-gray-50`}>
+    <View style={tw`bg-background flex-1`}>
       {/* Header */}
-      <View style={tw`border-b border-gray-100 bg-white px-4 pb-4 pt-14`}>
-        <Text style={tw`text-2xl font-bold text-gray-900`}>Calendar</Text>
+      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
+        <Text style={tw`text-foreground font-serif-bold text-2xl`}>Calendar</Text>
       </View>
 
       {/* Calendar */}
       <Calendar
         markedDates={buildMarkedDates()}
         theme={{
-          arrowColor: '#6F8F7B',
-          dotColor: '#6F8F7B',
-          monthTextColor: '#2F2F2F',
-          selectedDayBackgroundColor: '#6F8F7B',
-          selectedDayTextColor: '#ffffff',
+          arrowColor: colors.primary,
+          dotColor: colors.primary,
+          monthTextColor: colors.foreground,
+          selectedDayBackgroundColor: colors.primary,
+          selectedDayTextColor: colors.white,
           textDayFontSize: 14,
           textMonthFontSize: 16,
           textMonthFontWeight: '600',
-          todayTextColor: '#C97C5D',
+          todayTextColor: colors.accent,
         }}
         onDayPress={handleDayPress}
         onMonthChange={handleMonthChange}
@@ -287,18 +288,18 @@ export function CalendarScreen({ navigation }: Props) {
 
       {/* Day Events */}
       <View style={tw`flex-1 px-4 pt-4`}>
-        <Text style={tw`mb-3 text-sm font-medium text-gray-500`}>
+        <Text style={tw`text-subtitle mb-3 text-sm font-medium`}>
           {selectedDate === today ? 'Today' : selectedDate}
         </Text>
 
         {isLoading ? (
           <View style={tw`flex-1 items-center justify-center`}>
-            <ActivityIndicator color="#6F8F7B" size="small" />
+            <ActivityIndicator color={colors.primary} size="small" />
           </View>
         ) : dayEvents.length === 0 ? (
           <View style={tw`flex-1 items-center justify-center`}>
-            <CalendarIcon height={40} style={tw`mb-2 text-gray-300`} width={40} />
-            <Text style={tw`text-gray-500`}>No events for this day</Text>
+            <CalendarIcon height={40} style={tw`text-placeholder mb-2`} width={40} />
+            <Text style={tw`text-subtitle`}>No events for this day</Text>
           </View>
         ) : (
           <View>{dayEvents.map(renderEventItem)}</View>
