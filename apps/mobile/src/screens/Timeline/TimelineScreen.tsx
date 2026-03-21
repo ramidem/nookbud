@@ -1,17 +1,19 @@
 import { LegendList } from '@legendapp/list';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { View, Text, Pressable, RefreshControl, ActivityIndicator } from 'react-native';
 
 import { TimelineFilters, type FilterState } from './TimelineFilters';
 
-import { EntryCard } from '@/components/molecules/EntryCard';
+import { EntryCard, type SpaceInfo } from '@/components/molecules/EntryCard';
+import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { PencilLineIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import {
   TimelineService,
-  RelationshipService,
+  SpaceService,
+  type SpaceWithRole,
   type TimelineEntry,
   type TimelineQueryParams,
 } from '@/services';
@@ -23,12 +25,13 @@ const PAGE_SIZE = 20;
 
 export function TimelineScreen({ navigation }: Props) {
   const tw = useTw();
+  const { activeSpaceId, isAllSpaces, switchToSpace } = useActiveSpace();
   const [entries, setEntries] = useState<TimelineEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
+  const [allSpaces, setAllSpaces] = useState<SpaceWithRole[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     childIds: [],
@@ -37,16 +40,26 @@ export function TimelineScreen({ navigation }: Props) {
     types: [],
   });
 
-  // Load relationship on mount
+  // Load all user spaces when in All Spaces mode
   useEffect(() => {
-    async function loadRelationship() {
-      const relationship = await RelationshipService.getCurrentRelationship();
-      if (relationship) {
-        setRelationshipId(relationship.id);
-      }
+    if (isAllSpaces) {
+      SpaceService.listSpaces().then(setAllSpaces);
     }
-    loadRelationship();
-  }, []);
+  }, [isAllSpaces]);
+
+  const allSpaceIds = useMemo(() => allSpaces.map((s) => s.id), [allSpaces]);
+
+  // Build a lookup map: spaceId → SpaceInfo for entry card indicators
+  const spaceInfoMap = useMemo(() => {
+    const map = new Map<string, SpaceInfo>();
+    for (const s of allSpaces) {
+      map.set(s.id, { color: s.color, emoji: s.emoji, id: s.id, name: s.name });
+    }
+
+    return map;
+  }, [allSpaces]);
+
+  const canQuery = isAllSpaces ? allSpaceIds.length > 0 : !!activeSpaceId;
 
   const buildQueryParams = useCallback(
     (offset = 0): TimelineQueryParams => ({
@@ -55,14 +68,14 @@ export function TimelineScreen({ navigation }: Props) {
       dateTo: filters.dateTo ?? undefined,
       limit: PAGE_SIZE,
       offset,
-      relationshipId: relationshipId ?? '',
+      ...(isAllSpaces ? { spaceIds: allSpaceIds } : { spaceId: activeSpaceId ?? '' }),
       types: filters.types.length > 0 ? filters.types : undefined,
     }),
-    [filters, relationshipId],
+    [filters, activeSpaceId, isAllSpaces, allSpaceIds],
   );
 
   const loadEntries = useCallback(async () => {
-    if (!relationshipId) return;
+    if (!canQuery) return;
 
     setIsLoading(true);
     try {
@@ -74,17 +87,17 @@ export function TimelineScreen({ navigation }: Props) {
     } finally {
       setIsLoading(false);
     }
-  }, [relationshipId, buildQueryParams]);
+  }, [canQuery, buildQueryParams]);
 
-  // Load entries when relationship or filters change
+  // Load entries when active space or filters change
   useEffect(() => {
-    if (relationshipId) {
+    if (canQuery) {
       loadEntries();
     }
-  }, [relationshipId, filters, loadEntries]);
+  }, [canQuery, filters, loadEntries]);
 
   const handleRefresh = async () => {
-    if (!relationshipId) return;
+    if (!canQuery) return;
 
     setIsRefreshing(true);
     try {
@@ -99,7 +112,7 @@ export function TimelineScreen({ navigation }: Props) {
   };
 
   const handleLoadMore = async () => {
-    if (!relationshipId || !hasMore || isLoadingMore) return;
+    if (!canQuery || !hasMore || isLoadingMore) return;
 
     setIsLoadingMore(true);
     try {
@@ -130,9 +143,23 @@ export function TimelineScreen({ navigation }: Props) {
     filters.dateFrom !== null ||
     filters.dateTo !== null;
 
+  const handleSpacePress = useCallback(
+    (spaceInfo: SpaceInfo) => {
+      switchToSpace(spaceInfo.id);
+    },
+    [switchToSpace],
+  );
+
   const renderItem = useCallback(
-    ({ item }: { item: TimelineEntry }) => <EntryCard entry={item} onPress={handleEntryPress} />,
-    [handleEntryPress],
+    ({ item }: { item: TimelineEntry }) => (
+      <EntryCard
+        entry={item}
+        spaceInfo={isAllSpaces ? spaceInfoMap.get(item.spaceId) ?? null : null}
+        onPress={handleEntryPress}
+        onSpacePress={isAllSpaces ? handleSpacePress : undefined}
+      />
+    ),
+    [handleEntryPress, isAllSpaces, spaceInfoMap, handleSpacePress],
   );
 
   if (isLoading) {
@@ -204,7 +231,8 @@ export function TimelineScreen({ navigation }: Props) {
       {/* Filters Modal */}
       <TimelineFilters
         filters={filters}
-        relationshipId={relationshipId}
+        spaceId={activeSpaceId}
+        spaceIds={isAllSpaces ? allSpaceIds : undefined}
         visible={showFilters}
         onApply={(newFilters) => {
           setFilters(newFilters);

@@ -10,22 +10,24 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 
+import { Alert } from '@/components/atoms';
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
+import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { PencilLineIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
-import { EntryService, RelationshipService } from '@/services';
+import { EntryService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddAgreement'>;
 
 export function AddAgreementScreen({ navigation }: Props) {
   const tw = useTw();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
   const [isLoading, setIsLoading] = useState(false);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
+  const [hasPermission, setHasPermission] = useState(true);
 
   // Form state
   const [title, setTitle] = useState('');
@@ -35,17 +37,40 @@ export function AddAgreementScreen({ navigation }: Props) {
 
   useEffect(() => {
     async function load() {
-      const rel = await RelationshipService.getCurrentRelationship();
-      if (rel) setRelationshipId(rel.id);
+      if (isAllSpaces || !activeSpaceId) {
+        Alert.error({
+          message:
+            'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
+          title: 'No Space Selected',
+        });
+        navigation.goBack();
+
+        return;
+      }
+
+      // Role permission check
+      const role = await SpaceService.getUserRole(activeSpaceId);
+      if (role === 'viewer') {
+        Alert.error({
+          message: 'Your role in this Space does not allow creating entries.',
+          title: 'Access Denied',
+        });
+        setHasPermission(false);
+        navigation.goBack();
+      }
     }
     load();
-  }, []);
+  }, [activeSpaceId, isAllSpaces, navigation]);
 
   const canSave =
-    title.trim().length > 0 && termsText.trim().length > 0 && effectiveDate !== undefined;
+    title.trim().length > 0 &&
+    termsText.trim().length > 0 &&
+    effectiveDate !== undefined &&
+    hasPermission &&
+    !isAllSpaces;
 
   const handleSave = async () => {
-    if (!canSave || !relationshipId) return;
+    if (!canSave || !activeSpaceId) return;
 
     setIsLoading(true);
     try {
@@ -56,13 +81,16 @@ export function AddAgreementScreen({ navigation }: Props) {
           termsText: termsText.trim(),
           title: title.trim(),
         },
-        relationshipId,
+        spaceId: activeSpaceId,
         type: 'agreement',
       });
 
       navigation.goBack();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to save',
+        title: 'Error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -95,6 +123,15 @@ export function AddAgreementScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
+        {/* Space context pill */}
+        {activeSpace && (
+          <View style={tw`mb-4 self-start rounded-full bg-neutral-200 px-3 py-1.5`}>
+            <Text style={tw`text-foreground text-sm`}>
+              {activeSpace.emoji} {activeSpace.name}
+            </Text>
+          </View>
+        )}
+
         {/* Info banner */}
         <View style={tw`bg-warning/15 mb-6 flex-row rounded-xl p-4`}>
           <PencilLineIcon height={16} style={tw`text-warning mr-2 mt-0.5`} width={16} />

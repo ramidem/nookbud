@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Pressable, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 
+import { Alert } from '@/components/atoms';
 import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
+import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { FileTextIcon, LockIcon, PackageIcon } from '@/icons';
 import {
   ExportService,
-  RelationshipService,
   ChildService,
+  SpaceService,
   TimelineService,
   type ExportFilters,
+  type SpaceWithRole,
 } from '@/services';
 import { colors } from '@/tailwind';
 
@@ -17,6 +20,8 @@ const ACTIVE_BG = 'bg-primary';
 const INACTIVE_BG = 'bg-neutral-200';
 const ACTIVE_TEXT = 'text-white';
 const INACTIVE_TEXT = 'text-foreground';
+const ACTIVE_CARD = 'border-primary bg-primary/15';
+const INACTIVE_CARD = 'border-divider';
 
 const EXPORT_ICON_SIZE = 28;
 
@@ -28,36 +33,35 @@ const TYPE_LABELS: Record<EntryType, string> = {
   upload: 'Document',
 };
 
+type SpaceScope = 'this' | 'all';
+
 export function ExportScreen() {
   const tw = useTw();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
+  const [allSpaces, setAllSpaces] = useState<SpaceWithRole[]>([]);
+  const [allSpaceIds, setAllSpaceIds] = useState<string[]>([]);
   const [children, setChildren] = useState<Child[]>([]);
   const [entryCount, setEntryCount] = useState(0);
 
   // Filter state
+  const [spaceScope, setSpaceScope] = useState<SpaceScope>(isAllSpaces ? 'all' : 'this');
   const [exportType, setExportType] = useState<'pdf' | 'bundle'>('pdf');
   const [selectedChildIds, setSelectedChildIds] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<EntryType[]>([]);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    if (relationshipId) {
-      updateCount();
-    }
-  }, [relationshipId, selectedChildIds, selectedTypes, updateCount]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const rel = await RelationshipService.getCurrentRelationship();
-      if (rel) {
-        setRelationshipId(rel.id);
-        const c = await ChildService.listByRelationship(rel.id);
+      const spaceList = await SpaceService.listSpaces();
+      setAllSpaces(spaceList);
+      setAllSpaceIds(spaceList.map((s) => s.id));
+
+      // Load children for active space
+      if (activeSpaceId) {
+        const c = await ChildService.listBySpace(activeSpaceId);
         setChildren(c);
       }
     } catch {
@@ -65,23 +69,41 @@ export function ExportScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeSpaceId]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useEffect(() => {
+    updateCount();
+  }, [spaceScope, activeSpaceId, selectedChildIds, selectedTypes, allSpaceIds, updateCount]);
 
   const updateCount = useCallback(async () => {
-    if (!relationshipId) return;
-
     try {
-      const result = await TimelineService.query({
-        childId: selectedChildIds.length === 1 ? selectedChildIds[0] : undefined,
-        limit: 1,
-        relationshipId,
-        types: selectedTypes.length > 0 ? selectedTypes : undefined,
-      });
-      setEntryCount(result.total);
+      if (spaceScope === 'all' && allSpaceIds.length > 0) {
+        const result = await TimelineService.query({
+          childId: selectedChildIds.length === 1 ? selectedChildIds[0] : undefined,
+          limit: 1,
+          spaceIds: allSpaceIds,
+          types: selectedTypes.length > 0 ? selectedTypes : undefined,
+        });
+        setEntryCount(result.total);
+      } else if (activeSpaceId) {
+        const result = await TimelineService.query({
+          childId: selectedChildIds.length === 1 ? selectedChildIds[0] : undefined,
+          limit: 1,
+          spaceId: activeSpaceId,
+          types: selectedTypes.length > 0 ? selectedTypes : undefined,
+        });
+        setEntryCount(result.total);
+      } else {
+        setEntryCount(0);
+      }
     } catch {
       // Silent fail — count update is non-critical
     }
-  }, [relationshipId, selectedChildIds, selectedTypes]);
+  }, [spaceScope, activeSpaceId, allSpaceIds, selectedChildIds, selectedTypes]);
 
   const toggleChild = (childId: string) => {
     setSelectedChildIds((prev) =>
@@ -96,16 +118,19 @@ export function ExportScreen() {
   };
 
   const handleExport = async () => {
-    if (!relationshipId) return;
-
     setIsExporting(true);
     try {
       const filters: ExportFilters = {
         childIds: selectedChildIds.length > 0 ? selectedChildIds : undefined,
         includeDisputed: true,
-        relationshipId,
         types: selectedTypes.length > 0 ? selectedTypes : undefined,
       };
+
+      if (spaceScope === 'all') {
+        filters.spaceIds = allSpaceIds;
+      } else {
+        filters.spaceId = activeSpaceId ?? undefined;
+      }
 
       let result;
       if (exportType === 'pdf') {
@@ -116,13 +141,19 @@ export function ExportScreen() {
 
       await ExportService.shareExport(result);
 
-      Alert.alert('Success', `Export created: ${result.fileName}`);
+      Alert.success({ title: `Export created: ${result.fileName}` });
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Export failed');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Export failed',
+        title: 'Export Failed',
+      });
     } finally {
       setIsExporting(false);
     }
   };
+
+  const spaceName = activeSpace?.name ?? 'Space';
+  const spaceEmoji = activeSpace?.emoji ?? '';
 
   if (isLoading) {
     return (
@@ -143,6 +174,37 @@ export function ExportScreen() {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
+        {/* Space Scope Selector */}
+        <View style={tw`mb-6`}>
+          <Text style={tw`text-subtitle mb-3 text-sm font-medium uppercase tracking-wide`}>
+            Space Scope
+          </Text>
+          <View style={tw`flex-row gap-3`}>
+            <Pressable
+              style={tw`flex-1 rounded-xl border-2 p-4 ${
+                spaceScope === 'this' ? ACTIVE_CARD : INACTIVE_CARD
+              }`}
+              onPress={() => setSpaceScope('this')}
+            >
+              <Text style={tw`text-foreground font-semibold`}>
+                {spaceEmoji} {spaceName}
+              </Text>
+              <Text style={tw`text-subtitle mt-1 text-sm`}>Export from this Space only</Text>
+            </Pressable>
+            <Pressable
+              style={tw`flex-1 rounded-xl border-2 p-4 ${
+                spaceScope === 'all' ? ACTIVE_CARD : INACTIVE_CARD
+              }`}
+              onPress={() => setSpaceScope('all')}
+            >
+              <Text style={tw`text-foreground font-semibold`}>All Spaces</Text>
+              <Text style={tw`text-subtitle mt-1 text-sm`}>
+                Export across {allSpaces.length} Spaces
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+
         {/* Export Type */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-3 text-sm font-medium uppercase tracking-wide`}>
@@ -151,7 +213,7 @@ export function ExportScreen() {
           <View style={tw`flex-row gap-3`}>
             <Pressable
               style={tw`flex-1 rounded-xl border-2 p-4 ${
-                exportType === 'pdf' ? 'border-primary bg-primary/15' : 'border-divider'
+                exportType === 'pdf' ? ACTIVE_CARD : INACTIVE_CARD
               }`}
               onPress={() => setExportType('pdf')}
             >
@@ -167,7 +229,7 @@ export function ExportScreen() {
             </Pressable>
             <Pressable
               style={tw`flex-1 rounded-xl border-2 p-4 ${
-                exportType === 'bundle' ? 'border-primary bg-primary/15' : 'border-divider'
+                exportType === 'bundle' ? ACTIVE_CARD : INACTIVE_CARD
               }`}
               onPress={() => setExportType('bundle')}
             >
@@ -263,8 +325,10 @@ export function ExportScreen() {
         {/* Preview Count */}
         <View style={tw`bg-background mb-6 rounded-xl p-4`}>
           <Text style={tw`text-subtitle text-center`}>
-            <Text style={tw`text-foreground text-2xl font-bold`}>{entryCount}</Text> entries will be
-            exported
+            <Text style={tw`text-foreground text-2xl font-bold`}>{entryCount}</Text>{' '}
+            {spaceScope === 'all'
+              ? `entries across ${allSpaces.length} Spaces`
+              : `entries from ${spaceEmoji} ${spaceName}`}
           </Text>
         </View>
 

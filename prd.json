@@ -929,7 +929,7 @@
       "title": "Schema migration \u2014 spaces and space_members tables",
       "description": "Replace the relationships table with spaces and space_members. Migrate existing relationship data. Re-link all entries, children, and acknowledgments to Spaces.",
       "priority": 38,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "spaces table: id, name, emoji, color, created_by (FK users), created_at, updated_at",
         "space_members table: id, space_id (FK spaces), user_id (FK users), role (owner|parent|guardian|lawyer|viewer), joined_at, invited_by",
@@ -954,7 +954,7 @@
       "title": "SpaceService \u2014 create, list, getById, rename, delete, leave",
       "description": "Core CRUD service for Spaces. A user can create a Space (becoming owner), list their Spaces, view details, rename, update appearance, soft-delete, or leave.",
       "priority": 39,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "createSpace(name, emoji?, color?) \u2014 creates Space, adds creator as owner",
         "listSpaces(userId) \u2014 all Spaces the user is a member of, with member count and role",
@@ -980,7 +980,7 @@
       "title": "SpaceMemberService \u2014 invite, accept, assign role, remove member",
       "description": "Manage Space membership. Owners generate invite codes/links with pre-assigned roles. Invited users accept to join. Owners can reassign roles and remove members.",
       "priority": 40,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "generateInviteCode(spaceId, role, userId) \u2014 6-char code, 7-day expiry, owner only",
         "generateInviteLink(spaceId, role, userId) \u2014 deep link coparent://invite/{code}",
@@ -1006,7 +1006,7 @@
       "title": "Active Space context \u2014 useActiveSpace() hook, MMKV persistence",
       "description": "Active Space determines which timeline, children, and members are shown. Persists across restarts. Supports 'All Spaces' mode.",
       "priority": 41,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "useActiveSpace() returns: activeSpace, setActiveSpace, isAllSpaces",
         "Active Space ID persisted in MMKV, restored on launch",
@@ -1031,7 +1031,7 @@
       "title": "Space switcher UI \u2014 header dropdown",
       "description": "Space switcher in the app header. Shows current Space name + emoji. Tapping opens a bottom sheet listing all Spaces + All Spaces option.",
       "priority": 42,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Header displays: active Space emoji + name (or 'All Spaces' icon)",
         "Tapping opens BottomSheet listing all user's Spaces",
@@ -1057,7 +1057,7 @@
       "title": "All Spaces timeline \u2014 merged feed with Space indicators",
       "description": "When All Spaces is active, timeline merges entries from all user's Spaces. Each entry tagged with Space emoji and color.",
       "priority": 43,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "All Spaces mode: timeline fetches entries from all user's Spaces",
         "Each entry shows Space emoji + color indicator",
@@ -1083,7 +1083,7 @@
       "title": "Onboarding update \u2014 create and name first Space",
       "description": "Replace relationship-based onboarding with Space creation. Inclusive language. User names their Space, adds first child, optionally invites members with roles.",
       "priority": 44,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "After profile setup, user is prompted to 'Create your first Space'",
         "Space creation: name (required), emoji (optional), color (optional)",
@@ -1112,7 +1112,7 @@
       "title": "Settings \u2014 manage Spaces",
       "description": "My Spaces section in Settings. View all Spaces, manage members, invite new members, change roles, rename, update appearance, leave or delete.",
       "priority": 45,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Settings has 'My Spaces' section listing all user's Spaces (emoji, name, member count, role)",
         "Tapping a Space opens Space detail screen",
@@ -1141,7 +1141,7 @@
       "title": "Entry creation scoped to active Space",
       "description": "All entry creation forms scoped to active Space. If All Spaces is active, user must select a Space first. Role-based creation permissions enforced.",
       "priority": 46,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "All entry forms display active Space as context (shown, not editable)",
         "Created entries linked to active Space's space_id",
@@ -1167,7 +1167,7 @@
       "title": "Export scoped to Spaces",
       "description": "Export supports single-Space or all-Spaces. Cover page includes Space name, members, roles. All Spaces export groups entries by Space with section headers.",
       "priority": 47,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Export flow includes Space selection: specific Space or All Spaces",
         "Single-Space PDF: Space name, members, and roles on cover page",
@@ -1191,7 +1191,7 @@
       "title": "Phase 3 QA pass",
       "description": "Comprehensive QA: migration verification, Space CRUD, member management, invite flow, active Space context, Space switcher, All Spaces timeline, onboarding, settings, entry scoping, export scoping, role enforcement.",
       "priority": 48,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "All migrated data verified: relationships \u2192 Spaces, entries linked, no data loss",
         "Space CRUD: create, list, view, rename, customize, delete, leave",

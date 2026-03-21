@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 import { children } from './children';
-import { relationships } from './relationships';
+import { spaces } from './spaces';
 import { users } from './users';
 
 // Entry types enum (stored as text in SQLite)
@@ -28,9 +28,9 @@ export const entries = sqliteTable('entries', {
   id: text('id').primaryKey(),
 
   // UUID
-  relationshipId: text('relationship_id')
+  spaceId: text('space_id')
     .notNull()
-    .references(() => relationships.id),
+    .references(() => spaces.id),
 
   status: text('status').notNull().$type<EntryStatus>().default('active'),
   // Optional, for child-specific entries

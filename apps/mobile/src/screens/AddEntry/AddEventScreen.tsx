@@ -9,14 +9,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 
+import { Alert } from '@/components/atoms';
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import type { Child } from '@/database/schema';
+import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
-import { EntryService, RelationshipService, ChildService, UserService } from '@/services';
+import { EntryService, ChildService, UserService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddEvent'>;
@@ -28,10 +29,11 @@ const INACTIVE_TEXT = 'text-foreground';
 
 export function AddEventScreen({ navigation }: Props) {
   const tw = useTw();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
   const [isLoading, setIsLoading] = useState(false);
   const [children, setChildren] = useState<Child[]>([]);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [hasPermission, setHasPermission] = useState(true);
 
   // Form state
   const [title, setTitle] = useState('');
@@ -44,23 +46,45 @@ export function AddEventScreen({ navigation }: Props) {
 
   useEffect(() => {
     async function load() {
-      const rel = await RelationshipService.getCurrentRelationship();
-      if (rel) {
-        setRelationshipId(rel.id);
-        const c = await ChildService.listByRelationship(rel.id);
-        setChildren(c);
+      if (isAllSpaces || !activeSpaceId) {
+        Alert.error({
+          message:
+            'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
+          title: 'No Space Selected',
+        });
+        navigation.goBack();
+
+        return;
       }
+
+      // Role permission check
+      const role = await SpaceService.getUserRole(activeSpaceId);
+      if (role === 'viewer') {
+        Alert.error({
+          message: 'Your role in this Space does not allow creating entries.',
+          title: 'Access Denied',
+        });
+        setHasPermission(false);
+        navigation.goBack();
+
+        return;
+      }
+
+      const c = await ChildService.listBySpace(activeSpaceId);
+      setChildren(c);
+
       const uid = UserService.getCurrentUserId();
       setUserId(uid);
       if (uid) setResponsibleParent(uid);
     }
     load();
-  }, []);
+  }, [activeSpaceId, isAllSpaces, navigation]);
 
-  const canSave = title.trim().length > 0 && eventDate !== undefined;
+  const canSave =
+    title.trim().length > 0 && eventDate !== undefined && hasPermission && !isAllSpaces;
 
   const handleSave = async () => {
-    if (!canSave || !relationshipId || !userId || !eventDate) return;
+    if (!canSave || !activeSpaceId || !userId || !eventDate) return;
 
     setIsLoading(true);
     try {
@@ -82,13 +106,16 @@ export function AddEventScreen({ navigation }: Props) {
           startTime,
           title: title.trim(),
         },
-        relationshipId,
+        spaceId: activeSpaceId,
         type: 'event',
       });
 
       navigation.goBack();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to save',
+        title: 'Error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -121,6 +148,15 @@ export function AddEventScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
+        {/* Space context pill */}
+        {activeSpace && (
+          <View style={tw`mb-4 self-start rounded-full bg-neutral-200 px-3 py-1.5`}>
+            <Text style={tw`text-foreground text-sm`}>
+              {activeSpace.emoji} {activeSpace.name}
+            </Text>
+          </View>
+        )}
+
         {/* Title */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Title *</Text>

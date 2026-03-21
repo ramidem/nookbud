@@ -1,8 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
+import { Alert } from '@/components/atoms';
+import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import {
   CalendarDaysIcon,
@@ -13,6 +15,7 @@ import {
   WalletIcon,
 } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import { SpaceService } from '@/services';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddEntryPicker'>;
 
@@ -64,6 +67,47 @@ const ENTRY_OPTIONS: Array<{
 
 export function AddEntryPickerScreen({ navigation }: Props) {
   const tw = useTw();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
+  const [canCreate, setCanCreate] = useState(true);
+
+  useEffect(() => {
+    async function checkPermission() {
+      if (isAllSpaces || !activeSpaceId) {
+        setCanCreate(false);
+
+        return;
+      }
+
+      const role = await SpaceService.getUserRole(activeSpaceId);
+      if (role === 'viewer') {
+        setCanCreate(false);
+      }
+    }
+    checkPermission();
+  }, [activeSpaceId, isAllSpaces]);
+
+  const handleNavigate = (screen: keyof TimelineStackParamList) => {
+    if (isAllSpaces || !activeSpaceId) {
+      Alert.error({
+        message:
+          'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
+        title: 'No Space Selected',
+      });
+
+      return;
+    }
+
+    if (!canCreate) {
+      Alert.error({
+        message: 'Your role in this Space does not allow creating entries.',
+        title: 'Access Denied',
+      });
+
+      return;
+    }
+
+    navigation.navigate(screen as never);
+  };
 
   return (
     <View style={tw`bg-surface flex-1`}>
@@ -77,13 +121,22 @@ export function AddEntryPickerScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
+        {/* Space context pill */}
+        {activeSpace && (
+          <View style={tw`mb-4 self-start rounded-full bg-neutral-200 px-3 py-1.5`}>
+            <Text style={tw`text-foreground text-sm`}>
+              {activeSpace.emoji} {activeSpace.name}
+            </Text>
+          </View>
+        )}
+
         <Text style={tw`text-subtitle mb-6`}>What would you like to record?</Text>
 
         {ENTRY_OPTIONS.map((option) => (
           <Pressable
             key={option.type}
             style={tw`bg-background mb-3 flex-row items-center rounded-xl p-4`}
-            onPress={() => navigation.navigate(option.screen as never)}
+            onPress={() => handleNavigate(option.screen)}
           >
             <View style={tw`bg-surface mr-4 h-12 w-12 items-center justify-center rounded-full`}>
               <option.Icon

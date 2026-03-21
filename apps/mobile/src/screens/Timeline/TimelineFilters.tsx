@@ -15,7 +15,8 @@ export type FilterState = {
 type Props = {
   visible: boolean;
   filters: FilterState;
-  relationshipId: string | null;
+  spaceId: string | null;
+  spaceIds?: string[];
   onClose: () => void;
   onApply: (filters: FilterState) => void;
 };
@@ -28,17 +29,25 @@ const TYPE_LABELS: Record<EntryType, string> = {
   upload: 'Document',
 };
 
-export function TimelineFilters({ filters, onApply, onClose, relationshipId, visible }: Props) {
+export function TimelineFilters({ filters, onApply, onClose, spaceId, spaceIds, visible }: Props) {
   const tw = useTw();
   const [localFilters, setLocalFilters] = useState<FilterState>(filters);
   const [children, setChildren] = useState<Child[]>([]);
 
-  // Load children
+  // Load children — from all spaces or a single space
   useEffect(() => {
-    if (relationshipId) {
-      ChildService.listByRelationship(relationshipId).then(setChildren);
+    if (spaceIds && spaceIds.length > 0) {
+      Promise.all(spaceIds.map((id) => ChildService.listBySpace(id))).then((results) => {
+        const merged = results.flat();
+        const unique = merged.filter(
+          (child, idx, arr) => arr.findIndex((c) => c.id === child.id) === idx,
+        );
+        setChildren(unique);
+      });
+    } else if (spaceId) {
+      ChildService.listBySpace(spaceId).then(setChildren);
     }
-  }, [relationshipId]);
+  }, [spaceId, spaceIds]);
 
   // Reset local filters when modal opens
   useEffect(() => {

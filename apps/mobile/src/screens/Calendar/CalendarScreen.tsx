@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { Calendar, type DateData, type MarkedDates } from 'react-native-calendars';
 
+import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { CalendarIcon } from '@/icons';
 import type { MainTabParamList } from '@/navigation/MainNavigator';
@@ -10,9 +11,10 @@ import {
   TimelineService,
   EntryService,
   AuditService,
-  RelationshipService,
+  SpaceService,
   UserService,
   type TimelineEntry,
+  type SpaceWithRole,
 } from '@/services';
 import { colors } from '@/tailwind';
 import type { EventContent } from '@/types/entry-content.types';
@@ -61,30 +63,32 @@ const MAX_EVENTS = 200;
 export function CalendarScreen({ navigation }: Props) {
   const tw = useTw();
   const today = getToday();
+  const { activeSpaceId, isAllSpaces } = useActiveSpace();
 
   const [selectedDate, setSelectedDate] = useState(today);
   const [monthEvents, setMonthEvents] = useState<TimelineEntry[]>([]);
   const [dayEvents, setDayEvents] = useState<TimelineEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
+  const [allSpaces, setAllSpaces] = useState<SpaceWithRole[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [actionEntryId, setActionEntryId] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function init() {
-      const rel = await RelationshipService.getCurrentRelationship();
-      const userId = UserService.getCurrentUserId();
-      if (rel) setRelationshipId(rel.id);
-      if (userId) setCurrentUserId(userId);
-    }
-    init();
-  }, []);
+  const allSpaceIds = allSpaces.map((s) => s.id);
+  const canQuery = isAllSpaces ? allSpaceIds.length > 0 : !!activeSpaceId;
 
   useEffect(() => {
-    if (relationshipId) {
+    const userId = UserService.getCurrentUserId();
+    if (userId) setCurrentUserId(userId);
+    if (isAllSpaces) {
+      SpaceService.listSpaces().then(setAllSpaces);
+    }
+  }, [isAllSpaces]);
+
+  useEffect(() => {
+    if (canQuery) {
       loadMonthEvents(selectedDate);
     }
-  }, [relationshipId, loadMonthEvents, selectedDate]);
+  }, [canQuery, loadMonthEvents, selectedDate]);
 
   const filterDayEvents = useCallback((events: TimelineEntry[], date: string) => {
     const filtered = events.filter((entry) => {
@@ -97,7 +101,7 @@ export function CalendarScreen({ navigation }: Props) {
 
   const loadMonthEvents = useCallback(
     async (refDate: string) => {
-      if (!relationshipId) return;
+      if (!canQuery) return;
 
       setIsLoading(true);
       try {
@@ -106,7 +110,7 @@ export function CalendarScreen({ navigation }: Props) {
           dateFrom,
           dateTo,
           limit: MAX_EVENTS,
-          relationshipId,
+          ...(isAllSpaces ? { spaceIds: allSpaceIds } : { spaceId: activeSpaceId ?? '' }),
           types: ['event'],
         });
 
@@ -118,7 +122,7 @@ export function CalendarScreen({ navigation }: Props) {
         setIsLoading(false);
       }
     },
-    [relationshipId, filterDayEvents],
+    [canQuery, isAllSpaces, allSpaceIds, activeSpaceId, filterDayEvents],
   );
 
   const buildMarkedDates = useCallback((): MarkedDates => {

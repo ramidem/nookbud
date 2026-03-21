@@ -194,7 +194,7 @@ He's looking for something that would have let him press a button and produce a 
 - **Job:** Electrical technician on a 2-year contract
 - **Income:** SAR 4,500/month (~$1,200 USD); sends ~$800/month home
 - **Family situation:** Married, but wife Maricel and two children (6 and 9) are in Pampanga. His mother (Lola Cora) helps with daily care while Maricel works as a teacher.
-- **Space setup:** 1 Space — Jun + Maricel + Lola Cora (guardian)
+- **Space setup:** 1 Space — Jun + Maricel + Lola Cora (editor)
 
 **Backstory**
 
@@ -217,10 +217,10 @@ His bigger fear: what happens when he comes home after this contract. He's heard
 - A Space where he, Maricel, and Lola Cora all participate — logging care events, expenses, decisions, and milestones
 - Entry types that capture: school enrollment decisions, medical visits, expense allocation of remittances, and daily care activities
 - Verified export that immigration, schools, or courts would accept as proof of involvement
-- Guardian role for Lola Cora — she needs full access as a daily caregiver, not just "viewer"
+- Editor role for Lola Cora — she needs full access as a daily caregiver, not just "viewer"
 - Mobile-first, works on his Android phone in Riyadh and Lola Cora's phone in Pampanga
 
-**Features that matter most:** Spaces (3-member arrangement), guardian role, expense tracking (remittance accountability), verified export, mobile-first
+**Features that matter most:** Spaces (3-member arrangement), editor role, expense tracking (remittance accountability), verified export, mobile-first
 
 **Willingness to Pay:** Moderate — $5–10/month is feasible on his income. Would pay more if it demonstrably helps his immigration case.
 
@@ -238,7 +238,7 @@ His bigger fear: what happens when he comes home after this contract. He's heard
 - **Job:** Retired government employee (SSS pension)
 - **Income:** ~PHP 12,000/month pension + remittance support from Jun
 - **Family situation:** Primary daily caregiver for her two grandchildren (6 and 9) while son Jun works in Saudi Arabia and daughter-in-law Maricel teaches full-time
-- **Space setup:** Member of Jun's Space as "guardian" role
+- **Space setup:** Member of Jun's Space as "editor" role
 
 **Backstory**
 
@@ -266,7 +266,7 @@ She doesn't need a co-parenting app. She needs a **shared care record** that doc
 - Acknowledgment from Jun and Maricel that they approve her care decisions
 - A verified report she can show to schools, hospitals, or barangay officials that documents her role and the parents' authorization
 
-**Features that matter most:** Guardian role in Space, simple entry logging, expense tracking with photo receipts, acknowledgment system, verified export for institutions
+**Features that matter most:** Editor role in Space, simple entry logging, expense tracking with photo receipts, acknowledgment system, verified export for institutions
 
 **Willingness to Pay:** Low — on a pension. Must be covered by the free tier (1 Space free). Jun would pay for the family's Space if needed.
 
@@ -283,7 +283,7 @@ She doesn't need a co-parenting app. She needs a **shared care record** that doc
 - **Jobs:** Sarah — UX designer; David — civil engineer; Mia — nursing student
 - **Income:** Chen household ~$155,000/year; Mia — student income
 - **Family situation:** Lily (3 years old) was adopted at birth through a private domestic adoption. The openness agreement specifies: quarterly photo/milestone updates from the Chens to Mia, two in-person visits per year, and ongoing communication as Lily grows
-- **Space setup:** 1 Space — Sarah (owner) + David (parent) + Mia (parent)
+- **Space setup:** 1 Space — Sarah (owner) + David (editor) + Mia (editor)
 
 **Backstory**
 
@@ -362,7 +362,7 @@ She needs **Spaces.**
 - Space switcher that lets her move between arrangements quickly
 - All Spaces view that merges timelines across arrangements for a consolidated calendar
 - Expense tracking per Space with acknowledgment — Liam needs to confirm expense splits
-- Different roles across Spaces — she's "parent" in Space 1 and 2, "viewer" in Space 3
+- Different roles across Spaces — she's "editor" in Space 1 and 2, "viewer" in Space 3
 - Verified exports per Space or across all Spaces — for her lawyer if James escalates
 
 **Features that matter most:** Multi-Space support, Space switcher, All Spaces timeline, expense tracking with acknowledgment, role flexibility across Spaces, verified export
@@ -395,7 +395,7 @@ All five personas share the same moment of regret: **starting documentation too 
 CoParent's messaging should address this directly: **"The record you build today speaks for itself tomorrow."**
 
 ### Key Insight: The Spaces Unlock
-Three of the five personas (Jun, Sarah, Camille) need a Space with more than two members. Two (Jun, Camille) need roles beyond "parent." One (Camille) needs multiple Spaces. None of these use cases are served by any existing competitor. **The Spaces model isn't a nice-to-have — it's the product-market fit unlock for the inclusive market.**
+Three of the five personas (Jun, Sarah, Camille) need a Space with more than two members. Two (Jun, Camille) need roles beyond "editor." One (Camille) needs multiple Spaces. None of these use cases are served by any existing competitor. **The Spaces model isn't a nice-to-have — it's the product-market fit unlock for the inclusive market.**
 
 ---
 
@@ -404,8 +404,8 @@ Three of the five personas (Jun, Sarah, Camille) need a Space with more than two
 | Persona | Lead Message | Feature to Lead With |
 |---------|-------------|----------------------|
 | Marcus (Separated Parent) | "Stop paying your lawyer to organize your records." | Verified export + audit trail |
-| Jun (OFW Parent) | "Prove you're an involved parent — even from abroad." | Space with guardian + verified export for immigration |
-| Lola Cora (Guardian Lola) | "Show schools and hospitals that you're authorized to care for this child." | Guardian role + acknowledgment + institutional export |
+| Jun (OFW Parent) | "Prove you're an involved parent — even from abroad." | Space with editor role + verified export for immigration |
+| Lola Cora (Guardian Lola) | "Show schools and hospitals that you're authorized to care for this child." | Editor role + acknowledgment + institutional export |
 | Sarah/David/Mia (Open Adoption) | "A shared record of a loving arrangement — organized, acknowledged, and trusted." | 3-member Space + milestone logging + calm UX |
 | Camille (Blended Family) | "Three arrangements. One app. Every record in its place." | Multi-Space support + Space switcher + All Spaces view |
 

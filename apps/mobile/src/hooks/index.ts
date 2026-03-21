@@ -1,3 +1,4 @@
+export * from './useActiveSpace.hook';
 export * from './useApplicationDimensions.hook';
 export * from './useAppState.hook';
 export * from './useDebounce.hook';

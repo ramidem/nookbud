@@ -13,7 +13,8 @@ import { OnboardingNavigator } from './OnboardingNavigator';
 import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
-import { UserService, NotificationService } from '@/services';
+import { UserService, NotificationService, SpaceService } from '@/services';
+import { useLocalStorageStore } from '@/stores';
 import { colors } from '@/tailwind';
 
 export type RootStackParamList = {
@@ -96,6 +97,20 @@ function DeepLinkHandler() {
   return null;
 }
 
+async function initializeActiveSpace() {
+  const userSpaces = await SpaceService.listSpaces();
+  const storedId = useLocalStorageStore.getState().activeSpaceId;
+
+  if (storedId) {
+    const stillValid = userSpaces.some((s) => s.id === storedId);
+    if (!stillValid) {
+      SpaceService.setCurrentSpace(userSpaces.length > 0 ? userSpaces[0].id : null);
+    }
+  } else if (userSpaces.length > 0) {
+    SpaceService.setCurrentSpace(userSpaces[0].id);
+  }
+}
+
 export function RootNavigator() {
   const tw = useTw();
   const { error: migrationError, success: migrationSuccess } = useDbMigrations();
@@ -118,6 +133,11 @@ export function RootNavigator() {
       if (exists && !permissionRequested.current && !NotificationService.hasRequestedPermission()) {
         permissionRequested.current = true;
         NotificationService.requestPermissions().catch(() => {});
+      }
+
+      // Initialize active Space context
+      if (exists) {
+        await initializeActiveSpace();
       }
     } catch {
       // Silent fail — user check is non-critical

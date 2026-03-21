@@ -14,7 +14,7 @@ import {
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
-import { RelationshipService, ChildService } from '@/services';
+import { ChildService } from '@/services';
 import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'AddChild'>;
@@ -25,8 +25,9 @@ type ChildInput = {
   dateOfBirth: Date | undefined;
 };
 
-export function AddChildScreen({ navigation }: Props) {
+export function AddChildScreen({ navigation, route }: Props) {
   const tw = useTw();
+  const { spaceId } = route.params;
   const [children, setChildren] = useState<ChildInput[]>([
     { dateOfBirth: undefined, id: '1', name: '' },
   ]);
@@ -61,23 +62,15 @@ export function AddChildScreen({ navigation }: Props) {
     setError(null);
 
     try {
-      // Create relationship first
-      const relationship = await RelationshipService.create();
-
-      // Add each valid child
       for (const child of validChildren) {
         await ChildService.create({
           dateOfBirth: child.dateOfBirth ?? undefined,
           name: child.name.trim(),
-          relationshipId: relationship.id,
+          spaceId,
         });
       }
 
-      // Navigate to invite partner
-      navigation.navigate('InvitePartner', {
-        inviteToken: relationship.inviteToken ?? '',
-        relationshipId: relationship.id,
-      });
+      navigation.navigate('InviteMembers', { spaceId });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add children');
     } finally {

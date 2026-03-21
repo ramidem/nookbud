@@ -3,4 +3,5 @@ export * from './BottomActionsContainer';
 export * from './DatePickerInput';
 export * from './ScreenContainer';
 export * from './ScreenHeader';
+export * from './SpaceSwitcher';
 export * from './StorageManager';

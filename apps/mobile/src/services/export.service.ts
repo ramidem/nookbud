@@ -10,16 +10,27 @@ import {
   entryVersions,
   attachments,
   acknowledgments,
+  spaces,
+  spaceMembers,
+  users,
   type EntryType,
 } from '@/database/schema';
 
 export type ExportFilters = {
-  relationshipId: string;
+  spaceId?: string;
+  spaceIds?: string[];
   childIds?: string[];
   types?: EntryType[];
   dateFrom?: Date;
   dateTo?: Date;
   includeDisputed?: boolean;
+};
+
+type SpaceMeta = {
+  id: string;
+  name: string;
+  emoji: string;
+  members: { name: string; role: string }[];
 };
 
 export type ExportResult = {
@@ -56,13 +67,46 @@ function formatDateTime(date: Date): string {
   return date.toLocaleString();
 }
 
+/**
+ * Fetch metadata for a list of Space IDs (name, emoji, members with roles)
+ */
+async function fetchSpaceMetas(spaceIds: string[]): Promise<SpaceMeta[]> {
+  const results: SpaceMeta[] = [];
+
+  for (const id of spaceIds) {
+    const [space] = await db.select().from(spaces).where(eq(spaces.id, id));
+    if (!space) continue;
+
+    const memberRows = await db
+      .select({ role: spaceMembers.role, userName: users.name })
+      .from(spaceMembers)
+      .innerJoin(users, eq(spaceMembers.userId, users.id))
+      .where(eq(spaceMembers.spaceId, id));
+
+    results.push({
+      emoji: space.emoji,
+      id: space.id,
+      members: memberRows.map((m) => ({ name: m.userName, role: m.role })),
+      name: space.name,
+    });
+  }
+
+  return results;
+}
+
 export const ExportService = {
   /**
-   * Fetch entries with all related data
+   * Fetch entries with all related data.
+   * Supports single-space (spaceId) or multi-space (spaceIds) queries.
    */
   async fetchEntries(filters: ExportFilters) {
-    const conditions = [eq(entries.relationshipId, filters.relationshipId)];
-    conditions.push(ne(entries.status, 'soft_deleted'));
+    const conditions = [ne(entries.status, 'soft_deleted')];
+
+    if (filters.spaceIds && filters.spaceIds.length > 0) {
+      conditions.push(inArray(entries.spaceId, filters.spaceIds));
+    } else if (filters.spaceId) {
+      conditions.push(eq(entries.spaceId, filters.spaceId));
+    }
 
     if (filters.types && filters.types.length > 0) {
       conditions.push(inArray(entries.type, filters.types));
@@ -116,6 +160,7 @@ export const ExportService = {
         createdAt: entry.createdAt,
         createdBy: entry.createdBy,
         id: entry.id,
+        spaceId: entry.spaceId,
         status: entry.status,
         type: entry.type as EntryType,
         version,
@@ -130,6 +175,7 @@ export const ExportService = {
    * Creates a folder with JSON data, HTML summary, and attachments
    */
   async generateBundle(filters: ExportFilters): Promise<ExportResult> {
+    const isMultiSpace = !!filters.spaceIds && filters.spaceIds.length > 0;
     const exportDir = getExportDir();
     const timestamp = formatDate(new Date());
     const bundleName = `CoParent_Evidence_${timestamp}`;
@@ -139,35 +185,54 @@ export const ExportService = {
     await RNFS.mkdir(bundleDir);
     await RNFS.mkdir(`${bundleDir}/attachments`);
 
+    // Fetch space metadata
+    const spaceIdList = isMultiSpace
+      ? filters.spaceIds ?? []
+      : filters.spaceId
+        ? [filters.spaceId]
+        : [];
+    const spaceMetas = await fetchSpaceMetas(spaceIdList);
+    const spaceMap = new Map(spaceMetas.map((s) => [s.id, s]));
+
+    // Write spaces.json
+    await RNFS.writeFile(`${bundleDir}/spaces.json`, JSON.stringify(spaceMetas, null, 2), 'utf8');
+
     // Fetch entries
     const entryList = await this.fetchEntries(filters);
 
-    // Generate data.json
+    // Generate data.json — each entry includes Space name + emoji
     const dataJson = {
-      entries: entryList.map((e) => ({
-        acknowledgmentStatus: e.ackStatus,
-        attachments: e.attachments.map((a) => ({
-          bundlePath: `attachments/${a.fileHash}_${a.originalFilename}`,
-          filename: a.originalFilename,
-          hash: a.fileHash,
-          mimeType: a.mimeType,
-          size: a.fileSizeBytes,
-        })),
-        content: JSON.parse(e.version.contentJson),
-        createdAt: e.createdAt.toISOString(),
-        createdBy: e.createdBy,
-        id: e.id,
-        status: e.status,
-        type: e.type,
-        versionNumber: e.version.versionNumber,
-      })),
+      entries: entryList.map((e) => {
+        const space = spaceMap.get(e.spaceId);
+
+        return {
+          acknowledgmentStatus: e.ackStatus,
+          attachments: e.attachments.map((a) => ({
+            bundlePath: `attachments/${a.fileHash}_${a.originalFilename}`,
+            filename: a.originalFilename,
+            hash: a.fileHash,
+            mimeType: a.mimeType,
+            size: a.fileSizeBytes,
+          })),
+          content: JSON.parse(e.version.contentJson),
+          createdAt: e.createdAt.toISOString(),
+          createdBy: e.createdBy,
+          id: e.id,
+          spaceEmoji: space?.emoji ?? '',
+          spaceName: space?.name ?? '',
+          status: e.status,
+          type: e.type,
+          versionNumber: e.version.versionNumber,
+        };
+      }),
       entryCount: entryList.length,
       exportDate: new Date().toISOString(),
       exportId: generateUUID(),
       filters: {
         dateFrom: filters.dateFrom?.toISOString(),
         dateTo: filters.dateTo?.toISOString(),
-        relationshipId: filters.relationshipId,
+        spaceId: filters.spaceId,
+        spaceIds: filters.spaceIds,
         types: filters.types,
       },
     };
@@ -175,11 +240,19 @@ export const ExportService = {
     await RNFS.writeFile(`${bundleDir}/data.json`, JSON.stringify(dataJson, null, 2), 'utf8');
 
     // Copy attachments with hash in filename
-    const manifest: Array<{ filename: string; hash: string; verified: boolean }> = [];
+    const manifest: Array<{
+      filename: string;
+      hash: string;
+      spaceId: string;
+      spaceName: string;
+      verified: boolean;
+    }> = [];
 
-    const allAttachments = entryList.flatMap((entry) => entry.attachments);
+    const allAttachmentsWithSpace = entryList.flatMap((entry) =>
+      entry.attachments.map((a) => ({ ...a, spaceId: entry.spaceId })),
+    );
 
-    for (const att of allAttachments) {
+    for (const att of allAttachmentsWithSpace) {
       const sourcePath = FileService.getFullPath(att.storagePath);
       const destFilename = `${att.fileHash}_${att.originalFilename}`;
       const destPath = `${bundleDir}/attachments/${destFilename}`;
@@ -190,9 +263,12 @@ export const ExportService = {
 
         await RNFS.copyFile(sourcePath, destPath);
         const verified = await FileService.verifyIntegrity(att.storagePath, att.fileHash);
+        const space = spaceMap.get(att.spaceId);
         manifest.push({
           filename: destFilename,
           hash: att.fileHash,
+          spaceId: att.spaceId,
+          spaceName: space?.name ?? '',
           verified,
         });
       } catch {
@@ -200,7 +276,7 @@ export const ExportService = {
       }
     }
 
-    // Generate manifest.json
+    // Generate manifest.json — includes Space context per file
     const manifestJson = {
       bundleId: generateUUID(),
       files: manifest,
@@ -233,6 +309,7 @@ Bundle ID: ${manifestJson.bundleId}
 ## Contents
 
 - data.json: Machine-readable export of all entries
+- spaces.json: Space metadata with members and roles
 - summary.html: Human-readable timeline report
 - manifest.json: File integrity verification data
 - attachments/: All attached files with SHA-256 hashes
@@ -263,15 +340,24 @@ at time of creation. Edit history is preserved in the application.
   },
 
   /**
-   * Generate a PDF timeline report
-   * Note: This creates an HTML file that can be printed/shared as PDF
-   * For proper PDF generation, integrate react-native-html-to-pdf
+   * Generate a PDF timeline report (HTML).
+   * Single-space: cover page with Space name, emoji, and members.
+   * All-spaces: cover page listing all Spaces; entries grouped by Space.
    */
   async generatePDF(filters: ExportFilters): Promise<ExportResult> {
+    const isMultiSpace = !!filters.spaceIds && filters.spaceIds.length > 0;
     const exportDir = getExportDir();
     const timestamp = formatDate(new Date());
     const fileName = `CoParent_Report_${timestamp}.html`;
     const filePath = `${exportDir}/${fileName}`;
+
+    // Fetch space metadata
+    const spaceIdList = isMultiSpace
+      ? filters.spaceIds ?? []
+      : filters.spaceId
+        ? [filters.spaceId]
+        : [];
+    const spaceMetas = await fetchSpaceMetas(spaceIdList);
 
     // Fetch entries
     const entryList = await this.fetchEntries(filters);
@@ -287,7 +373,15 @@ at time of creation. Edit history is preserved in the application.
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; color: #2F2F2F; }
     h1 { color: #2F2F2F; border-bottom: 2px solid #C8BFB6; padding-bottom: 10px; }
+    h2 { color: #2F2F2F; margin-top: 32px; }
     .meta { color: #6E6A66; font-size: 14px; margin-bottom: 20px; }
+    .space-info { background: #F7F3EE; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .space-info h3 { margin: 0 0 8px 0; }
+    .member-list { list-style: none; padding: 0; margin: 4px 0 0 0; }
+    .member-list li { font-size: 14px; color: #6E6A66; padding: 2px 0; }
+    .member-role { color: #6F8F7B; font-weight: 500; }
+    .space-divider { border: none; border-top: 2px solid #C8BFB6; margin: 32px 0 24px 0; position: relative; text-align: center; }
+    .space-divider-label { background: white; padding: 0 16px; position: relative; top: -12px; font-weight: 600; color: #2F2F2F; }
     .entry { border: 1px solid #C8BFB6; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
     .entry-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
     .entry-type { font-weight: 600; color: #2F2F2F; }
@@ -303,49 +397,64 @@ at time of creation. Edit history is preserved in the application.
   </style>
 </head>
 <body>
-  <h1>📋 CoParent Timeline Report</h1>
-  <div class="meta">
+`;
+
+    // Cover page
+    if (isMultiSpace) {
+      html += `  <h1>📋 All Spaces Care Report</h1>\n`;
+      html += `  <div class="meta">
+    <p>Generated: ${new Date().toLocaleString()}</p>
+    <p>Entries: ${entryList.length} across ${spaceMetas.length} Spaces</p>
+    ${filters.dateFrom ? `<p>From: ${formatDate(filters.dateFrom)}</p>` : ''}
+    ${filters.dateTo ? `<p>To: ${formatDate(filters.dateTo)}</p>` : ''}
+  </div>\n`;
+
+      for (const space of spaceMetas) {
+        html += `  <div class="space-info">
+    <h3>${space.emoji} ${space.name}</h3>
+    <ul class="member-list">
+      ${space.members.map((m) => `<li>${m.name} <span class="member-role">(${m.role})</span></li>`).join('\n      ')}
+    </ul>
+  </div>\n`;
+      }
+    } else {
+      const space = spaceMetas[0];
+      html += `  <h1>📋 CoParent Timeline Report</h1>\n`;
+      html += `  <div class="meta">
     <p>Generated: ${new Date().toLocaleString()}</p>
     <p>Entries: ${entryList.length}</p>
     ${filters.dateFrom ? `<p>From: ${formatDate(filters.dateFrom)}</p>` : ''}
     ${filters.dateTo ? `<p>To: ${formatDate(filters.dateTo)}</p>` : ''}
-  </div>
-`;
+  </div>\n`;
 
-    for (const entry of entryList) {
-      const content = JSON.parse(entry.version.contentJson);
-      const statusClass =
-        entry.ackStatus === 'acknowledged'
-          ? 'status-acknowledged'
-          : entry.ackStatus === 'disputed'
-            ? 'status-disputed'
-            : 'status-pending';
-
-      html += `
-  <div class="entry">
-    <div class="entry-header">
-      <span class="entry-type">${this.getTypeLabel(entry.type)}</span>
-      <span class="entry-date">${formatDateTime(entry.createdAt)}</span>
-    </div>
-    <span class="status ${statusClass}">${entry.ackStatus || 'pending'}</span>
-    <div class="entry-content">
-      ${this.renderContentHTML(entry.type, content)}
-    </div>
-`;
-
-      if (entry.attachments.length > 0) {
-        html += `<div style="margin-top: 12px;"><strong>Attachments:</strong>`;
-        for (const att of entry.attachments) {
-          html += `
-      <div class="attachment">
-        📎 ${att.originalFilename}
-        <div class="hash">SHA-256: ${att.fileHash}</div>
-      </div>`;
-        }
-        html += `</div>`;
+      if (space) {
+        html += `  <div class="space-info">
+    <h3>${space.emoji} ${space.name}</h3>
+    <ul class="member-list">
+      ${space.members.map((m) => `<li>${m.name} <span class="member-role">(${m.role})</span></li>`).join('\n      ')}
+    </ul>
+  </div>\n`;
       }
+    }
 
-      html += `</div>`;
+    // Render entries — grouped by Space for multi-space, flat for single
+    if (isMultiSpace) {
+      for (const space of spaceMetas) {
+        const spaceEntries = entryList.filter((e) => e.spaceId === space.id);
+        if (spaceEntries.length === 0) continue;
+
+        html += `
+  <div class="space-divider"><span class="space-divider-label">${space.emoji} ${space.name}</span></div>
+`;
+
+        for (const entry of spaceEntries) {
+          html += this.renderEntryHTML(entry);
+        }
+      }
+    } else {
+      for (const entry of entryList) {
+        html += this.renderEntryHTML(entry);
+      }
     }
 
     html += `
@@ -414,6 +523,53 @@ at time of creation. Edit history is preserved in the application.
       default:
         return JSON.stringify(content);
     }
+  },
+
+  /**
+   * Render a single entry as HTML
+   */
+  renderEntryHTML(entry: {
+    ackStatus: string | null;
+    attachments: { fileHash: string; originalFilename: string }[];
+    createdAt: Date;
+    type: EntryType;
+    version: { contentJson: string };
+  }): string {
+    const content = JSON.parse(entry.version.contentJson);
+    const statusClass =
+      entry.ackStatus === 'acknowledged'
+        ? 'status-acknowledged'
+        : entry.ackStatus === 'disputed'
+          ? 'status-disputed'
+          : 'status-pending';
+
+    let html = `
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-type">${this.getTypeLabel(entry.type)}</span>
+      <span class="entry-date">${formatDateTime(entry.createdAt)}</span>
+    </div>
+    <span class="status ${statusClass}">${entry.ackStatus || 'pending'}</span>
+    <div class="entry-content">
+      ${this.renderContentHTML(entry.type, content)}
+    </div>
+`;
+
+    if (entry.attachments.length > 0) {
+      html += `<div style="margin-top: 12px;"><strong>Attachments:</strong>`;
+      for (const att of entry.attachments) {
+        html += `
+      <div class="attachment">
+        📎 ${att.originalFilename}
+        <div class="hash">SHA-256: ${att.fileHash}</div>
+      </div>`;
+      }
+      html += `</div>`;
+    }
+
+    html += `</div>`;
+
+    return html;
   },
 
   /**

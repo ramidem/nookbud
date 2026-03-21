@@ -9,13 +9,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 
+import { Alert } from '@/components/atoms';
+import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { AlertTriangleIcon, MessageCircleIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
-import { EntryService, RelationshipService } from '@/services';
+import { EntryService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 import type { CommunicationImportance } from '@/types/entry-content.types';
 
@@ -26,8 +27,9 @@ const INACTIVE_TEXT = 'text-foreground';
 
 export function AddCommunicationScreen({ navigation }: Props) {
   const tw = useTw();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
   const [isLoading, setIsLoading] = useState(false);
-  const [relationshipId, setRelationshipId] = useState<string | null>(null);
+  const [hasPermission, setHasPermission] = useState(true);
 
   // Form state
   const [subject, setSubject] = useState('');
@@ -36,16 +38,36 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
   useEffect(() => {
     async function load() {
-      const rel = await RelationshipService.getCurrentRelationship();
-      if (rel) setRelationshipId(rel.id);
+      if (isAllSpaces || !activeSpaceId) {
+        Alert.error({
+          message:
+            'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
+          title: 'No Space Selected',
+        });
+        navigation.goBack();
+
+        return;
+      }
+
+      // Role permission check
+      const role = await SpaceService.getUserRole(activeSpaceId);
+      if (role === 'viewer') {
+        Alert.error({
+          message: 'Your role in this Space does not allow creating entries.',
+          title: 'Access Denied',
+        });
+        setHasPermission(false);
+        navigation.goBack();
+      }
     }
     load();
-  }, []);
+  }, [activeSpaceId, isAllSpaces, navigation]);
 
-  const canSave = subject.trim().length > 0 && body.trim().length > 0;
+  const canSave =
+    subject.trim().length > 0 && body.trim().length > 0 && hasPermission && !isAllSpaces;
 
   const handleSave = async () => {
-    if (!canSave || !relationshipId) return;
+    if (!canSave || !activeSpaceId) return;
 
     setIsLoading(true);
     try {
@@ -55,13 +77,16 @@ export function AddCommunicationScreen({ navigation }: Props) {
           importance,
           subject: subject.trim(),
         },
-        relationshipId,
+        spaceId: activeSpaceId,
         type: 'communication',
       });
 
       navigation.goBack();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save');
+      Alert.error({
+        message: err instanceof Error ? err.message : 'Failed to save',
+        title: 'Error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +119,15 @@ export function AddCommunicationScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
+        {/* Space context pill */}
+        {activeSpace && (
+          <View style={tw`mb-4 self-start rounded-full bg-neutral-200 px-3 py-1.5`}>
+            <Text style={tw`text-foreground text-sm`}>
+              {activeSpace.emoji} {activeSpace.name}
+            </Text>
+          </View>
+        )}
+
         {/* Info banner */}
         <View style={tw`bg-primary/15 mb-6 flex-row rounded-xl p-4`}>
           <MessageCircleIcon height={16} style={tw`text-primary mr-2 mt-0.5`} width={16} />

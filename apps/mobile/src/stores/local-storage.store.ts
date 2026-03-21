@@ -1,13 +1,15 @@
 import { StateCreator, create } from 'zustand';
 import { PersistOptions, createJSONStorage, persist } from 'zustand/middleware';
 
+import { createSpaceSlice, SpaceSlice } from './space.slice';
 import { createThemeSlice, ThemeSlice } from './theme.slice';
 import { createUserSlice, UserSlice } from './user.slice';
 
 import { MmkvStorage } from '@/stores/mmkvStorage';
 
 export type LocalStorageStore = UserSlice &
-  ThemeSlice & {
+  ThemeSlice &
+  SpaceSlice & {
     _hasHydrated: boolean;
     setHasHydrated: (hasHydrated: boolean) => void;
     clear: () => void;
@@ -24,10 +26,12 @@ export const useLocalStorageStore = create<LocalStorageStore, []>(
       (() => {
         const userSlice = createUserSlice(set, get, store);
         const themeSlice = createThemeSlice(set, get, store);
+        const spaceSlice = createSpaceSlice(set, get, store);
 
         return {
           ...userSlice,
           ...themeSlice,
+          ...spaceSlice,
           _hasHydrated: false,
           clear: () => {
             userSlice.signOut();

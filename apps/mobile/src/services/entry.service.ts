@@ -55,7 +55,9 @@ export const EntryService = {
    * Create a new entry with initial version
    */
   async create(data: {
-    relationshipId: string;
+    spaceId?: string;
+    /** @deprecated Use spaceId — kept for screen compatibility until Story 39+ */
+    relationshipId?: string;
     type: EntryType;
     content: Record<string, unknown>;
     childId?: string;
@@ -66,6 +68,7 @@ export const EntryService = {
 
     const entryId = generateUUID();
     const versionId = generateUUID();
+    const resolvedSpaceId = data.spaceId ?? data.relationshipId ?? '';
 
     // Start transaction
     await opsqlite.execute('BEGIN TRANSACTION');
@@ -77,7 +80,7 @@ export const EntryService = {
         createdBy: userId,
         currentVersionId: versionId,
         id: entryId,
-        relationshipId: data.relationshipId,
+        spaceId: resolvedSpaceId,
         status: 'active',
         type: data.type,
       };
@@ -149,7 +152,7 @@ export const EntryService = {
         entityType: AUDIT_ENTITY_ENTRY,
         metadata: {
           childId: data.childId,
-          relationshipId: data.relationshipId,
+          spaceId: resolvedSpaceId,
           type: data.type,
           versionId,
         },

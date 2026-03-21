@@ -5,7 +5,7 @@ import { View, Text, Pressable, ActivityIndicator, TextInput } from 'react-nativ
 
 import { useTw } from '@/hooks/useTw';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
-import { RelationshipService } from '@/services';
+import { SpaceMemberService } from '@/services';
 import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AcceptInvite'>;
@@ -43,7 +43,7 @@ export function AcceptInviteScreen({ navigation, route }: Props) {
     setError('');
 
     try {
-      await RelationshipService.acceptInvite(code);
+      await SpaceMemberService.acceptInvite(code);
       // Navigate to main app after successful join
       navigation.dispatch(
         CommonActions.reset({

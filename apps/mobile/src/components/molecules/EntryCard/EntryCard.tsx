@@ -14,9 +14,18 @@ import {
 } from '@/icons';
 import type { TimelineEntry } from '@/services';
 
+export type SpaceInfo = {
+  id: string;
+  emoji: string;
+  color: string;
+  name: string;
+};
+
 type Props = {
   entry: TimelineEntry;
   onPress: (entry: TimelineEntry) => void;
+  spaceInfo?: SpaceInfo | null;
+  onSpacePress?: (spaceInfo: SpaceInfo) => void;
 };
 
 const TYPE_ICONS: Record<EntryType, React.FC<SvgProps>> = {
@@ -120,7 +129,7 @@ function getEntrySubtitle(entry: TimelineEntry): string | null {
   }
 }
 
-export function EntryCard({ entry, onPress }: Props) {
+export function EntryCard({ entry, onPress, onSpacePress, spaceInfo }: Props) {
   const tw = useTw();
 
   const title = getEntryTitle(entry);
@@ -128,11 +137,32 @@ export function EntryCard({ entry, onPress }: Props) {
   const statusColor = entry.acknowledgmentStatus ? STATUS_COLORS[entry.acknowledgmentStatus] : null;
   const Icon = TYPE_ICONS[entry.type];
 
+  const spacePill = spaceInfo ? (
+    <Pressable
+      style={[
+        tw`flex-row items-center rounded-full px-2 py-0.5`,
+        { backgroundColor: `${spaceInfo.color}20` },
+      ]}
+      onPress={() => onSpacePress?.(spaceInfo)}
+    >
+      <Text style={tw`mr-1 text-xs`}>{spaceInfo.emoji}</Text>
+      <Text
+        numberOfLines={1}
+        style={[tw`text-xs font-medium`, { color: spaceInfo.color, maxWidth: 80 }]}
+      >
+        {spaceInfo.name}
+      </Text>
+    </Pressable>
+  ) : null;
+
   return (
     <Pressable
       style={tw`border-divider bg-surface mb-3 rounded-xl border p-4 shadow-sm`}
       onPress={() => onPress(entry)}
     >
+      {/* Space indicator pill — top right */}
+      {spacePill && <View style={tw`mb-2 flex-row justify-end`}>{spacePill}</View>}
+
       <View style={tw`flex-row items-start`}>
         {/* Icon */}
         <View style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}>

@@ -24,13 +24,10 @@ function generateUUID(): string {
 
 export const ChildService = {
   /**
-   * Get children count for a relationship
+   * Get children count for a space
    */
-  async count(relationshipId: string): Promise<number> {
-    const result = await db
-      .select()
-      .from(children)
-      .where(eq(children.relationshipId, relationshipId));
+  async count(spaceId: string): Promise<number> {
+    const result = await db.select().from(children).where(eq(children.spaceId, spaceId));
 
     return result.length;
   },
@@ -38,16 +35,23 @@ export const ChildService = {
   /**
    * Create a new child record
    */
-  async create(data: { relationshipId: string; name: string; dateOfBirth?: Date }): Promise<Child> {
+  async create(data: {
+    spaceId?: string;
+    /** @deprecated Use spaceId — kept for screen compatibility until Story 39+ */
+    relationshipId?: string;
+    name: string;
+    dateOfBirth?: Date;
+  }): Promise<Child> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error('No current user');
 
     const id = generateUUID();
+    const resolvedSpaceId = data.spaceId ?? data.relationshipId ?? '';
     const newChild: NewChild = {
       dateOfBirth: data.dateOfBirth,
       id,
       name: data.name,
-      relationshipId: data.relationshipId,
+      spaceId: resolvedSpaceId,
     };
 
     await db.insert(children).values(newChild);
@@ -58,7 +62,7 @@ export const ChildService = {
       entityType: 'child',
       metadata: {
         name: data.name,
-        relationshipId: data.relationshipId,
+        spaceId: resolvedSpaceId,
       },
       userId,
     });
@@ -78,14 +82,18 @@ export const ChildService = {
   },
 
   /**
-   * Get all children for a relationship
+   * Get all children for a space
+   * @deprecated Use listBySpace — kept for screen compatibility until Story 39+
    */
-  async listByRelationship(relationshipId: string): Promise<Child[]> {
-    return db
-      .select()
-      .from(children)
-      .where(eq(children.relationshipId, relationshipId))
-      .orderBy(children.name);
+  async listByRelationship(spaceId: string): Promise<Child[]> {
+    return this.listBySpace(spaceId);
+  },
+
+  /**
+   * Get all children for a space
+   */
+  async listBySpace(spaceId: string): Promise<Child[]> {
+    return db.select().from(children).where(eq(children.spaceId, spaceId)).orderBy(children.name);
   },
 
   /**

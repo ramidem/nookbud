@@ -113,7 +113,7 @@ Founded 2012. Positioned around "unalterable records" of communication. Strong e
 - Court-trusted alongside OFW
 
 **Weaknesses:**
-- **Two-parent model only** — no Space concept, no guardian/viewer roles
+- **Two-parent model only** — no Space concept, no flexible role system
 - Primarily a communication tool; weak on structured record types
 - No acknowledgment/dispute workflow on individual entries
 - No structured evidence export
@@ -121,7 +121,7 @@ Founded 2012. Positioned around "unalterable records" of communication. Strong e
 - Legal professionals note that extracting records adds billable time
 
 **CoParent Opportunity:**
-TalkingParents users get good communication records but nothing for expenses, events, agreements, or disputes. And the platform cannot accommodate a grandmother, a step-parent, or a lawyer as a first-class member of the care arrangement.
+TalkingParents users get good communication records but nothing for expenses, events, agreements, or disputes. And the platform cannot accommodate a grandmother, a step-parent, or a professional as a first-class member of the care arrangement.
 
 ---
 
@@ -246,8 +246,8 @@ Cozi users who transition from cooperative to complex family situations are an a
 | Feature | OFW | TalkingParents | AppClose | 2Houses | Cozi | **CoParent** |
 |---------|-----|----------------|----------|---------|------|------------|
 | **Multiple Spaces (arrangements)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Role-based access (5+ roles)** | Partial (2 parents + viewer) | ❌ | Partial (2 + pro) | ❌ | ❌ | ✅ |
-| **Guardian/extended family as member** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Role-based access (owner/editor/viewer)** | Partial (2 parents + viewer) | ❌ | Partial (2 + pro) | ❌ | ❌ | ✅ |
+| **All caregivers as first-class members** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Tamper-proof messaging** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | **Immutable entry versions (all types)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Cryptographic file hashing (SHA-256)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
@@ -276,10 +276,10 @@ Cozi users who transition from cooperative to complex family situations are an a
 
 ---
 
-### Gap 2: No one treats guardians, extended family, or lawyers as first-class members
+### Gap 2: No one treats guardians, extended family, or professionals as first-class members
 **The problem:** OFW has "Parent A" and "Parent B." TalkingParents has the same. AppClose's "circle" concept is slightly broader but still centers on two parents. A grandparent raising a grandchild, a step-parent, an older sibling with caregiving responsibilities — none of these have a place in existing tools.
 
-**The opportunity:** CoParent's role system (owner, parent, guardian, lawyer, viewer) gives every member of the care circle a defined, appropriate level of access. A lola in Manila can be a "guardian" in a Space with full read/write access. A family lawyer can be a "lawyer" with read-only access. This is not a permission hack — it's a product design decision that makes CoParent work for how families actually function.
+**The opportunity:** CoParent's role system (owner, editor, viewer) gives every member of the care circle a defined, appropriate level of access. A lola in Manila can be an "editor" in a Space with full read/write access. A family lawyer can be a "viewer" with read-only access and export. This is not a permission hack — it's a product design decision that makes CoParent work for how families actually function.
 
 ---
 
@@ -357,7 +357,7 @@ Cozi users who transition from cooperative to complex family situations are an a
 
 ### Defensible Moats
 1. **Spaces model:** Multi-arrangement support requires fundamental architecture decisions that competitors can't bolt on
-2. **Role system:** Owner/parent/guardian/lawyer/viewer is a product-level decision, not a permission flag
+2. **Role system:** Owner/editor/viewer is a product-level decision, not a permission flag
 3. **Technical:** SHA-256 file hashing + immutable entry versioning = months of re-architecture for incumbents
 4. **Inclusive positioning:** First-mover on the "shared care records" category — competitors are locked into "co-parenting conflict" positioning
 5. **Trust model:** User-verifiable integrity vs. "trust us, it's tamper-proof"
@@ -375,7 +375,7 @@ Cozi users who transition from cooperative to complex family situations are an a
 | Dimension | CoParent Advantage |
 |-----------|-------------------|
 | Family structure support | Spaces model — any arrangement, any number of members, any role |
-| Inclusive access | Guardian, lawyer, viewer roles — not just "Parent A / Parent B" |
+| Inclusive access | Owner, editor, viewer roles — not just "Parent A / Parent B" |
 | Legal architecture | Cryptographic integrity, versioned entries, hash manifest |
 | Evidence export | PDF + JSON + attachments + manifest — built for any professional |
 | Dispute capture | Structured per-entry acknowledgment + dispute workflow |
