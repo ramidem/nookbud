@@ -248,6 +248,7 @@ Cozi users who transition from cooperative to complex family situations are an a
 | **Multiple Spaces (arrangements)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Role-based access (owner/editor/viewer)** | Partial (2 parents + viewer) | ❌ | Partial (2 + pro) | ❌ | ❌ | ✅ |
 | **All caregivers as first-class members** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Reference document layer (Resources)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Tamper-proof messaging** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | **Immutable entry versions (all types)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Cryptographic file hashing (SHA-256)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
@@ -304,14 +305,21 @@ Cozi users who transition from cooperative to complex family situations are an a
 
 ---
 
-### Gap 6: Pricing excludes the most vulnerable users
+### Gap 6: No separate reference document layer with integrity verification
+**The problem:** All competitors treat documents as attachments to messages or timeline events. None offers a dedicated reference document layer — a place for static documents like vaccination records, custody orders, or school forms that need to exist and be accessible, not recorded as events. And none provides integrity verification for these documents distinct from the activity timeline.
+
+**The opportunity:** CoParent's Resources feature is a purpose-built reference document layer per Space. Documents are SHA-256 verified, categorized (medical, school, legal, financial, identity, insurance), optionally linked to a child, and included in verified care report exports. No competitor offers this — they would need to design an entirely new document model separate from their event/message architecture.
+
+---
+
+### Gap 7: Pricing excludes the most vulnerable users
 **The problem:** OFW requires both parents to subscribe ($220–$552/year per household). The families who most need documentation — lower-income, OFW families, grandparent guardians — can't afford it.
 
 **The opportunity:** Freemium with 1 Space free. The basic arrangement (OFW parent + guardian, or separated parents with one set of children) works at no cost. Paid tiers unlock complexity (multiple Spaces, professional access, advanced exports). Free access for DV survivors and financial hardship.
 
 ---
 
-### Gap 7: No one acknowledges non-divorce use cases
+### Gap 8: No one acknowledges non-divorce use cases
 **The problem:** Every competitor's marketing, onboarding, and feature set assumes divorce. An OFW parent searching for "app to document my involvement with my child" finds nothing. A grandparent searching for "app to keep records of caring for my grandchild" finds nothing. These families are invisible to the current market.
 
 **The opportunity:** CoParent's inclusive positioning — "Shared records for everyone raising a child" — and its Spaces model make it the first tool that acknowledges and serves the full spectrum of shared care arrangements. This is not just a marketing angle — it's a structural product advantage that opens a market 3–5x larger than the divorce segment alone.
@@ -376,6 +384,7 @@ Cozi users who transition from cooperative to complex family situations are an a
 |-----------|-------------------|
 | Family structure support | Spaces model — any arrangement, any number of members, any role |
 | Inclusive access | Owner, editor, viewer roles — not just "Parent A / Parent B" |
+| Reference documents | Dedicated Resources layer with integrity verification, separate from timeline |
 | Legal architecture | Cryptographic integrity, versioned entries, hash manifest |
 | Evidence export | PDF + JSON + attachments + manifest — built for any professional |
 | Dispute capture | Structured per-entry acknowledgment + dispute workflow |

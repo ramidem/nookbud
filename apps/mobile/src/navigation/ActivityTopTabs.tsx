@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
+import { SlidersHorizontalIcon } from '@/icons';
 import { CalendarScreen } from '@/screens/Calendar';
 import { TimelineScreen } from '@/screens/Timeline';
 import { colors } from '@/tailwind';
@@ -38,6 +39,8 @@ export function useActivityFilter() {
 const TopTab = createMaterialTopTabNavigator<ActivityTopTabParamList>();
 
 const HEADER_TOP_PADDING = 8;
+const FILTER_ICON_SIZE = 20;
+const FILTER_HIT_SLOP = 8;
 
 function ActivityTabBar({ descriptors, navigation, state }: MaterialTopTabBarProps) {
   const tw = useTw();
@@ -45,55 +48,61 @@ function ActivityTabBar({ descriptors, navigation, state }: MaterialTopTabBarPro
   const { hasActiveFilters, setShowFilters } = useActivityFilter();
 
   return (
-    <View style={tw`bg-surface border-divider flex-row items-center border-b px-4 pb-2`}>
-      <View style={tw`flex-1 flex-row`}>
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const isFocused = state.index === index;
-
-          const onPress = () => {
-            const event = navigation.emit({
-              canPreventDefault: true,
-              target: route.key,
-              type: 'tabPress',
-            });
-
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            }
-          };
-
-          return (
-            <Pressable
-              key={route.key}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              accessibilityRole="tab"
-              accessibilityState={isFocused ? { selected: true } : {}}
-              style={tw`mr-4 pb-1 ${isFocused ? 'border-primary border-b-2' : ''}`}
-              onPress={onPress}
-            >
-              <Typography
-                style={tw`text-sm font-medium ${isFocused ? 'text-primary' : 'text-subtitle'}`}
-              >
-                {route.name}
-              </Typography>
-            </Pressable>
-          );
-        })}
+    <View style={tw`flex-row items-center px-4 py-2`}>
+      {/* Left: filter icon (visible on Timeline only) */}
+      <View style={tw`w-8 items-start`}>
+        {isTimelineActive && (
+          <Pressable hitSlop={FILTER_HIT_SLOP} onPress={() => setShowFilters(true)}>
+            <SlidersHorizontalIcon
+              height={FILTER_ICON_SIZE}
+              style={tw`${hasActiveFilters ? 'text-primary' : 'text-subtitle'}`}
+              width={FILTER_ICON_SIZE}
+            />
+          </Pressable>
+        )}
       </View>
 
-      {isTimelineActive && (
-        <Pressable
-          style={tw`${hasActiveFilters ? 'bg-primary/15' : 'bg-neutral-200'} rounded-lg px-3 py-1.5`}
-          onPress={() => setShowFilters(true)}
-        >
-          <Typography
-            style={tw`${hasActiveFilters ? 'text-primary' : 'text-subtitle'} text-xs font-medium`}
-          >
-            {hasActiveFilters ? 'Filtered' : 'Filter'}
-          </Typography>
-        </Pressable>
-      )}
+      {/* Center: segmented control */}
+      <View style={tw`flex-1 items-center`}>
+        <View style={tw`flex-row rounded-full bg-neutral-200 p-1`}>
+          {state.routes.map((route, index) => {
+            const { options } = descriptors[route.key];
+            const isFocused = state.index === index;
+
+            const onPress = () => {
+              const event = navigation.emit({
+                canPreventDefault: true,
+                target: route.key,
+                type: 'tabPress',
+              });
+
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name);
+              }
+            };
+
+            return (
+              <Pressable
+                key={route.key}
+                accessibilityLabel={options.tabBarAccessibilityLabel}
+                accessibilityRole="tab"
+                accessibilityState={isFocused ? { selected: true } : {}}
+                style={tw`rounded-full px-5 py-2 ${isFocused ? 'bg-surface shadow-sm' : ''}`}
+                onPress={onPress}
+              >
+                <Typography
+                  style={tw`text-sm ${isFocused ? 'text-foreground font-semibold' : 'text-subtitle font-medium'}`}
+                >
+                  {route.name}
+                </Typography>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+
+      {/* Right: spacer to balance the filter icon */}
+      <View style={tw`w-8`} />
     </View>
   );
 }
@@ -108,7 +117,7 @@ export function ActivityTopTabs() {
     <ActivityFilterContext.Provider
       value={{ hasActiveFilters, setHasActiveFilters, setShowFilters, showFilters }}
     >
-      <View style={[tw`bg-surface flex-1`, { paddingTop: insets.top + HEADER_TOP_PADDING }]}>
+      <View style={[tw`bg-background flex-1`, { paddingTop: insets.top + HEADER_TOP_PADDING }]}>
         <TopTab.Navigator
           screenOptions={{
             lazy: true,

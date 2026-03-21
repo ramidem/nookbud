@@ -30,6 +30,7 @@ import PencilLineIcon from './pencil-line.svg';
 import ScaleIcon from './scale.svg';
 import ShareIcon from './share.svg';
 import ShirtIcon from './shirt.svg';
+import SlidersHorizontalIcon from './sliders-horizontal.svg';
 import TrophyIcon from './trophy.svg';
 import UserIcon from './user.svg';
 import UsersIcon from './users.svg';
@@ -68,6 +69,7 @@ export {
   PencilLineIcon,
   ScaleIcon,
   ShareIcon,
+  SlidersHorizontalIcon,
   ShirtIcon,
   TrophyIcon,
   UserIcon,

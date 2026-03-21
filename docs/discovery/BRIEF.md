@@ -163,6 +163,20 @@ Each file:
 
 ---
 
+### 5.7 Resources (Reference Documents)
+
+Static reference documents per Space — distinct from the timeline. Not things that happened, but things you need to know or prove.
+
+- Scoped to a Space, optionally linked to a child
+- Categories: medical, school, legal, financial, identity, insurance, other
+- SHA-256 hashed at upload for integrity verification
+- Immutable (soft delete only) — no versioning, no acknowledgment
+- Included in verified care report exports
+
+**Examples:** vaccination records, custody orders, school enrollment forms, insurance cards.
+
+---
+
 ## 6. Security & Encryption
 
 ### Data Protection
@@ -220,7 +234,7 @@ Each file:
 
 ```
 users
-spaces
+spaces (archived_at — nullable, for Archive Space)
 space_members (user_id, space_id, role, label — optional relationship descriptor)
 children (linked to spaces)
 entries (scoped to spaces)
@@ -228,6 +242,7 @@ entry_versions
 attachments
 acknowledgments
 disputes
+resources (space_id, child_id?, category, file_hash — reference documents per Space)
 audit_logs
 ```
 
@@ -255,10 +270,17 @@ audit_logs
 - [ ] Onboarding rewrite (create first Space)
 - [ ] Space settings (rename, emoji/color, manage members)
 
+### Phase 4 — Resources
+- [ ] Resources — reference documents per Space (medical, school, legal, etc.)
+- [ ] Resource integrity verification (SHA-256)
+- [ ] Archive Space — hide inactive Spaces from switcher, preserve data
+- [ ] Export includes Resources
+
 ### Later Phases
-- [ ] Viewer access portal
-- [ ] Shared export links
-- [ ] Expense summaries and care pattern insights
+- [ ] Expense summaries and care pattern insights (Phase 5)
+- [ ] Viewer access portal (Phase 6)
+- [ ] Shared export links (Phase 6)
+- [ ] Web portal / PWA (Phase 6)
 - [ ] Digital signatures (PKI)
 - [ ] Calendar sync (Google/Apple)
 

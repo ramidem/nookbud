@@ -131,12 +131,7 @@ export function SettingsScreen({ navigation }: Props) {
   return (
     <View style={tw`bg-background flex-1`}>
       {/* Header */}
-      <View
-        style={[
-          tw`border-divider bg-surface border-b px-4 pb-3`,
-          { paddingTop: insets.top + HEADER_TOP_PADDING },
-        ]}
-      >
+      <View style={[tw`px-4 pb-3`, { paddingTop: insets.top + HEADER_TOP_PADDING }]}>
         <Text style={tw`text-foreground font-serif-bold text-2xl`}>Settings</Text>
       </View>
 
