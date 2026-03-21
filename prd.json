@@ -1083,7 +1083,7 @@
       "title": "Onboarding update \u2014 create and name first Space",
       "description": "Replace relationship-based onboarding with Space creation. Inclusive language. User names their Space, adds first child, optionally invites members with roles.",
       "priority": 44,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "After profile setup, user is prompted to 'Create your first Space'",
         "Space creation: name (required), emoji (optional), color (optional)",

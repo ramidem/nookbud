@@ -25,8 +25,8 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
         timezone,
       });
 
-      // Navigate to add children screen
-      navigation.navigate('AddChild');
+      // Navigate to create first Space
+      navigation.navigate('CreateSpace');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create profile');
     } finally {
@@ -75,7 +75,7 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
           )}
         </Pressable>
 
-        <Text style={tw`text-subtitle mt-4 text-center text-sm`}>Next: Add your children</Text>
+        <Text style={tw`text-subtitle mt-4 text-center text-sm`}>Next: Create your Space</Text>
       </View>
     </View>
   );
