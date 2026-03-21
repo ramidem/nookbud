@@ -123,7 +123,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Space context pill */}
         {activeSpace && (
-          <View style={tw`mb-4 self-start rounded-full bg-neutral-200 px-3 py-1.5`}>
+          <View style={tw`mb-4 self-start rounded-lg bg-neutral-200 px-3 py-1.5`}>
             <Text style={tw`text-foreground text-sm`}>
               {activeSpace.emoji} {activeSpace.name}
             </Text>

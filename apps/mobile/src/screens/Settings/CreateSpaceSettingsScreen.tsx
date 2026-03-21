@@ -61,7 +61,7 @@ export function CreateSpaceSettingsScreen({ navigation }: Props) {
           {EXAMPLE_NAMES.map((example) => (
             <Pressable
               key={example}
-              style={tw`rounded-full border px-4 py-2 ${
+              style={tw`rounded-xl border px-4 py-2 ${
                 name === example ? 'bg-primary border-primary' : 'border-divider bg-background'
               }`}
               onPress={() => setName(example)}
