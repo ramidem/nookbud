@@ -2,7 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
-import { Button, Typography } from '@/components';
+import { Button, EmojiText, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 import { SpaceService } from '@/services';
@@ -111,7 +111,7 @@ export function CreateSpaceScreen({ navigation }: Props) {
               }`}
               onPress={() => setSelectedEmoji(emoji)}
             >
-              <Typography style={tw`text-2xl`}>{emoji}</Typography>
+              <EmojiText style={tw`text-2xl`}>{emoji}</EmojiText>
             </Pressable>
           ))}
         </ScrollView>

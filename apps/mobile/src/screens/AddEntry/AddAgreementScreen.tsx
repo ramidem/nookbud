@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import { Alert } from '@/components/atoms';
+import { Alert, EmojiText } from '@/components/atoms';
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
@@ -127,7 +127,7 @@ export function AddAgreementScreen({ navigation }: Props) {
         {activeSpace && (
           <View style={tw`mb-4 self-start rounded-lg bg-neutral-200 px-3 py-1.5`}>
             <Text style={tw`text-foreground text-sm`}>
-              {activeSpace.emoji} {activeSpace.name}
+              <EmojiText>{activeSpace.emoji}</EmojiText> {activeSpace.name}
             </Text>
           </View>
         )}

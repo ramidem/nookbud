@@ -8,6 +8,7 @@ import {
   Alert,
   BottomSheet,
   Button,
+  EmojiText,
   ScreenContainer,
   ScreenHeader,
   SelectDropdown,
@@ -26,7 +27,6 @@ import {
   ArchiveRestoreIcon,
   ChevronRightIcon,
   PencilLineIcon,
-  ShareIcon,
   UsersIcon,
 } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
@@ -396,7 +396,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                       { backgroundColor: space.color ?? colors.primary },
                     ]}
                   >
-                    <Typography style={tw`text-2xl`}>{space.emoji ?? '🏠'}</Typography>
+                    <EmojiText style={tw`text-2xl`}>{space.emoji ?? '🏠'}</EmojiText>
                   </View>
                   <Typography style={tw`text-foreground flex-1 text-lg font-medium`}>
                     {space.name}
@@ -422,7 +422,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                     }`}
                     onPress={() => handleChangeEmoji(emoji)}
                   >
-                    <Typography style={tw`text-xl`}>{emoji}</Typography>
+                    <EmojiText style={tw`text-xl`}>{emoji}</EmojiText>
                   </Pressable>
                 ))}
               </ScrollView>
@@ -726,22 +726,13 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
               </Typography>
 
               <View style={tw`w-full flex-row gap-3`}>
-                <Pressable
-                  style={tw`flex-1 items-center rounded-xl bg-neutral-200 py-3`}
+                <Button
+                  style={tw`flex-1`}
+                  title={copied ? 'Copied!' : 'Copy Code'}
+                  variant="outlined"
                   onPress={handleCopyCode}
-                >
-                  <Typography style={tw`text-foreground text-sm font-medium`}>
-                    {copied ? 'Copied!' : 'Copy Code'}
-                  </Typography>
-                </Pressable>
-
-                <Pressable
-                  style={tw`bg-primary flex-1 flex-row items-center justify-center gap-2 rounded-xl py-3`}
-                  onPress={handleShareInvite}
-                >
-                  <ShareIcon height={16} style={tw`text-white`} width={16} />
-                  <Typography style={tw`text-sm font-medium text-white`}>Share</Typography>
-                </Pressable>
+                />
+                <Button style={tw`flex-1`} title="Share" onPress={handleShareInvite} />
               </View>
             </View>
           )}

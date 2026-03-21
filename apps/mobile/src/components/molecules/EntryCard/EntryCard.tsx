@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
+import { EmojiText } from '@/components';
 import type { EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import {
@@ -145,7 +146,7 @@ export function EntryCard({ entry, onPress, onSpacePress, spaceInfo }: Props) {
       ]}
       onPress={() => onSpacePress?.(spaceInfo)}
     >
-      <Text style={tw`mr-1 text-xs`}>{spaceInfo.emoji}</Text>
+      <EmojiText style={tw`mr-1 text-xs`}>{spaceInfo.emoji}</EmojiText>
       <Text
         numberOfLines={1}
         style={[tw`text-xs font-medium`, { color: spaceInfo.color, maxWidth: 80 }]}

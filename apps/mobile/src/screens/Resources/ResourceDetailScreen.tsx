@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Image, Linking, Pressable, View } from 'react-native';
 
-import { Alert, ScreenContainer, ScreenHeader, Toast, Typography } from '@/components';
+import { Alert, Button, ScreenContainer, ScreenHeader, Toast, Typography } from '@/components';
 import {
   RESOURCE_CATEGORY_DISPLAY,
   type Child,
@@ -16,7 +16,6 @@ import {
   BabyIcon,
   BookOpenIcon,
   CopyIcon,
-  ExternalLinkIcon,
   HeartPulseIcon,
   LockIcon,
   PackageIcon,
@@ -289,13 +288,7 @@ export function ResourceDetailScreen({ navigation, route }: Props) {
             <Typography style={tw`text-subtitle mt-1 text-xs`}>
               {formatFileSize(resource.fileSizeBytes)} · {resource.mimeType}
             </Typography>
-            <Pressable
-              style={tw`bg-primary mt-3 flex-row items-center justify-center rounded-xl py-3`}
-              onPress={handleOpenFile}
-            >
-              <ExternalLinkIcon height={16} style={tw`mr-2 text-white`} width={16} />
-              <Typography style={tw`font-semibold text-white`}>Open File</Typography>
-            </Pressable>
+            <Button buttonStyle={tw`mt-3`} title="Open File" onPress={handleOpenFile} />
           </View>
         </View>
 

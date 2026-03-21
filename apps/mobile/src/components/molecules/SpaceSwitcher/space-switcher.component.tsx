@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
-import { BottomSheet, Divider, Typography, useBottomSheet } from '@/components';
+import { BottomSheet, Divider, EmojiText, Typography, useBottomSheet } from '@/components';
 import { useActiveSpace } from '@/hooks';
 import { CheckCircleIcon, ChevronDownIcon, UsersIcon } from '@/icons';
 import { SpaceService, type SpaceWithRole } from '@/services';
@@ -47,7 +47,7 @@ function SpaceRow({
 }) {
   return (
     <Pressable style={tw`flex-row items-center px-4 py-3`} onPress={onPress}>
-      <Typography style={tw`text-[${EMOJI_SIZE}px] mr-3`}>{space.emoji || '🏠'}</Typography>
+      <EmojiText style={tw`text-[${EMOJI_SIZE}px] mr-3`}>{space.emoji || '🏠'}</EmojiText>
       <View style={tw`flex-1`}>
         <Typography numberOfLines={1} style={tw`text-foreground text-base font-medium`}>
           {space.name}
@@ -109,7 +109,7 @@ export const SpaceSwitcher = forwardRef<SpaceSwitcherRef, Props>((props, ref) =>
           {isAllSpaces ? (
             <UsersIcon height={ICON_SIZE} style={tw`text-primary`} width={ICON_SIZE} />
           ) : (
-            <Typography style={tw`text-lg`}>{activeSpace?.emoji || '🏠'}</Typography>
+            <EmojiText style={tw`text-lg`}>{activeSpace?.emoji || '🏠'}</EmojiText>
           )}
           <Typography
             numberOfLines={1}

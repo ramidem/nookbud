@@ -10,7 +10,7 @@ import { DefaultComponentProps } from '@/types';
 type Props = DefaultComponentProps & {
   hasBackButton?: boolean;
   extraActionComponent?: React.ReactNode;
-  title: string;
+  title: React.ReactNode;
   titleStyle?: StyleProp<ViewStyle>;
   onBackPress?: () => void;
   onExtraActionPress?: () => void;

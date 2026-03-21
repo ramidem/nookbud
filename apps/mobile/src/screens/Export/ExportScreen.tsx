@@ -2,7 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator, Switch } from 'react-native';
 
-import { PageHeader } from '@/components';
+import { Button, PageHeader } from '@/components';
 import { Alert } from '@/components/atoms';
 import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
@@ -368,19 +368,13 @@ export function ExportScreen({ navigation }: Props) {
         )}
 
         {/* Export Button */}
-        <Pressable
-          disabled={isExporting || entryCount === 0}
-          style={tw`bg-primary flex-row items-center justify-center rounded-xl py-4`}
+        <Button
+          isDisabled={entryCount === 0}
+          isLoading={isExporting}
+          size="lg"
+          title={exportType === 'pdf' ? 'Generate Report' : 'Create Evidence Bundle'}
           onPress={handleExport}
-        >
-          {isExporting ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text style={tw`text-lg font-semibold text-white`}>
-              {exportType === 'pdf' ? 'Generate Report' : 'Create Evidence Bundle'}
-            </Text>
-          )}
-        </Pressable>
+        />
 
         {entryCount === 0 && (
           <Text style={tw`text-subtitle mt-4 text-center`}>No entries match your filters</Text>

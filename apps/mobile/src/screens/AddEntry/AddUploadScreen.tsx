@@ -13,7 +13,7 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 
-import { Alert } from '@/components/atoms';
+import { Alert, EmojiText } from '@/components/atoms';
 import type { Child } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
@@ -206,7 +206,7 @@ export function AddUploadScreen({ navigation }: Props) {
         {activeSpace && (
           <View style={tw`mb-4 self-start rounded-lg bg-neutral-200 px-3 py-1.5`}>
             <Text style={tw`text-foreground text-sm`}>
-              {activeSpace.emoji} {activeSpace.name}
+              <EmojiText>{activeSpace.emoji}</EmojiText> {activeSpace.name}
             </Text>
           </View>
         )}
