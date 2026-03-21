@@ -22,7 +22,6 @@ import {
   useModal,
 } from '@/components';
 import { requestPushNotification, useToggleDarkMode } from '@/hooks';
-import { PublicScreenProps, Screens } from '@/routes';
 import { tw } from '@/tailwind';
 
 const DROPDOWN_OPTIONS = [
@@ -40,7 +39,7 @@ function SectionTitle({ title }: { title: string }) {
   );
 }
 
-export function LandingScreen(_props: PublicScreenProps<Screens.LANDING>) {
+export function ComponentsShowcaseScreen() {
   const [textValue, setTextValue] = useState('');
   const [dateModalValue, setDateModalValue] = useState<Date | undefined>();
   const [dateTextValue, setDateTextValue] = useState<Date | undefined>();
