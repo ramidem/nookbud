@@ -1191,7 +1191,7 @@
       "title": "Phase 3 QA pass",
       "description": "Comprehensive QA: migration verification, Space CRUD, member management, invite flow, active Space context, Space switcher, All Spaces timeline, onboarding, settings, entry scoping, export scoping, role enforcement.",
       "priority": 48,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "All migrated data verified: relationships \u2192 Spaces, entries linked, no data loss",
         "Space CRUD: create, list, view, rename, customize, delete, leave",
