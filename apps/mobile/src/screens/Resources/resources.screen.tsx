@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
-import { Button, EmojiText, ScreenContainer, ScreenHeader, Typography } from '@/components';
+import { Button, PageHeader, ScreenContainer, Typography } from '@/components';
 import {
   RESOURCE_CATEGORIES,
   RESOURCE_CATEGORY_DISPLAY,
@@ -58,7 +58,7 @@ function formatDate(date: Date): string {
 
 export function ResourcesScreen({ navigation }: Props) {
   const tw = useTw();
-  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
+  const { activeSpaceId, isAllSpaces } = useActiveSpace();
   const [resourceList, setResourceList] = useState<Resource[]>([]);
   const [childMap, setChildMap] = useState<Map<string, Child>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
@@ -74,18 +74,7 @@ export function ResourcesScreen({ navigation }: Props) {
     }
   }, [isAllSpaces]);
 
-  const headerTitle = useMemo(() => {
-    if (isAllSpaces) return 'All Resources';
-    if (activeSpace) {
-      return (
-        <>
-          <EmojiText>{activeSpace.emoji}</EmojiText> Resources
-        </>
-      );
-    }
-
-    return 'Resources';
-  }, [isAllSpaces, activeSpace]);
+  const headerTitle = 'Resources';
 
   const canQuery = isAllSpaces ? allSpaceIds.length > 0 : !!activeSpaceId;
 
@@ -170,8 +159,8 @@ export function ResourcesScreen({ navigation }: Props) {
 
   if (isLoading) {
     return (
-      <ScreenContainer hasScroll={false}>
-        <ScreenHeader hasBackButton={false} title={headerTitle} />
+      <ScreenContainer excludedEdges={['top']} hasScroll={false}>
+        <PageHeader title={headerTitle} />
         <View style={tw`flex-1 items-center justify-center`}>
           <ActivityIndicator color={colors.primary} size="large" />
         </View>
@@ -180,8 +169,8 @@ export function ResourcesScreen({ navigation }: Props) {
   }
 
   return (
-    <ScreenContainer hasScroll={false}>
-      <ScreenHeader hasBackButton={false} title={headerTitle} />
+    <ScreenContainer excludedEdges={['top']} hasScroll={false}>
+      <PageHeader title={headerTitle} />
 
       {/* Category filter chips */}
       <View style={tw`pb-2`}>
