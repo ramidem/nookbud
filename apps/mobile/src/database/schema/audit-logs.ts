@@ -7,6 +7,8 @@ export const AUDIT_ACTIONS = [
   'create',
   'update',
   'soft_delete',
+  'delete',
+  'leave',
   'acknowledge',
   'dispute',
   'respond',
@@ -17,6 +19,7 @@ export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 export const AUDIT_ENTITY_TYPES = [
   'user',
   'relationship',
+  'space',
   'child',
   'entry',
   'attachment',

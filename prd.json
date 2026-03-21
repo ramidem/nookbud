@@ -954,7 +954,7 @@
       "title": "SpaceService \u2014 create, list, getById, rename, delete, leave",
       "description": "Core CRUD service for Spaces. A user can create a Space (becoming owner), list their Spaces, view details, rename, update appearance, soft-delete, or leave.",
       "priority": 39,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "createSpace(name, emoji?, color?) \u2014 creates Space, adds creator as owner",
         "listSpaces(userId) \u2014 all Spaces the user is a member of, with member count and role",
