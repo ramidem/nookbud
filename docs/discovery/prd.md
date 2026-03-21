@@ -1,9 +1,8 @@
 # CoParent — Product Requirements Document
 
-> **Version:** 1.0
-> **Author:** Eli (PRD Writer)
+> **Version:** 2.0
 > **Date:** 2026-03-21
-> **Status:** Discovery Complete — Ready for Build Phase
+> **Status:** Phases 1–2 Complete — Phase 3 (Spaces) Next
 
 ---
 
@@ -12,12 +11,15 @@
 1. [Overview](#1-overview)
 2. [Problem Statement](#2-problem-statement)
 3. [Solution](#3-solution)
-4. [User Stories](#4-user-stories)
-5. [MVP Scope](#5-mvp-scope)
-6. [Success Metrics](#6-success-metrics)
-7. [Technical Constraints](#7-technical-constraints)
-8. [Timeline](#8-timeline)
-9. [Appendix](#9-appendix)
+4. [Phases Overview](#4-phases-overview)
+5. [Phase 1 — Core Evidence System (Complete)](#5-phase-1--core-evidence-system-complete)
+6. [Phase 2 — Native UX Improvements (Complete)](#6-phase-2--native-ux-improvements-complete)
+7. [Phase 3 — Spaces (Next)](#7-phase-3--spaces-next)
+8. [Phase 4 — Collaboration](#8-phase-4--collaboration)
+9. [Phase 5 — Intelligence](#9-phase-5--intelligence)
+10. [Success Metrics](#10-success-metrics)
+11. [Technical Constraints](#11-technical-constraints)
+12. [Appendix](#12-appendix)
 
 ---
 
@@ -27,31 +29,31 @@
 **CoParent**
 
 ### Tagline
-*"Built for clarity. Ready for court."*
+*"Shared records for everyone raising a child."*
 
 ### One-Line Description
-A tamper-resistant, cryptographically verifiable record system for co-parenting — built as legal evidence infrastructure from day one.
+A shared care records platform that works across family structures — verified, immutable, and exportable for courts, schools, hospitals, and immigration.
 
 ### Vision
-CoParent becomes the definitive source of truth in co-parenting disputes: a system both parents trust, lawyers depend on, and courts accept — not because of a marketing claim, but because the technical architecture makes tampering verifiably impossible.
+CoParent becomes the definitive record system for shared child care: a platform that any combination of caregivers — parents, guardians, extended family, lawyers — can trust, contribute to, and rely on when documentation matters. Not because of a marketing claim, but because the technical architecture makes tampering verifiably impossible and the product design includes every family structure.
 
 ### Positioning Statement
-CoParent is the first co-parenting platform built as a **legal evidence system** — not a communication tool with evidence features bolted on. Where competitors create records, CoParent creates evidence.
+CoParent is the first shared care records platform built for **every family structure** — not just divorced parents. Where competitors create communication logs, CoParent creates verified care records across Spaces.
 
 ### Target Audience (Summary)
-- **Primary:** High-conflict co-parents in active or anticipated litigation
-- **Secondary:** Proactive/protective co-parents building records before conflict escalates
-- **Tertiary:** Court-ordered users mandated to use a co-parenting platform
-- **B2B (Phase 2+):** Family law attorneys, mediators, parenting coordinators
+- **Primary:** Separated/divorced parents needing defensible care records
+- **Expansion:** OFW families, grandparent guardians, blended families, open adoption arrangements
+- **B2B (Phase 4+):** Family law attorneys, mediators, parenting coordinators
+- **Institutional:** Schools, hospitals, immigration agencies (as consumers of verified exports)
 
 ### Platform Strategy
-- **Phase 1:** React Native mobile app (iOS + Android)
-- **Phase 2+:** Web portal (PWA or dedicated web app)
+- **Phase 1–3:** React Native mobile app (iOS + Android)
+- **Phase 4+:** Web portal (PWA or dedicated web app)
 
 ### Business Model
-- B2C subscription: per-household or per-parent monthly/annual plans
-- Free tier with limited exports (conversion hook)
-- Professional tier for lawyers/mediators (Phase 2)
+- Freemium: 1 Space free (covers basic arrangement)
+- Paid: Multiple Spaces, advanced exports, professional access
+- Professional tier for lawyers/mediators (Phase 4)
 - Free access for domestic violence survivors and financial hardship cases
 
 ---
@@ -59,42 +61,44 @@ CoParent is the first co-parenting platform built as a **legal evidence system**
 ## 2. Problem Statement
 
 ### Who Has the Problem
-Separated and divorced parents across the US, UK, Canada, and Australia who co-parent children under 21. Estimated **45–55 million co-parenting adults** in English-speaking markets alone, with a serviceable addressable market of **3–5 million high-conflict households**.
+Anyone who shares responsibility for raising a child with another person — across households, across cities, across countries. This includes:
+- Separated and divorced parents (~45–55M in English-speaking markets)
+- OFW families (~10M+ Filipino OFWs, millions more globally)
+- Grandparent and relative guardians (~2.7M in the US, ~3–5M in the Philippines)
+- Blended families (~16M US adults in step-family households)
+- Open adoption families (~500K active arrangements in the US)
+
+**Total addressable: ~150–200M adults globally.**
 
 ### What the Problem Is
 
-Co-parents in conflict face a fundamental documentation crisis: **memory is disputed, records are incomplete, and courts demand evidence.**
+People sharing responsibility for a child's care face a documentation crisis: **care happens daily, records are scattered, and no shared system captures who did what, when, and whether it was acknowledged.**
 
-Current workarounds all fail in court:
+This problem manifests differently depending on the context:
 
-| Workaround | Why It Fails |
-|------------|-------------|
-| Text messages / iMessage | Screenshots are contestable, out of context, easily "edited" visually |
-| Spreadsheets | Editable with no audit trail; "who changed this?" is unanswerable |
-| Notes apps | No integrity verification; timestamps are user-controlled |
-| Email chains | Disorganized, no structure, no acknowledgment system |
-| Existing co-parenting apps | Focus on communication only; immutability limited to messages; no cryptographic file verification; exports require significant attorney prep time |
+| Context | Documentation Need | Current Workaround | Why It Fails |
+|---------|-------------------|-------------------|--------------|
+| Custody dispute | Court-admissible evidence | Screenshots, spreadsheets, notes apps | Editable, contestable, disorganized |
+| OFW immigration petition | Proof of ongoing parental involvement | WhatsApp call logs, remittance receipts | Not structured, not verified, not accepted |
+| Guardian school enrollment | Proof of care authority | Handwritten notes, SPA from consulate | Slow, expensive, single-use |
+| Blended family coordination | Separate records per arrangement | Multiple accounts on different apps | No tool supports multiple arrangements |
+| Open adoption compliance | Record of openness agreement adherence | Email threads, text messages | Scattered, unverifiable, no shared view |
 
 ### The Critical Gap
-No existing tool treats **the entire co-parenting record** — expenses, events, agreements, communication, and uploaded documents — as a legal evidence ledger with:
-- Cryptographic file integrity (SHA-256 hashing)
-- Immutable version-diffed history for all entry types
-- Structured acknowledgment + dispute workflow per entry
-- A court-export bundle (PDF + JSON + hash manifest) designed for legal professionals
+No existing tool:
+- Supports **multiple care arrangements** (Spaces) per user
+- Treats **guardians and extended family** as first-class members with defined roles
+- Provides **cryptographic file integrity** (SHA-256 hashing)
+- Offers **immutable version-diffed history** for all entry types (not just messages)
+- Produces a **verified care report** usable across institutions (courts, schools, hospitals, immigration)
 
-### Why It Matters Now (Market Timing)
-
-**AI-fabricated evidence is an active 2024–2026 legal crisis.** AI-generated deepfakes, fabricated messages, and forged financial documents are being submitted in custody cases. Courts are alarmed. Any digital record without cryptographic provenance is now suspect — and this directly creates the CoParent opportunity.
-
-**72% of family law cases involve self-represented litigants** (Clio 2026). These parents need tools that are simple to use but legally sound.
-
-**The window is open.** OurFamilyWizard has validated court-ordered app adoption (50 US states), but it's a 2001-era product resting on brand equity. The "legal evidence record" niche is genuinely underserved. Estimated 3–5 years before a well-funded player dominates.
-
-### Scale of Problem
-- ~$15,000+ average US divorce cost; significant portion is lawyer time organizing inadequate records
-- Family law attorneys bill $300–500/hour to do record-organization work that structured software should handle
-- High-conflict cases: 10–15% of ~700K annual US divorce caseload = 70,000–105,000 new cases/year in the US alone
-- **SAM revenue potential: $540M–$1.2B/year** at $15–20/month per household pair
+### Why It Matters Now
+- AI-fabricated evidence is an active legal crisis (2024–2026)
+- OFW migration at all-time highs with no documentation tools
+- Family structures have diversified beyond the 2-parent model
+- 72% of family law cases involve self-represented litigants
+- Court acceptance of digital records is mainstream
+- The co-parenting app market is established but locked into a narrow model
 
 ---
 
@@ -102,565 +106,563 @@ No existing tool treats **the entire co-parenting record** — expenses, events,
 
 ### How CoParent Solves It
 
-CoParent provides a single, shared, legally defensible record system where **every co-parenting event is logged immutably, cryptographically verified, mutually acknowledged, and exportable in court-ready format** — with no technical expertise required.
+CoParent provides **Spaces** — care circles where every member can log immutable, verifiable care records. Each Space has its own members, children, timeline, and roles. A user can belong to multiple Spaces and switch between them.
 
 ### Core Capabilities
 
-#### 3.1 Immutable Evidence Feed (Timeline)
-Every action becomes a permanent, versioned entry. Entries are never deleted — only amended (with full version history). Entry types cover the full spectrum of co-parenting activity:
+#### 3.1 Spaces (Care Circles)
+The organizing primitive. Each Space represents one care arrangement around one child or group of children. Members have roles (owner, parent, guardian, lawyer, viewer) that define their access level.
 
-- **Expense** — with receipt upload, split tracking, reimbursement status
-- **Event** — pickups, dropoffs, school events, medical appointments
-- **Agreement** — decisions made together (documented and acknowledged)
-- **Communication** — structured messages (not chat; evidence-grade)
-- **Upload** — documents, photos, videos with hash verification
+#### 3.2 Immutable Care Feed (Timeline)
+Every action becomes a permanent, versioned entry within a Space. Entries are never deleted — only amended. Entry types: Expense, Event, Agreement, Communication, Upload.
 
-#### 3.2 Cryptographic File Integrity
-Every uploaded file is SHA-256 hashed at upload. The hash is stored server-side and included in every evidence export. A lawyer or judge can independently verify that the exported file matches the original upload — without trusting CoParent's word.
+#### 3.3 Cryptographic File Integrity
+Every uploaded file is SHA-256 hashed at upload. The hash is stored server-side and included in every export. Any professional can independently verify file integrity.
 
-#### 3.3 Versioned Audit Trail
-Every change creates a new version with a diff of what changed, who changed it, and when (server-side timestamp). The original is never overwritten. This applies to all entry types, not just messages.
+#### 3.4 Versioned Audit Trail
+Every change creates a new version with a diff. The original is never overwritten. Applies to all entry types, not just messages.
 
-#### 3.4 Acknowledgment + Dispute System
-Every entry has a status:
-- `pending` — awaiting the other parent's response
-- `acknowledged` — confirmed by the other parent (timestamped)
-- `disputed` — challenged with reason, counter-evidence, and threaded response
+#### 3.5 Acknowledgment + Dispute System
+Every entry has a status: `pending`, `acknowledged`, or `disputed`. Both sides of every dispute are captured in the structured record.
 
-Both sides of every dispute are captured in the structured record — not in a separate chat thread.
+#### 3.6 Verified Care Report (Export)
+Three formats, all filterable by date range, child, entry type, and Space:
 
-#### 3.5 Court-Ready Export (Killer Feature)
-Three export formats, all filterable by date range, child, and entry type:
-
-**A. Timeline Report (PDF)** — Human-readable for lawyers and judges. Chronological, timestamped, authors, status, inline attachments.
-
-**B. Evidence Bundle (ZIP)** — PDF summary + JSON data + all attachments + SHA-256 hash manifest file. Designed for legal professionals. Hash manifest enables independent integrity verification.
-
+**A. Timeline Report (PDF)** — Human-readable for lawyers, judges, schools, hospitals, immigration officers.
+**B. Evidence Bundle (ZIP)** — PDF + JSON + attachments + SHA-256 hash manifest.
 **C. Audit Report** — Full edit history, acknowledgment logs, dispute logs.
 
-### Unique Angle — Why This Approach
-Every competitor has bolted legal features onto a communication tool. CoParent is architected as an evidence system first — the coordination features (calendar, expense tracking) serve the evidence layer, not the other way around.
-
-**Technical moat:** SHA-256 file hashing + immutable entry versioning across all data types + hash manifest in exports = months of re-architecture for incumbents to match. They'd have to break backward compatibility with existing records.
-
-**Trust model moat:** User-verifiable integrity vs. "trust us, it's tamper-proof." A user's lawyer can independently verify CoParent records without subpoenaing the company.
-
 ### Unfair Advantages
-1. **First-mover on cryptographic evidence bundles** — creates case law association as courts accept hash-verified records
-2. **Architecture-level immutability** — not a UX feature, a database design decision; competitors can't replicate without rebuild
-3. **Both-sides capture** — records with mutual acknowledgment are structurally more credible than one-parent records
-4. **Calm, neutral UX** — users are emotionally taxed; the design should de-escalate, not inflame
+1. **Spaces model** — multi-arrangement support requires fundamental architecture decisions competitors can't bolt on
+2. **Role system** — owner/parent/guardian/lawyer/viewer is a product-level decision, not a permission flag
+3. **Cryptographic evidence bundles** — first-mover on hash manifest creates case law association
+4. **Architecture-level immutability** — database design, not a UX feature
+5. **Inclusive positioning** — 3–5x larger addressable market than divorce-only competitors
 
 ---
 
-## 4. User Stories
+## 4. Phases Overview
 
-### Persona 1: Marcus — The High-Conflict Parent
-*37, Atlanta USA, active custody modification hearing, paying $300/hr for lawyer to organize his records*
+| Phase | Name | Status | Core Deliverable |
+|-------|------|--------|-----------------|
+| 1 | Core Evidence System | Complete | Timeline, entries, audit trail, export, acknowledgment, dispute |
+| 2 | Native UX Improvements | Complete | Date pickers, calendar, partner invite, Supabase, notifications |
+| 3 | Spaces | Next | Multi-space, roles, Space switcher, All Spaces view, onboarding rewrite |
+| 4 | Collaboration | Planned | Lawyer/viewer portal, shared export links, read-only invite links |
+| 5 | Intelligence | Planned | Expense summaries, care pattern insights, reminders |
 
 ---
 
-**US-1: Log an expense entry with receipt**
-> *As Marcus, I want to log an expense with a photo receipt, amount, and category, so that I have a timestamped, immutable record of every co-parenting expense I pay.*
+## 5. Phase 1 — Core Evidence System (Complete)
+
+Phase 1 established the evidence architecture and the core care record loop.
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| User auth & onboarding | Registration, email verification, profile setup | Complete |
+| Partner invitation | Email-based invite to link two accounts | Complete |
+| Children management | Add/edit children linked to relationship | Complete |
+| Timeline feed (mobile) | Scrollable, chronological care feed | Complete |
+| Expense entry | Log expenses with amount, currency, category, receipt | Complete |
+| Event entry | Log pickups, dropoffs, appointments | Complete |
+| Agreement entry | Log mutual decisions, require acknowledgment | Complete |
+| Communication entry | Structured message (evidence-grade) | Complete |
+| Upload entry | Standalone document/media upload | Complete |
+| File upload + SHA-256 hashing | Every file hashed at upload | Complete |
+| Audit trail / version history | Every edit creates new version with diff | Complete |
+| Acknowledgment system | Per-entry pending/acknowledged/disputed | Complete |
+| Dispute layer | Dispute reason, counter-evidence, threaded response | Complete |
+| Server-side timestamps | All entries timestamped by server | Complete |
+| Court-ready PDF export | Timeline report PDF, filterable | Complete |
+| Evidence bundle (ZIP) | PDF + JSON + attachments + hash manifest | Complete |
+| Multi-currency expenses | ISO 4217 currency support | Complete |
+| i18n-ready architecture | Strings externalized, UTC timestamps | Complete |
+| Role-based access (2 parents) | Two-parent access model | Complete |
+| Soft delete (no hard deletes) | Records never permanently destroyed | Complete |
+| Encrypted storage | AES-256 at rest, TLS 1.3 in transit | Complete |
+
+---
+
+## 6. Phase 2 — Native UX Improvements (Complete)
+
+Phase 2 improved the native experience and laid the Supabase foundation for sync and collaboration.
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Native date pickers | Platform-native date/time selection | Complete |
+| Calendar view | Responsibility ledger with schedule visualization | Complete |
+| Partner invite improvements | Improved invitation flow | Complete |
+| Supabase foundation | Client, auth service, sync infrastructure | Complete |
+| Push notifications | Local notifications for care events | Complete |
+
+---
+
+## 7. Phase 3 — Spaces (Next)
+
+### Overview
+
+Phase 3 transforms CoParent from a 2-parent app into a **multi-Space, multi-role shared care records platform.** This is the architectural pivot that unlocks the inclusive market — OFW families, grandparent guardians, blended families, and open adoption arrangements.
+
+### Key Changes
+- `relationships` table → `spaces` + `space_members` tables
+- Fixed "Parent A / Parent B" roles → flexible role system (owner, parent, guardian, lawyer, viewer)
+- Single arrangement per user → multiple Spaces per user
+- No space context → active Space context with switcher
+- Single timeline → per-Space timeline + All Spaces merged view
+
+---
+
+### Phase 3 User Stories
+
+---
+
+**S3-01: Schema migration — spaces and space_members tables**
+
+> *As a developer, I need to migrate the database from the `relationships` model to `spaces` + `space_members`, so that the app supports multiple care arrangements with flexible roles.*
+
+**Description:**
+Replace the `relationships` table with `spaces` and `space_members`. Migrate existing relationship data into the new schema. All existing entries, children, and acknowledgments must be re-linked to Spaces. This is the foundational migration for Phase 3.
 
 **Acceptance Criteria:**
-- [ ] Marcus can create an expense entry with: amount, currency, category, date, notes, and receipt photo/PDF
-- [ ] Entry is timestamped server-side (not client-side) on creation
-- [ ] Receipt file is SHA-256 hashed at upload; hash stored with entry
-- [ ] Entry appears immediately in the shared timeline
-- [ ] The other parent receives a notification (in-app) of the new entry
-- [ ] Entry status is set to `pending` until the other parent acknowledges or disputes it
+- [ ] `spaces` table created with: id (UUID), name, emoji, color, created_by (FK: users), created_at, updated_at
+- [ ] `space_members` table created with: id (UUID), space_id (FK: spaces), user_id (FK: users), role (enum: owner, parent, guardian, lawyer, viewer), joined_at, invited_by (FK: users)
+- [ ] `children` table updated: `relationship_id` → `space_id` (FK: spaces)
+- [ ] `entries` table updated: `relationship_id` → `space_id` (FK: spaces)
+- [ ] All existing relationship data migrated: each relationship becomes a Space; parent_a becomes owner, parent_b becomes parent
+- [ ] Migration is reversible (down migration exists)
+- [ ] All existing entries, children, and acknowledgments correctly linked to migrated Spaces
+- [ ] `relationships` table dropped after successful migration verification
+
+**Files:** Database migration files, schema definitions, SpaceService, SpaceMemberService
+**Dependencies:** None — this is the first Phase 3 story
 
 ---
 
-**US-2: View full audit trail for a disputed entry**
-> *As Marcus, I want to see the complete version history of any entry, so that I can prove what was originally recorded versus what was later amended.*
+**S3-02: SpaceService — create, list, getById, rename, delete, leave**
+
+> *As a user, I want to create and manage Spaces so that I can organize my care arrangements separately.*
+
+**Description:**
+Implement the core SpaceService with CRUD operations for Spaces. A user can create a Space (becoming the owner), list their Spaces, view a single Space, rename it, customize its emoji/color, delete it (soft delete), or leave it.
 
 **Acceptance Criteria:**
-- [ ] Marcus can view a list of all versions for any entry, from v1 to current
-- [ ] Each version shows: timestamp, who made the change, and a diff of what changed
-- [ ] Original version (v1) is always accessible and clearly labeled
-- [ ] Version history is read-only; cannot be edited or deleted
-- [ ] Full version history is included in court exports
+- [ ] `createSpace(name, emoji?, color?)` — creates a Space, adds the creating user as `owner`
+- [ ] `listSpaces(userId)` — returns all Spaces the user is a member of, with member count and role
+- [ ] `getSpaceById(spaceId, userId)` — returns Space details including members, children, and the user's role (only if user is a member)
+- [ ] `renameSpace(spaceId, name, userId)` — only owner can rename
+- [ ] `updateSpaceAppearance(spaceId, emoji?, color?, userId)` — only owner can update
+- [ ] `deleteSpace(spaceId, userId)` — only owner can soft-delete; all entries preserved in audit
+- [ ] `leaveSpace(spaceId, userId)` — any non-owner member can leave; owner must transfer ownership first
+- [ ] All operations logged in audit_logs
+- [ ] Authorization checks: only members can access their Spaces; role-based write permissions
+
+**Files:** SpaceService, Space model/types, API routes
+**Dependencies:** S3-01
 
 ---
 
-**US-3: Export a court-ready evidence bundle**
-> *As Marcus, I want to generate an evidence bundle (PDF + ZIP with hash manifest) for a date range, so that I can hand it to my lawyer without hours of manual prep.*
+**S3-03: SpaceMemberService — invite by code, accept invite, assign role, remove member**
+
+> *As a Space owner, I want to invite people to my Space and assign them roles, so that everyone in the care circle has appropriate access.*
+
+**Description:**
+Implement SpaceMemberService for managing Space membership. Owners can generate invite codes/links, assign roles, and remove members. Invited users can accept invitations to join a Space.
 
 **Acceptance Criteria:**
-- [ ] Marcus can trigger an export with filters: date range, child(ren), entry types
-- [ ] PDF output is chronological, includes all entries with timestamps, authors, statuses, and inline attachment thumbnails
-- [ ] ZIP bundle includes: PDF, JSON data file, all attachments, SHA-256 hash manifest
-- [ ] Hash manifest lists every file's name, upload timestamp, and hash
-- [ ] Export completes within 60 seconds for typical usage (≤500 entries)
-- [ ] Export is accessible from the mobile app and downloadable
+- [ ] `generateInviteCode(spaceId, role, userId)` — owner generates a 6-character invite code with expiry (7 days) and pre-assigned role
+- [ ] `generateInviteLink(spaceId, role, userId)` — owner generates a deep link containing the invite code
+- [ ] `acceptInvite(inviteCode, userId)` — user joins the Space with the pre-assigned role; invite code is consumed
+- [ ] `assignRole(spaceId, memberId, newRole, userId)` — owner can change any member's role (except their own)
+- [ ] `removeMember(spaceId, memberId, userId)` — owner can remove any non-owner member
+- [ ] `transferOwnership(spaceId, newOwnerId, userId)` — current owner transfers ownership to another member
+- [ ] Invite codes are single-use and expire after 7 days (with re-generate option)
+- [ ] A user cannot join a Space they're already a member of
+- [ ] Role-based permission enforcement: only `owner` can invite, assign roles, and remove members
+- [ ] All membership changes logged in audit_logs
+
+**Files:** SpaceMemberService, invite code generation, API routes
+**Dependencies:** S3-01, S3-02
 
 ---
 
-**US-4: Track acknowledgment status on all entries**
-> *As Marcus, I want to see whether the other parent has acknowledged each entry, so that I know when I have mutual confirmation vs. a pending or disputed record.*
+**S3-04: Active Space context — useActiveSpace() hook, MMKV persistence**
+
+> *As a user with multiple Spaces, I want the app to remember which Space I was last using and scope all actions to that Space.*
+
+**Description:**
+Implement active Space context throughout the app. The active Space determines which timeline, children, and members are visible. The selection persists across app restarts via MMKV.
 
 **Acceptance Criteria:**
-- [ ] Every entry shows its current status: `pending`, `acknowledged`, or `disputed`
-- [ ] Status change (acknowledge or dispute) is timestamped server-side
-- [ ] Marcus can filter the timeline by status
-- [ ] Unacknowledged entries older than 7 days are visually highlighted (reminder state)
+- [ ] `useActiveSpace()` hook returns: activeSpace (object), setActiveSpace (setter), isAllSpaces (boolean)
+- [ ] Active Space ID persisted in MMKV; restored on app launch
+- [ ] If persisted Space no longer exists (user was removed or Space deleted), fallback to first available Space
+- [ ] If user has no Spaces, redirect to Space creation flow
+- [ ] Setting active Space to `null` or a sentinel value activates "All Spaces" mode
+- [ ] All timeline queries, entry creation, and child listing are scoped to the active Space (or all Spaces in "All Spaces" mode)
+- [ ] Active Space context is available throughout the app via Zustand or Jotai atom
+
+**Files:** useActiveSpace hook, MMKV persistence layer, Zustand/Jotai store updates
+**Dependencies:** S3-01, S3-02
 
 ---
 
-### Persona 2: Siobhán — The Proactive/Protective Parent
-*34, Dublin Ireland, amicable separation, building records "just in case"*
+**S3-05: Space switcher UI — header dropdown**
 
----
+> *As a user with multiple Spaces, I want to quickly switch between Spaces from the main header, so that I can move between care arrangements without navigating to settings.*
 
-**US-5: Log a custody event (pickup/dropoff) quickly**
-> *As Siobhán, I want to log a pickup or dropoff event in under 30 seconds from my phone, so that I maintain a running record without it feeling like surveillance.*
+**Description:**
+Add a Space switcher to the app header. Shows the current Space name + emoji. Tapping opens a dropdown or bottom sheet listing all Spaces + "All Spaces" option. Selecting a Space switches the active context immediately.
 
 **Acceptance Criteria:**
-- [ ] Siobhán can create an event entry with: type (pickup/dropoff/activity/appointment), assigned parent, date/time, child, and optional notes
-- [ ] Entry can be created from the timeline feed in ≤3 taps
-- [ ] No mandatory fields beyond type, child, and date/time
-- [ ] Entry is server-timestamped on creation
-- [ ] Co-parent receives notification with option to acknowledge
+- [ ] Header displays: active Space emoji + name (or "All Spaces" with a distinct icon)
+- [ ] Tapping the header element opens a bottom sheet or dropdown listing all user's Spaces
+- [ ] Each Space in the list shows: emoji, name, member count, user's role badge
+- [ ] "All Spaces" option at the top of the list with a distinct visual treatment
+- [ ] Selecting a Space closes the picker and immediately switches the active Space
+- [ ] Timeline, calendar, and all scoped views update to reflect the new active Space
+- [ ] If user has only 1 Space, the switcher still appears but indicates it's the only Space
+- [ ] Smooth animation on open/close (use BottomSheet component)
+
+**Files:** Space switcher component, header integration, bottom sheet
+**Dependencies:** S3-02, S3-04
 
 ---
 
-**US-6: Log a mutual agreement**
-> *As Siobhán, I want to record an agreement we've both made (e.g., "school in Dublin for the next academic year"), so that it's documented, acknowledged by both of us, and retrievable if things change.*
+**S3-06: All Spaces timeline — merged feed with Space indicators**
+
+> *As a user with multiple Spaces, I want to see a merged timeline across all my Spaces, so that I have a consolidated view of all care activity.*
+
+**Description:**
+When "All Spaces" is the active context, the timeline merges entries from all the user's Spaces into a single chronological feed. Each entry is tagged with its Space emoji and color for visual distinction.
 
 **Acceptance Criteria:**
-- [ ] Siobhán can create an agreement entry with: description, effective date, related child(ren)
-- [ ] Agreement entries require acknowledgment from the other parent before status moves to `acknowledged`
-- [ ] Both parents can add notes to the agreement thread before acknowledgment
-- [ ] Acknowledged agreements display prominently in a dedicated "Agreements" view
-- [ ] Agreements are included in all exports
+- [ ] When active context is "All Spaces," timeline queries fetch entries from all user's Spaces
+- [ ] Each entry in the merged feed displays the Space emoji + color indicator alongside the entry
+- [ ] Entries are sorted chronologically (most recent first) across all Spaces
+- [ ] Tapping a Space indicator on an entry switches the active context to that Space
+- [ ] Filtering by entry type works across all Spaces
+- [ ] Performance: merged feed loads within 1 second for typical usage (≤5 Spaces, ≤500 entries total)
+- [ ] Pull-to-refresh fetches latest entries from all Spaces
+
+**Files:** Timeline query updates, entry card component (Space indicator), All Spaces data fetching
+**Dependencies:** S3-04, S3-05
 
 ---
 
-**US-7: Onboard the other parent via invitation**
-> *As Siobhán, I want to invite my co-parent via email or link, so that we're both on the same record system and entries are mutually visible.*
+**S3-07: Onboarding update — create and name first Space**
+
+> *As a new user, I want to create my first Space during onboarding, so that I start with a properly set up care arrangement instead of a generic "relationship."*
+
+**Description:**
+Replace the current onboarding flow that creates a "relationship" with a flow that creates a Space. New users name their Space, optionally choose an emoji and color, and add their first child. The language should be inclusive — not assuming divorce or conflict.
 
 **Acceptance Criteria:**
-- [ ] Siobhán can send an invitation by email to co-parent from within the app
-- [ ] Invitation link expires after 7 days (with re-send option)
-- [ ] When co-parent accepts, both accounts are linked under the same "co-parenting relationship"
-- [ ] Co-parent sees the same timeline from their own account perspective
-- [ ] Children must be added by the inviting parent; co-parent can confirm child details
+- [ ] After registration and profile setup, user is prompted to "Create your first Space"
+- [ ] Space creation step includes: name (required), emoji (optional, default provided), color (optional, default provided)
+- [ ] Inclusive onboarding copy — e.g., "A Space is your care circle for a child or group of children. Name it anything that makes sense to you."
+- [ ] Examples shown: "Finn & Ava's Space," "Lola Cora's Care," "Portland Family"
+- [ ] After Space creation, user adds first child (name, date of birth)
+- [ ] After child creation, user is prompted to invite members (optional, can skip)
+- [ ] Invite flow uses role selection: "What is this person's role?" with options: parent, guardian, lawyer, viewer
+- [ ] User becomes the `owner` of the created Space
+- [ ] Existing users with migrated relationships see their Space already set up (no re-onboarding)
+
+**Files:** Onboarding screens, Space creation form, invite flow updates
+**Dependencies:** S3-01, S3-02, S3-03
 
 ---
 
-**US-8: View the timeline in a calm, neutral interface**
-> *As Siobhán, I want the app to feel organized and professional, not adversarial, so that I don't feel like I'm treating my co-parent as an enemy just by using it.*
+**S3-08: Settings — manage Spaces**
+
+> *As a user, I want to manage my Spaces from settings — rename, change appearance, view members, invite new members, and see roles.*
+
+**Description:**
+Add a "My Spaces" section to Settings. Each Space shows its members, roles, and management options. Owners get additional controls (rename, change emoji/color, invite, manage roles, remove members).
 
 **Acceptance Criteria:**
-- [ ] No aggressive language in UI copy (follow the neutral language guide: "Recorded" not "You owe"; "Not completed" not "Failed to")
-- [ ] Entry status indicators use calm color system (muted, not alarming)
-- [ ] Timeline scrolls chronologically with clear date separators
-- [ ] No "score" or "balance due" framing for expenses — only neutral labels
-- [ ] App passes a copy review checklist for neutral language
+- [ ] Settings screen includes "My Spaces" section listing all user's Spaces
+- [ ] Each Space entry shows: emoji, name, member count, user's role
+- [ ] Tapping a Space opens Space detail screen showing:
+  - Space name, emoji, color
+  - All members with their roles and join dates
+  - Children in this Space
+  - Owner-only actions: rename, change emoji/color, invite member, change member role, remove member
+  - Any member: leave Space (non-owners only)
+- [ ] "Create New Space" button at the bottom of the Spaces list
+- [ ] Invite member flow: generate invite code or share invite link; select role for invitee
+- [ ] Role display uses human-readable labels with brief descriptions (e.g., "Guardian — Full access to log and view care records")
+- [ ] Leaving a Space requires confirmation dialog
+- [ ] Deleting a Space (owner only) requires confirmation with warning about data preservation
+
+**Files:** Settings screen updates, Space detail screen, member management components
+**Dependencies:** S3-02, S3-03
 
 ---
 
-### Persona 3: Tyler — The Court-Ordered User
-*42, Vancouver Canada, judge-mandated co-parenting app, compliance-focused*
+**S3-09: Entry creation scoped to active Space**
 
----
+> *As a user, I want new entries to automatically belong to the active Space, so that records are always filed in the correct care arrangement.*
 
-**US-9: Log a receipt in under 60 seconds on mobile**
-> *As Tyler, I want to photograph a receipt and submit it as a logged expense from my phone in under 60 seconds, so that compliance logging doesn't interfere with my workday.*
+**Description:**
+Ensure all entry creation flows (expense, event, agreement, communication, upload) are scoped to the active Space. The Space context should be visible during entry creation. If "All Spaces" is active, the user must select a Space before creating an entry.
 
 **Acceptance Criteria:**
-- [ ] Camera-first entry flow: tap "+" → select "Expense" → camera opens immediately
-- [ ] Photo captured → amount + category fields auto-surfaced
-- [ ] Entry submitted in ≤3 screens / ≤60 seconds from launch
-- [ ] Entry receives server-side timestamp on submission
-- [ ] Confirmation screen shows entry ID and timestamp for Tyler's records
+- [ ] All entry creation forms include the active Space as context (displayed but not editable)
+- [ ] Created entries are automatically linked to the active Space's `space_id`
+- [ ] If active context is "All Spaces," entry creation prompts the user to select a target Space first
+- [ ] Child selection dropdown only shows children belonging to the active Space
+- [ ] Acknowledgment notifications are sent to members of the entry's Space (not all Spaces)
+- [ ] Entry creation respects role permissions: only owner, parent, and guardian roles can create entries; lawyer and viewer cannot
+
+**Files:** Entry creation forms, Space context integration, notification scoping
+**Dependencies:** S3-04
 
 ---
 
-**US-10: Receive acknowledgment notifications**
-> *As Tyler, I want to be notified immediately when the other parent acknowledges or disputes one of my entries, so that I know the record is complete or needs a response.*
+**S3-10: Export scoped to Spaces**
+
+> *As a user, I want to export records for a specific Space or all Spaces, so that I can produce verified reports relevant to a particular care arrangement.*
+
+**Description:**
+Update the export system to support Space-scoped and cross-Space exports. Single-Space exports include only that Space's records. All-Spaces exports include a Space identifier per entry.
 
 **Acceptance Criteria:**
-- [ ] Push notification sent within 60 seconds of acknowledgment or dispute action
-- [ ] Notification includes: entry type, entry date, status change (acknowledged / disputed)
-- [ ] Tapping notification opens directly to the relevant entry
-- [ ] In-app notification badge for unacknowledged entries
+- [ ] Export flow includes Space selection: specific Space or "All Spaces"
+- [ ] Single-Space PDF export includes Space name, members, and roles in the cover page
+- [ ] All-Spaces PDF export groups entries by Space with clear section headers
+- [ ] ZIP evidence bundle includes Space metadata in the JSON data file
+- [ ] Hash manifest includes Space context per file
+- [ ] Export filters (date range, child, entry type) work within Space scope or across all Spaces
+- [ ] Audit report export includes Space membership changes (joins, leaves, role changes)
+
+**Files:** Export service updates, PDF template updates, ZIP bundle generation
+**Dependencies:** S3-04
 
 ---
 
-**US-11: Respond to a dispute with counter-evidence**
-> *As Tyler, I want to add a counter-response (including a document) to a disputed entry, so that my side of the story is captured in the formal record.*
+**S3-11: Phase 3 QA pass**
+
+> *As the development team, we need to verify that all Phase 3 features work correctly end-to-end and that the migration preserves all existing data.*
+
+**Description:**
+Comprehensive QA pass covering: schema migration verification, Space CRUD, member management, invite flow, active Space context, Space switcher, All Spaces timeline, onboarding, settings, entry creation scoping, export scoping, and role-based access control.
 
 **Acceptance Criteria:**
-- [ ] Tyler can view all entries the other parent has marked `disputed`, with the dispute reason visible
-- [ ] Tyler can add a written response and/or upload a file as counter-evidence
-- [ ] Counter-evidence file is SHA-256 hashed at upload
-- [ ] Dispute thread (reason → response → counter-response) is stored as part of the entry record
-- [ ] Full dispute thread is included in exports
+- [ ] All migrated data verified: existing relationships → Spaces, entries linked correctly, no data loss
+- [ ] Space CRUD: create, list, view, rename, customize, delete, leave — all working
+- [ ] Member management: invite by code, accept, assign role, remove, transfer ownership — all working
+- [ ] Active Space: persists across app restart, handles edge cases (removed from Space, Space deleted)
+- [ ] Space switcher: opens, lists Spaces, switches context, updates timeline
+- [ ] All Spaces timeline: merged feed, Space indicators, correct chronological ordering
+- [ ] Onboarding: new user creates Space + child + optional invite
+- [ ] Settings: view Spaces, manage members, invite flow, role display
+- [ ] Entry creation: scoped to active Space, role-based creation permissions enforced
+- [ ] Export: single-Space and all-Spaces exports produce correct output
+- [ ] Role enforcement: lawyer and viewer cannot create entries; guardian can; owner manages membership
+- [ ] No regressions in Phase 1 and Phase 2 features
+- [ ] ESLint passes (`npx nx run mobile:lint`)
+- [ ] TypeScript compiles (`tsc --noEmit`)
+
+**Files:** All Phase 3 files
+**Dependencies:** S3-01 through S3-10
 
 ---
 
-### Persona 4: Priya — The Family Lawyer (B2B — Phase 2 Feature, Design Now)
-*44, Sydney Australia, family law solicitor, recommends apps to clients weekly*
+## 8. Phase 4 — Collaboration
 
-> ⚠️ **Note:** Priya's primary workflows (lawyer portal, multi-client management) are **Phase 2 features**. These stories are included in the PRD to ensure the Phase 1 architecture supports them without re-engineering. The export story below is Phase 1 since it directly serves all user types.
+Phase 4 extends Spaces with professional access and sharing capabilities.
 
----
+| Feature | Description |
+|---------|-------------|
+| Lawyer/viewer access portal | Read-only web portal for professionals to view client Spaces |
+| Shared export links | Generate time-limited, password-protected links to verified care reports |
+| Read-only invite links | Public invite links with viewer role for mediators, coordinators |
+| Professional tier pricing | Multi-Space subscription for lawyers managing multiple client Spaces |
+| Web portal (PWA) | Browser-based access for desktop users and professionals |
 
-**US-12: Receive a court-export that requires minimal prep before filing**
-> *As Priya (via her client), I want a structured, filterable evidence bundle that I can use in a filing without spending billable hours organizing it.*
-
-**Acceptance Criteria:**
-- [ ] PDF export has clearly labeled sections: Summary, Expenses, Events, Agreements, Communications, Uploads, Disputes, Audit Report
-- [ ] Each entry in the PDF includes: entry ID, type, date, author, status, acknowledgment timestamp (if applicable), dispute summary (if applicable)
-- [ ] JSON data file is structured and parseable (documented schema)
-- [ ] Export is filterable by: date range, child, entry type, status (acknowledged / disputed / pending)
-- [ ] PDF includes a cover page with: case metadata, export generation timestamp, number of entries, and hash manifest summary
-
----
-
-**US-13: Viewer access role for lawyer/mediator (Phase 2 foundation)**
-> *As Priya, I want read-only access to a client's CoParent record without requiring the client to export and email me files.*
-
-> ⚠️ **Phase 2 story** — included here to ensure Phase 1 database and auth architecture supports role=`viewer` without redesign.
-
-**Acceptance Criteria:**
-- [ ] Role system supports: `parent_a`, `parent_b`, `viewer` roles
-- [ ] `viewer` role has read-only access; cannot create, edit, or acknowledge entries
-- [ ] Client can invite a viewer by email with a time-limited access token
-- [ ] Viewer access can be revoked by either parent at any time
-- [ ] All viewer actions are logged in the audit trail
+### Key Stories (Phase 4)
+- Professional can view all Spaces they've been invited to from a single dashboard
+- Lawyer can export records from a client's Space without client action
+- Shared export link expires after configurable period (7/30/90 days)
+- Professional can manage multiple client Spaces under one subscription
+- Parenting coordinator can be added as viewer to multiple Spaces across families
 
 ---
 
-### Cross-Cutting Stories
+## 9. Phase 5 — Intelligence
+
+Phase 5 adds insights and automation on top of the verified record system.
+
+| Feature | Description |
+|---------|-------------|
+| Expense summaries | Per-Space and cross-Space expense totals, splits, and trends |
+| Care pattern insights | Visualization of custody time, event participation, acknowledgment rates |
+| Smart reminders | Configurable reminders for pending acknowledgments, overdue expenses, upcoming events |
+| Automated reports | Scheduled export generation (weekly/monthly) sent to designated members |
+| Compliance tracking | Track adherence to care agreements and court orders (referenced, not enforced) |
 
 ---
 
-**US-14: Register and create a co-parenting profile**
-> *As a new user, I want to register with email and password, create my profile, and add my children, so that I can start using CoParent.*
-
-**Acceptance Criteria:**
-- [ ] User can register with email + password (Argon2 hashed)
-- [ ] Email verification required before first login
-- [ ] User creates a profile: name, timezone, preferred currency
-- [ ] User can add one or more children: name, date of birth, optional photo
-- [ ] Account is created with role `parent_a` for the inviting user; co-parent invitation sets role `parent_b`
-
----
-
-**US-15: Upload any document or media file**
-> *As any user, I want to upload photos, PDFs, or videos as standalone evidence uploads or attachments to entries, so that I have a verified record of any document relevant to my co-parenting situation.*
-
-**Acceptance Criteria:**
-- [ ] Supported file types: JPEG, PNG, GIF, PDF, MP4, MOV (with size limits per tier)
-- [ ] Every file is SHA-256 hashed at upload; hash and upload timestamp stored server-side
-- [ ] Files can be uploaded as: (a) standalone Upload entries, or (b) attachments to any other entry type
-- [ ] File integrity is verifiable: hash displayed in-app and included in every export
-- [ ] Files are stored encrypted at rest (AES-256)
-
----
-
-**US-16: Multi-currency expense tracking**
-> *As a user in any supported country, I want to log expenses in my local currency, so that the record reflects actual financial transactions accurately.*
-
-**Acceptance Criteria:**
-- [ ] Expense entries support any ISO 4217 currency
-- [ ] User profile stores a default currency preference
-- [ ] Currency is displayed on each entry and in exports
-- [ ] No automatic currency conversion (amounts recorded as-submitted; courts deal in actual amounts)
-- [ ] Currency symbols and formatting follow locale conventions
-
----
-
-**US-17: i18n-ready UI and date/time handling**
-> *As a user in any supported locale, I want dates, times, and number formats to display correctly for my region, so that the app is usable and the records are unambiguous.*
-
-**Acceptance Criteria:**
-- [ ] App uses i18n framework (i18next or equivalent) for all user-facing strings
-- [ ] Date/time stored as UTC; displayed in user's timezone
-- [ ] User can set their timezone in profile settings
-- [ ] Number formatting follows locale (decimal separators, currency placement)
-- [ ] Phase 1 ships in English; architecture supports additional locales without code changes
-
----
-
-**US-18: Soft delete and data retention**
-> *As a user, I want to know that records are never permanently deleted, so that I can trust the system's completeness as a legal record.*
-
-**Acceptance Criteria:**
-- [ ] No hard deletes exist in the system; only soft deletes with `deleted_at` timestamp
-- [ ] "Deleted" entries are hidden from the main timeline by default but visible in audit reports
-- [ ] Soft-deleted entries and their versions remain in court exports
-- [ ] User cannot permanently delete any entry; deletion requests are logged
-
----
-
-## 5. MVP Scope
-
-### Phase 1 — Core Evidence System (Must-Have)
-
-The Phase 1 MVP establishes the evidence architecture and the core co-parenting record loop. Every feature in Phase 1 serves the goal of creating a legally defensible record.
-
-| Feature | Description | Priority |
-|---------|-------------|----------|
-| User auth & onboarding | Registration, email verification, profile setup | P1 |
-| Co-parent invitation | Email-based invite to link two parent accounts | P1 |
-| Children management | Add/edit children linked to co-parenting relationship | P1 |
-| Timeline feed (mobile) | Scrollable, chronological evidence feed | P1 |
-| Expense entry | Log expenses with amount, currency, category, receipt | P1 |
-| Event entry | Log pickups, dropoffs, appointments with assigned parent | P1 |
-| Agreement entry | Log mutual decisions, require acknowledgment from both | P1 |
-| Communication entry | Structured message (evidence-grade, not chat) | P1 |
-| Upload entry | Standalone document/media upload to timeline | P1 |
-| File upload + SHA-256 hashing | Every file hashed at upload, hash stored server-side | P1 |
-| Audit trail / version history | Every edit creates new version with diff | P1 |
-| Acknowledgment system | Per-entry pending/acknowledged/disputed status | P1 |
-| Dispute layer | Dispute reason, counter-evidence upload, threaded response | P1 |
-| Server-side timestamps | All entries timestamped by server, not client | P1 |
-| Court-ready PDF export | Timeline report PDF, filterable | P1 |
-| Evidence bundle (ZIP) | PDF + JSON + attachments + hash manifest | P1 |
-| Multi-currency expenses | ISO 4217 currency support, locale formatting | P1 |
-| i18n-ready architecture | All strings externalized, UTC timestamps, timezone support | P1 |
-| Role-based access (parent A/B) | Two-parent access model; viewer role architecture | P1 |
-| Soft delete (no hard deletes) | Records never permanently destroyed | P1 |
-| Push notifications | Acknowledgment, dispute, and new entry notifications | P1 |
-| Encrypted storage | AES-256 at rest, TLS 1.3 in transit | P1 |
-
-### Phase 2 — Growth & Professional Layer (Should-Have)
-
-| Feature | Description | Target Phase |
-|---------|-------------|-------------|
-| Lawyer/viewer portal | Read-only professional access with time-limited token | Phase 2 |
-| Professional tier pricing | Multi-client subscription for lawyers/mediators | Phase 2 |
-| Calendar view | Responsibility ledger with custody schedule visualization | Phase 2 |
-| Google/Apple Calendar sync | Two-way sync for custody schedule | Phase 2 |
-| Web portal (PWA) | Browser-based access for desktop users and lawyers | Phase 2 |
-| Audit report export | Standalone full audit history report | Phase 2 |
-| Certified/notarized records | Third-party notarization service integration | Phase 2 |
-| Expense reimbursement requests | Formal request + approval workflow | Phase 2 |
-| Automated reminders | Configurable reminders for pending acknowledgments | Phase 2 |
-| Parenting coordinator access | Third-party neutral viewer role | Phase 2 |
-
-### Phase 3 — Differentiation & Scale (Nice-to-Have)
-
-| Feature | Description | Target Phase |
-|---------|-------------|-------------|
-| Digital signatures (PKI) | Cryptographic signing of entries and exports | Phase 3 |
-| Blockchain anchoring | Optional hash anchoring to public blockchain | Phase 3 |
-| Call recording | In-app call recording with transcript, stored/logged | Phase 3 |
-| GPS check-ins | Location-verified custody exchanges | Phase 3 |
-| AI tone analysis | Flag inflammatory language before sending | Phase 3 |
-| Import from other apps | Migrate records from OFW, TalkingParents | Phase 3 |
-| EU localization | German, French, Dutch, Spanish support | Phase 3 |
-| Court order management | Store and track compliance with specific court orders | Phase 3 |
-| DV survivor free tier | Free full-feature access for domestic violence cases | Phase 3 |
-| Analytics dashboard (B2B) | Case-level insights for legal professionals | Phase 3 |
-
----
-
-## 6. Success Metrics
+## 10. Success Metrics
 
 ### North Star Metric
-**Evidence bundles exported per month** — This measures whether users are creating records they trust enough to present in court. It is the ultimate validation that CoParent is fulfilling its core promise.
+**Active Spaces per month** — This measures whether users are creating and maintaining care arrangements across family structures. A growing number of active Spaces validates both the core product and the inclusive positioning.
 
-### Leading Indicators (Early Signal, Weeks 1–12)
+### Leading Indicators (Early Signal)
 
-| Metric | Target (Month 3) | Rationale |
-|--------|------------------|-----------|
-| Day-7 retention | >45% | Users who return after 7 days are building a habit |
-| Entries logged per active user per week | >5 | Measures active record-building behavior |
-| Acknowledgment rate | >60% of entries acknowledged within 48h | Both parents engaged = mutual record credibility |
-| Time-to-first-entry after registration | <10 minutes | Onboarding converts to value quickly |
+| Metric | Target (Month 3 post-Phase 3) | Rationale |
+|--------|-------------------------------|-----------|
+| Spaces created per user | >1.2 avg | Multi-Space adoption validates the model |
+| Space members per Space | >2.0 avg | More than 2 = inclusive family structures adopting |
+| Day-7 retention | >45% | Users returning = building a habit |
+| Entries per active Space per week | >5 | Active record-building |
+| Acknowledgment rate | >60% within 48h | Multiple members engaged |
 
-### Lagging Indicators (Business Health, Months 3–12)
+### Lagging Indicators (Business Health)
 
-| Metric | Target (Month 6) | Rationale |
-|--------|------------------|-----------|
-| Monthly recurring revenue (MRR) | $5,000+ | Early monetization validation |
-| Paid conversion rate (free → paid) | >15% | Export as conversion trigger |
-| Net Promoter Score (NPS) | >40 | High-stress product; NPS reflects genuine value |
-| Lawyer/court referral rate | >20% of signups cite lawyer/court as source | Distribution moat building |
-| Churn rate (monthly) | <5% | Once users build a record, they stay |
+| Metric | Target (Month 6 post-Phase 3) | Rationale |
+|--------|-------------------------------|-----------|
+| Monthly recurring revenue (MRR) | $8,000+ | Spaces-based pricing drives upgrades |
+| Paid conversion rate | >15% | Multi-Space need = conversion trigger |
+| NPS | >40 | High-stress product; NPS reflects genuine value |
+| Non-divorce user percentage | >20% | Validates inclusive market thesis |
+| Churn rate (monthly) | <5% | Record lock-in = retention |
 
-### Anti-Metrics (Things to Monitor but Not Optimize)
-- **Time in app** — We don't want users to spend excessive time here; the goal is efficient logging
-- **Message volume** — CoParent is not a chat app; high message volume may indicate feature creep
-- **Dispute rate** — High dispute rates may signal the product is becoming adversarial; should stay below 20% of entries
+### Anti-Metrics
+- **Time in app** — goal is efficient logging, not engagement
+- **Message volume** — not a chat app
+- **Dispute rate** — should stay below 20% of entries; higher may signal adversarial use
 
 ---
 
-## 7. Technical Constraints
+## 11. Technical Constraints
 
 ### Platform Requirements
 
 | Layer | Technology | Rationale |
 |-------|-----------|-----------|
-| Mobile app | React Native (bare or Expo) | Cross-platform iOS + Android; single codebase |
-| Language | TypeScript | End-to-end type safety; required for legal data integrity |
-| Backend | Node.js + NestJS | Structured, testable; familiar to team |
-| Database | PostgreSQL | ACID compliance critical for audit trail; no eventual consistency |
-| ORM | Drizzle ORM | Lightweight, type-safe; established project preference |
-| File storage | S3-compatible (AWS S3 or Cloudflare R2) | Encrypted at rest; durable; scalable |
-| Cache | Redis | Session management; notification queuing |
-| PDF generation | react-pdf or Puppeteer | PDF export from structured data |
-| Auth | JWT + Argon2 | Secure token auth; Argon2 for password hashing |
-| Hashing | SHA-256 (Node.js crypto) | File integrity verification |
+| Mobile app | React Native 0.83 + React 19 | Cross-platform; established codebase |
+| Language | TypeScript 5.8 (strict) | End-to-end type safety |
+| Backend | Supabase (PostgreSQL + Auth + Storage) | Foundation laid in Phase 2 |
+| State | Zustand + Jotai + React Query | Established in Phase 1–2 |
+| Local storage | MMKV | Active Space persistence, offline data |
+| File storage | Supabase Storage (S3-compatible) | Encrypted at rest |
+| Hashing | SHA-256 (crypto) | File integrity verification |
+| Navigation | React Navigation | Established in codebase |
+| Styling | twrnc (Tailwind) | Established in codebase |
 
 ### Security Requirements (Non-Negotiable)
 
 | Requirement | Implementation |
 |-------------|---------------|
-| Data at rest | AES-256 encryption (database + file storage) |
+| Data at rest | AES-256 encryption |
 | Data in transit | TLS 1.3 minimum |
-| File integrity | SHA-256 hash stored at upload, included in exports |
-| Passwords | Argon2id hashing (never stored plaintext) |
-| Audit logging | Separate `audit_logs` table; append-only; no updates |
-| No hard deletes | Soft delete only; `deleted_at` + `deleted_by` fields |
-| Server-side timestamps | All `created_at` and `updated_at` set by the server, never trusted from client |
-| Input validation | All API inputs validated at API layer before reaching database |
-| Rate limiting | Auth endpoints, export endpoints rate-limited |
+| File integrity | SHA-256 hash at upload, in exports |
+| Passwords | Argon2id hashing |
+| Audit logging | Append-only audit_logs table |
+| No hard deletes | Soft delete only |
+| Server-side timestamps | Never trusted from client |
+| Space isolation | Members only see Spaces they belong to; RLS policies enforce this |
+| Role enforcement | Write operations check member role before execution |
 
-### Database Design Requirements (Immutability)
+### Database Design — Spaces Schema
 
-The following constraints enforce immutability at the data layer, not just the application layer:
+```
+spaces
+  - id (UUID)
+  - name (string)
+  - emoji (string, nullable)
+  - color (string, nullable)
+  - created_by (FK: users)
+  - created_at (server-set)
+  - updated_at (server-set)
+  - deleted_at (nullable — soft delete)
 
-- `entries` table: `created_at` is set once on INSERT; no `updated_at` on base record
-- `entry_versions` table: every modification creates a new row with `version_number`, `diff_json`, `created_by`, `created_at`
-- `attachments` table: `file_hash` (SHA-256), `file_size`, `uploaded_at`, `storage_path` — all set on INSERT; no UPDATE
-- `audit_logs` table: INSERT only; no UPDATE or DELETE privileges for application user
-- `acknowledgments` table: INSERT only; status transitions create new rows, not updates
+space_members
+  - id (UUID)
+  - space_id (FK: spaces)
+  - user_id (FK: users)
+  - role (enum: owner, parent, guardian, lawyer, viewer)
+  - joined_at (server-set)
+  - invited_by (FK: users, nullable)
+  - left_at (nullable — soft leave)
 
-### API Design Requirements
+space_invites
+  - id (UUID)
+  - space_id (FK: spaces)
+  - code (string, 6 chars, unique)
+  - role (enum: parent, guardian, lawyer, viewer)
+  - created_by (FK: users)
+  - created_at (server-set)
+  - expires_at (server-set, +7 days)
+  - accepted_by (FK: users, nullable)
+  - accepted_at (nullable)
 
-- RESTful API with versioning (`/v1/`)
-- All timestamps returned in ISO 8601 UTC format
-- All file references returned as signed URLs (time-limited)
-- Pagination on all list endpoints (cursor-based preferred)
-- API responses include `request_id` for tracing
+children
+  - id (UUID)
+  - space_id (FK: spaces)  ← changed from relationship_id
+  - name
+  - date_of_birth
+  - created_at
 
-### Internationalization Requirements
+entries
+  - id (UUID)
+  - space_id (FK: spaces)  ← changed from relationship_id
+  - child_id (FK: children, nullable)
+  - type (expense | event | agreement | communication | upload)
+  - created_by (FK: users)
+  - created_at (server-set, immutable)
+  - status (active | soft_deleted)
+  - current_version_id (FK: entry_versions)
 
-- All user-facing strings managed via `i18next` (or equivalent)
-- Date/time displayed in user's configured timezone (stored in profile as IANA timezone string)
-- Numbers and currency formatted per locale using `Intl.NumberFormat`
-- Currency stored as: amount (integer, in minor units) + currency_code (ISO 4217) — never as float
-- Phase 1 ships English only; architecture must support adding locales without code changes
+-- entry_versions, attachments, acknowledgments, disputes,
+-- dispute_responses, audit_logs remain unchanged from Phase 1
+```
 
-### Scalability Constraints
+### Role Permissions Matrix
 
-- Phase 1 target: up to 10,000 active households
-- Database must handle: ~500 entries/day at 10,000 households = 5M entries/year
-- File storage: estimate 2MB avg/attachment × 5 attachments/entry × 5M entries/year = ~50TB over 5 years (use tiered storage with warm/cold transition)
-- Export generation: must complete in <60 seconds for ≤500 entries; async job queue for larger exports
+| Permission | owner | parent | guardian | lawyer | viewer |
+|-----------|-------|--------|----------|--------|--------|
+| Create entries | ✅ | ✅ | ✅ | ❌ | ❌ |
+| View entries | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Acknowledge entries | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Dispute entries | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Export records | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Invite members | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Manage roles | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Remove members | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Rename/customize Space | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Delete Space | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Leave Space | ❌ | ✅ | ✅ | ✅ | ✅ |
 
-### Privacy Architecture
-
-- **End-to-end encryption (E2EE) consideration:** Full E2EE for message content is architecturally possible but complicates server-side hash verification and export generation. **Decision: Phase 1 uses server-side encryption (AES-256 at rest) with a strong access control model. E2EE for message content is a Phase 3 consideration after validating that it doesn't compromise the court-export use case.**
-- Minimum data collection — only collect data necessary for the evidence record
-- Users can export their full data at any time (data portability)
-- Account deletion: soft-delete account, retain records per court-order-compliance statute window (jurisdiction-dependent; default: 7 years)
-
-### Integration Constraints (Phase 1: None Required)
-
-Phase 1 has no external service integrations beyond:
-- Email provider (SendGrid or Postmark) for invitations and notifications
-- Push notification service (FCM + APNs) for mobile push
-
-Third-party payment, calendar sync, and legal service integrations are Phase 2+.
-
----
-
-## 8. Timeline
-
-### Phase 1 — Core Evidence System (Months 1–3)
-
-**Goal:** Functioning mobile app with full evidence architecture, shareable with early users and lawyers for feedback.
-
-| Week | Milestone |
-|------|-----------|
-| 1–2 | Project setup, database schema, auth system |
-| 3–4 | Entry types (expense, event, agreement, communication, upload) |
-| 5–6 | File upload + SHA-256 hashing; audit trail / versioning |
-| 7–8 | Acknowledgment + dispute system; push notifications |
-| 9–10 | Timeline feed UI (mobile); entry detail views |
-| 11–12 | Court-ready PDF export; evidence bundle (ZIP + hash manifest) |
-
-**Phase 1 Exit Criteria:**
-- All MVP features complete and passing acceptance criteria
-- iOS and Android builds running on device
-- 3 legal professionals have reviewed an evidence export and confirmed usability
-- No critical security issues in auth or file storage
-
----
-
-### Phase 2 — Professional Layer & Growth (Months 4–6)
-
-**Goal:** Lawyer portal MVP, web access, expanded export features, first paying B2B customers.
-
-| Feature Area | Estimated Effort |
-|--------------|-----------------|
-| Lawyer/viewer portal (read-only access) | 3 weeks |
-| Web portal (PWA) | 4 weeks |
-| Calendar view with custody schedule | 2 weeks |
-| Certified records (third-party integration) | 2 weeks |
-| Expense reimbursement request workflow | 2 weeks |
-| Professional pricing tier | 1 week |
+### Supabase RLS Policy Requirements
+- All `spaces` queries filtered by `space_members` membership
+- All `entries` queries filtered by Space membership (via join)
+- `space_invites` readable only by the Space's owner
+- `audit_logs` append-only; no UPDATE or DELETE policies
 
 ---
 
-### Phase 3 — Differentiation & Scale (Months 7–12)
+## 12. Appendix
 
-**Goal:** Technical moat features, EU expansion, advanced legal integrations.
-
-| Feature Area | Estimated Effort |
-|--------------|-----------------|
-| Digital signatures (PKI) | 4 weeks |
-| Blockchain anchoring (optional) | 3 weeks |
-| EU localization (DE, FR, NL) | 6 weeks |
-| Call recording + transcription | 4 weeks |
-| DV survivor free tier + eligibility workflow | 2 weeks |
-| Import from OFW / TalkingParents | 4 weeks |
-
----
-
-### Revenue Milestones
-
-| Milestone | Target |
-|-----------|--------|
-| First paying user | Month 2 (soft launch to waitlist) |
-| $1K MRR | Month 4 |
-| $5K MRR | Month 6 |
-| $12K MRR (OFW parity benchmark) | Month 12–18 |
-| First court-ordered usage | Month 8–12 (via lawyer referral channel) |
-
----
-
-## 9. Appendix
-
-### A. Competitive Positioning Summary
-
-| Competitor | Their Moat | CoParent Advantage |
-|-----------|------------|-------------------|
-| OurFamilyWizard | Court brand recognition (20+ years) | Superior technical architecture; OFW rebuilt for 2026 |
-| TalkingParents | Communication immutability; free tier | Full-spectrum evidence (all entry types, not just messages) |
-| AppClose | Affordable; Certified Electronic Records (2025) | Launched with superior legal architecture; first-mover on hash manifest |
-| 2Houses | International, one-subscription model | Court-ready architecture; 2Houses serves cooperative users only |
-
-### B. Neutral Language Guide
+### A. Neutral Language Guide
 
 | Avoid | Use Instead |
 |-------|-------------|
+| "Parent A / Parent B" | Member name or role |
+| "Co-parent" (as label) | "Member" or role name |
 | "You owe" | "Balance" or "Recorded amount" |
 | "Failed to" | "Not completed" |
 | "Debt" | "Outstanding amount" |
 | "Violation" | "Unresolved item" |
-| "Evidence" (in UI copy for parents) | "Record" |
+| "Evidence" (in UI for users) | "Record" |
+| "Evidence bundle" (in UI) | "Verified care report" |
 | "Dispute" (as accusation) | "Flag for review" |
+| "Custody" (in UI) | "Care arrangement" |
+| "Court-ready" (in positioning) | "Verified records" |
+| "Relationship" (data model) | "Space" or "Care circle" |
 
-### C. Core Data Model
+### B. Core Data Model (Complete)
 
 ```
 users
@@ -670,27 +672,48 @@ users
   - display_name
   - timezone
   - default_currency
-  - role (parent_a | parent_b | viewer)
   - created_at
 
-relationships
+spaces
   - id (UUID)
-  - parent_a_id (FK: users)
-  - parent_b_id (FK: users, nullable until accepted)
-  - invite_token
-  - invite_expires_at
+  - name
+  - emoji (nullable)
+  - color (nullable)
+  - created_by (FK: users)
   - created_at
+  - updated_at
+  - deleted_at (nullable)
+
+space_members
+  - id (UUID)
+  - space_id (FK: spaces)
+  - user_id (FK: users)
+  - role (owner | parent | guardian | lawyer | viewer)
+  - joined_at
+  - invited_by (FK: users, nullable)
+  - left_at (nullable)
+
+space_invites
+  - id (UUID)
+  - space_id (FK: spaces)
+  - code (6 chars, unique)
+  - role (parent | guardian | lawyer | viewer)
+  - created_by (FK: users)
+  - created_at
+  - expires_at
+  - accepted_by (FK: users, nullable)
+  - accepted_at (nullable)
 
 children
   - id (UUID)
-  - relationship_id (FK: relationships)
+  - space_id (FK: spaces)
   - name
   - date_of_birth
   - created_at
 
 entries
   - id (UUID)
-  - relationship_id (FK: relationships)
+  - space_id (FK: spaces)
   - child_id (FK: children, nullable)
   - type (expense | event | agreement | communication | upload)
   - created_by (FK: users)
@@ -702,7 +725,7 @@ entry_versions
   - id (UUID)
   - entry_id (FK: entries)
   - version_number (integer, starts at 1)
-  - content_json (JSONB — entry-type-specific data)
+  - content_json (JSONB)
   - diff_json (nullable on v1)
   - created_by (FK: users)
   - created_at (server-set)
@@ -743,19 +766,21 @@ dispute_responses
 audit_logs
   - id (UUID)
   - user_id (FK: users)
-  - action (string — e.g., "entry.create", "entry.version.create", "acknowledgment.set")
+  - action (string)
   - entity_type
   - entity_id
   - metadata_json
   - created_at (server-set)
 ```
 
-### D. Export Hash Manifest Format
+### C. Export Hash Manifest Format
 
 ```
-CoParent Evidence Bundle — Hash Manifest
+CoParent Verified Care Report — Hash Manifest
 Generated: 2026-03-21T14:32:00Z
 Export ID: exp_01HXXXXX
+Space: "Finn & Ava's Space" (space_01HAAAAAA)
+Members: Camille Oduya (owner), Liam Byrne (parent)
 Entries: 47
 Attachments: 23
 
@@ -765,11 +790,13 @@ receipt_2026-02-14_expense-001.jpg
   SHA-256: a3f4b8c2d1e9...
   Uploaded: 2026-02-14T09:15:22Z
   Entry ID: ent_01HAAAAAA
+  Space: Finn & Ava's Space
 
 medical_bill_2026-01-20.pdf
   SHA-256: 7e2b9f1a4c8d...
   Uploaded: 2026-01-20T16:44:01Z
   Entry ID: ent_01HBBBBBB
+  Space: Finn & Ava's Space
 
 ...
 
@@ -779,28 +806,39 @@ Verification instructions:
   A match confirms the file is identical to the original upload.
 ```
 
-### E. Market Size Summary
+### D. Market Size Summary
 
 | Market | Estimate |
 |--------|----------|
-| Global TAM (English-speaking + EU) | ~$2.7–3.3B/year |
-| SAM (high-conflict + active legal) | $540M–$1.2B/year |
-| SOM (3–5 year horizon) | $2.7M–$12M ARR |
+| Global TAM (all shared care arrangements) | ~$6–8B/year |
+| TAM (English-speaking + Philippines) | ~$3.5–4.5B/year |
+| SAM (active documentation need) | $1.4–2.2B/year |
+| SOM (3–5 year horizon) | $12M–$54M ARR |
 | Benchmark: OurFamilyWizard ARR (2024) | ~$10.5M |
 
-### F. Pricing Direction (To Be Validated)
+### E. Pricing Direction (To Be Validated)
 
 | Tier | Price | Includes |
 |------|-------|---------|
-| Free | $0 | Basic logging, limited export (5/month) |
-| Essential | ~$9.99/mo | Unlimited entries, unlimited PDF exports |
-| Complete | ~$14.99/mo | Evidence bundle exports (ZIP + hash manifest), dispute tools |
-| Professional | ~$79.99/mo | Lawyer portal, multi-client management (Phase 2) |
+| Free | $0 | 1 Space, 2 members, basic timeline, limited export (5/month) |
+| Plus | ~$9.99/mo | Unlimited Spaces, unlimited members, unlimited PDF exports |
+| Complete | ~$14.99/mo | Evidence bundle exports (ZIP + hash manifest), dispute tools, All Spaces view |
+| Professional | ~$79.99/mo | Lawyer portal, multi-Space management (Phase 4) |
 
-*Both parents should be able to use the core features on a single-subscription model (one parent subscribes, both can log).*
+*Per-account pricing — one subscription unlocks features across all Spaces.*
+*Free access for DV survivors and financial hardship cases.*
+
+### F. Competitive Positioning Summary
+
+| Competitor | Their Moat | CoParent Advantage |
+|-----------|------------|-------------------|
+| OurFamilyWizard | Court brand (20+ years) | Spaces model, inclusive positioning, superior technical architecture |
+| TalkingParents | Communication immutability; free tier | Full-spectrum evidence (all types), multi-Space, guardian roles |
+| AppClose | Affordable; Certified Records (2025) | Architecture-first legal integrity; Spaces; 3–5x larger market |
+| 2Houses | International, one-sub model | Verified records; Spaces; role-based access |
 
 ---
 
-*This PRD is the final output of the CoParent discovery phase. Build phase begins with Phase 1 — Core Evidence System.*
+*This PRD is the output of the CoParent discovery rerun with inclusive framing and Spaces.*
 *Discovery inputs: BRIEF.md, market-research.md, competitor-analysis.md, icp.md*
-*Next: Begin implementation per prd.json task list.*
+*Next: Phase 3 implementation per user stories S3-01 through S3-11.*

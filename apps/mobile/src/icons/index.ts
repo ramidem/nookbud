@@ -1,23 +1,75 @@
 import AlertTriangleIcon from './alert-triangle.svg';
+import AppleIcon from './apple.svg';
 import ArrowLeftIcon from './arrow-left.svg';
+import BabyIcon from './baby.svg';
+import BookOpenIcon from './book-open.svg';
+import CalendarDaysIcon from './calendar-days.svg';
+import CalendarIcon from './calendar.svg';
+import CameraIcon from './camera.svg';
+import CarIcon from './car.svg';
 import CheckCircleIcon from './check-circle.svg';
 import ChevronDownIcon from './chevron-down.svg';
 import ChevronRightIcon from './chevron-right.svg';
+import ClipboardListIcon from './clipboard-list.svg';
+import ClockIcon from './clock.svg';
 import CrossIcon from './cross.svg';
+import FileTextIcon from './file-text.svg';
 import GearIcon from './gear.svg';
+import HandshakeIcon from './handshake.svg';
+import HeartPulseIcon from './heart-pulse.svg';
+import ImageIcon from './image.svg';
 import InfoIcon from './info.svg';
 import KeyboardHideIcon from './keyboard-hide.svg';
+import LightbulbIcon from './lightbulb.svg';
+import LockIcon from './lock.svg';
+import MessageCircleIcon from './message-circle.svg';
+import PackageIcon from './package.svg';
+import PaperclipIcon from './paperclip.svg';
+import PencilLineIcon from './pencil-line.svg';
+import ScaleIcon from './scale.svg';
+import ShareIcon from './share.svg';
+import ShirtIcon from './shirt.svg';
+import TrophyIcon from './trophy.svg';
+import UserIcon from './user.svg';
+import UsersIcon from './users.svg';
+import WalletIcon from './wallet.svg';
 import XCircleIcon from './x-circle.svg';
 
 export {
   AlertTriangleIcon,
+  AppleIcon,
   ArrowLeftIcon,
+  BabyIcon,
+  BookOpenIcon,
+  CalendarDaysIcon,
+  CalendarIcon,
+  CameraIcon,
+  CarIcon,
   CheckCircleIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  ClipboardListIcon,
+  ClockIcon,
   CrossIcon,
+  FileTextIcon,
   GearIcon,
+  HandshakeIcon,
+  HeartPulseIcon,
+  ImageIcon,
   InfoIcon,
   KeyboardHideIcon,
+  LightbulbIcon,
+  LockIcon,
+  MessageCircleIcon,
+  PackageIcon,
+  PaperclipIcon,
+  PencilLineIcon,
+  ScaleIcon,
+  ShareIcon,
+  ShirtIcon,
+  TrophyIcon,
+  UserIcon,
+  UsersIcon,
+  WalletIcon,
   XCircleIcon,
 };

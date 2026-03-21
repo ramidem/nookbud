@@ -1,6 +1,5 @@
 # CoParent — Competitor Analysis
 
-> Prepared by: Marco (Competitor Analyst)
 > Date: 2026-03-21
 > For: CoParent discovery phase
 
@@ -8,17 +7,15 @@
 
 ## Executive Summary
 
-The co-parenting app market is dominated by tools that focus on **communication, scheduling, and expense tracking** — but treat legal defensibility as an afterthought or a premium add-on. The closest incumbents (OurFamilyWizard, TalkingParents) market tamper-proof records, but none of them treat the entire co-parenting record as a **cryptographically verifiable evidence system from day one**.
+The co-parenting app market is dominated by tools built for **one scenario: two divorced parents in conflict.** They focus on communication, scheduling, and expense tracking — treating legal defensibility as an afterthought or a premium add-on.
 
-The gap CoParent exploits: **existing apps create records. CoParent creates evidence.**
+Every competitor shares the same structural limitation: **they assume a two-parent model with fixed roles (Parent A / Parent B).** None supports multiple care arrangements per user (Spaces), none treats guardians or extended family as first-class members, and none is designed for the broader reality of how children are actually raised — by grandparents, OFW families, blended households, and adoptive arrangements.
 
-No competitor currently offers:
-- SHA-256 file integrity hashing at upload
-- Immutable version-diffed entry history across all data types (not just messages)
-- A structured acknowledgment + dispute layer built into every record
-- A court-export bundle (PDF + ZIP + hash manifest) designed for non-technical lawyers and judges
+The gap CoParent exploits is twofold:
+1. **Technical:** No competitor offers SHA-256 file integrity hashing, immutable version-diffed entry history across all data types, a structured acknowledgment + dispute layer, or a court-export bundle with hash manifest
+2. **Structural:** No competitor supports multiple Spaces, role-based access beyond "Parent A / Parent B," or inclusive onboarding for non-divorce family structures
 
-The market window is real. OurFamilyWizard is expensive, aging, and disliked by users (1.3 stars on Sitejabber). TalkingParents limits court-readiness behind paywalls. AppClose is strong on UX but its legal features are still maturing. The rest of the field is fragmented or irrelevant for legal use cases.
+**The Spaces model is CoParent's deepest moat.** Competitors would need a fundamental re-architecture to support it — not a feature addition, but a database and product redesign.
 
 ---
 
@@ -28,26 +25,25 @@ The market window is real. OurFamilyWizard is expensive, aging, and disliked by 
 **The Incumbent. Court-ordered in 50 states.**
 
 **Overview:**
-Founded 2001. The most recognized co-parenting app in the legal ecosystem. Courts recommend — and sometimes mandate — its use in high-conflict cases. Over 20 years of brand equity with family law professionals.
+Founded 2001. The most recognized co-parenting app in the legal ecosystem. Courts recommend and sometimes mandate its use in high-conflict cases. 20+ years of brand equity with family law professionals.
 
 **Legal Defensibility:**
 - Time-stamped messaging; messages are unalterable and server-stored
-- Login history tracking (who was in-app, when)
+- Login history tracking
 - Court-accepted documentation in all 50 US states
-- ToneMeter™ AI flags inflammatory language before sending
+- ToneMeter AI flags inflammatory language
 - GPS-verified check-ins for custody exchanges
 - Certified records: notarized, printed, and mailed (Premium+ only)
 
 **Audit Trail:**
-- Messages are immutable once sent — no edits, no deletes
+- Messages are immutable once sent
 - Calendar changes and expense requests are logged
 - Full account activity tracking
-- Audit access for lawyers and professionals (built-in professional portal)
+- Audit access for lawyers via professional portal
 
-**Export Capabilities:**
+**Export:**
 - Unlimited PDF record downloads (Essentials+)
-- Certified printed records — notarized, mailed (Premium tier)
-- Call recordings and transcripts stored 365 days (Max tier)
+- Certified printed records (Premium tier)
 - No structured ZIP/bundle export with hash manifest
 
 **Pricing (per parent, annually):**
@@ -62,22 +58,21 @@ Founded 2001. The most recognized co-parenting app in the legal ecosystem. Court
 
 **Strengths:**
 - Court brand recognition is unmatched; judges and lawyers default to it
-- Professional portal: attorneys and mediators can be granted access
-- 20+ years of case law associating it with credible records
-- Comprehensive feature set: calendar, messages, expenses, info bank, calls
+- Professional portal for attorneys and mediators
+- 20+ years of case law association
+- Comprehensive feature set
 
 **Weaknesses:**
+- **Two-parent model only** — no support for guardians, extended family, or multiple arrangements
 - High cost, especially for lower-income families (no free tier)
-- UX feels dated; interface criticized as clunky
-- User reviews are brutal: 1.3/5 on Sitejabber, frequent complaints about missed notifications leading to legal consequences
-- Certified records are per-request and expensive at lower tiers
-- No cryptographic file verification (hash-based integrity)
-- No versioned entry history across all data types — just messages
-- Call feature is reportedly unreliable
-- Export is PDF-only; no machine-readable bundle for legal tech pipelines
+- UX feels dated; 1.3/5 on Sitejabber
+- No cryptographic file verification
+- No versioned entry history across all data types
+- PDF-only export; no machine-readable bundle
+- No Spaces concept — one account = one arrangement
 
 **CoParent Opportunity:**
-OFW's court brand is its moat, but it's resting on it. A technically superior product — with cryptographic integrity proofs, structured evidence bundles, and a cleaner UX — can position as "OFW rebuilt for 2026." The pricing gap for families in financial hardship is also a wedge.
+OFW's court brand is its moat, but it's architecturally locked into the 2-parent model. It cannot serve a grandparent guardian, an OFW family, or a blended family manager without a fundamental redesign. CoParent's Spaces model + cryptographic integrity + inclusive positioning targets a market 3–5x larger than OFW's addressable base.
 
 ---
 
@@ -85,29 +80,23 @@ OFW's court brand is its moat, but it's resting on it. A technically superior pr
 **Communication-Focused. Free tier available.**
 
 **Overview:**
-Founded 2012 by Monitored Communications, LLC. Positioned explicitly around "unalterable records" of all communication. Strong emphasis on court admissibility. Has a free tier (web-only, ad-supported), which OFW lacks.
+Founded 2012. Positioned around "unalterable records" of communication. Strong emphasis on court admissibility. Has a free tier (web-only, ad-supported).
 
 **Legal Defensibility:**
 - "Unalterable Record" is their core marketing claim
-- All messages are time-stamped, permanently stored, cannot be edited or deleted
-- Accountable Calling℠: calls are automatically recorded and transcribed
-- Call logs document every unanswered, missed, completed, or canceled call
-- Sentiment Scanner + Writing Assist℠ (higher tiers)
+- All messages time-stamped, permanently stored, cannot be edited or deleted
+- Accountable Calling: calls are automatically recorded and transcribed
 - PDF records downloadable at all paid tiers
 
 **Audit Trail:**
 - Messages: immutable, timestamped, read receipts logged
-- Calls: full log with outcome (answered/missed/canceled), recordings stored
-- Payments: transaction records with status
-- Personal journal for private notes
-- Limited to communication artifacts — does not log changes to calendar events or expense records with version history
+- Calls: full log with outcome
+- Limited to communication artifacts — no version history for calendar or expense records
 
-**Export Capabilities:**
+**Export:**
 - Unlimited PDF records (Enhanced+)
-- 1 FREE Full Printed Records Package (Ultimate)
 - Certified printed records available
 - No hash-verified bundle export
-- Professionals report that extracting data is time-consuming and adds attorney fees
 
 **Pricing (per parent):**
 | Plan | Price/mo | Notes |
@@ -115,28 +104,24 @@ Founded 2012 by Monitored Communications, LLC. Positioned explicitly around "una
 | Free | $0 | Web only, ads, receive-only calls |
 | Essentials | $6/mo | 1 GB storage, 30 min calls |
 | Enhanced | $12/mo | 15 GB storage, 60 min calls |
-| Ultimate | $27/mo | 50 GB, unlimited calls, 1 free printed package |
-
-*Parents can be on different plans and still communicate. Free tier is a genuine entry point.*
+| Ultimate | $27/mo | 50 GB, unlimited calls |
 
 **Strengths:**
 - Free tier creates low-friction adoption
-- Strongest brand association with communication accountability
-- Call recording + transcription is a standout feature
-- Widely court-trusted (alongside OFW)
-- Clean, modern UI compared to OFW
+- Strongest brand for communication accountability
+- Call recording + transcription
+- Court-trusted alongside OFW
 
 **Weaknesses:**
-- Primarily a communication tool; weak on structured record types (expenses, events, disputes)
+- **Two-parent model only** — no Space concept, no guardian/viewer roles
+- Primarily a communication tool; weak on structured record types
 - No acknowledgment/dispute workflow on individual entries
-- No structured evidence export (ZIP + manifest); PDF only
-- Legal professionals note that extracting records for court use adds billable time
-- Sentiment Scanner is AI-powered but doesn't prevent inflammatory content — just flags it
-- No cryptographic file integrity verification
-- No versioned history for non-message records
+- No structured evidence export
+- No cryptographic file integrity
+- Legal professionals note that extracting records adds billable time
 
 **CoParent Opportunity:**
-TalkingParents' users get good communication records but no structured evidence for expenses, events, agreements, or disputes. A user who needs to bring an expense dispute to court has no structured way to document the full history. CoParent fills that gap.
+TalkingParents users get good communication records but nothing for expenses, events, agreements, or disputes. And the platform cannot accommodate a grandmother, a step-parent, or a lawyer as a first-class member of the care arrangement.
 
 ---
 
@@ -144,28 +129,24 @@ TalkingParents' users get good communication records but no structured evidence 
 **Free-to-start. Broad features. Certified Electronic Business Records (new 2025).**
 
 **Overview:**
-Offers a comprehensive feature set at a competitive price. Notable for their social mission: free accounts for domestic violence survivors and financial hardship cases. In November 2025, launched **Certified Electronic Business Records** — a significant move toward legal defensibility. Flat $8.99/mo all-inclusive plan.
+Comprehensive feature set at a competitive price. Free accounts for domestic violence survivors. In late 2025, launched Certified Electronic Business Records. Flat $8.99/mo all-inclusive plan.
 
 **Legal Defensibility:**
 - Messages: unalterable, time-stamped, encrypted
-- Co-parent messages cannot be deleted or edited
 - Certified Electronic Business Records (launched Dec 2025) — court-admissible
-- Subpoena-accessible records
-- GPS-based check-ins for custody exchanges (private, non-trackable)
-- Calls: documented, optionally recorded with mutual consent, transcribed
+- GPS-based check-ins for custody exchanges
+- Calls documented and optionally recorded
 - AppClose Pro: lawyers and mediators can connect to a "circle"
 
 **Audit Trail:**
-- All messages immutable and timestamped
-- Event history: detailed history of activity and conversation per event
-- Call logs: every unanswered, missed, completed, canceled call documented
-- Request history: discussion threads tied to each reimbursement request
-- Expense history: full transaction trail
+- Messages immutable and timestamped
+- Event history and call logs
+- Expense history with transaction trail
+- No version-diffed entry history
 
-**Export Capabilities:**
+**Export:**
 - Export chats, expense records, payment records, call logs
-- Certified Electronic Business Records export (new Dec 2025)
-- Subpoena-available certified records
+- Certified Electronic Business Records export (new)
 - Free export for all users
 
 **Pricing:**
@@ -174,28 +155,24 @@ Offers a comprehensive feature set at a competitive price. Notable for their soc
 | All-Inclusive | $8.99/mo |
 | Free (DV/hardship) | $0 |
 
-*One of the most affordable paid options. Free accounts available for qualifying users.*
-
 **Strengths:**
-- Most affordable comprehensive plan ($8.99 flat)
-- Certified Electronic Business Records is a real legal leap (just launched)
-- Free accounts for DV survivors is a genuine differentiator
-- AppClose Pro (professional portal) enables lawyer access
-- AppClose Solo: send requests to non-connected co-parents via text/email
+- Most affordable comprehensive plan
+- Certified Electronic Business Records is a real legal advancement
+- Free accounts for DV survivors
+- AppClose Pro enables lawyer access
 - Modern, clean UX
-- Integrated payments via ipayou
 
 **Weaknesses:**
-- Certified records only launched December 2025 — court adoption is lagging
-- Less established court brand than OFW or TalkingParents
-- Lawyers report inconsistent/difficult access to records (adds attorney time cost)
-- No explicit version-diffed history per entry (showing what changed between versions)
-- No cryptographic hash verification for uploaded files
+- **Two-parent model** — "circle" concept exists but is limited to 2 parents + professionals
+- No multi-arrangement support (no Spaces)
+- Certified records only launched Dec 2025 — court adoption lagging
+- No version-diffed history per entry
+- No cryptographic hash verification for files
 - No structured evidence bundle (PDF + ZIP + hash manifest)
-- Dispute layer is informal (comments on requests, not a structured dispute record)
+- Dispute layer is informal
 
 **CoParent Opportunity:**
-AppClose is the closest functional competitor and is moving in the right direction. CoParent needs to launch with superior legal architecture — cryptographic file hashing, immutable entry versioning, and a court-export bundle — before AppClose catches up.
+AppClose is the closest functional competitor and is moving in the right direction on legal features. But it remains locked into the 2-parent model. It cannot serve an OFW family, a grandparent guardian, or a blended family manager. CoParent's Spaces model + inclusive onboarding + cryptographic integrity addresses a fundamentally different market.
 
 ---
 
@@ -203,272 +180,141 @@ AppClose is the closest functional competitor and is moving in the right directi
 **Family-Friendly. International Focus. One-subscription model.**
 
 **Overview:**
-European-origin co-parenting app with multilingual and multi-currency support. Positions as a "co-parenting facilitator." Clean interface, affordable. Only one parent needs to subscribe — all family members get access.
+European-origin app with multilingual and multi-currency support. Clean interface, affordable. Only one parent subscribes — all family members get access.
 
 **Legal Defensibility:**
-- Basic: time-stamped messages stored securely
-- Shared calendar with change history (basic)
-- Expense records and finance summaries
-- Custody journal
-- No explicit "court-ready" positioning or certified records
-
-**Audit Trail:**
-- Messages are stored and organized
-- Calendar and expense change logs exist but are basic
-- No formal audit trail system; not positioned for legal use
-- Professionals report difficulty extracting useful information for court
-
-**Export Capabilities:**
-- Basic PDF/data export available
-- No certified or court-specific export bundles
-- No hash verification
+- Basic: time-stamped messages
+- Calendar with basic change history
+- No explicit "court-ready" positioning
 
 **Pricing:**
 | Plan | Price/mo | Notes |
 |------|----------|-------|
-| All-Inclusive | $8.25/mo | $99/yr, one subscription for whole family |
-
-*Only one parent pays — covers both parents, children, third parties, and mediators.*
+| All-Inclusive | $8.25/mo | One subscription covers whole family |
 
 **Strengths:**
-- Lowest cost for household coverage (one sub covers everyone)
-- Multilingual support and currency tools (good for international cases)
-- 14-day free trial
-- Clean, attractive interface
+- Lowest cost for household coverage
+- Multilingual and multi-currency (good for international cases)
+- Clean interface
 
 **Weaknesses:**
+- **Two-parent model** — no extended family or multi-arrangement support
 - Not designed for legal/court use
 - No tamper-proof record guarantees
-- No certified records or court-ready exports
-- Minimal audit trail depth
-- Professionals find it difficult to extract information for legal proceedings
+- No certified records or verified exports
+- Minimal audit trail
 - No acknowledgment or dispute workflows
-- Not widely recognized by US family courts
 
 **CoParent Opportunity:**
-2Houses serves the cooperative, low-conflict co-parenting market. They're not competing for the legal defensibility segment at all. CoParent can ignore them as a direct threat but should avoid their UI complexity traps (noted for steeper learning curve).
+2Houses serves cooperative, low-conflict pairs. Not competing for legal defensibility or inclusive family structures. The Spaces model makes CoParent a fundamentally different product.
 
 ---
 
 ### 5. Cozi
-**Family Organizer. Not Co-Parenting Specific. Organizationally Focused.**
+**Family Organizer. Not co-parenting specific.**
 
 **Overview:**
-General family organizing app — not built for separated parents. Shared calendar, to-do lists, shopping lists, recipes, meal planning. Widely used by intact families. Some co-parents adopt it informally when they have cooperative relationships.
+General family organizing app — shared calendar, to-do lists, shopping lists. Some co-parents adopt it informally for cooperative relationships.
 
-**Legal Defensibility:**
-- None. Not designed for it.
-- No tamper-proof records
-- No message logging for legal purposes
-- No audit trail
-
-**Audit Trail:**
-- None relevant for co-parenting legal disputes
-
-**Export Capabilities:**
-- Basic calendar and list exports; not court-relevant
+**Legal Defensibility:** None.
+**Audit Trail:** None relevant.
+**Export:** Basic calendar exports; not court-relevant.
 
 **Pricing:**
 | Plan | Price |
 |------|-------|
-| Free | Limited (significantly restricted after May 2024) |
+| Free | Limited |
 | Cozi Gold | $39/yr |
-
-*Free tier was severely restricted in May 2024, angering many users. Gold is cheap but lacks legal value.*
 
 **Strengths:**
 - Extremely user-friendly
-- Great for managing activities, groceries, meal plans
-- Affordable premium tier
+- Affordable
 
 **Weaknesses:**
 - Zero legal defensibility
-- No co-parenting specific features (messaging, expenses, custody tracking)
+- No co-parenting features
 - Not recognized by any court
-- May 2024 free tier changes generated significant negative user sentiment
-- Competing in the wrong category for CoParent's target user
+- Single-family model — no multi-arrangement support
 
 **CoParent Opportunity:**
-Cozi users who transition from cooperative to conflicted co-parenting are a prime acquisition target. When their casual calendar tool is no longer enough, CoParent is the upgrade path.
-
----
-
-### 6. Custody Connection
-**Calendar-Focused. Simple. Niche.**
-
-**Overview:**
-Minimal app, focused exclusively on custody schedule management. Described as "the first syncable cloud-based custody calendar iPhone App." Feature set is narrow: shared calendar, trade day requests, child information storage.
-
-**Legal Defensibility:**
-- Basic trade request logging (accept/reject/counter)
-- Calendar tracking and reporting (custody day counts)
-- No court-ready messaging, no certified records
-- No dispute layer, no evidence export
-
-**Audit Trail:**
-- Trade request history (accepted/rejected/suggested alternative)
-- Custody day count tracking
-- No full audit trail for legal use
-
-**Export Capabilities:**
-- Basic reporting for custody day counts
-- No court-ready export
-
-**Pricing:**
-- Appears to be free (iOS-focused, older app)
-
-**Strengths:**
-- Extremely simple and focused
-- Reduces custody scheduling confusion
-- Lawyers mention it reduces conflict over parenting schedules
-
-**Weaknesses:**
-- No legal defensibility features whatsoever
-- No messaging, no expenses, no evidence layer
-- App appears dated (website design is circa 2012)
-- Limited to calendar/scheduling only
-- No Android presence noted
-
-**CoParent Opportunity:**
-Custody Connection is not a real competitor for CoParent's target market (high-conflict, legally aware co-parents). It may appeal to the most basic segment. Not a threat.
-
----
-
-### 7. WeParent (by SupportPay)
-**Messaging + Calendar. Pivoting to SupportPay integration.**
-
-**Overview:**
-WeParent is being rebranded as "SupportPay: Calendar & Messages" — indicating it's becoming a companion app to SupportPay (a child support payment platform). Targets single parents, co-parents, step-parents, caregivers broadly.
-
-**Legal Defensibility:**
-- "Certified record-keeping" — messages are permanently archived, accessible for court proceedings
-- Messages are securely stored
-- Not as explicitly court-marketed as OFW or TalkingParents
-
-**Audit Trail:**
-- Messages are permanently archived and searchable
-- Shared lists and calendar updates tracked
-- Basic communication archive
-
-**Export Capabilities:**
-- Records accessible for review and court proceedings
-- No specific export format mentioned (no PDF/ZIP bundles found)
-
-**Pricing:**
-- Free with 14-day trial for premium
-- Premium available via SupportPay subscription (pricing bundled with expense tracking)
-- $9.99/mo or $99.99/year per family noted by some sources (WeParent standalone)
-
-**Strengths:**
-- Integration with SupportPay for financial tracking is unique
-- "Circle" concept includes step-parents, caregivers, professionals
-- Permanently archived messages
-
-**Weaknesses:**
-- Undergoing rebrand/pivot — product direction unclear
-- Limited court-specific tooling
-- Not widely recognized by family courts
-- No certified records or verified evidence bundles
-- Less established than OFW or TalkingParents
-
-**CoParent Opportunity:**
-WeParent's product pivot creates churn risk for their users. Co-parents who signed up for a focused app and now find it changing could be receptive to CoParent.
+Cozi users who transition from cooperative to complex family situations are an acquisition target. When their casual calendar tool is no longer enough, CoParent is the upgrade path.
 
 ---
 
 ## Competitive Matrix
 
-| Feature | OFW | TalkingParents | AppClose | 2Houses | Cozi | Custody Connection | WeParent | **CoParent** |
-|---------|-----|----------------|----------|---------|------|-------------------|----------|------------|
-| **Tamper-proof messaging** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| **Immutable entry versions (all types)** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Cryptographic file hashing (SHA-256)** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Acknowledgment system** | Partial | ❌ | Partial | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Structured dispute layer** | ❌ | ❌ | Informal | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **PDF court export** | ✅ | ✅ | ✅ | Basic | ❌ | ❌ | Basic | ✅ |
-| **ZIP evidence bundle + hash manifest** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Certified/notarized records** | ✅ (fee) | ✅ (Ultimate) | ✅ (new) | ❌ | ❌ | ❌ | ❌ | Planned |
-| **Professional/lawyer portal** | ✅ | ❌ | ✅ | Basic | ❌ | ❌ | ❌ | Planned |
-| **Calendar with audit trail** | ✅ | ✅ | ✅ | Basic | ❌ | ✅ | Partial | ✅ |
-| **Expense tracking** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | Via SupportPay | ✅ |
-| **Call recording** | ✅ (Max) | ✅ (Enhanced+) | ✅ (consent) | ❌ | ❌ | ❌ | ❌ | Planned |
-| **Court recognition** | ✅✅✅ | ✅✅ | ✅ (growing) | ❌ | ❌ | ❌ | ❌ | — |
-| **Free tier** | ❌ | ✅ (limited) | ✅ (qualifying) | ❌ | ✅ (limited) | ✅ | ✅ | TBD |
-| **Price/mo (per parent)** | $9–$23 | $0–$27 | $8.99 flat | $8.25 | $0–$3.25 | Free | ~$8–$10 | TBD |
+| Feature | OFW | TalkingParents | AppClose | 2Houses | Cozi | **CoParent** |
+|---------|-----|----------------|----------|---------|------|------------|
+| **Multiple Spaces (arrangements)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Role-based access (5+ roles)** | Partial (2 parents + viewer) | ❌ | Partial (2 + pro) | ❌ | ❌ | ✅ |
+| **Guardian/extended family as member** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Tamper-proof messaging** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **Immutable entry versions (all types)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Cryptographic file hashing (SHA-256)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Acknowledgment system** | Partial | ❌ | Partial | ❌ | ❌ | ✅ |
+| **Structured dispute layer** | ❌ | ❌ | Informal | ❌ | ❌ | ✅ |
+| **PDF export** | ✅ | ✅ | ✅ | Basic | ❌ | ✅ |
+| **ZIP evidence bundle + hash manifest** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **All Spaces merged timeline** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Certified/notarized records** | ✅ (fee) | ✅ (Ultimate) | ✅ (new) | ❌ | ❌ | Planned |
+| **Professional/lawyer portal** | ✅ | ❌ | ✅ | Basic | ❌ | Planned |
+| **Calendar with audit trail** | ✅ | ✅ | ✅ | Basic | ❌ | ✅ |
+| **Expense tracking** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **Court recognition** | ✅✅✅ | ✅✅ | ✅ (growing) | ❌ | ❌ | — |
+| **Free tier** | ❌ | ✅ (limited) | ✅ (qualifying) | ❌ | ✅ | ✅ |
+| **Inclusive onboarding (non-divorce)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Price/mo (per parent)** | $9–$23 | $0–$27 | $8.99 flat | $8.25 | $0–$3.25 | TBD |
 
 ---
 
 ## Gap Analysis
 
-### Gap 1: No one treats the entire record as evidence — only messages
-**The problem:** All competitors lock tamper-proof guarantees to messaging. Calendar changes, expense disputes, agreement modifications, file uploads — none of these are treated with the same legal rigor as messages.
+### Gap 1: No one supports multiple care arrangements (Spaces)
+**The problem:** Every competitor assumes one account = one co-parenting relationship = two parents. A father with children from two relationships must create two separate accounts — or worse, mix records. A grandmother involved in two grandchildren's care has no option at all.
 
-**The opportunity:** CoParent's immutable versioning applies to *every entry type*. An expense edited three times shows every version, who changed what, and when. A pickup event marked "missed" and then disputed — full history, fully verified. This is the audit trail courts actually need, and none of the incumbents provide it.
-
----
-
-### Gap 2: No cryptographic file integrity
-**The problem:** Every app stores files, but none verify that the file you uploaded is the file that gets exported. There is no hash manifest proving documents weren't tampered with in transit or storage.
-
-**The opportunity:** CoParent hashes every file at upload (SHA-256) and includes the manifest in every evidence bundle. A lawyer can verify file integrity without trusting the platform. This is a genuine technical differentiator that competitors would take months to implement properly.
+**The opportunity:** CoParent's Spaces model is the organizing primitive. Each Space is a separate care circle with its own members, children, timeline, and records. One user can belong to multiple Spaces and switch between them. This serves blended families, multi-arrangement parents, and guardians involved in multiple children's care — a market no competitor can address without fundamental re-architecture.
 
 ---
 
-### Gap 3: No structured evidence bundle for lawyers
-**The problem:** OFW and TalkingParents produce PDFs. Lawyers and judges have to wade through long printouts without clear structure. Professionals explicitly note this adds billable time.
+### Gap 2: No one treats guardians, extended family, or lawyers as first-class members
+**The problem:** OFW has "Parent A" and "Parent B." TalkingParents has the same. AppClose's "circle" concept is slightly broader but still centers on two parents. A grandparent raising a grandchild, a step-parent, an older sibling with caregiving responsibilities — none of these have a place in existing tools.
 
-**The opportunity:** CoParent's evidence bundle (PDF + JSON + attachments + hash manifest) is designed for legal professionals — structured, filterable by date range, child, and entry type, with a verification layer. Build it for the lawyer, and the lawyer recommends it.
-
----
-
-### Gap 4: No acknowledgment + dispute system on individual records
-**The problem:** Competitors track messages but not the acknowledgment state of specific events. Did Parent B acknowledge the medical appointment? Did they dispute the expense? The record of *acknowledgment* is what courts need, not just communication logs.
-
-**The opportunity:** CoParent's acknowledgment system is per-entry, with status (pending / acknowledged / disputed) and timestamp. Disputes include counter-evidence uploads and threaded responses. Both sides of the story are captured, structured, and exportable.
+**The opportunity:** CoParent's role system (owner, parent, guardian, lawyer, viewer) gives every member of the care circle a defined, appropriate level of access. A lola in Manila can be a "guardian" in a Space with full read/write access. A family lawyer can be a "lawyer" with read-only access. This is not a permission hack — it's a product design decision that makes CoParent work for how families actually function.
 
 ---
 
-### Gap 5: Pricing creates hardship for the most at-risk users
-**The problem:** OFW requires both parents to subscribe (~$220–$552/year per household). The users who need legal protection most — lower-income, high-conflict cases — are the least able to afford it.
+### Gap 3: No one treats the entire record as evidence — only messages
+**The problem:** All competitors lock tamper-proof guarantees to messaging. Calendar changes, expense disputes, agreement modifications, file uploads — none have the same legal rigor as messages.
 
-**The opportunity:** A tiered model where one parent can start for free (view-only for the other) or a single-sub model like 2Houses' approach, combined with genuine free access for DV survivors (as AppClose does), creates both ethical positioning and market access.
-
----
-
-### Gap 6: No user-verifiable integrity proof
-**The problem:** Users have to trust the platform. OFW, TalkingParents, AppClose — all make tamper-proof claims that are operationally true but not *user-verifiable*. There's no mechanism for a user or their lawyer to independently verify record integrity without subpoenaing the company.
-
-**The opportunity:** CoParent's hash manifest in the evidence bundle lets anyone with basic technical knowledge verify that records haven't been tampered with — even by CoParent itself. This is a meaningful legal and trust differentiator. In a world where platform trustworthiness is increasingly questioned, user-verifiable integrity is powerful.
+**The opportunity:** CoParent's immutable versioning applies to every entry type. An expense edited three times shows every version, who changed what, and when. A pickup event marked "missed" and then disputed — full history, fully verified.
 
 ---
 
-## Recommended Positioning
+### Gap 4: No cryptographic file integrity
+**The problem:** Every app stores files, but none verifies that the file uploaded is the file exported. No hash manifest proving documents weren't tampered with.
 
-### Core Position
-> **CoParent is the first co-parenting platform built as a legal evidence system — not a communication tool with evidence features bolted on.**
+**The opportunity:** CoParent hashes every file at upload (SHA-256) and includes the manifest in every export. A lawyer, judge, school administrator, or immigration officer can verify file integrity without trusting the platform.
 
-### Who to Win First
-**Primary:** High-conflict co-parents who are already in litigation or anticipate it. They are in pain, they understand the stakes, and they will pay for peace of mind.
+---
 
-**Secondary:** Family law attorneys who recommend apps to clients. Make the lawyer's job easier — structured exports, professional portal, hash verification — and they become a sales channel.
+### Gap 5: No structured evidence bundle for professionals
+**The problem:** OFW and TalkingParents produce PDFs. Lawyers wade through long printouts without structure. Schools and agencies receive unverified attachments.
 
-**Tertiary:** Cooperative co-parents who want to prevent future conflict with a proper record. Sell the "insurance" angle: "You don't need this until you do."
+**The opportunity:** CoParent's verified care report (PDF + JSON + attachments + hash manifest) is designed for any professional who needs to trust the record — lawyers, judges, school administrators, hospital staff, immigration officers.
 
-### Messaging Angle Against Incumbents
-- **vs. OurFamilyWizard:** "OFW is court-recognized. CoParent is court-ready. There's a difference."
-- **vs. TalkingParents:** "TalkingParents documents what you say. CoParent documents everything that happens."
-- **vs. AppClose:** "AppClose is getting there. CoParent started there."
+---
 
-### Defensible Moats
-1. **Technical:** Cryptographic file hashing + versioned entry history = hard to replicate quickly without re-architecting existing products
-2. **Legal:** First-mover on hash manifest evidence bundles creates case law association
-3. **Trust:** User-verifiable integrity (vs. "trust us, it's tamper-proof")
-4. **UX:** Complex legal architecture behind a calm, neutral, simple interface
+### Gap 6: Pricing excludes the most vulnerable users
+**The problem:** OFW requires both parents to subscribe ($220–$552/year per household). The families who most need documentation — lower-income, OFW families, grandparent guardians — can't afford it.
 
-### What to Avoid
-- Don't position as an OFW killer — court recognition takes years. Position as the superior technical standard.
-- Don't compete on features alone — the audit-trail + verification angle is where you win.
-- Don't make the UI feel like a legal tool. Courts and lawyers are the secondary audience. The parents are the primary user.
+**The opportunity:** Freemium with 1 Space free. The basic arrangement (OFW parent + guardian, or separated parents with one set of children) works at no cost. Paid tiers unlock complexity (multiple Spaces, professional access, advanced exports). Free access for DV survivors and financial hardship.
+
+---
+
+### Gap 7: No one acknowledges non-divorce use cases
+**The problem:** Every competitor's marketing, onboarding, and feature set assumes divorce. An OFW parent searching for "app to document my involvement with my child" finds nothing. A grandparent searching for "app to keep records of caring for my grandchild" finds nothing. These families are invisible to the current market.
+
+**The opportunity:** CoParent's inclusive positioning — "Shared records for everyone raising a child" — and its Spaces model make it the first tool that acknowledges and serves the full spectrum of shared care arrangements. This is not just a marketing angle — it's a structural product advantage that opens a market 3–5x larger than the divorce segment alone.
 
 ---
 
@@ -476,14 +322,51 @@ WeParent's product pivot creates churn risk for their users. Co-parents who sign
 
 | Alternative | Why People Use It | Why It Fails |
 |-------------|-------------------|--------------|
-| Text/SMS | Free, familiar | No structured record, editable screenshots |
-| Email | Documentation trail | Disorganized, no structure, screenshots can be faked |
-| Google Calendar | Shared scheduling | No legal record, editable, no accountability |
-| Spreadsheets | Expense tracking | Editable, no audit trail, not court-ready |
-| WhatsApp/iMessage | Communication | Deletable, no certified export, screenshots are contested |
-| Notes apps (Apple Notes, Notion) | Record-keeping | No tamper-proof guarantee, no export structure |
+| WhatsApp groups | Free, familiar, everyone has it | No structured record, messages deletable, screenshots contested, no roles or permissions |
+| Shared Google Sheets | Expense tracking, schedule coordination | Editable by anyone, no audit trail, no integrity verification, not defensible |
+| Email threads | Documentation trail | Disorganized, no structure, no acknowledgment system, easily manipulated |
+| Google Calendar | Shared scheduling | No legal record, editable, no accountability, no care-specific features |
+| Text/SMS/iMessage | Free, immediate | Screenshots contestable, no structure, easily faked with AI tools |
+| Remittance apps (GCash, Wise) | Track money sent | Only tracks transfers, not what money was used for; no care record |
+| Notes apps (Apple Notes, Notion) | Personal record-keeping | No tamper-proof guarantee, no shared visibility, timestamps are user-controlled |
+| Facebook Messenger | Family group chat | Deletable, no export, no verification, no legal defensibility |
 
-The migration path: users are already doing something. CoParent needs to import from these and give them a superior record going forward.
+**The migration path:** Users across all these alternatives are already trying to solve the shared care record problem with tools that weren't built for it. CoParent needs to import from these and give them a verified, structured record going forward.
+
+---
+
+## Recommended Positioning
+
+### Core Position
+> **CoParent is the first shared care records platform — built for every family structure, not just divorce.**
+
+### Who to Win First
+**Primary:** Separated parents in conflict — they understand the stakes, they're already spending money, and they're the most likely to convert from existing competitors.
+
+**Secondary:** OFW families — massive, completely unserved market. The proof-of-involvement use case is compelling and has no competition.
+
+**Tertiary:** Grandparent/relative guardians — invisible to existing tools, high documentation needs, strong word-of-mouth potential in community networks.
+
+**Phase 2:** Blended family managers, open adoption families, legal professionals.
+
+### Messaging Angles Against Incumbents
+- **vs. OurFamilyWizard:** "OFW was built for two parents in court. CoParent was built for everyone raising a child."
+- **vs. TalkingParents:** "TalkingParents documents what you say. CoParent documents everything that happens — across every arrangement."
+- **vs. AppClose:** "AppClose is catching up on legal features. CoParent started with the architecture — and built for every family structure."
+- **vs. WhatsApp/Sheets/Email:** "You're already documenting. CoParent makes it verified, organized, and defensible."
+
+### Defensible Moats
+1. **Spaces model:** Multi-arrangement support requires fundamental architecture decisions that competitors can't bolt on
+2. **Role system:** Owner/parent/guardian/lawyer/viewer is a product-level decision, not a permission flag
+3. **Technical:** SHA-256 file hashing + immutable entry versioning = months of re-architecture for incumbents
+4. **Inclusive positioning:** First-mover on the "shared care records" category — competitors are locked into "co-parenting conflict" positioning
+5. **Trust model:** User-verifiable integrity vs. "trust us, it's tamper-proof"
+
+### What to Avoid
+- Don't position as an OFW killer — court recognition takes years
+- Don't lead with "court-ready" — it narrows the audience. The product IS court-ready, but the pitch is broader
+- Don't make the UI feel like a legal tool — parents, guardians, and families are the primary user; courts and lawyers are secondary
+- Don't assume conflict — design for peace, prove in conflict
 
 ---
 
@@ -491,13 +374,16 @@ The migration path: users are already doing something. CoParent needs to import 
 
 | Dimension | CoParent Advantage |
 |-----------|-------------------|
+| Family structure support | Spaces model — any arrangement, any number of members, any role |
+| Inclusive access | Guardian, lawyer, viewer roles — not just "Parent A / Parent B" |
 | Legal architecture | Cryptographic integrity, versioned entries, hash manifest |
-| Evidence export | PDF + JSON + attachments + manifest — built for lawyers |
+| Evidence export | PDF + JSON + attachments + manifest — built for any professional |
 | Dispute capture | Structured per-entry acknowledgment + dispute workflow |
-| Pricing fairness | Access model that serves lower-income and DV users |
-| UX philosophy | Legal complexity hidden behind calm, neutral simplicity |
+| Market scope | 3–5x larger addressable market than divorce-only competitors |
+| Pricing fairness | Freemium with 1 Space free; paid for complexity |
+| UX philosophy | Inclusive, calm, non-adversarial — works for all family structures |
 | Trust model | User-verifiable, not just "trust us" |
 
 ---
 
-*Sources: OurFamilyWizard (ourfamilywizard.com), TalkingParents (talkingparents.com), AppClose (appclose.com), 2Houses (2houses.com), Cozi (cozi.com), Custody Connection (custodyconnection.com), WeParent (App Store), Law firm reviews (lakemunrolaw.com, wassermanwhite.com), User reviews (Sitejabber, Trustpilot, Reddit), AppClose PR (November 2025).*
+*Sources: OurFamilyWizard (ourfamilywizard.com), TalkingParents (talkingparents.com), AppClose (appclose.com), 2Houses (2houses.com), Cozi (cozi.com), law firm reviews, user reviews (Sitejabber, Trustpilot, Reddit), AppClose PR (November 2025).*

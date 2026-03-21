@@ -44,7 +44,7 @@ export function TextInputArea(props: TextInputAreaProps) {
     if (numberOfNewLines !== newLines) {
       setNumberOfNewLines(newLines);
     }
-  }, [value]);
+  }, [value, autoAdjustHeight, numberOfNewLines]);
 
   return (
     <TextInput

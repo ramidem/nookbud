@@ -27,7 +27,7 @@ const customConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     assetExts: assetExts.filter((ext) => ext !== 'svg'),
-    sourceExts: [...sourceExts, 'cjs', 'mjs', 'svg'],
+    sourceExts: [...sourceExts, 'cjs', 'mjs', 'svg', 'sql'],
   },
 };
 

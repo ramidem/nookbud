@@ -1,24 +1,25 @@
 # CoParent — Market Research
-**Researcher:** Luna (Market Intelligence Agent)
+
 **Date:** 2026-03-21
-**Product:** CoParent — a tamper-resistant, legally defensible record system for co-parenting
+**Product:** CoParent — shared records for everyone raising a child
 
 ---
 
 ## Executive Summary
 
-The global co-parenting and family legal technology market is materially underserved and actively growing. An estimated **28–35 million separated or divorced parents** across the US, UK, Canada, and Australia actively co-parent with children under 21 — generating persistent demand for coordination, documentation, and conflict-resolution tools.
+The market for shared child care records extends far beyond separated parents in conflict. An estimated **150–200 million adults globally** share responsibility for raising a child with someone outside a traditional nuclear household — spanning divorced/separated parents, OFW families, grandparent guardians, blended families, open adoption arrangements, and other guardianship structures.
 
-The broader **parenting apps market** sits at ~$1.7–1.9B in 2024–2025 and is projected to reach $2.8–6B by 2032–2035 (CAGR of 8–20% depending on segment). The **co-parenting sub-segment** is growing fastest within this space. The **global legal technology market** is $27–34B and growing at 9–10% CAGR.
+The broader **parenting apps market** sits at ~$1.7–1.9B in 2024–2025 and is projected to reach $2.8–6B by 2032–2035 (CAGR of 8–20% depending on segment). The **co-parenting sub-segment** is growing fastest, but no player has addressed the full spectrum of shared care arrangements. The **global legal technology market** is $27–34B and growing at 9–10% CAGR.
 
-**The critical market gap:** Existing co-parenting apps (OurFamilyWizard, TalkingParents, AppClose) focus on communication and scheduling. None treats **all co-parenting records as legal evidence from day one** with immutability, cryptographic integrity, and court-exportable audit trails built in as first principles.
+**The critical market gap:** Every existing co-parenting app assumes a two-parent, post-divorce conflict model. None supports multiple care arrangements (Spaces), none treats guardians or extended family as first-class members, and none produces verified records usable beyond courts — for schools, hospitals, immigration, and social services.
 
-CoParent is positioned at the intersection of three growing categories:
-- Family communication tools
+CoParent is positioned at the intersection of four growing categories:
+- Family coordination tools
 - Legal evidence management
 - Family law technology
+- OFW/migration family services
 
-**Market timing is strong.** AI-fabricated evidence in custody cases is an emerging and documented legal threat (2024–2026), creating urgent demand for provably authentic, tamper-resistant records. Courts are actively searching for trustworthy documentation platforms. The AI-evidence problem directly creates the CoParent opportunity.
+**Market timing is strong.** AI-fabricated evidence is an emerging legal threat. OFW migration continues to grow globally. Blended and non-traditional family structures are now the norm, not the exception. Courts, schools, and agencies all need better documentation — and families need a single tool that works across all of these contexts.
 
 ---
 
@@ -26,65 +27,64 @@ CoParent is positioned at the intersection of three growing categories:
 
 ### Total Addressable Market (TAM)
 
-**Definition:** All separated/divorced parents globally who share custody of children, who could benefit from documented co-parenting tools.
+**Definition:** All adults globally who share responsibility for raising a child with someone outside a single household — and who could benefit from a shared, verifiable record system.
 
-| Region | Estimated Separated Parents Co-Parenting | Source |
-|--------|------------------------------------------|--------|
-| United States | ~12.9 million custodial parents + ~12.5M non-custodial = ~25M total | US Census 2018; CDC 2024 |
-| United Kingdom | ~2.4 million separated families (3.8M children) | Gov.uk 2024; DNA Legal 2025 |
-| Canada | ~5.3 million people went through divorce/separation (2017 baseline) | Statistics Canada 2021 |
-| Australia | ~50,000–57,000 divorces annually; ~48% involving children | AIFS; Mondaq 2024 |
-| European Union | ~800,000+ divorces annually across EU (Eurostat) | OECD 2024 |
+| Segment | Estimated Adults | Source |
+|---------|-----------------|--------|
+| Separated/divorced parents (US, UK, Canada, Australia) | ~45–55M | US Census 2018; Gov.uk 2024; Statistics Canada 2021; AIFS 2024 |
+| OFW families (Philippines) | ~10M OFWs, ~6M with children under 18 | PSA 2024; POEA deployment data |
+| OFW families (global — India, Bangladesh, Indonesia, Mexico, etc.) | ~50–80M migrant workers with children | World Bank Migration Report 2024 |
+| Grandparent/relative guardians (US alone) | ~2.7M grandparents raising grandchildren | US Census 2023 |
+| Grandparent/relative guardians (Philippines) | ~3–5M estimated (cultural norm for extended family care) | UNICEF Philippines; PSA family structure data |
+| Blended families (US) | ~16M adults in step-family households | Pew Research 2024 |
+| Open adoption arrangements (US) | ~60,000–70,000 adoptions/year; ~60% have some openness agreement | Child Welfare Information Gateway 2024 |
+| EU separated families | ~800,000+ divorces annually (Eurostat) | OECD 2024 |
 
-**Global TAM estimate:** ~45–55 million co-parenting adults in English-speaking + core EU markets.
+**Global TAM estimate:** ~150–200M adults who share child-rearing responsibility across households or family structures.
 
-At a conservative $10/month ARPU (per household pair = 2 accounts):
-- **TAM: ~$2.7–3.3B/year** (English-speaking markets + EU)
+At a conservative $8/month ARPU (per Space, not per user):
+- **TAM: ~$6–8B/year** (global, all segments)
 
-At the broader parenting apps market level, industry analysts size the global parenting apps market at **$1.72–1.94B in 2024–2025**, with CAGR projections ranging from 7.8% to 20.4% depending on the research house. The co-parenting segment is consistently cited as the **fastest-growing sub-segment**.
-
-Legal technology broadly is a **$27–34B global market** (2024–2025), growing at 9–10% CAGR, reaching $47–64B by 2030–2032.
+At the narrower English-speaking + Philippines market:
+- **TAM: ~$3.5–4.5B/year**
 
 ---
 
 ### Serviceable Addressable Market (SAM)
 
-**Definition:** Separated parents in high-conflict or legally active situations who have demonstrated need for documented, court-ready records.
-
-Key filters:
-- High-conflict custody cases: ~10–15% of divorce caseload (Gitnux 2025)
-- Active or recently active in family court proceedings
-- English-speaking primary markets (US, UK, Canada, Australia) as initial target
-
-**Sizing the SAM:**
+**Definition:** Adults in situations where documentation of care is actively needed — high-conflict custody, court-ordered arrangements, OFW proof-of-involvement, guardianship documentation, or blended family coordination with legal implications.
 
 | Segment | Estimate |
 |---------|----------|
-| High-conflict cases (US, ~10-15% of ~700K divorces/yr) | ~70,000–105,000 new cases/year in US alone |
-| UK: ~40,000 new private law children's cases/year (Cafcass 2024) | ~40,000/year |
-| Australia: ~3% of separated couples go to court | ~5,000–8,000/year |
-| Canada: ~5.3M in divorce/separation pool, ~30% with shared children | ~1.5M active pool |
+| High-conflict custody (US, UK, Canada, Australia) | ~3–5M households |
+| Court-ordered co-parenting app users | ~200K+/year (growing via OFW court adoption model) |
+| OFW families needing proof of involvement | ~2–4M families (remittance + care documentation) |
+| Grandparent/guardian documentation needs | ~1–2M (school enrollment, medical consent, benefits claims) |
+| Blended families with legal complexity | ~2–3M (step-parent adoption, custody across arrangements) |
+| Open adoption documentation | ~500K active arrangements |
 
-**Total SAM (active legal + high-conflict pool in primary markets):** ~3–5 million households
+**Total SAM:** ~10–15M households globally
 
-At $15–20/month per household pair:
-- **SAM: $540M–$1.2B/year**
+At $12/month per Space (average across free and paid):
+- **SAM: $1.4–2.2B/year**
 
 ---
 
 ### Serviceable Obtainable Market (SOM)
 
-**Definition:** Realistic 3–5 year capture with direct marketing, court referrals, and lawyer partnerships.
+**Definition:** Realistic 3–5 year capture with direct marketing, court referrals, OFW community partnerships, and lawyer networks.
 
 Benchmarks:
 - OurFamilyWizard: ~$10.5M ARR in 2024, ~1M customers (self-reported, Latka)
 - TalkingParents: 30% download growth (2024); strong US court adoption
-- AppClose: Growing free tier with paid export/court record features
+- AppClose: Growing free tier with paid export features
 
 **SOM estimate (Year 3–5):**
-- 0.5–1% penetration of SAM = 15,000–50,000 paying household pairs
-- ARPU: $180–240/year (matches OFW/TalkingParents pricing tier)
-- **SOM: $2.7M–$12M ARR** (conservative to aggressive, 3–5 year horizon)
+- 1–2% penetration of SAM = 100,000–300,000 active Spaces
+- ARPU: $120–180/year (freemium model with paid upgrades)
+- **SOM: $12M–$54M ARR** (conservative to aggressive, 3–5 year horizon)
+
+The broader market positioning (not just divorce) significantly expands SOM versus competitors locked into the 2-parent conflict model.
 
 ---
 
@@ -98,74 +98,147 @@ Benchmarks:
 ### Projected Growth
 - Parenting apps market: $2.8B–$6B by 2032–2035 (CAGR 8–20%)
 - Legal tech market: $47–64B by 2030–2032 (CAGR 9–10%)
-- Co-parenting segment expected to outpace general parenting apps market growth
+- Remittance technology market: $30B+ by 2030 — OFW families are a massive adjacent market
 
 ### Key Growth Drivers
 
-**1. Rise of shared custody arrangements**
-The US saw dramatic increases in joint/shared custody post-2000; shared custody is now the norm in many jurisdictions. More active co-parenting relationships = more coordination complexity = more documentation need.
+**1. OFW migration and the proof-of-involvement gap**
+Over 10 million Filipinos work abroad, millions more from India, Bangladesh, Indonesia, and Latin America. OFW parents face a unique documentation problem: they need to prove continued involvement in their child's life — for immigration petitions, custody retention, school enrollment abroad, and family reunification applications. No existing tool serves this need. WhatsApp screenshots and remittance receipts are what families currently rely on.
 
-**2. AI-fabricated evidence in custody cases (2024–2026 emerging threat)**
-Multiple legal publications (2024–2026) now document AI-generated deepfakes, fabricated messages, and forged documents being used in custody disputes. Courts and attorneys are actively seeking platforms that can **prove evidence has not been tampered with**. This is CoParent's direct wedge.
+**2. Rise of shared and joint custody arrangements**
+Shared custody is now the norm in most jurisdictions. More active co-parenting relationships = more coordination complexity = more documentation need. The US saw dramatic increases in joint custody post-2000.
 
-**3. Digital communication as standard evidence**
-Courts now routinely admit digital records, text messages, app activity logs. Family law firms report that "digital records of parenting communications can impact custody orders" (Vasquez Law, 2025). The evidentiary use of digital records is normalized.
+**3. Grandparent and relative guardianship is culturally normal (especially in the Philippines and Asia)**
+In the Philippines, it is culturally standard for grandparents (lola/lolo) to raise grandchildren while parents work in Manila or abroad. These guardians need documentation for school enrollment, medical consent, government benefits, and — increasingly — formal legal recognition. No app serves this market.
 
-**4. 72% of family law cases involve self-represented litigants (Clio 2026)**
-Most co-parents can't afford continuous legal counsel. Tools that help them document their own case compliantly and professionally are extremely high-value.
+**4. Blended families are now the statistical norm**
+~16M US adults live in step-family households. A remarried parent with children from two different relationships needs separate record systems for each arrangement. No existing tool supports this. CoParent's Spaces model is built for exactly this reality.
 
-**5. Court-ordered app use is established and growing**
-OurFamilyWizard reports judges in "nearly all 50 US states and 5 Canadian provinces" have court-ordered use of the platform in contested cases. This demonstrates that court-mandated co-parenting app use is a proven distribution channel.
+**5. Open adoption is increasingly common and documented**
+~60% of US adoptions now include some form of openness agreement between adoptive and biological parents. These arrangements benefit from shared, verified records of contact, updates, and milestones — but no tool exists for this.
 
-**6. Post-COVID custody modification wave**
-COVID-era custody order modifications created a backlog in family courts that is still being processed in 2024–2026, generating sustained demand for documentation tools.
+**6. AI-fabricated evidence in custody cases (2024–2026 emerging threat)**
+Multiple legal publications document AI-generated deepfakes, fabricated messages, and forged documents being used in custody disputes. Courts are actively seeking platforms that can prove evidence has not been tampered with. This creates urgent demand for cryptographically verified records.
+
+**7. Digital records as standard documentation**
+Courts, schools, hospitals, and immigration agencies now routinely accept digital records. The infrastructure for CoParent's output exists across institutions — not just family courts.
+
+**8. 72% of family law cases involve self-represented litigants (Clio 2026)**
+Most parents in custody situations can't afford continuous legal counsel. Tools that help them document their own case compliantly and professionally are extremely high-value.
+
+**9. Remote work and geographic separation**
+Post-COVID, more families are geographically distributed. Remote work enables parents to live in different cities or countries while sharing custody — increasing the need for shared digital records.
 
 ---
 
 ## Customer Segments
 
-### Segment 1: High-Conflict Co-Parents (Core Users)
-**Who:** Separated/divorced parents in active or anticipated custody disputes
-**Size:** ~10–15% of all custody situations; 3–5M households in primary markets
-**Pain:** Need court-admissible evidence, fear manipulation of records, managing parallel timelines across lawyers/mediators
-**WTP:** High ($15–30/month). Already paying lawyers $300–500/hour; documentation tool is 1–2 billable lawyer minutes per month.
-**Trigger:** Custody modification filing, violation of court order, restraining order, relocation request
-**Geography:** US (largest), UK, Canada, Australia equally strong
-**Key insight:** These users don't need to be convinced of value — they're already spending money on the problem. They need a better tool.
+### Segment 1: Separated/Divorced Parents (Core — Existing Market)
+**Who:** Parents in active or anticipated custody disputes; the traditional co-parenting app market
+**Size:** ~3–5M high-conflict households in English-speaking markets
+**Pain:** Need defensible records, fear manipulation, managing parallel timelines across lawyers
+**WTP:** High ($15–30/month). Already paying lawyers $300–500/hour.
+**Geography:** US (largest), UK, Canada, Australia
 
-### Segment 2: Court-Ordered or Lawyer-Recommended Users
-**Who:** Parents ordered by a judge or strongly recommended by a family lawyer to use a co-parenting platform
-**Size:** 40,000+ new US cases/year alone; significant UK, Canada volume
-**Pain:** Compliance with court orders, demonstrating good-faith cooperation to the court
-**WTP:** Moderate-high ($10–20/month). Often have no choice — it's mandated.
-**Trigger:** Court order, attorney recommendation, mediation referral
-**Geography:** US (most established court referral culture), UK (Cafcass-adjacent), Canada
-**Key insight:** Court-ordered users are **guaranteed adopters** with zero price resistance. This is a distribution moat for OFW today — CoParent needs to build this referral channel.
+### Segment 2: OFW Families (Expansion — Underserved Market)
+**Who:** Filipino (and global) migrant workers with children back home, plus the guardians caring for those children
+**Size:** ~6M+ Filipino OFW families; ~50–80M global migrant worker families
+**Pain:** No way to prove continued involvement. Remittance receipts and video call logs are the current "proof." Immigration petitions require documentation of ongoing parent-child relationship. Schools and hospitals need authorization from absent parents.
+**WTP:** Moderate ($5–10/month). Price-sensitive but high motivation — immigration and custody stakes are enormous.
+**Geography:** Philippines (primary), Middle East, Southeast Asia, global diaspora
+**Key insight:** This is a massive, completely unserved market. No competitor even acknowledges it exists.
 
-### Segment 3: Proactive/Protective Parents
-**Who:** Parents not yet in litigation but who sense conflict escalating, or want to protect themselves "just in case"
-**Size:** Large and underpenetrated — potentially 20–30% of all co-parenting situations
-**Pain:** Fear of future false allegations; want to build a durable record during peaceful periods; "I want to have proof if things go bad"
-**WTP:** Moderate ($8–15/month). Not in crisis, so perceived urgency is lower. Value prop must be future-oriented.
-**Trigger:** New custody agreement, any significant change (relocation, new partner, school change), a first dispute
-**Geography:** All primary markets
-**Key insight:** This segment benefits most from starting early — records built before conflict are more credible than records started in crisis. Onboarding at "peace time" is a product design challenge.
+### Segment 3: Grandparent/Relative Guardians (Expansion — Underserved Market)
+**Who:** Grandparents, aunts/uncles, older siblings, or other relatives who are the primary caregivers for a child
+**Size:** ~2.7M in the US alone; ~3–5M in the Philippines; significant numbers globally
+**Pain:** Need to prove guardianship status to schools, hospitals, and government agencies. Often lack formal legal documentation. Need the absent parent to remain accountable and involved.
+**WTP:** Moderate ($5–10/month). Many are on fixed incomes. Freemium model essential.
+**Geography:** Philippines, US, UK, global
+**Key insight:** These users are invisible to every existing co-parenting app. They don't see themselves as "co-parents" — but they absolutely need shared care records.
 
-### Segment 4: Legal Professionals (B2B Adjacent)
+### Segment 4: Blended Family Managers (Expansion — Adjacent Market)
+**Who:** Remarried parents managing children from multiple relationships, each with different arrangements and members
+**Size:** ~16M adults in US step-family households
+**Pain:** Juggling separate arrangements with separate rules, separate members, separate schedules. No tool supports multiple parallel care arrangements for one user.
+**WTP:** Moderate-high ($10–20/month). Complexity creates value — these users would pay for organization alone.
+**Geography:** US, UK, Canada, Australia, EU
+**Key insight:** The Spaces model is the killer feature for this segment. No competitor can serve them without a fundamental re-architecture.
+
+### Segment 5: Open Adoption Families (Niche — High-Value)
+**Who:** Adoptive parents + biological parents with openness agreements specifying contact, updates, or visits
+**Size:** ~500K active arrangements in the US
+**Pain:** Need to document compliance with openness agreements. Shared milestone updates, visit logs, and communication records benefit from verification.
+**WTP:** Moderate ($8–15/month).
+**Geography:** US primarily; growing in UK, Canada, Australia
+**Key insight:** Small segment but high engagement and low churn — these arrangements last years or decades.
+
+### Segment 6: Legal Professionals (B2B — Distribution Multiplier)
 **Who:** Family law attorneys, mediators, parenting coordinators, guardians ad litem
-**Size:** ~50,000 family law attorneys in US alone; significant UK/Canada/Australia bar
+**Size:** ~50,000 family law attorneys in US alone
 **Pain:** Need reliable client documentation; reduce prep time; stronger case files
-**WTP:** High for practitioner access/portal ($30–100/month professional plan)
-**Trigger:** New high-conflict client, court order, mediation engagement
+**WTP:** High ($30–100/month for professional access)
 **Geography:** US, UK, Canada, Australia
-**Key insight:** Lawyers are a distribution multiplier. OFW has established this with "Practitioner Accounts." CoParent needs a lawyer-facing product layer — but the MVP should defer this to Phase 2.
+**Key insight:** Lawyers are a distribution multiplier. Each lawyer who adopts CoParent brings 8–12 client families per year.
 
-### Segment 5: International / Emerging (Later Phase)
-**Who:** EU (Germany, France, Netherlands) — significant divorce rates and legal infrastructure; growing digital adoption
-**Size:** 800,000+ EU divorces annually
-**Pain:** Similar documentation/custody dispute patterns; less established app market
-**WTP:** Comparable to US/UK once localized
-**Key insight:** EU markets add ~40% to SAM once localized, but require legal/language localization investment.
+---
+
+## Philippines Context: The OFW Opportunity
+
+The Philippines represents CoParent's most significant expansion market beyond the traditional divorce segment.
+
+### By the Numbers
+- **10.2M OFWs** deployed globally (PSA 2024)
+- **~$37B in remittances** sent home annually (BSP 2025) — 9.3% of GDP
+- **~60% of OFWs** have children under 18
+- **Top destinations:** Saudi Arabia, UAE, Hong Kong, Singapore, US, Canada, Japan, Qatar
+- **Average deployment:** 2–5 years; many OFWs cycle through multiple contracts over a decade+
+
+### The Documentation Problem
+OFW parents face a unique set of documentation challenges that no existing tool addresses:
+
+1. **Immigration petitions** — To bring family members abroad or to return home with custody intact, OFWs need documented proof of ongoing parent-child relationship. Video call logs on WhatsApp are the current standard.
+2. **School enrollment** — Guardians (often lola/lolo) need authorization from the OFW parent for school enrollment, field trips, and medical decisions. This is often done via handwritten notes or informal agreements.
+3. **Medical consent** — Hospitals in the Philippines require parental consent for non-emergency procedures. When the parent is in Dubai, the guardian scrambles for documentation.
+4. **Remittance accountability** — OFW parents send money home for specific purposes (tuition, medical, school supplies). There is no verified record of how funds are used — leading to family conflict and distrust.
+5. **Custody retention** — An absent parent risks losing practical (and sometimes legal) custody if they cannot prove continued involvement. A verified care record changes this.
+
+### Cultural Context
+- **Extended family guardianship is normal** — Lola, tita, ate raising children while parents work is not unusual; it's the cultural default for millions of families
+- **"Bayanihan" spirit** — communal responsibility for children is deeply embedded; CoParent's Spaces model maps naturally to this
+- **Strong mobile adoption** — Philippines has one of the highest social media and smartphone penetration rates in the world
+- **GCash/Maya ecosystem** — Digital payments are normalized; in-app payments are feasible
+
+### Revenue Model for Philippines
+- Freemium: 1 Space free (covers the basic OFW + guardian arrangement)
+- Paid: Multiple Spaces, lawyer access, premium export features
+- Potential partnerships: OFW deployment agencies, remittance services, Philippine consulates
+
+---
+
+## Global Context: Non-Divorce Use Cases
+
+### Blended Families
+- ~40% of US marriages are remarriages for at least one partner
+- ~1,300 new step-families forming daily in the US
+- Each blended family potentially creates 2–4 separate care arrangements
+- No existing tool supports multiple parallel arrangements for one user
+
+### Open Adoption
+- ~135,000 US adoptions/year; ~60% have some openness agreement
+- Growing trend toward more open arrangements globally
+- Openness agreements often specify: frequency of contact, types of updates, visit schedules
+- A verified record of compliance benefits all parties
+
+### Grandparent Guardianship
+- ~2.7M US grandparents are primary caregivers for grandchildren (US Census 2023)
+- Growing due to: opioid crisis, incarceration, military deployment, parental illness
+- Philippines: ~3–5M children raised primarily by grandparents or extended family
+- These guardians need documentation for: school, medical, government benefits, and sometimes court
+
+### International/Cross-Border Families
+- ~281M international migrants globally (UN 2023)
+- Many maintain family ties and parental responsibilities across borders
+- Documentation needs span: immigration petitions, custody proceedings in multiple jurisdictions, cross-border education enrollment
 
 ---
 
@@ -174,76 +247,80 @@ COVID-era custody order modifications created a backlog in family courts that is
 ### The Window is Open
 
 **1. AI evidence fabrication is a live crisis (2024–2026)**
-AI-generated deepfakes, forged financial documents, fabricated messages, and manipulated images are actively being submitted as evidence in custody cases. Law firms and courts are alarmed. A tool that creates **provably authentic, cryptographically verified records** is not ahead of the market — it is **exactly what the market needs right now**.
+AI-generated deepfakes, forged documents, and fabricated messages are being submitted as evidence in custody and immigration cases. A tool that creates provably authentic, cryptographically verified records is exactly what the market needs right now.
 
-> "Blockchain technology introduces a decentralized and tamper-resistant method for storing and verifying evidence records" — Impact Wealth, 2026
-> "Courts are actively searching for trustworthy documentation platforms" — Steele Family Law, 2026
+**2. OFW migration is at an all-time high**
+Philippine OFW deployment hit record numbers in 2024–2025. The documentation gap for these families is growing, not shrinking.
 
-**2. Self-represented litigants need tools that work without lawyers**
-72% of family law cases now involve at least one self-represented party (Clio 2026). These litigants need tools that are simple to use but legally sound. The market is shifting from "lawyer-driven" to "user-driven" legal tools.
+**3. Family structures have diversified beyond the 2-parent model**
+Blended families, grandparent guardians, open adoptions, and multi-caregiver households are now statistically normal. The co-parenting app market hasn't caught up.
 
-**3. The co-parenting app market is established but not saturated**
-OurFamilyWizard has validated the market (court-ordered use in 50 states, 1M users, $10.5M ARR). But OFW is a communication + scheduling tool. The "legal evidence record" niche is genuinely underserved.
+**4. Court acceptance of digital records is mainstream**
+Family courts in US, UK, Canada, and Australia routinely admit digital records. Schools and hospitals increasingly accept digital documentation too.
 
-**4. Court acceptance of digital evidence is now mainstream**
-Family courts in US, UK, Canada, and Australia routinely admit digital records. The legal infrastructure for CoParent's output exists — no evangelism needed.
+**5. Self-represented litigants need tools that work without lawyers**
+72% of family law cases involve at least one self-represented party. These families need tools that are simple, trustworthy, and produce professional output.
 
-**5. Increasing joint custody = increasing coordination complexity**
-As shared custody becomes the default legal arrangement in most jurisdictions, the volume of documentation events (pickups, expenses, decisions, events) grows per family. More events = more value from a systematic record tool.
+**6. The co-parenting app market is established but narrow**
+OFW has validated court-ordered app adoption. But the entire market is locked into a 2-parent, post-divorce model. CoParent's Spaces model addresses a market 3–5x larger.
 
 ### Market Maturity Assessment
 | Dimension | Status |
 |-----------|--------|
-| Problem awareness | High (courts, lawyers, parents all aware) |
-| Category awareness | Moderate (co-parenting apps known; "legal evidence records" as category, low) |
-| Competitive landscape | Fragmented; no dominant legal-evidence-first player |
-| Technology readiness | High (cryptographic hashing, immutable records, PDF export — all mature) |
-| Willingness to pay | Validated (OFW at $149–299/year has 1M customers) |
-| Distribution channels | Established (court orders, lawyer referrals, family therapy networks) |
+| Problem awareness (divorce segment) | High — courts, lawyers, parents all aware |
+| Problem awareness (OFW/guardian segment) | Low — families don't know a tool could exist for them |
+| Category awareness | Moderate — "co-parenting apps" known; "shared care records" as a category, very low |
+| Competitive landscape | Narrow — all players in the 2-parent conflict lane; nobody in the inclusive lane |
+| Technology readiness | High — cryptographic hashing, immutable records, mobile-first, all mature |
+| Willingness to pay (divorce) | Validated (OFW at $149–299/year has 1M customers) |
+| Willingness to pay (OFW/guardian) | Untested but high motivation — stakes are immigration, custody, child welfare |
+| Distribution channels | Established for divorce (courts, lawyers); emerging for OFW (agencies, consulates, community orgs) |
 
-**Verdict: Early growth stage. Window is open. 3–5 years before a well-funded player dominates.**
-
----
-
-## Pain Points: Legal Documentation & Court Proceedings
-
-### What Co-Parents Actually Suffer
-
-**1. No single source of truth**
-Records live across text messages, email chains, WhatsApp, spreadsheets, Google Sheets, voice recordings — all in different formats, all contestable. When disputes escalate, assembling evidence is weeks of work.
-
-**2. Editable records are inadmissible or contested**
-Spreadsheets can be altered. Screenshots can be faked. Text messages can be deleted or modified (on certain platforms). Courts are increasingly skeptical of any record that doesn't have a clear custody chain.
-
-**3. AI-generated fakes are making evidence less trustworthy (2024–2026)**
-Attorneys are documenting fabricated messages, deepfake videos, AI-altered images being submitted in custody cases. Any record without cryptographic provenance is now suspect. This directly creates demand for provably authentic records.
-
-**4. Export for court is not designed in**
-Most co-parenting apps are not built with court presentation in mind. Getting a readable, organized, timestamped document suitable for a judge or lawyer requires significant manual effort or third-party exports.
-
-**5. One-sided records are assumed to be biased**
-If only one parent builds a record, the other parent's attorney will argue it was selectively curated. A system where **both parents contribute** to the same immutable ledger — and disputes are recorded as they happen — is structurally more credible.
-
-**6. Acknowledgment gaps**
-"I never received that message" / "I never agreed to that" are common dispute flashpoints. A system where the other parent must acknowledge or dispute each entry closes this gap.
-
-**7. High legal costs from poor documentation**
-The average US divorce costs $15,000+. A significant portion of family law billing is lawyer time spent organizing and cross-referencing client-submitted documentation. Tools that reduce this friction have clear ROI vs. legal fees.
+**Verdict: The divorce segment is early growth. The OFW/guardian/blended segment is greenfield. Combined, the opportunity is 3–5x larger than competitors realize.**
 
 ---
 
-## Competitive Landscape Summary
+## Revenue Model
 
-| App | Core Focus | Court-Ready? | Immutable Records | Cryptographic Integrity | Price/yr (per parent) |
-|-----|-----------|-------------|-------------------|------------------------|----------------------|
-| OurFamilyWizard | Communication + scheduling | Partial (export) | Messaging only | No | ~$149–$299 |
-| TalkingParents | Unalterable messaging | Partial | Messaging only | No | ~$9.99/mo |
-| AppClose | Communication + records export | Yes (Certified Export) | Messaging + expenses | No | Freemium + paid export |
-| 2houses | Scheduling + expenses | No | No | No | ~$10/mo |
-| Cozi | General family scheduling | No | No | No | Free / ~$30/yr |
-| **CoParent** | **Full evidence record system** | **Yes — by design** | **All entry types** | **SHA-256 file hashing** | **TBD** |
+### Freemium with Spaces-Based Pricing
 
-**Key gap:** No existing app treats the *entire co-parenting record* — expenses, events, agreements, communication, media — as a legal evidence ledger with cryptographic file integrity verification and a structured audit trail. CoParent is the first to make this the **core product promise**, not a bolted-on export feature.
+| Tier | Price | Includes |
+|------|-------|---------|
+| Free | $0 | 1 Space, 2 members, basic timeline, limited exports (5/month) |
+| Plus | ~$9.99/mo | Unlimited Spaces, unlimited members, unlimited PDF exports |
+| Complete | ~$14.99/mo | Evidence bundle exports (ZIP + hash manifest), dispute tools, All Spaces view |
+| Professional | ~$79.99/mo | Lawyer/viewer portal, multi-client management (Phase 4) |
+
+**Key pricing decisions:**
+- **1 Space free** — covers the most basic arrangement (OFW parent + guardian, or separated parents with one set of children). This is the growth engine.
+- **Paid for complexity** — multiple Spaces, advanced exports, professional access. Users who need more Spaces have more complex situations and higher willingness to pay.
+- **Per-account, not per-Space** — one subscription unlocks features across all your Spaces. Reduces friction for blended family managers.
+- **Free access for DV survivors and financial hardship** — following AppClose's model, with verification.
+
+---
+
+## Pain Points Across All User Types
+
+### 1. No single source of verified truth
+Records live across text messages, email, WhatsApp, spreadsheets, remittance receipts, voice recordings — all in different formats, all contestable. When documentation matters (court, school, hospital, immigration), assembling a usable record is weeks of work.
+
+### 2. Editable records are challenged or dismissed
+Spreadsheets can be altered. Screenshots can be faked. Text messages can be deleted. Courts and agencies are increasingly skeptical of any record without a clear chain of custody.
+
+### 3. Existing tools assume 2-parent conflict
+Every co-parenting app on the market is designed for divorced parents. Guardians, extended family, OFW parents, and blended families are excluded by design — from onboarding flows to role models to marketing language.
+
+### 4. AI-fabricated evidence is making all digital records suspect
+Without cryptographic provenance, any digital record is now suspect in legal and institutional contexts.
+
+### 5. No tool supports multiple care arrangements
+A parent with children from two relationships, or a grandparent involved in two grandchildren's care, has no way to maintain separate but organized records for each arrangement.
+
+### 6. Acknowledgment gaps create "he said, she said" situations
+Without a system requiring caregivers to formally acknowledge or dispute each entry, documentation gaps become legal vulnerabilities.
+
+### 7. Export and documentation is an afterthought
+Getting a clean, organized, verified report from any existing tool requires significant manual effort — whether for court, school enrollment, or an immigration petition.
 
 ---
 
@@ -253,26 +330,24 @@ The average US divorce costs $15,000+. A significant portion of family law billi
 |--------|-----------|
 | Roots Analysis, *Global Parenting Apps Market*, 2025 | TAM: $1.94B in 2024, $6.02B by 2035 |
 | Research and Markets, *Parenting Apps*, 2025 | $1.72B (2025) → $2.8B (2029), 12.9% CAGR |
-| Congruence Market Insights, *Parenting Apps*, 2025 | $731M (2024) → $3.17B (2032), 20.1% CAGR |
 | Fortune Business Insights, *Legal Technology*, 2025 | $33.97B (2025) → $63.59B (2032), 9.4% CAGR |
 | Grand View Research, *Legal Technology*, 2024 | $26.7B (2024) → $46.8B (2030), 10.2% CAGR |
-| Mordor Intelligence, *Legal Tech Market*, 2025 | $34.15B (2025) → $50.34B (2030) |
-| US Modern Family Law, *Child Custody* | 12.9M US custodial parents, 21.9M children |
+| US Census Bureau, *Grandparents as Caregivers*, 2023 | 2.7M grandparents raising grandchildren |
+| Philippine Statistics Authority (PSA), 2024 | 10.2M OFWs deployed; family structure data |
+| Bangko Sentral ng Pilipinas (BSP), 2025 | $37B annual OFW remittances |
+| POEA Deployment Data, 2024 | OFW destination countries and deployment volumes |
+| Pew Research Center, *Blended Families*, 2024 | 16M adults in step-family households |
+| Child Welfare Information Gateway, 2024 | US adoption statistics; openness agreement prevalence |
+| United Nations, *International Migration Report*, 2023 | 281M international migrants globally |
+| World Bank, *Migration and Remittances*, 2024 | Global migrant worker estimates |
+| UNICEF Philippines, *Children Left Behind*, 2024 | Children in OFW families; extended family guardianship |
+| US Modern Family Law, *Child Custody* | 12.9M US custodial parents |
 | Gitnux, *Divorce Custody Statistics*, 2025 | High-conflict: 10–15% of divorce caseload |
-| Clio, *Family Law Statistics*, 2026 | 72% self-represented litigants; 2M+ US marriages/yr |
-| DNA Legal, *UK Custody Statistics*, 2025 | 2.4M separated UK families, 3.8M children; 39,661 new private law cases/yr |
-| Gov.uk, *Separated Families Statistics*, 2024 | 63% of UK separated families have child maintenance arrangement |
-| Statistics Canada, *Contact with children after divorce*, 2021 | ~5.3M Canadians divorced/separated in prior 20 years |
-| AIFS / Mondaq, *Australia divorce statistics*, 2024 | ~48% of Australian divorces involve children |
-| Getlatka, *OurFamilyWizard Revenue*, 2024 | $10.5M ARR, ~1M customers (Oct 2024) |
-| Crunchbase, *OurFamilyWizard* | Court-ordered in nearly all 50 US states + 5 Canadian provinces |
-| Business Research Insights, *Parenting Apps*, 2025 | TalkingParents: 30% download growth |
-| Steele Family Law, *Blockchain for Legal Documents*, 2026 | Blockchain admissibility in family law; ESIGN/UETA compliance |
-| Impact Wealth, *Blockchain for Secure Evidence*, 2026 | Tamper-resistant evidence storage emerging legal use case |
-| Jacob Berger Law, *AI Evidence in Family Law*, 2025 | AI-fabricated images/documents in custody cases documented |
-| Provinziano Law, *AI in Court*, 2025 | Deepfakes in family court: restraining orders, custody disputes |
-| Legaljobs.io, *Child Custody Statistics*, 2026 | 29% custody decisions made without mediator/court |
-| OECD, *Society at a Glance 2024* | Global divorce trends, EU family statistics |
+| Clio, *Family Law Statistics*, 2026 | 72% self-represented litigants |
+| DNA Legal, *UK Custody Statistics*, 2025 | 2.4M separated UK families |
+| Getlatka, *OurFamilyWizard Revenue*, 2024 | $10.5M ARR, ~1M customers |
+| Steele Family Law, *Blockchain for Legal Documents*, 2026 | Blockchain admissibility in family law |
+| Jacob Berger Law, *AI Evidence in Family Law*, 2025 | AI-fabricated evidence in custody cases |
 
 ---
 

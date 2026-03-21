@@ -28,7 +28,7 @@ export function Skeleton(props: Props) {
 
   React.useEffect(() => {
     opacity.value = 0.5; // Start the animation
-  }, []);
+  }, [opacity]);
 
   if (!isLoading) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
