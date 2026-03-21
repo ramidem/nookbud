@@ -1,6 +1,7 @@
 import { type BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type SvgProps } from 'react-native-svg';
 
@@ -40,12 +41,36 @@ const TAB_ICONS: Record<string, React.FC<SvgProps>> = {
   SpacesTab: LayersIcon,
 };
 
+const FAB_ROTATION_DURATION = 200;
+const FAB_ROTATION_ANGLE = 45;
+
 function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
   const tw = useTw();
   const insets = useSafeAreaInsets();
+  const fabRotation = useSharedValue(0);
+
+  // Check if the Activity stack is currently on an Add* screen
+  const activityRoute = state.routes.find((r) => r.name === 'ActivityTab');
+  const nestedState = activityRoute?.state;
+  const currentNestedRoute = nestedState?.routes[nestedState.index ?? 0];
+  const isOnAddScreen = currentNestedRoute?.name?.startsWith('Add') ?? false;
+
+  useEffect(() => {
+    fabRotation.value = withTiming(isOnAddScreen ? FAB_ROTATION_ANGLE : 0, {
+      duration: FAB_ROTATION_DURATION,
+    });
+  }, [isOnAddScreen, fabRotation]);
+
+  const fabIconStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${fabRotation.value}deg` }],
+  }));
 
   const handleFabPress = () => {
-    navigation.navigate('ActivityTab', { screen: 'AddEntryPicker' });
+    if (isOnAddScreen) {
+      navigation.navigate('ActivityTab', { screen: 'ActivityTabs' });
+    } else {
+      navigation.navigate('ActivityTab', { screen: 'AddEntryPicker' });
+    }
   };
 
   const tabBarBottom = insets.bottom > 0 ? insets.bottom : TAB_BAR_MARGIN;
@@ -114,7 +139,9 @@ function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
         ]}
         onPress={handleFabPress}
       >
-        <PlusIcon height={FAB_ICON_SIZE} style={tw`text-white`} width={FAB_ICON_SIZE} />
+        <Animated.View style={fabIconStyle}>
+          <PlusIcon height={FAB_ICON_SIZE} style={tw`text-white`} width={FAB_ICON_SIZE} />
+        </Animated.View>
       </Pressable>
 
       {/* Floating tab bar */}
