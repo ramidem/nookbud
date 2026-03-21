@@ -1031,7 +1031,7 @@
       "title": "Space switcher UI \u2014 header dropdown",
       "description": "Space switcher in the app header. Shows current Space name + emoji. Tapping opens a bottom sheet listing all Spaces + All Spaces option.",
       "priority": 42,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Header displays: active Space emoji + name (or 'All Spaces' icon)",
         "Tapping opens BottomSheet listing all user's Spaces",
