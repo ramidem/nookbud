@@ -15,12 +15,12 @@ import { Alert } from '@/components/atoms';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { AlertTriangleIcon, MessageCircleIcon } from '@/icons';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { EntryService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 import type { CommunicationImportance } from '@/types/entry-content.types';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'AddCommunication'>;
+type Props = NativeStackScreenProps<ActivityStackParamList, 'AddCommunication'>;
 
 const ACTIVE_TEXT = 'text-white';
 const INACTIVE_TEXT = 'text-foreground';

@@ -1,29 +1,25 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React from 'react';
-import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useRef } from 'react';
+import { Pressable } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
+import { ActivityNavigator } from './ActivityNavigator';
 import { SettingsNavigator } from './SettingsNavigator';
-import { TimelineNavigator } from './TimelineNavigator';
 
-import { SpaceSwitcher } from '@/components';
+import { SpaceSwitcher, type SpaceSwitcherRef } from '@/components';
 import { useTw } from '@/hooks/useTw';
-import { CalendarIcon, ClipboardListIcon, GearIcon, ShareIcon } from '@/icons';
-import { CalendarScreen } from '@/screens/Calendar';
-import { ExportScreen } from '@/screens/Export';
+import { ClipboardListIcon, GearIcon, LayersIcon } from '@/icons';
+import { colors } from '@/tailwind';
 
 export type MainTabParamList = {
-  TimelineTab: undefined;
-  CalendarTab: undefined;
-  ExportTab: undefined;
+  SpacesTab: undefined;
+  ActivityTab: undefined;
   SettingsTab: undefined;
 };
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const TAB_ICON_SIZE = 24;
-const HEADER_TOP_PADDING = 8;
 
 function TabIcon({ focused, Icon }: { Icon: React.FC<SvgProps>; focused: boolean }) {
   const tw = useTw();
@@ -37,62 +33,60 @@ function TabIcon({ focused, Icon }: { Icon: React.FC<SvgProps>; focused: boolean
   );
 }
 
+function EmptyScreen() {
+  return null;
+}
+
 export function MainNavigator() {
   const tw = useTw();
-  const insets = useSafeAreaInsets();
+  const spaceSwitcherRef = useRef<SpaceSwitcherRef>(null);
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        header: () => (
-          <View
-            style={[
-              tw`bg-surface border-divider flex-row items-center border-b px-4 pb-3`,
-              { paddingTop: insets.top + HEADER_TOP_PADDING },
-            ]}
-          >
-            <SpaceSwitcher />
-          </View>
-        ),
-        headerShown: true,
-        tabBarActiveTintColor: '#6F8F7B',
-        tabBarInactiveTintColor: '#6E6A66',
-        tabBarLabelStyle: tw`mt-1 text-xs`,
-        tabBarStyle: tw`border-divider bg-surface border-t pt-2`,
-      }}
-    >
-      <Tab.Screen
-        component={TimelineNavigator}
-        name="TimelineTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={ClipboardListIcon} />,
-          tabBarLabel: 'Timeline',
+    <>
+      <Tab.Navigator
+        initialRouteName="ActivityTab"
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.subtitle,
+          tabBarLabelStyle: tw`mt-1 text-xs`,
+          tabBarStyle: tw`border-divider bg-surface border-t pt-2`,
         }}
-      />
-      <Tab.Screen
-        component={CalendarScreen}
-        name="CalendarTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={CalendarIcon} />,
-          tabBarLabel: 'Calendar',
-        }}
-      />
-      <Tab.Screen
-        component={ExportScreen}
-        name="ExportTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={ShareIcon} />,
-          tabBarLabel: 'Export',
-        }}
-      />
-      <Tab.Screen
-        component={SettingsNavigator}
-        name="SettingsTab"
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={GearIcon} />,
-          tabBarLabel: 'Settings',
-        }}
-      />
-    </Tab.Navigator>
+      >
+        <Tab.Screen
+          component={EmptyScreen}
+          name="SpacesTab"
+          options={{
+            tabBarButton: (props) => (
+              <Pressable {...props} onPress={() => spaceSwitcherRef.current?.expand()}>
+                {props.children}
+              </Pressable>
+            ),
+            tabBarIcon: () => (
+              <LayersIcon height={TAB_ICON_SIZE} style={tw`text-subtitle`} width={TAB_ICON_SIZE} />
+            ),
+            tabBarLabel: 'Spaces',
+          }}
+        />
+        <Tab.Screen
+          component={ActivityNavigator}
+          name="ActivityTab"
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={ClipboardListIcon} />,
+            tabBarLabel: 'Activity',
+          }}
+        />
+        <Tab.Screen
+          component={SettingsNavigator}
+          name="SettingsTab"
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon focused={focused} Icon={GearIcon} />,
+            tabBarLabel: 'Settings',
+          }}
+        />
+      </Tab.Navigator>
+
+      <SpaceSwitcher ref={spaceSwitcherRef} showTrigger={false} />
+    </>
   );
 }

@@ -20,6 +20,7 @@ import HeartPulseIcon from './heart-pulse.svg';
 import ImageIcon from './image.svg';
 import InfoIcon from './info.svg';
 import KeyboardHideIcon from './keyboard-hide.svg';
+import LayersIcon from './layers.svg';
 import LightbulbIcon from './lightbulb.svg';
 import LockIcon from './lock.svg';
 import MessageCircleIcon from './message-circle.svg';
@@ -58,6 +59,7 @@ export {
   ImageIcon,
   InfoIcon,
   KeyboardHideIcon,
+  LayersIcon,
   LightbulbIcon,
   LockIcon,
   MessageCircleIcon,

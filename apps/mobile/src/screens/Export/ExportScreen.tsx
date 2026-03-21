@@ -1,11 +1,14 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Alert } from '@/components/atoms';
 import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
-import { FileTextIcon, LockIcon, PackageIcon } from '@/icons';
+import { ArrowLeftIcon, FileTextIcon, LockIcon, PackageIcon } from '@/icons';
+import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import {
   ExportService,
   ChildService,
@@ -24,6 +27,7 @@ const ACTIVE_CARD = 'border-primary bg-primary/15';
 const INACTIVE_CARD = 'border-divider';
 
 const EXPORT_ICON_SIZE = 28;
+const HEADER_TOP_PADDING = 8;
 
 const TYPE_LABELS: Record<EntryType, string> = {
   agreement: 'Agreement',
@@ -35,8 +39,11 @@ const TYPE_LABELS: Record<EntryType, string> = {
 
 type SpaceScope = 'this' | 'all';
 
-export function ExportScreen() {
+type Props = NativeStackScreenProps<SettingsStackParamList, 'Export'>;
+
+export function ExportScreen({ navigation }: Props) {
   const tw = useTw();
+  const insets = useSafeAreaInsets();
   const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -166,11 +173,19 @@ export function ExportScreen() {
   return (
     <View style={tw`bg-surface flex-1`}>
       {/* Header */}
-      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
-        <Text style={tw`text-foreground font-serif-bold text-2xl`}>Export</Text>
-        <Text style={tw`text-subtitle mt-1`}>
-          Generate court-ready reports and evidence bundles
-        </Text>
+      <View
+        style={[
+          tw`border-divider bg-surface border-b px-4 pb-3`,
+          { paddingTop: insets.top + HEADER_TOP_PADDING },
+        ]}
+      >
+        <View style={tw`mb-2 flex-row items-center`}>
+          <Pressable style={tw`mr-3`} onPress={() => navigation.goBack()}>
+            <ArrowLeftIcon height={24} style={tw`text-foreground`} width={24} />
+          </Pressable>
+          <Text style={tw`text-foreground font-serif-bold text-2xl`}>Export</Text>
+        </View>
+        <Text style={tw`text-subtitle`}>Generate court-ready reports and evidence bundles</Text>
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>

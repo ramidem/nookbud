@@ -1,19 +1,20 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
+import { ActivityTopTabs } from './ActivityTopTabs';
+
 import {
-  AddEntryPickerScreen,
-  AddExpenseScreen,
-  AddEventScreen,
   AddAgreementScreen,
   AddCommunicationScreen,
+  AddEntryPickerScreen,
+  AddEventScreen,
+  AddExpenseScreen,
   AddUploadScreen,
 } from '@/screens/AddEntry';
 import { EntryDetailScreen } from '@/screens/EntryDetail';
-import { TimelineScreen } from '@/screens/Timeline';
 
-export type TimelineStackParamList = {
-  Timeline: undefined;
+export type ActivityStackParamList = {
+  ActivityTabs: undefined;
   EntryDetail: { entryId: string };
   AddEntryPicker: undefined;
   AddExpense: undefined;
@@ -23,16 +24,16 @@ export type TimelineStackParamList = {
   AddUpload: undefined;
 };
 
-const Stack = createNativeStackNavigator<TimelineStackParamList>();
+const Stack = createNativeStackNavigator<ActivityStackParamList>();
 
-export function TimelineNavigator() {
+export function ActivityNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen component={TimelineScreen} name="Timeline" />
+      <Stack.Screen component={ActivityTopTabs} name="ActivityTabs" />
       <Stack.Screen component={EntryDetailScreen} name="EntryDetail" />
       <Stack.Screen component={AddEntryPickerScreen} name="AddEntryPicker" />
       <Stack.Screen component={AddExpenseScreen} name="AddExpense" />

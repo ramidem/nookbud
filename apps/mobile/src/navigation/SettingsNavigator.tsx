@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
+import { ExportScreen } from '@/screens/Export';
 import {
   CreateSpaceSettingsScreen,
   ProfileSettingsScreen,
@@ -17,6 +18,7 @@ export type SettingsStackParamList = {
   SpacesSettings: undefined;
   SpaceDetail: { spaceId: string };
   CreateSpaceSettings: undefined;
+  Export: undefined;
 };
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
@@ -33,6 +35,7 @@ export function SettingsNavigator() {
       <Stack.Screen component={SpacesSettingsScreen} name="SpacesSettings" />
       <Stack.Screen component={SpaceDetailScreen} name="SpaceDetail" />
       <Stack.Screen component={CreateSpaceSettingsScreen} name="CreateSpaceSettings" />
+      <Stack.Screen component={ExportScreen} name="Export" />
       {/* ChildSettings and AddChildSettings will be added later */}
     </Stack.Navigator>
   );

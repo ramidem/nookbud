@@ -14,17 +14,17 @@ import {
   PaperclipIcon,
   WalletIcon,
 } from '@/icons';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { SpaceService } from '@/services';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'AddEntryPicker'>;
+type Props = NativeStackScreenProps<ActivityStackParamList, 'AddEntryPicker'>;
 
 const PICKER_ICON_SIZE = 24;
 
 const ENTRY_OPTIONS: Array<{
   description: string;
   Icon: React.FC<SvgProps>;
-  screen: keyof TimelineStackParamList;
+  screen: keyof ActivityStackParamList;
   title: string;
   type: string;
 }> = [
@@ -86,7 +86,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
     checkPermission();
   }, [activeSpaceId, isAllSpaces]);
 
-  const handleNavigate = (screen: keyof TimelineStackParamList) => {
+  const handleNavigate = (screen: keyof ActivityStackParamList) => {
     if (isAllSpaces || !activeSpaceId) {
       Alert.error({
         message:

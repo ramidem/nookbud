@@ -15,12 +15,12 @@ import { Alert } from '@/components/atoms';
 import type { Child } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { EntryService, ChildService, UserService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 import type { ExpenseCategory, SplitType } from '@/types/entry-content.types';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'AddExpense'>;
+type Props = NativeStackScreenProps<ActivityStackParamList, 'AddExpense'>;
 
 const ACTIVE_BG = 'bg-primary';
 const INACTIVE_BG = 'bg-neutral-200';

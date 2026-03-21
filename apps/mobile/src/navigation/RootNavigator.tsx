@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import notifee, { EventType } from '@notifee/react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import {
@@ -164,23 +165,25 @@ export function RootNavigator() {
 
   return (
     <NavigationContainer>
-      <DeepLinkHandler />
-      <NotificationHandler />
-      <Stack.Navigator
-        initialRouteName={hasUser ? 'Main' : 'Onboarding'}
-        screenOptions={{
-          animation: 'fade',
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen component={OnboardingNavigator} name="Onboarding" />
-        <Stack.Screen component={MainNavigator} name="Main" />
-        <Stack.Screen
-          component={AcceptInviteScreen}
-          name="AcceptInvite"
-          options={{ animation: 'slide_from_right' }}
-        />
-      </Stack.Navigator>
+      <BottomSheetModalProvider>
+        <DeepLinkHandler />
+        <NotificationHandler />
+        <Stack.Navigator
+          initialRouteName={hasUser ? 'Main' : 'Onboarding'}
+          screenOptions={{
+            animation: 'fade',
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen component={OnboardingNavigator} name="Onboarding" />
+          <Stack.Screen component={MainNavigator} name="Main" />
+          <Stack.Screen
+            component={AcceptInviteScreen}
+            name="AcceptInvite"
+            options={{ animation: 'slide_from_right' }}
+          />
+        </Stack.Navigator>
+      </BottomSheetModalProvider>
     </NavigationContainer>
   );
 }

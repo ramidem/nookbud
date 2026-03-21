@@ -16,11 +16,11 @@ import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import type { Child } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
-import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { EntryService, ChildService, UserService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 
-type Props = NativeStackScreenProps<TimelineStackParamList, 'AddEvent'>;
+type Props = NativeStackScreenProps<ActivityStackParamList, 'AddEvent'>;
 
 const ACTIVE_BG = 'bg-primary';
 const INACTIVE_BG = 'bg-neutral-200';

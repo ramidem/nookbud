@@ -1,4 +1,6 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { Calendar, type DateData, type MarkedDates } from 'react-native-calendars';
@@ -6,7 +8,8 @@ import { Calendar, type DateData, type MarkedDates } from 'react-native-calendar
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { CalendarIcon } from '@/icons';
-import type { MainTabParamList } from '@/navigation/MainNavigator';
+import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
+import type { ActivityTopTabParamList } from '@/navigation/ActivityTopTabs';
 import {
   TimelineService,
   EntryService,
@@ -19,7 +22,10 @@ import {
 import { colors } from '@/tailwind';
 import type { EventContent } from '@/types/entry-content.types';
 
-type Props = BottomTabScreenProps<MainTabParamList, 'CalendarTab'>;
+type Props = CompositeScreenProps<
+  MaterialTopTabScreenProps<ActivityTopTabParamList, 'Calendar'>,
+  NativeStackScreenProps<ActivityStackParamList>
+>;
 
 type EventStatus = 'completed' | 'missed' | 'pending';
 
@@ -159,23 +165,11 @@ export function CalendarScreen({ navigation }: Props) {
   };
 
   const handleEventPress = (entry: TimelineEntry) => {
-    // Navigate to EntryDetail via TimelineTab
-    const parent = navigation.getParent();
-    if (parent) {
-      parent.navigate('TimelineTab', {
-        params: { entryId: entry.id },
-        screen: 'EntryDetail',
-      });
-    }
+    navigation.navigate('EntryDetail', { entryId: entry.id });
   };
 
   const handleAddEvent = () => {
-    const parent = navigation.getParent();
-    if (parent) {
-      parent.navigate('TimelineTab', {
-        screen: 'AddEvent',
-      });
-    }
+    navigation.navigate('AddEvent');
   };
 
   const handleMarkStatus = async (entry: TimelineEntry, newStatus: EventStatus) => {
@@ -267,11 +261,6 @@ export function CalendarScreen({ navigation }: Props) {
 
   return (
     <View style={tw`bg-background flex-1`}>
-      {/* Header */}
-      <View style={tw`border-divider bg-surface border-b px-4 pb-4 pt-14`}>
-        <Text style={tw`text-foreground font-serif-bold text-2xl`}>Calendar</Text>
-      </View>
-
       {/* Calendar */}
       <Calendar
         markedDates={buildMarkedDates()}
