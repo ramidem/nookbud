@@ -1006,7 +1006,7 @@
       "title": "Active Space context \u2014 useActiveSpace() hook, MMKV persistence",
       "description": "Active Space determines which timeline, children, and members are shown. Persists across restarts. Supports 'All Spaces' mode.",
       "priority": 41,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "useActiveSpace() returns: activeSpace, setActiveSpace, isAllSpaces",
         "Active Space ID persisted in MMKV, restored on launch",

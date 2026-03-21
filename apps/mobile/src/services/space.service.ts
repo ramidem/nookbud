@@ -1,10 +1,8 @@
 import { eq, and } from 'drizzle-orm';
-import { createMMKV } from 'react-native-mmkv';
 
 import { AuditService } from './audit.service';
 import { UserService } from './user.service';
 
-import CONFIG from '@/config';
 import { db } from '@/database';
 import {
   children,
@@ -17,14 +15,7 @@ import {
   type SpaceRole,
   type User,
 } from '@/database/schema';
-
-// MMKV storage for active space tracking
-const storage = createMMKV({
-  encryptionKey: CONFIG.STORAGE_KEY,
-  id: 'coparent-space',
-});
-
-const ACTIVE_SPACE_ID_KEY = 'active_space_id';
+import { useLocalStorageStore } from '@/stores';
 
 const UUID_RADIX = 16;
 const UUID_VARIANT_MASK = 0x3;
@@ -126,10 +117,10 @@ export const SpaceService = {
   },
 
   /**
-   * Get the current active Space from MMKV, falling back to first available
+   * Get the current active Space, falling back to first available
    */
   async getCurrentSpace(): Promise<Space | null> {
-    const activeId = storage.getString(ACTIVE_SPACE_ID_KEY);
+    const activeId = useLocalStorageStore.getState().activeSpaceId;
 
     if (activeId) {
       const userId = UserService.getCurrentUserId();
@@ -294,10 +285,10 @@ export const SpaceService = {
   },
 
   /**
-   * Save the active Space ID to MMKV
+   * Save the active Space ID to the store (persisted via MMKV)
    */
-  setCurrentSpace(spaceId: string): void {
-    storage.set(ACTIVE_SPACE_ID_KEY, spaceId);
+  setCurrentSpace(spaceId: string | null): void {
+    useLocalStorageStore.getState().setActiveSpaceId(spaceId);
   },
 
   /**
