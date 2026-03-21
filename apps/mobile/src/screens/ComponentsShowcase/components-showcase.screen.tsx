@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 
 import {
   Alert,
@@ -16,6 +16,7 @@ import {
   SelectDropdown,
   Skeleton,
   TextInput,
+  TextInputArea,
   Toast,
   Typography,
   useBottomSheet,
@@ -39,8 +40,17 @@ function SectionTitle({ title }: { title: string }) {
   );
 }
 
+function SizeLabel({ label }: { label: string }) {
+  return (
+    <Typography style={tw`text-subtitle mb-1 text-xs uppercase tracking-wide`}>{label}</Typography>
+  );
+}
+
 export function ComponentsShowcaseScreen() {
-  const [textValue, setTextValue] = useState('');
+  const [textSm, setTextSm] = useState('');
+  const [textMd, setTextMd] = useState('');
+  const [textLg, setTextLg] = useState('');
+  const [textArea, setTextArea] = useState('');
   const [dateModalValue, setDateModalValue] = useState<Date | undefined>();
   const [dateTextValue, setDateTextValue] = useState<Date | undefined>();
   const [selectedDropdown, setSelectedDropdown] = useState<string | undefined>();
@@ -51,65 +61,103 @@ export function ComponentsShowcaseScreen() {
 
   return (
     <ScreenContainer>
-      <ScreenHeader hasBackButton={false} title="Component Showcase" />
-      <View style={tw`px-4 pb-8`}>
+      <ScreenHeader hasBackButton title="Components Showcase" />
+      <ScrollView contentContainerStyle={tw`px-4 pb-8`} showsVerticalScrollIndicator={false}>
         {/* Logo */}
         <View style={tw`mt-4 items-center`}>
           <Image source={require('@/assets/images/logo.png')} style={{ height: 80, width: 80 }} />
         </View>
 
-        {/* Theme Toggle */}
+        {/* Theme */}
         <SectionTitle title="Theme" />
-        <Button
-          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          onPress={toggleColorScheme}
-        />
-
-        <Button
-          style={tw`mt-3`}
-          title="Request Push Notifications"
-          onPress={() => requestPushNotification()}
-        />
+        <View style={tw`gap-3`}>
+          <Button
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            onPress={toggleColorScheme}
+          />
+          <Button title="Request Push Notifications" onPress={() => requestPushNotification()} />
+        </View>
 
         <Divider style={tw`mt-4`} />
 
         {/* Typography */}
         <SectionTitle title="Typography" />
-        <Typography style={tw`font-serif-bold text-2xl`} variant="heading">
-          Heading Bold
-        </Typography>
-        <Typography style={tw`font-serif-semibold text-lg`} variant="heading">
-          Subheading Semibold
-        </Typography>
-        <Typography style={tw`text-base`}>Body text regular</Typography>
-        <Typography style={tw`text-subtitle text-sm`}>Caption text</Typography>
-
-        <Divider style={tw`mt-4`} />
-
-        {/* Buttons */}
-        <SectionTitle title="Buttons" />
-        <View style={tw`gap-3`}>
-          <Button title="Primary Button" onPress={() => {}} />
-          <Button isLoading title="Loading Button" onPress={() => {}} />
-          <Button isDisabled title="Disabled Button" onPress={() => {}} />
-          <OutlinedButton title="Outlined Button" onPress={() => {}} />
+        <View style={tw`gap-2`}>
+          <Typography style={tw`font-serif-bold text-2xl`} variant="heading">
+            Heading — 2xl Bold
+          </Typography>
+          <Typography style={tw`font-serif-semibold text-xl`} variant="heading">
+            Heading — xl Semibold
+          </Typography>
+          <Typography style={tw`font-serif-semibold text-lg`} variant="heading">
+            Heading — lg Semibold
+          </Typography>
+          <Typography style={tw`text-base font-bold`}>Body — base Bold</Typography>
+          <Typography style={tw`text-base`}>Body — base Regular</Typography>
+          <Typography style={tw`text-sm`}>Body — sm Regular</Typography>
+          <Typography style={tw`text-subtitle text-sm`}>Caption — sm Subtitle</Typography>
+          <Typography style={tw`text-primary text-sm font-medium`}>Label — sm Primary</Typography>
         </View>
 
         <Divider style={tw`mt-4`} />
 
-        {/* TextInput */}
+        {/* Buttons — Sizes */}
+        <SectionTitle title="Buttons" />
+
+        <SizeLabel label="Sizes" />
+        <View style={tw`flex-row flex-wrap items-center gap-3`}>
+          <Button size="sm" title="Small" onPress={() => {}} />
+          <Button size="md" title="Medium" onPress={() => {}} />
+          <Button size="lg" title="Large" onPress={() => {}} />
+        </View>
+
+        <SizeLabel label="Outlined — Sizes" />
+        <View style={tw`mt-2 flex-row flex-wrap items-center gap-3`}>
+          <OutlinedButton size="sm" title="Small" onPress={() => {}} />
+          <OutlinedButton size="md" title="Medium" onPress={() => {}} />
+          <OutlinedButton size="lg" title="Large" onPress={() => {}} />
+        </View>
+
+        <SizeLabel label="States" />
+        <View style={tw`mt-2 gap-3`}>
+          <Button title="Default (md)" onPress={() => {}} />
+          <Button isLoading title="Loading" onPress={() => {}} />
+          <Button isDisabled title="Disabled" onPress={() => {}} />
+          <OutlinedButton title="Outlined Default" onPress={() => {}} />
+          <OutlinedButton isDisabled title="Outlined Disabled" onPress={() => {}} />
+        </View>
+
+        <Divider style={tw`mt-4`} />
+
+        {/* Text Input — Sizes */}
         <SectionTitle title="Text Input" />
-        <View style={tw`gap-3`}>
-          <InputLayout isRequired label="Name">
-            <TextInput
-              placeholder="Enter your name"
-              value={textValue}
-              onChangeText={setTextValue}
-            />
-          </InputLayout>
-          <InputLayout error="This field is required" label="With Error">
-            <TextInput placeholder="Something went wrong" value="" onChangeText={() => {}} />
-          </InputLayout>
+        <View style={tw`gap-4`}>
+          <View>
+            <SizeLabel label="Single line" />
+            <InputLayout label="Small (sm — not supported, same as md)">
+              <TextInput placeholder="Small input" value={textSm} onChangeText={setTextSm} />
+            </InputLayout>
+          </View>
+          <View>
+            <InputLayout isRequired label="Medium (default)">
+              <TextInput placeholder="Enter value" value={textMd} onChangeText={setTextMd} />
+            </InputLayout>
+          </View>
+          <View>
+            <InputLayout label="With error">
+              <TextInput placeholder="Something wrong" value={textLg} onChangeText={setTextLg} />
+            </InputLayout>
+          </View>
+          <View>
+            <SizeLabel label="Multi-line (TextInputArea)" />
+            <InputLayout label="Notes">
+              <TextInputArea
+                placeholder="Write something longer..."
+                value={textArea}
+                onChangeText={setTextArea}
+              />
+            </InputLayout>
+          </View>
         </View>
 
         <Divider style={tw`mt-4`} />
@@ -128,20 +176,20 @@ export function ComponentsShowcaseScreen() {
         <Divider style={tw`mt-4`} />
 
         {/* Date Inputs */}
-        <SectionTitle title="Date Modal Input" />
-        <InputLayout label="Birthday">
-          <DateModalInput
-            maximumDate={new Date()}
-            placeholder="Pick a date"
-            value={dateModalValue}
-            onChange={setDateModalValue}
-          />
-        </InputLayout>
-
-        <SectionTitle title="Date Text Input" />
-        <InputLayout label="Date of Birth">
-          <DateTextInput value={dateTextValue} onChange={setDateTextValue} />
-        </InputLayout>
+        <SectionTitle title="Date Inputs" />
+        <View style={tw`gap-4`}>
+          <InputLayout label="Date Modal Input">
+            <DateModalInput
+              maximumDate={new Date()}
+              placeholder="Pick a date"
+              value={dateModalValue}
+              onChange={setDateModalValue}
+            />
+          </InputLayout>
+          <InputLayout label="Date Text Input">
+            <DateTextInput value={dateTextValue} onChange={setDateTextValue} />
+          </InputLayout>
+        </View>
 
         <Divider style={tw`mt-4`} />
 
@@ -155,7 +203,7 @@ export function ComponentsShowcaseScreen() {
             <View style={tw`h-5 w-1/2 rounded`} />
           </Skeleton>
           <Skeleton isLoading>
-            <View style={tw`h-10 w-full rounded-xl`} />
+            <View style={tw`h-14 w-full rounded-xl`} />
           </Skeleton>
         </View>
 
@@ -165,7 +213,7 @@ export function ComponentsShowcaseScreen() {
         <SectionTitle title="Alerts" />
         <View style={tw`gap-3`}>
           <Button
-            title="Show Error Alert"
+            title="Error Alert"
             onPress={() =>
               Alert.error({
                 message: 'Something went wrong. Please try again.',
@@ -174,7 +222,7 @@ export function ComponentsShowcaseScreen() {
             }
           />
           <Button
-            title="Show Success Alert"
+            title="Success Alert"
             onPress={() =>
               Alert.success({
                 title: 'Profile Updated',
@@ -182,7 +230,7 @@ export function ComponentsShowcaseScreen() {
             }
           />
           <Button
-            title="Show Warning Alert"
+            title="Warning Alert"
             onPress={() =>
               Alert.warning({
                 actions: [
@@ -201,10 +249,14 @@ export function ComponentsShowcaseScreen() {
         {/* Toast */}
         <SectionTitle title="Toasts" />
         <View style={tw`gap-3`}>
-          <Button title="Success Toast" onPress={() => Toast.success('Profile saved')} />
-          <Button title="Error Toast" onPress={() => Toast.error('Something went wrong')} />
-          <Button title="Info Toast" onPress={() => Toast.info('New version available')} />
-          <Button title="Warning Toast" onPress={() => Toast.warning('Check your connection')} />
+          <Button size="sm" title="✅ Success" onPress={() => Toast.success('Profile saved')} />
+          <Button size="sm" title="❌ Error" onPress={() => Toast.error('Something went wrong')} />
+          <Button size="sm" title="ℹ️ Info" onPress={() => Toast.info('New version available')} />
+          <Button
+            size="sm"
+            title="⚠️ Warning"
+            onPress={() => Toast.warning('Check your connection')}
+          />
         </View>
 
         <Divider style={tw`mt-4`} />
@@ -246,7 +298,7 @@ export function ComponentsShowcaseScreen() {
             <Button style={tw`mt-4`} title="Close" onPress={closeSheet} />
           </View>
         </BottomSheet>
-      </View>
+      </ScrollView>
     </ScreenContainer>
   );
 }
