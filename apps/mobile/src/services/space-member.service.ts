@@ -7,7 +7,13 @@ import { UserService } from './user.service';
 
 import CONFIG from '@/config';
 import { db } from '@/database';
-import { spaceMembers, users, type SpaceMember, type SpaceRole } from '@/database/schema';
+import {
+  spaceMembers,
+  users,
+  type SpaceMember,
+  type SpaceMemberLabel,
+  type SpaceRole,
+} from '@/database/schema';
 
 const storage = createMMKV({
   encryptionKey: CONFIG.STORAGE_KEY,
@@ -40,6 +46,7 @@ export type SpaceInvite = {
   code: string;
   deepLink: string;
   expiresAt: Date;
+  label?: SpaceMemberLabel;
   role: SpaceRole;
   spaceId: string;
 };
@@ -48,6 +55,7 @@ type StoredInvite = {
   code: string;
   deepLink: string;
   expiresAt: string;
+  label?: SpaceMemberLabel;
   role: SpaceRole;
   spaceId: string;
 };
@@ -120,6 +128,7 @@ export const SpaceMemberService = {
       id,
       invitedBy: userId,
       joinedAt: new Date(),
+      label: invite.label,
       role: invite.role,
       spaceId: invite.spaceId,
       userId,
@@ -145,25 +154,34 @@ export const SpaceMemberService = {
   /**
    * Assign a role to a member (owner only, cannot assign 'owner')
    */
-  async assignRole(spaceId: string, memberId: string, newRole: SpaceRole): Promise<SpaceMember> {
+  async assignRole(
+    spaceId: string,
+    memberId: string,
+    update: { label?: SpaceMemberLabel; role: SpaceRole },
+  ): Promise<SpaceMember> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
     await verifyOwner(spaceId, userId);
 
     if (memberId === userId) throw new Error(ERROR_CANNOT_CHANGE_OWN_ROLE);
-    if (newRole === 'owner') throw new Error(ERROR_CANNOT_ASSIGN_OWNER);
+    if (update.role === 'owner') throw new Error(ERROR_CANNOT_ASSIGN_OWNER);
+
+    const fields: { label?: SpaceMemberLabel | null; role: SpaceRole } = { role: update.role };
+    if (update.label !== undefined) {
+      fields.label = update.label;
+    }
 
     await db
       .update(spaceMembers)
-      .set({ role: newRole })
+      .set(fields)
       .where(and(eq(spaceMembers.spaceId, spaceId), eq(spaceMembers.userId, memberId)));
 
     await AuditService.log({
       action: 'assign_role',
       entityId: spaceId,
       entityType: ENTITY_TYPE_SPACE,
-      metadata: { memberId, newRole },
+      metadata: { label: update.label, memberId, newRole: update.role },
       userId,
     });
 
@@ -188,7 +206,11 @@ export const SpaceMemberService = {
   /**
    * Generate an invite code for a Space (owner only)
    */
-  async generateInviteCode(spaceId: string, role: SpaceRole): Promise<SpaceInvite> {
+  async generateInviteCode(
+    spaceId: string,
+    role: SpaceRole,
+    label?: SpaceMemberLabel,
+  ): Promise<SpaceInvite> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
@@ -201,7 +223,7 @@ export const SpaceMemberService = {
     const expiresAt = new Date(Date.now() + INVITE_EXPIRY_DAYS * MS_PER_DAY);
     const deepLink = `coparent://invite/${code}`;
 
-    const invite: SpaceInvite = { code, deepLink, expiresAt, role, spaceId };
+    const invite: SpaceInvite = { code, deepLink, expiresAt, label, role, spaceId };
 
     const invites = readInvites();
     invites.push(invite);
@@ -211,7 +233,7 @@ export const SpaceMemberService = {
       action: 'generate_invite',
       entityId: spaceId,
       entityType: ENTITY_TYPE_SPACE,
-      metadata: { code, role },
+      metadata: { code, label, role },
       userId,
     });
 

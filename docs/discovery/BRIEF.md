@@ -221,7 +221,7 @@ Each file:
 ```
 users
 spaces
-space_members (user_id, space_id, role)
+space_members (user_id, space_id, role, label — optional relationship descriptor)
 children (linked to spaces)
 entries (scoped to spaces)
 entry_versions
@@ -286,6 +286,7 @@ audit_logs
 - Equal visibility for all Space members
 - Calm, professional tone
 - Inclusive of all family structures — the UI never assumes two parents
+- Member labels (co-parent, guardian, grandparent, lawyer, etc.) provide human-readable relationship context without affecting permissions — role controls access, label describes relationship
 
 ### Simplicity
 Backend is complex. **Frontend must feel simple.**

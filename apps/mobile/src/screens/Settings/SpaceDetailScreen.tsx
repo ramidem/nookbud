@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Share, TextInput, View } from 'react-native';
 
 import {
@@ -10,11 +10,17 @@ import {
   Button,
   ScreenContainer,
   ScreenHeader,
+  SelectDropdown,
   Toast,
   Typography,
   useBottomSheet,
 } from '@/components';
-import type { SpaceRole } from '@/database/schema';
+import {
+  SPACE_MEMBER_LABELS,
+  SPACE_MEMBER_LABEL_DISPLAY,
+  type SpaceMemberLabel,
+  type SpaceRole,
+} from '@/database/schema';
 import { ChevronRightIcon, PencilLineIcon, ShareIcon, UsersIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { SpaceMemberService, SpaceService, type SpaceDetails, type SpaceInvite } from '@/services';
@@ -56,9 +62,15 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
   // Invite sheet
   const inviteSheet = useBottomSheet();
   const [inviteRole, setInviteRole] = useState<SpaceRole>('editor');
+  const [inviteLabel, setInviteLabel] = useState<SpaceMemberLabel | undefined>(undefined);
   const [invite, setInvite] = useState<SpaceInvite | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const labelOptions = useMemo(
+    () => SPACE_MEMBER_LABELS.map((l) => ({ id: l, label: SPACE_MEMBER_LABEL_DISPLAY[l] })),
+    [],
+  );
 
   // Role change sheet
   const roleSheet = useBottomSheet();
@@ -135,13 +147,18 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
     setInvite(null);
     setCopied(false);
     setInviteRole('editor');
+    setInviteLabel(undefined);
     inviteSheet.expandSheet();
+  };
+
+  const handleSelectInviteLabel = (id: string) => {
+    setInviteLabel(id === inviteLabel ? undefined : (id as SpaceMemberLabel));
   };
 
   const handleGenerateCode = async () => {
     setIsGenerating(true);
     try {
-      const result = await SpaceMemberService.generateInviteCode(spaceId, inviteRole);
+      const result = await SpaceMemberService.generateInviteCode(spaceId, inviteRole, inviteLabel);
       setInvite(result);
     } catch (err) {
       Alert.error({
@@ -181,7 +198,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
   const handleAssignRole = async (newRole: SpaceRole) => {
     if (!selectedMemberId) return;
     try {
-      await SpaceMemberService.assignRole(spaceId, selectedMemberId, newRole);
+      await SpaceMemberService.assignRole(spaceId, selectedMemberId, { role: newRole });
       roleSheet.closeSheet();
       await loadSpace();
       Toast.success('Role updated');
@@ -427,6 +444,13 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                       {member.user.displayName}
                     </Typography>
                     <View style={tw`mt-0.5 flex-row items-center gap-2`}>
+                      {member.label && (
+                        <View style={tw`bg-accent-soft/20 rounded-full px-2 py-0.5`}>
+                          <Typography style={tw`text-accent text-xs font-medium`}>
+                            {SPACE_MEMBER_LABEL_DISPLAY[member.label as SpaceMemberLabel]}
+                          </Typography>
+                        </View>
+                      )}
                       <View style={tw`bg-primary/15 rounded-full px-2 py-0.5`}>
                         <Typography style={tw`text-primary text-xs font-medium`}>
                           {ROLE_LABELS[member.role] ?? member.role}
@@ -585,6 +609,16 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                 </Pressable>
               ))}
 
+              <View style={tw`mb-2 mt-2`}>
+                <SelectDropdown
+                  label="Their relationship (optional)"
+                  options={labelOptions}
+                  placeholder="None"
+                  selectedId={inviteLabel}
+                  onSelect={handleSelectInviteLabel}
+                />
+              </View>
+
               <Button
                 buttonStyle={tw`bg-primary mt-4 rounded-xl py-4`}
                 isLoading={isGenerating}
@@ -608,7 +642,9 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
               </View>
 
               <Typography style={tw`text-subtitle mb-6 text-center text-xs`}>
-                Role: {ROLE_LABELS[invite.role]} — Expires in 7 days
+                Role: {ROLE_LABELS[invite.role]}
+                {invite.label ? ` · ${SPACE_MEMBER_LABEL_DISPLAY[invite.label]}` : ''} — Expires in
+                7 days
               </Typography>
 
               <View style={tw`w-full flex-row gap-3`}>

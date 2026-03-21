@@ -1,9 +1,15 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, Share, Text, View } from 'react-native';
 
-import type { SpaceRole } from '@/database/schema';
+import { SelectDropdown } from '@/components';
+import {
+  SPACE_MEMBER_LABELS,
+  SPACE_MEMBER_LABEL_DISPLAY,
+  type SpaceMemberLabel,
+  type SpaceRole,
+} from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { CheckCircleIcon, LightbulbIcon } from '@/icons';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
@@ -28,17 +34,31 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
   const tw = useTw();
   const { spaceId } = route.params;
   const [selectedRole, setSelectedRole] = useState<SpaceRole>('editor');
+  const [selectedLabel, setSelectedLabel] = useState<SpaceMemberLabel | undefined>(undefined);
   const [invite, setInvite] = useState<SpaceInvite | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const labelOptions = useMemo(
+    () => SPACE_MEMBER_LABELS.map((l) => ({ id: l, label: SPACE_MEMBER_LABEL_DISPLAY[l] })),
+    [],
+  );
+
+  const handleSelectLabel = (id: string) => {
+    setSelectedLabel(id === selectedLabel ? undefined : (id as SpaceMemberLabel));
+  };
 
   const handleGenerateInvite = async () => {
     setIsGenerating(true);
     setError(null);
 
     try {
-      const result = await SpaceMemberService.generateInviteCode(spaceId, selectedRole);
+      const result = await SpaceMemberService.generateInviteCode(
+        spaceId,
+        selectedRole,
+        selectedLabel,
+      );
       setInvite(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate invite');
@@ -106,6 +126,16 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
             </Pressable>
           ))}
 
+          <View style={tw`mb-3 mt-2`}>
+            <SelectDropdown
+              label="Their relationship (optional)"
+              options={labelOptions}
+              placeholder="None"
+              selectedId={selectedLabel}
+              onSelect={handleSelectLabel}
+            />
+          </View>
+
           {error && (
             <View style={tw`bg-error/15 mt-4 rounded-xl p-4`}>
               <Text style={tw`text-error`}>{error}</Text>
@@ -142,7 +172,9 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
               {invite.code}
             </Text>
             <Text style={tw`text-subtitle mt-2 text-sm`}>
-              Role: {ROLE_OPTIONS.find((r) => r.value === invite.role)?.label} · Valid for 7 days
+              Role: {ROLE_OPTIONS.find((r) => r.value === invite.role)?.label}
+              {invite.label ? ` · ${SPACE_MEMBER_LABEL_DISPLAY[invite.label]}` : ''} · Valid for 7
+              days
             </Text>
           </View>
 
