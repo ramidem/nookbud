@@ -14,6 +14,7 @@ import {
 
 import { PageHeader } from '@/components';
 import type { User, Child } from '@/database/schema';
+import { seedDatabase } from '@/database/seed';
 import { useTw } from '@/hooks/useTw';
 import { BabyIcon, ChevronRightIcon, ShareIcon, UserIcon, UsersIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
@@ -300,6 +301,49 @@ export function SettingsScreen({ navigation }: Props) {
             </View>
           </View>
         </View>
+
+        {/* Dev Tools — only in __DEV__ */}
+        {__DEV__ && (
+          <View style={tw`bg-surface mb-4 rounded-xl`}>
+            <View style={tw`border-divider border-b px-4 py-3`}>
+              <Text style={tw`text-subtitle text-sm font-medium uppercase tracking-wide`}>
+                Dev Tools
+              </Text>
+            </View>
+            <Pressable
+              style={tw`p-4`}
+              onPress={async () => {
+                Alert.alert(
+                  'Seed Database',
+                  'This will clear all existing data and insert sample records (2 Spaces, 2 children, 9 entries, 3 resources). Continue?',
+                  [
+                    { style: 'cancel', text: 'Cancel' },
+                    {
+                      onPress: async () => {
+                        const result = await seedDatabase();
+                        if (result.success) {
+                          Alert.alert(
+                            '✅ Seeded',
+                            'Sample data loaded. Restart the app to see all changes.',
+                          );
+                        } else {
+                          Alert.alert('❌ Seed Failed', result.error ?? 'Unknown error');
+                        }
+                      },
+                      style: 'destructive',
+                      text: 'Seed',
+                    },
+                  ],
+                );
+              }}
+            >
+              <Text style={tw`text-foreground font-medium`}>Seed Database</Text>
+              <Text style={tw`text-subtitle mt-1 text-sm`}>
+                Load sample data — 2 Spaces, 2 children, 9 timeline entries, 3 resources
+              </Text>
+            </Pressable>
+          </View>
+        )}
 
         {/* Danger Zone */}
         <View style={tw`bg-surface mb-4 rounded-xl`}>
