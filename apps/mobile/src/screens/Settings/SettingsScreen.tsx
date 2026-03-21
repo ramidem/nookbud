@@ -1,6 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -16,6 +15,7 @@ import {
 
 import type { User, Relationship, Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
+import { BabyIcon, ChevronRightIcon, UserIcon, UsersIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import {
   UserService,
@@ -23,6 +23,7 @@ import {
   ChildService,
   NotificationService,
   type NotificationPrefs,
+  type PermissionStatus,
 } from '@/services';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
@@ -56,8 +57,7 @@ export function SettingsScreen({ navigation }: Props) {
   const [children, setChildren] = useState<Child[]>([]);
   const [copied, setCopied] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState<NotificationPrefs>(NotificationService.getPrefs());
-  const [permissionStatus, setPermissionStatus] =
-    useState<Notifications.PermissionStatus>('undetermined');
+  const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>('undetermined');
 
   const loadPermissionStatus = useCallback(async () => {
     const status = await NotificationService.getPermissionStatus();
@@ -155,9 +155,7 @@ export function SettingsScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('ProfileSettings')}
           >
             <View style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-blue-100`}>
-              <Text aria-label="person" role="img" style={tw`text-xl`}>
-                👤
-              </Text>
+              <UserIcon height={24} style={tw`text-blue-600`} width={24} />
             </View>
             <View style={tw`flex-1`}>
               <Text style={tw`text-lg font-medium text-gray-900`}>
@@ -167,7 +165,7 @@ export function SettingsScreen({ navigation }: Props) {
                 {user?.timezone} • {user?.defaultCurrency}
               </Text>
             </View>
-            <Text style={tw`text-xl text-gray-400`}>›</Text>
+            <ChevronRightIcon height={20} style={tw`text-gray-400`} width={20} />
           </Pressable>
         </View>
 
@@ -194,9 +192,7 @@ export function SettingsScreen({ navigation }: Props) {
                 <View
                   style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-green-100`}
                 >
-                  <Text aria-label="child" role="img" style={tw`text-lg`}>
-                    👶
-                  </Text>
+                  <BabyIcon height={20} style={tw`text-green-600`} width={20} />
                 </View>
                 <View style={tw`flex-1`}>
                   <Text style={tw`text-base font-medium text-gray-900`}>{child.name}</Text>
@@ -206,7 +202,7 @@ export function SettingsScreen({ navigation }: Props) {
                     </Text>
                   )}
                 </View>
-                <Text style={tw`text-gray-400`}>›</Text>
+                <ChevronRightIcon height={16} style={tw`text-gray-400`} width={16} />
               </Pressable>
             ))
           )}
@@ -275,9 +271,7 @@ export function SettingsScreen({ navigation }: Props) {
                 <View
                   style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-purple-100`}
                 >
-                  <Text aria-label="people" role="img" style={tw`text-lg`}>
-                    👥
-                  </Text>
+                  <UsersIcon height={20} style={tw`text-purple-600`} width={20} />
                 </View>
                 <View style={tw`flex-1`}>
                   <Text style={tw`text-base font-medium text-green-600`}>Connected</Text>

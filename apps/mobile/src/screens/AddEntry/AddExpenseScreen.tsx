@@ -22,18 +22,18 @@ type Props = NativeStackScreenProps<TimelineStackParamList, 'AddExpense'>;
 
 const ACTIVE_BG = 'bg-blue-600';
 const INACTIVE_BG = 'bg-gray-100';
-const ACTIVE_TEXT = ACTIVE_TEXT;
-const INACTIVE_TEXT = INACTIVE_TEXT;
+const ACTIVE_TEXT = 'text-white';
+const INACTIVE_TEXT = 'text-gray-700';
 
 const CATEGORIES: { value: ExpenseCategory; label: string }[] = [
-  { label: '👶 Childcare', value: 'childcare' },
-  { label: '🏥 Medical', value: 'medical' },
-  { label: '📚 Education', value: 'education' },
-  { label: '👕 Clothing', value: 'clothing' },
-  { label: '⚽ Activities', value: 'activities' },
-  { label: '🍎 Food', value: 'food' },
-  { label: '🚗 Transport', value: 'transportation' },
-  { label: '📦 Other', value: 'other' },
+  { label: 'Childcare', value: 'childcare' },
+  { label: 'Medical', value: 'medical' },
+  { label: 'Education', value: 'education' },
+  { label: 'Clothing', value: 'clothing' },
+  { label: 'Activities', value: 'activities' },
+  { label: 'Food', value: 'food' },
+  { label: 'Transport', value: 'transportation' },
+  { label: 'Other', value: 'other' },
 ];
 
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'PHP', 'INR', 'SGD'];

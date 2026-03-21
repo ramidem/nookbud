@@ -3,6 +3,7 @@ import { View, Text, Pressable, ScrollView, ActivityIndicator, Alert } from 'rea
 
 import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
+import { FileTextIcon, LockIcon, PackageIcon } from '@/icons';
 import {
   ExportService,
   RelationshipService,
@@ -16,12 +17,14 @@ const INACTIVE_BG = 'bg-gray-100';
 const ACTIVE_TEXT = 'text-white';
 const INACTIVE_TEXT = 'text-gray-700';
 
+const EXPORT_ICON_SIZE = 28;
+
 const TYPE_LABELS: Record<EntryType, string> = {
-  agreement: '🤝 Agreement',
-  communication: '💬 Communication',
-  event: '📅 Event',
-  expense: '💰 Expense',
-  upload: '📎 Document',
+  agreement: 'Agreement',
+  communication: 'Communication',
+  event: 'Event',
+  expense: 'Expense',
+  upload: 'Document',
 };
 
 export function ExportScreen() {
@@ -151,9 +154,11 @@ export function ExportScreen() {
               }`}
               onPress={() => setExportType('pdf')}
             >
-              <Text aria-label="document" role="img" style={tw`mb-2 text-2xl`}>
-                📄
-              </Text>
+              <FileTextIcon
+                height={EXPORT_ICON_SIZE}
+                style={tw`mb-2 text-gray-700`}
+                width={EXPORT_ICON_SIZE}
+              />
               <Text style={tw`font-semibold text-gray-900`}>PDF Report</Text>
               <Text style={tw`mt-1 text-sm text-gray-600`}>
                 Timeline summary for printing or sharing
@@ -165,9 +170,11 @@ export function ExportScreen() {
               }`}
               onPress={() => setExportType('bundle')}
             >
-              <Text aria-label="package" role="img" style={tw`mb-2 text-2xl`}>
-                📦
-              </Text>
+              <PackageIcon
+                height={EXPORT_ICON_SIZE}
+                style={tw`mb-2 text-gray-700`}
+                width={EXPORT_ICON_SIZE}
+              />
               <Text style={tw`font-semibold text-gray-900`}>Evidence Bundle</Text>
               <Text style={tw`mt-1 text-sm text-gray-600`}>
                 Full data + files with hash verification
@@ -262,11 +269,9 @@ export function ExportScreen() {
 
         {/* Info */}
         {exportType === 'bundle' && (
-          <View style={tw`mb-6 rounded-xl bg-green-50 p-4`}>
-            <Text style={tw`text-sm text-green-800`}>
-              <Text aria-label="lock" role="img">
-                🔒
-              </Text>{' '}
+          <View style={tw`mb-6 flex-row rounded-xl bg-green-50 p-4`}>
+            <LockIcon height={16} style={tw`mr-2 mt-0.5 text-green-800`} width={16} />
+            <Text style={tw`flex-1 text-sm text-green-800`}>
               The evidence bundle includes SHA-256 hashes for all files. These can be used to prove
               files haven{"'"}t been modified.
             </Text>

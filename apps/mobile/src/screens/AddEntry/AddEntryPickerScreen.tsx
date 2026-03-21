@@ -1,47 +1,64 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
+import { type SvgProps } from 'react-native-svg';
 
 import { useTw } from '@/hooks/useTw';
+import {
+  CalendarDaysIcon,
+  ChevronRightIcon,
+  HandshakeIcon,
+  MessageCircleIcon,
+  PaperclipIcon,
+  WalletIcon,
+} from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddEntryPicker'>;
 
-const ENTRY_OPTIONS = [
+const PICKER_ICON_SIZE = 24;
+
+const ENTRY_OPTIONS: Array<{
+  description: string;
+  Icon: React.FC<SvgProps>;
+  screen: keyof TimelineStackParamList;
+  title: string;
+  type: string;
+}> = [
   {
+    Icon: WalletIcon,
     description: 'Track shared costs and reimbursements',
-    icon: '💰',
-    screen: 'AddExpense' as const,
+    screen: 'AddExpense',
     title: 'Expense',
-    type: 'expense' as const,
+    type: 'expense',
   },
   {
+    Icon: CalendarDaysIcon,
     description: 'Schedule pickups, activities, appointments',
-    icon: '📅',
-    screen: 'AddEvent' as const,
+    screen: 'AddEvent',
     title: 'Event',
-    type: 'event' as const,
+    type: 'event',
   },
   {
+    Icon: HandshakeIcon,
     description: 'Document decisions made together',
-    icon: '🤝',
-    screen: 'AddAgreement' as const,
+    screen: 'AddAgreement',
     title: 'Agreement',
-    type: 'agreement' as const,
+    type: 'agreement',
   },
   {
+    Icon: MessageCircleIcon,
     description: 'Send a documented message',
-    icon: '💬',
-    screen: 'AddCommunication' as const,
+    screen: 'AddCommunication',
     title: 'Communication',
-    type: 'communication' as const,
+    type: 'communication',
   },
   {
+    Icon: PaperclipIcon,
     description: 'Upload medical, school, or legal files',
-    icon: '📎',
-    screen: 'AddUpload' as const,
+    screen: 'AddUpload',
     title: 'Document',
-    type: 'upload' as const,
+    type: 'upload',
   },
 ];
 
@@ -66,16 +83,20 @@ export function AddEntryPickerScreen({ navigation }: Props) {
           <Pressable
             key={option.type}
             style={tw`mb-3 flex-row items-center rounded-xl bg-gray-50 p-4`}
-            onPress={() => navigation.navigate(option.screen)}
+            onPress={() => navigation.navigate(option.screen as never)}
           >
             <View style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-white`}>
-              <Text style={tw`text-2xl`}>{option.icon}</Text>
+              <option.Icon
+                height={PICKER_ICON_SIZE}
+                style={tw`text-gray-700`}
+                width={PICKER_ICON_SIZE}
+              />
             </View>
             <View style={tw`flex-1`}>
               <Text style={tw`text-base font-medium text-gray-900`}>{option.title}</Text>
               <Text style={tw`text-sm text-gray-500`}>{option.description}</Text>
             </View>
-            <Text style={tw`text-xl text-gray-400`}>›</Text>
+            <ChevronRightIcon height={20} style={tw`text-gray-400`} width={20} />
           </Pressable>
         ))}
       </ScrollView>

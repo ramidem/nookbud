@@ -15,6 +15,7 @@ import {
 
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useTw } from '@/hooks/useTw';
+import { PencilLineIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService } from '@/services';
 
@@ -94,11 +95,9 @@ export function AddAgreementScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Info banner */}
-        <View style={tw`mb-6 rounded-xl bg-amber-50 p-4`}>
-          <Text style={tw`text-sm text-amber-800`}>
-            <Text aria-label="memo" role="img">
-              📝
-            </Text>{' '}
+        <View style={tw`mb-6 flex-row rounded-xl bg-amber-50 p-4`}>
+          <PencilLineIcon height={16} style={tw`mr-2 mt-0.5 text-amber-800`} width={16} />
+          <Text style={tw`flex-1 text-sm text-amber-800`}>
             Agreements become part of your permanent record. Both parents can see and acknowledge
             them.
           </Text>

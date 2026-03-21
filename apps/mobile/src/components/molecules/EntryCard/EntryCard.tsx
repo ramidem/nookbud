@@ -1,8 +1,17 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { type SvgProps } from 'react-native-svg';
 
 import type { EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
+import {
+  AlertTriangleIcon,
+  CalendarDaysIcon,
+  HandshakeIcon,
+  MessageCircleIcon,
+  PaperclipIcon,
+  WalletIcon,
+} from '@/icons';
 import type { TimelineEntry } from '@/services';
 
 type Props = {
@@ -10,12 +19,12 @@ type Props = {
   onPress: (entry: TimelineEntry) => void;
 };
 
-const TYPE_ICONS: Record<EntryType, string> = {
-  agreement: '🤝',
-  communication: '💬',
-  event: '📅',
-  expense: '💰',
-  upload: '📎',
+const TYPE_ICONS: Record<EntryType, React.FC<SvgProps>> = {
+  agreement: HandshakeIcon,
+  communication: MessageCircleIcon,
+  event: CalendarDaysIcon,
+  expense: WalletIcon,
+  upload: PaperclipIcon,
 };
 
 const TYPE_LABELS: Record<EntryType, string> = {
@@ -34,6 +43,7 @@ const STATUS_COLORS = {
 
 const MS_PER_DAY = 86400000;
 const DAYS_IN_WEEK = 7;
+const ENTRY_ICON_SIZE = 20;
 
 function formatDate(date: Date): string {
   const now = new Date();
@@ -101,7 +111,7 @@ function getEntrySubtitle(entry: TimelineEntry): string | null {
 
         return null;
       case 'communication':
-        return content.importance === 'high' ? '⚠️ High priority' : null;
+        return content.importance === 'high' ? 'High priority' : null;
       default:
         return null;
     }
@@ -116,6 +126,7 @@ export function EntryCard({ entry, onPress }: Props) {
   const title = getEntryTitle(entry);
   const subtitle = getEntrySubtitle(entry);
   const statusColor = entry.acknowledgmentStatus ? STATUS_COLORS[entry.acknowledgmentStatus] : null;
+  const Icon = TYPE_ICONS[entry.type];
 
   return (
     <Pressable
@@ -125,7 +136,7 @@ export function EntryCard({ entry, onPress }: Props) {
       <View style={tw`flex-row items-start`}>
         {/* Icon */}
         <View style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-gray-100`}>
-          <Text style={tw`text-xl`}>{TYPE_ICONS[entry.type]}</Text>
+          <Icon height={ENTRY_ICON_SIZE} style={tw`text-gray-600`} width={ENTRY_ICON_SIZE} />
         </View>
 
         {/* Content */}
@@ -142,7 +153,14 @@ export function EntryCard({ entry, onPress }: Props) {
             {title}
           </Text>
 
-          {subtitle && <Text style={tw`text-sm text-gray-600`}>{subtitle}</Text>}
+          {subtitle && (
+            <View style={tw`flex-row items-center`}>
+              {entry.type === 'communication' && subtitle === 'High priority' && (
+                <AlertTriangleIcon height={12} style={tw`mr-1 text-amber-600`} width={12} />
+              )}
+              <Text style={tw`text-sm text-gray-600`}>{subtitle}</Text>
+            </View>
+          )}
         </View>
 
         {/* Status badge */}
@@ -150,7 +168,7 @@ export function EntryCard({ entry, onPress }: Props) {
           <View style={tw`${statusColor.split(' ')[0]} ml-2 rounded-full px-2 py-1`}>
             <Text style={tw`text-xs font-medium ${statusColor.split(' ')[1]}`}>
               {entry.acknowledgmentStatus === 'pending' && 'Pending'}
-              {entry.acknowledgmentStatus === 'acknowledged' && '✓'}
+              {entry.acknowledgmentStatus === 'acknowledged' && 'Ack'}
               {entry.acknowledgmentStatus === 'disputed' && '!'}
             </Text>
           </View>

@@ -13,11 +13,15 @@ import {
 } from 'react-native';
 
 import { useTw } from '@/hooks/useTw';
+import { AlertTriangleIcon, MessageCircleIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService } from '@/services';
 import type { CommunicationImportance } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<TimelineStackParamList, 'AddCommunication'>;
+
+const ACTIVE_TEXT = 'text-white';
+const INACTIVE_TEXT = 'text-gray-700';
 
 export function AddCommunicationScreen({ navigation }: Props) {
   const tw = useTw();
@@ -90,11 +94,9 @@ export function AddCommunicationScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* Info banner */}
-        <View style={tw`mb-6 rounded-xl bg-blue-50 p-4`}>
-          <Text style={tw`text-sm text-blue-800`}>
-            <Text aria-label="speech balloon" role="img">
-              💬
-            </Text>{' '}
+        <View style={tw`mb-6 flex-row rounded-xl bg-blue-50 p-4`}>
+          <MessageCircleIcon height={16} style={tw`mr-2 mt-0.5 text-blue-800`} width={16} />
+          <Text style={tw`flex-1 text-sm text-blue-800`}>
             This creates a permanent, documented record of your message. It{"'"}s not a chat — use
             it for important communications.
           </Text>
@@ -135,21 +137,21 @@ export function AddCommunicationScreen({ navigation }: Props) {
               onPress={() => setImportance('normal')}
             >
               <Text
-                style={tw`text-center ${importance === 'normal' ? 'text-white' : 'text-gray-700'} font-medium`}
+                style={tw`text-center ${importance === 'normal' ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}
               >
                 Normal
               </Text>
             </Pressable>
             <Pressable
-              style={tw`flex-1 rounded-lg py-3 ${importance === 'high' ? 'bg-red-600' : 'bg-gray-100'}`}
+              style={tw`flex-1 flex-row items-center justify-center rounded-lg py-3 ${importance === 'high' ? 'bg-red-600' : 'bg-gray-100'}`}
               onPress={() => setImportance('high')}
             >
-              <Text
-                style={tw`text-center ${importance === 'high' ? 'text-white' : 'text-gray-700'} font-medium`}
-              >
-                <Text aria-label="warning" role="img">
-                  ⚠️
-                </Text>{' '}
+              <AlertTriangleIcon
+                height={16}
+                style={tw`mr-1 ${importance === 'high' ? ACTIVE_TEXT : INACTIVE_TEXT}`}
+                width={16}
+              />
+              <Text style={tw`${importance === 'high' ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}>
                 High Priority
               </Text>
             </Pressable>

@@ -13,6 +13,7 @@ import {
 
 import type { EntryVersion, Attachment } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
+import { AlertTriangleIcon, CheckCircleIcon, ClockIcon, PaperclipIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import {
   EntryService,
@@ -25,13 +26,14 @@ import {
 type Props = NativeStackScreenProps<TimelineStackParamList, 'EntryDetail'>;
 
 const HASH_PREVIEW_LENGTH = 16;
+const INLINE_ICON_SIZE = 14;
 
 const TYPE_LABELS = {
-  agreement: '🤝 Agreement',
-  communication: '💬 Communication',
-  event: '📅 Event',
-  expense: '💰 Expense',
-  upload: '📎 Document',
+  agreement: 'Agreement',
+  communication: 'Communication',
+  event: 'Event',
+  expense: 'Expense',
+  upload: 'Document',
 };
 
 export function EntryDetailScreen({ navigation, route }: Props) {
@@ -183,13 +185,13 @@ export function EntryDetailScreen({ navigation, route }: Props) {
             <View style={tw`mb-2 flex-row items-center`}>
               <Text style={tw`flex-1 text-xl font-semibold`}>{content.subject}</Text>
               {content.importance === 'high' && (
-                <View style={tw`rounded bg-red-100 px-2 py-1`}>
-                  <Text style={tw`text-xs text-red-800`}>
-                    <Text aria-label="warning" role="img">
-                      ⚠️
-                    </Text>{' '}
-                    High
-                  </Text>
+                <View style={tw`flex-row items-center rounded bg-red-100 px-2 py-1`}>
+                  <AlertTriangleIcon
+                    height={INLINE_ICON_SIZE}
+                    style={tw`mr-1 text-red-800`}
+                    width={INLINE_ICON_SIZE}
+                  />
+                  <Text style={tw`text-xs text-red-800`}>High</Text>
                 </View>
               )}
             </View>
@@ -257,19 +259,42 @@ export function EntryDetailScreen({ navigation, route }: Props) {
                   : 'bg-amber-100'
             }`}
           >
-            <Text
-              style={tw`text-sm font-medium ${
-                entry.acknowledgmentStatus === 'acknowledged'
-                  ? 'text-green-800'
-                  : entry.acknowledgmentStatus === 'disputed'
-                    ? 'text-red-800'
-                    : 'text-amber-800'
-              }`}
-            >
-              {entry.acknowledgmentStatus === 'acknowledged' && '✓ Acknowledged'}
-              {entry.acknowledgmentStatus === 'disputed' && '⚠️ Disputed'}
-              {entry.acknowledgmentStatus === 'pending' && '⏳ Pending'}
-            </Text>
+            <View style={tw`flex-row items-center`}>
+              {entry.acknowledgmentStatus === 'acknowledged' && (
+                <CheckCircleIcon
+                  height={INLINE_ICON_SIZE}
+                  style={tw`mr-1 text-green-800`}
+                  width={INLINE_ICON_SIZE}
+                />
+              )}
+              {entry.acknowledgmentStatus === 'disputed' && (
+                <AlertTriangleIcon
+                  height={INLINE_ICON_SIZE}
+                  style={tw`mr-1 text-red-800`}
+                  width={INLINE_ICON_SIZE}
+                />
+              )}
+              {entry.acknowledgmentStatus === 'pending' && (
+                <ClockIcon
+                  height={INLINE_ICON_SIZE}
+                  style={tw`mr-1 text-amber-800`}
+                  width={INLINE_ICON_SIZE}
+                />
+              )}
+              <Text
+                style={tw`text-sm font-medium ${
+                  entry.acknowledgmentStatus === 'acknowledged'
+                    ? 'text-green-800'
+                    : entry.acknowledgmentStatus === 'disputed'
+                      ? 'text-red-800'
+                      : 'text-amber-800'
+                }`}
+              >
+                {entry.acknowledgmentStatus === 'acknowledged' && 'Acknowledged'}
+                {entry.acknowledgmentStatus === 'disputed' && 'Disputed'}
+                {entry.acknowledgmentStatus === 'pending' && 'Pending'}
+              </Text>
+            </View>
           </View>
           <Text style={tw`ml-3 text-sm text-gray-500`}>{entry.createdAt.toLocaleDateString()}</Text>
         </View>
@@ -285,12 +310,14 @@ export function EntryDetailScreen({ navigation, route }: Props) {
             </Text>
             {attachments.map((att) => (
               <View key={att.id} style={tw`mb-2 rounded-lg bg-gray-50 p-3`}>
-                <Text style={tw`text-gray-900`}>
-                  <Text aria-label="paperclip" role="img">
-                    📎
-                  </Text>{' '}
-                  {att.originalFilename}
-                </Text>
+                <View style={tw`flex-row items-center`}>
+                  <PaperclipIcon
+                    height={INLINE_ICON_SIZE}
+                    style={tw`mr-1.5 text-gray-600`}
+                    width={INLINE_ICON_SIZE}
+                  />
+                  <Text style={tw`text-gray-900`}>{att.originalFilename}</Text>
+                </View>
                 <Text style={tw`mt-1 text-xs text-gray-500`}>
                   Hash: {att.fileHash.substring(0, HASH_PREVIEW_LENGTH)}...
                 </Text>
@@ -339,7 +366,7 @@ export function EntryDetailScreen({ navigation, route }: Props) {
         {canAct && (
           <View style={tw`mt-4 flex-row gap-3`}>
             <Pressable style={tw`flex-1 rounded-xl bg-green-600 py-4`} onPress={handleAcknowledge}>
-              <Text style={tw`text-center font-semibold text-white`}>✓ Acknowledge</Text>
+              <Text style={tw`text-center font-semibold text-white`}>Acknowledge</Text>
             </Pressable>
             <Pressable
               style={tw`flex-1 rounded-xl bg-red-100 py-4`}

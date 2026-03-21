@@ -7,6 +7,7 @@ import { TimelineFilters, type FilterState } from './TimelineFilters';
 
 import { EntryCard } from '@/components/molecules/EntryCard';
 import { useTw } from '@/hooks/useTw';
+import { PencilLineIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import {
   TimelineService,
@@ -161,9 +162,7 @@ export function TimelineScreen({ navigation }: Props) {
       {/* Entry List */}
       {entries.length === 0 ? (
         <View style={tw`flex-1 items-center justify-center px-6`}>
-          <Text aria-label="memo" role="img" style={tw`mb-4 text-6xl`}>
-            📝
-          </Text>
+          <PencilLineIcon height={48} style={tw`mb-4 text-gray-300`} width={48} />
           <Text style={tw`mb-2 text-xl font-medium text-gray-900`}>No entries yet</Text>
           <Text style={tw`mb-6 text-center text-gray-600`}>
             Start documenting by adding your first entry.

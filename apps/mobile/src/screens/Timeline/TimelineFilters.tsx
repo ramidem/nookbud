@@ -21,11 +21,11 @@ type Props = {
 };
 
 const TYPE_LABELS: Record<EntryType, string> = {
-  agreement: '🤝 Agreement',
-  communication: '💬 Communication',
-  event: '📅 Event',
-  expense: '💰 Expense',
-  upload: '📎 Document',
+  agreement: 'Agreement',
+  communication: 'Communication',
+  event: 'Event',
+  expense: 'Expense',
+  upload: 'Document',
 };
 
 export function TimelineFilters({ filters, onApply, onClose, relationshipId, visible }: Props) {

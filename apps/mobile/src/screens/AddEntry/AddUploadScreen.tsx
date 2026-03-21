@@ -16,6 +16,7 @@ import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 
 import type { Child } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
+import { CameraIcon, CrossIcon, FileTextIcon, ImageIcon, LockIcon, PaperclipIcon } from '@/icons';
 import type { TimelineStackParamList } from '@/navigation/TimelineNavigator';
 import { EntryService, RelationshipService, ChildService, type AttachmentInput } from '@/services';
 import type { DocumentType } from '@/types/entry-content.types';
@@ -26,12 +27,14 @@ const ACTIVE_BG = 'bg-blue-600';
 const INACTIVE_BG = 'bg-gray-100';
 const ACTIVE_TEXT = 'text-white';
 const INACTIVE_TEXT = 'text-gray-700';
+const DOC_ICON_SIZE = 16;
+const BUTTON_ICON_SIZE = 24;
 
-const DOC_TYPES: { value: DocumentType; label: string; icon: string }[] = [
-  { icon: '🏥', label: 'Medical', value: 'medical' },
-  { icon: '📚', label: 'School', value: 'school' },
-  { icon: '⚖️', label: 'Legal', value: 'legal' },
-  { icon: '📄', label: 'Other', value: 'other' },
+const DOC_TYPES: { value: DocumentType; label: string }[] = [
+  { label: 'Medical', value: 'medical' },
+  { label: 'School', value: 'school' },
+  { label: 'Legal', value: 'legal' },
+  { label: 'Other', value: 'other' },
 ];
 
 export function AddUploadScreen({ navigation }: Props) {
@@ -196,7 +199,7 @@ export function AddUploadScreen({ navigation }: Props) {
                 onPress={() => setDocumentType(type.value)}
               >
                 <Text style={tw`${documentType === type.value ? ACTIVE_TEXT : INACTIVE_TEXT}`}>
-                  {type.icon} {type.label}
+                  {type.label}
                 </Text>
               </Pressable>
             ))}
@@ -212,14 +215,20 @@ export function AddUploadScreen({ navigation }: Props) {
             <View style={tw`mb-4`}>
               {files.map((file, index) => (
                 <View key={index} style={tw`mb-2 flex-row items-center rounded-lg bg-gray-50 p-3`}>
+                  <PaperclipIcon
+                    height={DOC_ICON_SIZE}
+                    style={tw`mr-1.5 text-gray-500`}
+                    width={DOC_ICON_SIZE}
+                  />
                   <Text numberOfLines={1} style={tw`flex-1 text-gray-700`}>
-                    <Text aria-label="paperclip" role="img">
-                      📎
-                    </Text>{' '}
                     {file.filename}
                   </Text>
                   <Pressable onPress={() => removeFile(index)}>
-                    <Text style={tw`text-red-500`}>✕</Text>
+                    <CrossIcon
+                      height={DOC_ICON_SIZE}
+                      style={tw`text-red-500`}
+                      width={DOC_ICON_SIZE}
+                    />
                   </Pressable>
                 </View>
               ))}
@@ -232,27 +241,33 @@ export function AddUploadScreen({ navigation }: Props) {
               style={tw`flex-1 items-center rounded-xl bg-gray-100 py-4`}
               onPress={handlePickDocument}
             >
-              <Text aria-label="document" role="img" style={tw`mb-1 text-2xl`}>
-                📄
-              </Text>
+              <FileTextIcon
+                height={BUTTON_ICON_SIZE}
+                style={tw`mb-1 text-gray-600`}
+                width={BUTTON_ICON_SIZE}
+              />
               <Text style={tw`text-sm text-gray-700`}>Document</Text>
             </Pressable>
             <Pressable
               style={tw`flex-1 items-center rounded-xl bg-gray-100 py-4`}
               onPress={handlePickImage}
             >
-              <Text aria-label="gallery" role="img" style={tw`mb-1 text-2xl`}>
-                🖼️
-              </Text>
+              <ImageIcon
+                height={BUTTON_ICON_SIZE}
+                style={tw`mb-1 text-gray-600`}
+                width={BUTTON_ICON_SIZE}
+              />
               <Text style={tw`text-sm text-gray-700`}>Gallery</Text>
             </Pressable>
             <Pressable
               style={tw`flex-1 items-center rounded-xl bg-gray-100 py-4`}
               onPress={handleTakePhoto}
             >
-              <Text aria-label="camera" role="img" style={tw`mb-1 text-2xl`}>
-                📷
-              </Text>
+              <CameraIcon
+                height={BUTTON_ICON_SIZE}
+                style={tw`mb-1 text-gray-600`}
+                width={BUTTON_ICON_SIZE}
+              />
               <Text style={tw`text-sm text-gray-700`}>Camera</Text>
             </Pressable>
           </View>
@@ -301,11 +316,9 @@ export function AddUploadScreen({ navigation }: Props) {
         )}
 
         {/* Info */}
-        <View style={tw`rounded-xl bg-green-50 p-4`}>
-          <Text style={tw`text-sm text-green-800`}>
-            <Text aria-label="lock" role="img">
-              🔒
-            </Text>{' '}
+        <View style={tw`flex-row rounded-xl bg-green-50 p-4`}>
+          <LockIcon height={16} style={tw`mr-2 mt-0.5 text-green-800`} width={16} />
+          <Text style={tw`flex-1 text-sm text-green-800`}>
             Files are stored securely with SHA-256 verification. The hash proves they haven{"'"}t
             been modified.
           </Text>

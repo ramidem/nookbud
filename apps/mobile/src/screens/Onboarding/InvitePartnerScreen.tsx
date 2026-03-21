@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Share } from 'react-native';
 
 import { useTw } from '@/hooks/useTw';
+import { CheckCircleIcon, LightbulbIcon } from '@/icons';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'InvitePartner'>;
@@ -56,9 +57,10 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
 
       <View style={tw`mb-8 flex-row gap-3`}>
         <Pressable style={tw`flex-1 rounded-xl bg-gray-100 py-4`} onPress={handleCopy}>
-          <Text style={tw`text-center font-medium text-gray-900`}>
-            {copied ? '✓ Copied!' : 'Copy Code'}
-          </Text>
+          <View style={tw`flex-row items-center justify-center`}>
+            {copied && <CheckCircleIcon height={16} style={tw`mr-1 text-green-600`} width={16} />}
+            <Text style={tw`font-medium text-gray-900`}>{copied ? 'Copied!' : 'Copy Code'}</Text>
+          </View>
         </Pressable>
 
         <Pressable style={tw`flex-1 rounded-xl bg-blue-600 py-4`} onPress={handleShare}>
@@ -66,11 +68,9 @@ export function InvitePartnerScreen({ navigation, route }: Props) {
         </Pressable>
       </View>
 
-      <View style={tw`mb-8 rounded-xl bg-amber-50 p-4`}>
-        <Text style={tw`text-sm text-amber-800`}>
-          <Text aria-label="light bulb" role="img">
-            💡
-          </Text>{' '}
+      <View style={tw`mb-8 flex-row rounded-xl bg-amber-50 p-4`}>
+        <LightbulbIcon height={16} style={tw`mr-2 mt-0.5 text-amber-800`} width={16} />
+        <Text style={tw`flex-1 text-sm text-amber-800`}>
           You can start using CoParent right away. Your co-parent can join anytime using this code,
           and they{"'"}ll see all the records you{"'"}ve created.
         </Text>

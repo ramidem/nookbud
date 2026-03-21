@@ -4,6 +4,7 @@ import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { Calendar, type DateData, type MarkedDates } from 'react-native-calendars';
 
 import { useTw } from '@/hooks/useTw';
+import { CalendarIcon } from '@/icons';
 import type { MainTabParamList } from '@/navigation/MainNavigator';
 import {
   TimelineService,
@@ -296,9 +297,7 @@ export function CalendarScreen({ navigation }: Props) {
           </View>
         ) : dayEvents.length === 0 ? (
           <View style={tw`flex-1 items-center justify-center`}>
-            <Text aria-label="calendar" role="img" style={tw`mb-1 text-4xl`}>
-              📅
-            </Text>
+            <CalendarIcon height={40} style={tw`mb-2 text-gray-300`} width={40} />
             <Text style={tw`text-gray-500`}>No events for this day</Text>
           </View>
         ) : (
