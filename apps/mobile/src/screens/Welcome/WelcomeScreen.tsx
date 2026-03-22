@@ -3,6 +3,10 @@ import React, { useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
+import CertificateIllustration from './illustrations/certificate.svg';
+import EverywhereTogether from './illustrations/everywhere-together.svg';
+import NotedIllustration from './illustrations/noted.svg';
+
 import { Button, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
@@ -10,23 +14,27 @@ import type { AuthStackParamList } from '@/navigation/AuthNavigator';
 type Props = NativeStackScreenProps<AuthStackParamList, 'Welcome'>;
 
 interface Slide {
-  key: string;
-  headline: string;
+  Illustration: React.FC<{ width: number; height: number }>;
   body: string;
+  headline: string;
+  key: string;
 }
 
 const SLIDES: Slide[] = [
   {
+    Illustration: NotedIllustration,
     body: 'Keep a record of every moment — notes, photos, and timestamps. All in one place.',
     headline: 'Log what happened.',
     key: 'log',
   },
   {
+    Illustration: EverywhereTogether,
     body: 'Schedules, agreements, updates. Everyone involved stays on the same page.',
     headline: 'Stay coordinated.',
     key: 'coordinate',
   },
   {
+    Illustration: CertificateIllustration,
     body: 'Every record is timestamped and tamper-proof. Always there when you need it.',
     headline: 'Everything verified.',
     key: 'verified',
@@ -77,7 +85,11 @@ export function WelcomeScreen({ navigation }: Props) {
       >
         {SLIDES.map((slide) => (
           <View key={slide.key} style={tw`flex-1`}>
-            <SlideContent body={slide.body} headline={slide.headline} />
+            <SlideContent
+              body={slide.body}
+              headline={slide.headline}
+              Illustration={slide.Illustration}
+            />
           </View>
         ))}
       </PagerView>
@@ -89,9 +101,7 @@ export function WelcomeScreen({ navigation }: Props) {
           {SLIDES.map((slide, i) => (
             <View
               key={slide.key}
-              style={tw`h-2 rounded-full ${
-                i === activeIndex ? 'bg-primary w-6' : 'bg-divider w-2'
-              }`}
+              style={tw`h-2 rounded-full ${i === activeIndex ? 'bg-primary w-6' : 'bg-divider w-2'}`}
             />
           ))}
         </View>
@@ -109,16 +119,22 @@ export function WelcomeScreen({ navigation }: Props) {
   );
 }
 
-function SlideContent({ body, headline }: { headline: string; body: string }) {
+function SlideContent({
+  body,
+  headline,
+  Illustration,
+}: {
+  Illustration: React.FC<{ height: number; width: number }>;
+  body: string;
+  headline: string;
+}) {
   const tw = useTw();
 
   return (
     <View style={tw`flex-1 px-6`}>
-      {/* Illustration placeholder */}
-      <View
-        style={tw`bg-background mx-0 mb-10 mt-16 flex-1 items-center justify-center rounded-3xl`}
-      >
-        <Typography style={tw`text-subtitle text-sm`}>Illustration</Typography>
+      {/* Illustration */}
+      <View style={tw`mb-10 mt-16 flex-1 items-center justify-center`}>
+        <Illustration height={280} width={280} />
       </View>
 
       {/* Text */}
