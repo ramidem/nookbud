@@ -141,8 +141,13 @@ export const AuthService = {
 
   /**
    * Password-based sign up (kept for flexibility).
+   * Returns `needsEmailConfirmation: true` when Supabase requires the user
+   * to click a verification link before a session is issued.
    */
-  async signUp(email: string, password: string): Promise<AuthResult> {
+  async signUp(
+    email: string,
+    password: string,
+  ): Promise<AuthResult & { needsEmailConfirmation?: boolean }> {
     const client = getSupabaseClient();
     if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
 
@@ -150,6 +155,9 @@ export const AuthService = {
 
     if (error) return { error: error.message, user: null };
 
-    return { error: null, user: data.user };
+    // When email confirmation is required, Supabase returns a user but no session.
+    const needsEmailConfirmation = !!data.user && !data.session;
+
+    return { error: null, needsEmailConfirmation, user: data.user };
   },
 };
