@@ -22,6 +22,7 @@ export {
 } from './space.service';
 export { SpaceMemberService, type SpaceInvite } from './space-member.service';
 export { AuthService } from './auth.service';
+export { LogService, type LogLevel } from './log.service';
 export { SyncService } from './sync.service';
 export {
   NotificationService,

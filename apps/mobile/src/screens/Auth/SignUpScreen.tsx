@@ -9,7 +9,7 @@ import { Button, Divider, InputLayout, TextInput, Typography } from '@/component
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
 import { navigationRef } from '@/navigation/RootNavigator';
-import { AuthService, SpaceService } from '@/services';
+import { AuthService, LogService, SpaceService } from '@/services';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
@@ -47,9 +47,11 @@ export function SignUpScreen({ navigation }: Props) {
     setIsLoading(true);
     setServerError(null);
 
+    LogService.info('auth', 'Sign up attempt', { email: data.email });
     const { error } = await AuthService.signUp(data.email, data.password);
 
     if (error) {
+      LogService.warn('auth', 'Sign up error', { error });
       // If already registered, try signing in with same credentials silently
       if (
         error.toLowerCase().includes('already registered') ||
@@ -83,11 +85,14 @@ export function SignUpScreen({ navigation }: Props) {
       return;
     }
 
+    LogService.info('auth', 'Sign up success — navigating to Setup');
     setIsLoading(false);
 
     // Navigate to Setup — retry a few times in case navigationRef isn't ready yet
     const navigate = () => {
-      if (navigationRef.isReady()) {
+      const ready = navigationRef.isReady();
+      LogService.debug('nav', 'navigationRef ready check (signup)', { ready });
+      if (ready) {
         navigationRef.reset({ index: 0, routes: [{ name: 'Setup' }] });
       } else {
         setTimeout(navigate, 100);

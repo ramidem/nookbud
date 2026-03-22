@@ -19,7 +19,13 @@ import { SetupNavigator } from './SetupNavigator';
 import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
-import { AuthService, NotificationService, SpaceService, UserService } from '@/services';
+import {
+  AuthService,
+  LogService,
+  NotificationService,
+  SpaceService,
+  UserService,
+} from '@/services';
 import { useLocalStorageStore } from '@/stores';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
@@ -137,6 +143,7 @@ export function RootNavigator() {
 
   useEffect(() => {
     if (migrationSuccess) {
+      LogService.startAutoFlush();
       bootstrap();
     }
   }, [migrationSuccess]);
@@ -145,7 +152,12 @@ export function RootNavigator() {
   useEffect(
     () =>
       AuthService.onAuthStateChange((event, session) => {
+        LogService.info('auth', 'Auth state change', { event });
+        if (event === 'SIGNED_IN' && session) {
+          LogService.setUserId(session.user.id);
+        }
         if (event === 'SIGNED_OUT') {
+          LogService.setUserId(null);
           setInitialRoute('Auth');
         } else if (event === 'SIGNED_IN' && session) {
           // Sync user to Supabase public.users if needed
@@ -174,14 +186,18 @@ export function RootNavigator() {
   );
 
   const bootstrap = async () => {
+    LogService.info('boot', 'App bootstrap started');
     try {
       const isAuthenticated = await AuthService.isAuthenticated();
+      LogService.debug('boot', 'Auth check', { isAuthenticated });
 
       if (!isAuthenticated) {
+        LogService.info('boot', 'Not authenticated → Auth');
         setInitialRoute('Auth');
       } else {
         // Authenticated — check if setup is complete
         const spaces = await SpaceService.listSpaces();
+        LogService.info('boot', 'Spaces check', { count: spaces.length });
         if (spaces.length === 0) {
           setInitialRoute('Setup');
         } else {
@@ -194,8 +210,8 @@ export function RootNavigator() {
           NotificationService.requestPermissions().catch(() => {});
         }
       }
-    } catch {
-      // Fallback to auth screen on error
+    } catch (e) {
+      LogService.error('boot', 'Bootstrap failed', { error: String(e) });
       setInitialRoute('Auth');
     } finally {
       const elapsed = Date.now() - splashShownAt.current;
@@ -240,13 +256,15 @@ export function RootNavigator() {
         await initializeActiveSpace();
       }
 
-      if (navigationRef.isReady()) {
+      const navReady = navigationRef.isReady();
+      LogService.info('nav', 'Auth callback nav', { navReady, target: 'Main' });
+      if (navReady) {
         navigationRef.reset({ index: 0, routes: [{ name: 'Main' }] });
       } else {
         setInitialRoute('Main');
       }
-    } catch {
-      // Silent — user stays on current screen
+    } catch (e) {
+      LogService.error('nav', 'Auth callback failed', { error: String(e) });
     }
   }, []);
 
