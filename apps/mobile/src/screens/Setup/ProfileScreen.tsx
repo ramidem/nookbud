@@ -48,6 +48,16 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
     LogService.info('setup', 'Profile submit started', { trace });
 
     try {
+      // Get Supabase auth user first so we can anchor existence check to their UID.
+      const authUser = await UserService.getCurrentAuthUser();
+      LogService.debug('setup', 'Auth user fetched', { hasAuthUser: !!authUser, trace });
+
+      // If we have an auth UID, pin it in MMKV so hasUser() finds any existing row
+      // (handles the case where MMKV was cleared but the SQLite row already exists).
+      if (authUser?.id) {
+        UserService.setCurrentUserId(authUser.id);
+      }
+
       const existing = await UserService.hasUser();
       LogService.debug('setup', 'User existence check', { existing, trace });
 
@@ -59,11 +69,6 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
         });
         LogService.info('setup', 'User updated', { trace });
       } else {
-        // First-time email/password sign up — no local user yet.
-        // Get Supabase auth user so the local row id matches auth.uid().
-        const authUser = await UserService.getCurrentAuthUser();
-        LogService.debug('setup', 'Auth user fetched', { hasAuthUser: !!authUser, trace });
-
         await UserService.createUser({
           email: authUser?.email,
           firstName: data.firstName,
@@ -72,12 +77,12 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
           middleName: data.middleName || undefined,
         });
         LogService.info('setup', 'User created', { trace });
+      }
 
-        // Sync to Supabase if we have an auth user
-        if (authUser?.id) {
-          await UserService.syncToSupabase(authUser.id);
-          LogService.info('setup', 'User synced to Supabase', { trace });
-        }
+      // Sync to Supabase if we have an auth user
+      if (authUser?.id) {
+        await UserService.syncToSupabase(authUser.id);
+        LogService.info('setup', 'User synced to Supabase', { trace });
       }
 
       // Auto-create a default space so the user lands in Main immediately

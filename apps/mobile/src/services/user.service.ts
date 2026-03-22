@@ -183,6 +183,14 @@ export const UserService = {
   },
 
   /**
+   * Manually set the current user ID in storage.
+   * Use to re-anchor MMKV after a cleared state when the SQLite row already exists.
+   */
+  setCurrentUserId(id: string): void {
+    storage.set(CURRENT_USER_ID_KEY, id);
+  },
+
+  /**
    * Upsert the current local user into Supabase public.users.
    * Called after Supabase auth is established so auth.uid() matches the row id.
    * The Supabase user id (from auth) replaces the local UUID so RLS works correctly.
