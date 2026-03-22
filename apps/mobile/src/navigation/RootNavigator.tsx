@@ -160,10 +160,18 @@ export function RootNavigator() {
           LogService.setUserId(null);
           setInitialRoute('Auth');
         } else if (event === 'SIGNED_IN' && session) {
-          // Sync user to Supabase public.users if needed
-          UserService.syncToSupabase(session.user.id).catch(() => {});
+          // Only sync if a local user already exists (i.e. returning user, not fresh sign-up).
+          // Fresh sign-up goes to Setup first where upsertUser + syncToSupabase runs.
+          UserService.hasUser()
+            .then((hasUser) => {
+              if (hasUser) {
+                UserService.syncToSupabase(session.user.id).catch(() => {});
+              }
+            })
+            .catch(() => {});
 
-          // Route to Setup if no spaces yet, otherwise Main
+          // Route to Setup if no spaces yet, otherwise Main.
+          // Fresh sign-up: SignUpScreen navigates directly to Setup (doesn't wait for this).
           SpaceService.listSpaces()
             .then((spaces) => {
               const target = spaces.length === 0 ? 'Setup' : 'Main';

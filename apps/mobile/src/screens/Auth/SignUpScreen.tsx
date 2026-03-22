@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { Button, Divider, InputLayout, TextInput, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
+import { navigationRef } from '@/navigation/RootNavigator';
 import { AuthService, LogService } from '@/services';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
@@ -75,7 +76,7 @@ export function SignUpScreen({ navigation }: Props) {
     }
 
     if (needsEmailConfirmation) {
-      // Email confirmation required — session won't fire until user clicks the link.
+      // Email confirmation required — no session yet.
       LogService.info('auth', 'Sign up success — email confirmation required');
       setIsLoading(false);
 
@@ -84,9 +85,19 @@ export function SignUpScreen({ navigation }: Props) {
       return;
     }
 
-    // Confirmation disabled — Supabase fires SIGNED_IN immediately.
-    // RootNavigator's onAuthStateChange will handle navigation. Keep spinner alive.
-    LogService.info('auth', 'Sign up success — waiting for SIGNED_IN event to navigate');
+    // Session is live — navigate to Setup directly.
+    // Don't wait for SIGNED_IN event (Supabase may fire INITIAL_SESSION instead on fresh signup).
+    LogService.info('auth', 'Sign up success — navigating to Setup');
+    setIsLoading(false);
+    const navigate = () => {
+      if (navigationRef.isReady()) {
+        navigationRef.reset({ index: 0, routes: [{ name: 'Setup' }] });
+      } else {
+        setTimeout(navigate, 100);
+      }
+    };
+
+    navigate();
   };
 
   const handleGoogleSignIn = async () => {
