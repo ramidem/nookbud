@@ -192,17 +192,15 @@ export function SelectDropdown(props: Props) {
         ]}
         onPress={handleToggle}
       >
-        <View style={tw`flex-1`}>
-          <Typography
-            style={[
-              defaultInputTextStyle,
-              tw`dark:text-dark-foreground`,
-              !selectedOption && tw`dark:text-placeholder text-placeholder`,
-            ]}
-          >
-            {selectedLabel}
-          </Typography>
-        </View>
+        <Typography
+          style={[
+            defaultInputTextStyle,
+            tw`dark:text-dark-foreground`,
+            !selectedOption && tw`dark:text-placeholder text-placeholder`,
+          ]}
+        >
+          {selectedLabel}
+        </Typography>
         {isOpen ? (
           <ChevronDownIcon height={20} style={tw`dark:text-subtitle text-subtitle`} width={20} />
         ) : (

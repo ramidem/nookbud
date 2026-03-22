@@ -1,17 +1,18 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
-  ActivityIndicator,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
+import { CHILD_ROLES, CHILD_ROLE_DISPLAY, type ChildRole } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { SetupStackParamList } from '@/navigation/SetupNavigator';
 import { ChildService } from '@/services';
@@ -20,39 +21,41 @@ import { colors } from '@/tailwind';
 type Props = NativeStackScreenProps<SetupStackParamList, 'AddChild'>;
 
 type ChildInput = {
+  dateOfBirth: Date | undefined;
   id: string;
   name: string;
-  dateOfBirth: Date | undefined;
+  role: ChildRole | undefined;
 };
+
+const ROLE_OPTIONS = CHILD_ROLES.map((r) => ({ label: CHILD_ROLE_DISPLAY[r], value: r }));
 
 export function AddChildScreen({ navigation, route }: Props) {
   const tw = useTw();
   const { spaceId } = route.params;
-  const [children, setChildren] = useState<ChildInput[]>([
-    { dateOfBirth: undefined, id: '1', name: '' },
+  const [childList, setChildList] = useState<ChildInput[]>([
+    { dateOfBirth: undefined, id: '1', name: '', role: undefined },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const addChild = () => {
-    setChildren([...children, { dateOfBirth: undefined, id: String(Date.now()), name: '' }]);
+    setChildList([
+      ...childList,
+      { dateOfBirth: undefined, id: String(Date.now()), name: '', role: undefined },
+    ]);
   };
 
-  const updateChildName = (id: string, value: string) => {
-    setChildren(children.map((c) => (c.id === id ? { ...c, name: value } : c)));
-  };
-
-  const updateChildDob = (id: string, value: Date) => {
-    setChildren(children.map((c) => (c.id === id ? { ...c, dateOfBirth: value } : c)));
+  const updateChild = (id: string, patch: Partial<ChildInput>) => {
+    setChildList(childList.map((c) => (c.id === id ? { ...c, ...patch } : c)));
   };
 
   const removeChild = (id: string) => {
-    if (children.length > 1) {
-      setChildren(children.filter((c) => c.id !== id));
+    if (childList.length > 1) {
+      setChildList(childList.filter((c) => c.id !== id));
     }
   };
 
-  const validChildren = children.filter((c) => c.name.trim().length >= 2);
+  const validChildren = childList.filter((c) => c.name.trim().length >= 2 && c.role);
   const canContinue = validChildren.length > 0;
 
   const handleContinue = async () => {
@@ -66,6 +69,7 @@ export function AddChildScreen({ navigation, route }: Props) {
         await ChildService.create({
           dateOfBirth: child.dateOfBirth ?? undefined,
           name: child.name.trim(),
+          role: child.role,
           spaceId,
         });
       }
@@ -87,11 +91,11 @@ export function AddChildScreen({ navigation, route }: Props) {
         <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Add your children</Text>
         <Text style={tw`text-subtitle mb-8 text-base`}>You can add more later in settings.</Text>
 
-        {children.map((child, index) => (
+        {childList.map((child, index) => (
           <View key={child.id} style={tw`bg-background mb-6 rounded-xl p-4`}>
             <View style={tw`mb-4 flex-row items-center justify-between`}>
               <Text style={tw`text-subtitle text-sm font-medium`}>Child {index + 1}</Text>
-              {children.length > 1 && (
+              {childList.length > 1 && (
                 <Pressable onPress={() => removeChild(child.id)}>
                   <Text style={tw`text-error text-sm`}>Remove</Text>
                 </Pressable>
@@ -104,7 +108,7 @@ export function AddChildScreen({ navigation, route }: Props) {
               placeholderTextColor={colors.placeholder}
               style={tw`border-divider bg-surface text-foreground mb-3 rounded-lg border px-4 py-3 text-base`}
               value={child.name}
-              onChangeText={(value) => updateChildName(child.id, value)}
+              onChangeText={(value) => updateChild(child.id, { name: value })}
             />
 
             <DatePickerInput
@@ -113,8 +117,34 @@ export function AddChildScreen({ navigation, route }: Props) {
               mode="date"
               placeholder="Select date of birth"
               value={child.dateOfBirth}
-              onChange={(value) => updateChildDob(child.id, value)}
+              onChange={(value) => updateChild(child.id, { dateOfBirth: value })}
             />
+
+            {/* Role selector */}
+            <Text style={tw`text-subtitle mb-2 mt-3 text-xs font-medium uppercase tracking-wide`}>
+              Your relationship to this child
+            </Text>
+            <View style={tw`flex-row flex-wrap gap-2`}>
+              {ROLE_OPTIONS.map((option) => {
+                const isSelected = child.role === option.value;
+
+                return (
+                  <Pressable
+                    key={option.value}
+                    style={tw`rounded-full border px-3 py-1.5 ${
+                      isSelected ? 'bg-primary border-primary' : 'border-divider bg-surface'
+                    }`}
+                    onPress={() => updateChild(child.id, { role: option.value })}
+                  >
+                    <Text
+                      style={tw`text-sm font-medium ${isSelected ? 'text-white' : 'text-foreground'}`}
+                    >
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
         ))}
 

@@ -50,6 +50,13 @@
       "when": 1742601600000,
       "tag": "0006_user_name_split",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1742688000000,
+      "tag": "0007_child_role",
+      "breakpoints": true
     }
   ]
 }

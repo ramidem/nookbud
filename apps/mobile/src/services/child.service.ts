@@ -4,7 +4,7 @@ import { AuditService } from './audit.service';
 import { UserService } from './user.service';
 
 import { db } from '@/database';
-import { children, type Child, type NewChild } from '@/database/schema';
+import { children, type Child, type NewChild, type ChildRole } from '@/database/schema';
 
 const UUID_RADIX = 16;
 const UUID_VARIANT_MASK = 0x3;
@@ -41,6 +41,7 @@ export const ChildService = {
     relationshipId?: string;
     name: string;
     dateOfBirth?: Date;
+    role?: ChildRole;
   }): Promise<Child> {
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error('No current user');
@@ -51,6 +52,7 @@ export const ChildService = {
       dateOfBirth: data.dateOfBirth,
       id,
       name: data.name,
+      role: data.role,
       spaceId: resolvedSpaceId,
     };
 
