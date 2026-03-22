@@ -13,11 +13,11 @@ import {
 
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { useTw } from '@/hooks/useTw';
-import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
+import type { SetupStackParamList } from '@/navigation/SetupNavigator';
 import { ChildService } from '@/services';
 import { colors } from '@/tailwind';
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, 'AddChild'>;
+type Props = NativeStackScreenProps<SetupStackParamList, 'AddChild'>;
 
 type ChildInput = {
   id: string;

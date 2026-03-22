@@ -1,9 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import { AddChildScreen } from '@/screens/Onboarding/AddChildScreen';
-import { CreateSpaceScreen } from '@/screens/Onboarding/CreateSpaceScreen';
-import { InvitePartnerScreen } from '@/screens/Onboarding/InvitePartnerScreen';
 import { OnboardingCompleteScreen } from '@/screens/Onboarding/OnboardingCompleteScreen';
 import { OnboardingCurrencyScreen } from '@/screens/Onboarding/OnboardingCurrencyScreen';
 import { OnboardingNameScreen } from '@/screens/Onboarding/OnboardingNameScreen';
@@ -19,16 +16,9 @@ export type OnboardingStackParamList = {
     timezone: string;
   };
   OnboardingComplete: {
+    defaultCurrency: string;
     displayName: string;
     timezone: string;
-    defaultCurrency: string;
-  };
-  CreateSpace: undefined;
-  AddChild: {
-    spaceId: string;
-  };
-  InviteMembers: {
-    spaceId: string;
   };
 };
 
@@ -46,9 +36,6 @@ export function OnboardingNavigator() {
       <Stack.Screen component={OnboardingTimezoneScreen} name="OnboardingTimezone" />
       <Stack.Screen component={OnboardingCurrencyScreen} name="OnboardingCurrency" />
       <Stack.Screen component={OnboardingCompleteScreen} name="OnboardingComplete" />
-      <Stack.Screen component={CreateSpaceScreen} name="CreateSpace" />
-      <Stack.Screen component={AddChildScreen} name="AddChild" />
-      <Stack.Screen component={InvitePartnerScreen} name="InviteMembers" />
     </Stack.Navigator>
   );
 }

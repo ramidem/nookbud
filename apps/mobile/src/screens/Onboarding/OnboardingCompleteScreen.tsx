@@ -1,16 +1,22 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import type {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 
 import { Button } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
+import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { UserService } from '@/services';
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'OnboardingComplete'>;
 
-export function OnboardingCompleteScreen({ navigation, route }: Props) {
+export function OnboardingCompleteScreen({ route }: Props) {
   const tw = useTw();
+  const rootNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { defaultCurrency, displayName, timezone } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +32,12 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
         timezone,
       });
 
-      // Navigate to create first Space
-      navigation.navigate('CreateSpace');
+      // Profile created — navigate to auth so user signs in with magic link.
+      // After sign-in, RootNavigator boots them into Setup (CreateSpace flow).
+      rootNavigation.reset({
+        index: 0,
+        routes: [{ name: 'Auth' }],
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create profile');
     } finally {
@@ -66,7 +76,9 @@ export function OnboardingCompleteScreen({ navigation, route }: Props) {
       <View style={tw`pb-8`}>
         <Button isLoading={isLoading} size="lg" title="Create Profile" onPress={handleComplete} />
 
-        <Text style={tw`text-subtitle mt-4 text-center text-sm`}>Next: Create your Space</Text>
+        <Text style={tw`text-subtitle mt-4 text-center text-sm`}>
+          Next: Sign in to your account
+        </Text>
       </View>
     </View>
   );

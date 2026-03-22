@@ -11,17 +11,19 @@ import { View, Text, ActivityIndicator, Linking } from 'react-native';
 import { AuthNavigator } from './AuthNavigator';
 import { MainNavigator } from './MainNavigator';
 import { OnboardingNavigator } from './OnboardingNavigator';
+import { SetupNavigator } from './SetupNavigator';
 
 import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
-import { AuthService, UserService, NotificationService, SpaceService } from '@/services';
+import { AuthService, NotificationService, SpaceService, UserService } from '@/services';
 import { useLocalStorageStore } from '@/stores';
 import { colors } from '@/tailwind';
 
 export type RootStackParamList = {
   Auth: undefined;
   Onboarding: undefined;
+  Setup: undefined;
   Main: undefined;
   AcceptInvite: { token?: string };
 };
@@ -140,7 +142,7 @@ async function initializeActiveSpace() {
   }
 }
 
-type AppRoute = 'Auth' | 'Onboarding' | 'Main';
+type AppRoute = 'Auth' | 'Onboarding' | 'Setup' | 'Main';
 
 export function RootNavigator() {
   const tw = useTw();
@@ -177,23 +179,29 @@ export function RootNavigator() {
       ]);
 
       if (!hasLocalUser) {
-        // New user — go through onboarding first, then auth
+        // Brand new user — collect profile info first, then auth
         setInitialRoute('Onboarding');
       } else if (!isAuthenticated) {
-        // Has local profile but not signed into Supabase
+        // Has local profile but no Supabase session
         setInitialRoute('Auth');
       } else {
-        // Fully set up
-        setInitialRoute('Main');
+        // Authenticated — check if they've created a Space yet
+        const spaces = await SpaceService.listSpaces();
+        if (spaces.length === 0) {
+          setInitialRoute('Setup');
+        } else {
+          setInitialRoute('Main');
+          await initializeActiveSpace();
+        }
       }
 
-      if (hasLocalUser) {
-        if (!permissionRequested.current && !NotificationService.hasRequestedPermission()) {
-          permissionRequested.current = true;
-          NotificationService.requestPermissions().catch(() => {});
-        }
-
-        await initializeActiveSpace();
+      if (
+        hasLocalUser &&
+        !permissionRequested.current &&
+        !NotificationService.hasRequestedPermission()
+      ) {
+        permissionRequested.current = true;
+        NotificationService.requestPermissions().catch(() => {});
       }
     } catch {
       // Fallback to auth screen on error
@@ -216,8 +224,14 @@ export function RootNavigator() {
       // Sync local profile to Supabase public.users
       await UserService.syncToSupabase(user.id).catch(() => {});
 
-      await initializeActiveSpace();
-      setInitialRoute('Main');
+      // Check if they need to create their first Space
+      const spaces = await SpaceService.listSpaces();
+      if (spaces.length === 0) {
+        setInitialRoute('Setup');
+      } else {
+        await initializeActiveSpace();
+        setInitialRoute('Main');
+      }
     } catch {
       // Silent — user stays on current screen
     }
@@ -252,6 +266,7 @@ export function RootNavigator() {
         >
           <Stack.Screen component={AuthNavigator} name="Auth" />
           <Stack.Screen component={OnboardingNavigator} name="Onboarding" />
+          <Stack.Screen component={SetupNavigator} name="Setup" />
           <Stack.Screen component={MainNavigator} name="Main" />
           <Stack.Screen
             component={AcceptInviteScreen}
