@@ -3,8 +3,8 @@ import { AppState, AppStateStatus, Linking } from 'react-native';
 import { checkNotifications, requestNotifications, RESULTS } from 'react-native-permissions';
 
 import { Alert } from '@/components/atoms';
+import { LogService } from '@/services/log.service';
 import { useLocalStorageStore } from '@/stores/local-storage.store';
-import { devLog } from '@/utils/log.util';
 
 function showEnableNotificationsAlert() {
   Alert.info({
@@ -23,12 +23,12 @@ function isGranted(status: string): boolean {
 
 // TODO: Implement once @react-native-firebase/messaging is installed
 async function registerFcmToken() {
-  devLog('registerFcmToken: Firebase messaging not configured yet');
+  LogService.debug('push', 'registerFcmToken: Firebase messaging not configured yet');
 }
 
 // TODO: Implement once @react-native-firebase/messaging is installed
 async function removeFcmToken() {
-  devLog('removeFcmToken: Firebase messaging not configured yet');
+  LogService.debug('push', 'removeFcmToken: Firebase messaging not configured yet');
 }
 
 function syncPushNotificationState(status: string) {
@@ -75,7 +75,7 @@ export async function removeCurrentFcmToken(): Promise<void> {
   try {
     await removeFcmToken();
   } catch (error) {
-    devLog('Failed to remove FCM token:', error);
+    LogService.error('push', 'Failed to remove FCM token', { error: String(error) });
   }
 }
 
@@ -91,7 +91,9 @@ export function usePushNotifications(isAuthenticated: boolean) {
       }
 
       handleAppForeground().catch((error) => {
-        devLog('Failed to check notification permission on foreground:', error);
+        LogService.error('push', 'Failed to check notification permission on foreground', {
+          error: String(error),
+        });
       });
     };
 

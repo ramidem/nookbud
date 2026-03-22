@@ -41,7 +41,7 @@ export function SignInScreen({ navigation }: Props) {
     setIsLoading(true);
     setServerError(null);
 
-    LogService.info('auth', 'Sign in attempt', { email: data.email });
+    LogService.info('auth', 'Sign in attempt');
     const { error } = await AuthService.signIn(data.email, data.password);
 
     setIsLoading(false);

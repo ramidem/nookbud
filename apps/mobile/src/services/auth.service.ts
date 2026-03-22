@@ -7,7 +7,7 @@ type AuthResult = { error: string | null; user: User | null };
 type SignOutResult = { error: string | null };
 
 const REDIRECT_URL = 'coparent://auth/callback';
-const SUPABASE_NOT_CONFIGURED = SUPABASE_NOT_CONFIGURED;
+const SUPABASE_NOT_CONFIGURED = 'Supabase is not configured';
 
 export const AuthService = {
   /**

@@ -12,18 +12,18 @@ import {
 
 import { useNavigation } from '@/hooks';
 import { ArrowLeftIcon } from '@/icons';
-import { Screens } from '@/routes';
 import { tw } from '@/tailwind';
 import { DefaultComponentProps } from '@/types';
 
 type Props = DefaultComponentProps &
   PressableProps & {
-    fallbackRoute?: Screens;
+    fallbackRoute?: string;
     onPress?: (event?: GestureResponderEvent) => void;
     style?: StyleProp<ViewStyle>;
   };
 
 const ACTIVE_OPACITY = 0.5;
+
 export function BackButton(props: Props) {
   const { fallbackRoute, onPress, style } = props;
   const navigation = useNavigation<ParamListBase>();
@@ -40,7 +40,7 @@ export function BackButton(props: Props) {
     } else if (navigation.canGoBack()) {
       navigation.goBack();
     } else if (fallbackRoute) {
-      navigation.replace(fallbackRoute);
+      navigation.navigate(fallbackRoute);
     }
   };
 
