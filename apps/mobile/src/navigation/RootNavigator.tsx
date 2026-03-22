@@ -1,6 +1,10 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import notifee, { EventType } from '@notifee/react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+  useNavigation,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackNavigationProp,
@@ -18,6 +22,8 @@ import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
 import { AuthService, NotificationService, SpaceService, UserService } from '@/services';
 import { useLocalStorageStore } from '@/stores';
 import { colors } from '@/tailwind';
+
+export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 export type RootStackParamList = {
   Auth: undefined;
@@ -147,9 +153,20 @@ export function RootNavigator() {
           // Route to Setup if no spaces yet, otherwise Main
           SpaceService.listSpaces()
             .then((spaces) => {
-              setInitialRoute(spaces.length === 0 ? 'Setup' : 'Main');
+              const target = spaces.length === 0 ? 'Setup' : 'Main';
+              if (navigationRef.isReady()) {
+                navigationRef.reset({ index: 0, routes: [{ name: target }] });
+              } else {
+                setInitialRoute(target);
+              }
             })
-            .catch(() => setInitialRoute('Setup'));
+            .catch(() => {
+              if (navigationRef.isReady()) {
+                navigationRef.reset({ index: 0, routes: [{ name: 'Setup' }] });
+              } else {
+                setInitialRoute('Setup');
+              }
+            });
         }
       }),
     [],
@@ -199,11 +216,12 @@ export function RootNavigator() {
 
       // Check if they need to create their first Space
       const spaces = await SpaceService.listSpaces();
-      if (spaces.length === 0) {
-        setInitialRoute('Setup');
+      const target = spaces.length === 0 ? 'Setup' : 'Main';
+      if (spaces.length > 0) await initializeActiveSpace();
+      if (navigationRef.isReady()) {
+        navigationRef.reset({ index: 0, routes: [{ name: target }] });
       } else {
-        await initializeActiveSpace();
-        setInitialRoute('Main');
+        setInitialRoute(target);
       }
     } catch {
       // Silent — user stays on current screen

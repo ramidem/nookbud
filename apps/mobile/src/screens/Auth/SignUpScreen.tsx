@@ -48,11 +48,28 @@ export function SignUpScreen({ navigation }: Props) {
 
     const { error } = await AuthService.signUp(data.email, data.password);
 
-    setIsLoading(false);
-
     if (error) {
+      // If already registered, try signing in with same credentials silently
+      if (
+        error.toLowerCase().includes('already registered') ||
+        error.toLowerCase().includes('already exists')
+      ) {
+        const { error: signInError } = await AuthService.signIn(data.email, data.password);
+        setIsLoading(false);
+        if (signInError) {
+          setServerError('An account with this email already exists. Please sign in instead.');
+        }
+
+        // On success, onAuthStateChange handles navigation
+        return;
+      }
+      setIsLoading(false);
       setServerError(error);
+
+      return;
     }
+
+    setIsLoading(false);
     // On success, RootNavigator's onAuthStateChange handles navigation
   };
 
