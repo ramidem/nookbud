@@ -4,7 +4,7 @@ import { createMMKV } from 'react-native-mmkv';
 import CONFIG from '@/config';
 import { getSupabaseClient } from '@/config/supabase';
 import { db } from '@/database';
-import { users, type User, type NewUser } from '@/database/schema';
+import { users, type User, type NewUser, type UserRole } from '@/database/schema';
 
 // MMKV storage for quick key-value access
 const storage = createMMKV({
@@ -62,7 +62,10 @@ export const UserService = {
    * Create a new user
    */
   async createUser(data: {
-    displayName: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+    role?: UserRole;
     email?: string;
     timezone?: string;
     defaultCurrency?: string;
@@ -70,9 +73,12 @@ export const UserService = {
     const id = generateUUID();
     const newUser: NewUser = {
       defaultCurrency: data.defaultCurrency ?? getDeviceCurrency(),
-      displayName: data.displayName,
       email: data.email,
+      firstName: data.firstName,
       id,
+      lastName: data.lastName,
+      middleName: data.middleName,
+      role: data.role,
       timezone: data.timezone ?? getDeviceTimezone(),
     };
 
@@ -141,9 +147,12 @@ export const UserService = {
     const { error } = await client.from('users').upsert(
       {
         default_currency: localUser.defaultCurrency,
-        display_name: localUser.displayName,
         email: localUser.email,
+        first_name: localUser.firstName,
         id: supabaseUserId,
+        last_name: localUser.lastName,
+        middle_name: localUser.middleName,
+        role: localUser.role,
         timezone: localUser.timezone,
       },
       { onConflict: 'id' },
@@ -164,7 +173,10 @@ export const UserService = {
    * Update current user
    */
   async updateUser(data: {
-    displayName?: string;
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+    role?: UserRole;
     email?: string;
     timezone?: string;
     defaultCurrency?: string;
@@ -175,10 +187,13 @@ export const UserService = {
     await db
       .update(users)
       .set({
-        ...(data.displayName && { displayName: data.displayName }),
-        ...(data.email !== undefined && { email: data.email }),
-        ...(data.timezone && { timezone: data.timezone }),
         ...(data.defaultCurrency && { defaultCurrency: data.defaultCurrency }),
+        ...(data.email !== undefined && { email: data.email }),
+        ...(data.firstName && { firstName: data.firstName }),
+        ...(data.lastName && { lastName: data.lastName }),
+        ...(data.middleName !== undefined && { middleName: data.middleName }),
+        ...(data.role && { role: data.role }),
+        ...(data.timezone && { timezone: data.timezone }),
       })
       .where(eq(users.id, userId));
 

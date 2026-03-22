@@ -4,8 +4,10 @@ import React from 'react';
 import { AddChildScreen } from '@/screens/Onboarding/AddChildScreen';
 import { CreateSpaceScreen } from '@/screens/Onboarding/CreateSpaceScreen';
 import { InvitePartnerScreen } from '@/screens/Onboarding/InvitePartnerScreen';
+import { ProfileScreen } from '@/screens/Setup/ProfileScreen';
 
 export type SetupStackParamList = {
+  Profile: undefined;
   CreateSpace: undefined;
   AddChild: { spaceId: string };
   InviteMembers: { spaceId: string };
@@ -15,7 +17,7 @@ const Stack = createNativeStackNavigator<SetupStackParamList>();
 
 /**
  * Post-auth setup flow for first-time users.
- * Runs after sign-in when the user has no Spaces yet.
+ * Runs after sign-in when the user has no profile/spaces yet.
  */
 export function SetupNavigator() {
   return (
@@ -25,6 +27,7 @@ export function SetupNavigator() {
         headerShown: false,
       }}
     >
+      <Stack.Screen component={ProfileScreen} name="Profile" />
       <Stack.Screen component={CreateSpaceScreen} name="CreateSpace" />
       <Stack.Screen component={AddChildScreen} name="AddChild" />
       <Stack.Screen component={InvitePartnerScreen} name="InviteMembers" />
