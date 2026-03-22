@@ -143,6 +143,13 @@ export function RootNavigator() {
         } else if (event === 'SIGNED_IN' && session) {
           // Sync user to Supabase public.users if needed
           UserService.syncToSupabase(session.user.id).catch(() => {});
+
+          // Route to Setup if no spaces yet, otherwise Main
+          SpaceService.listSpaces()
+            .then((spaces) => {
+              setInitialRoute(spaces.length === 0 ? 'Setup' : 'Main');
+            })
+            .catch(() => setInitialRoute('Setup'));
         }
       }),
     [],
