@@ -94,10 +94,10 @@ export function WelcomeScreen({ navigation }: Props) {
         ))}
       </PagerView>
 
-      {/* Bottom controls */}
-      <View style={tw`px-6 pb-12`}>
+      {/* Bottom controls — fixed height so slide content never shifts */}
+      <View style={tw`h-52 justify-end px-6 pb-12`}>
         {/* Dot indicators */}
-        <View style={tw`mb-8 flex-row items-center justify-center gap-2`}>
+        <View style={tw`mb-6 flex-row items-center justify-center gap-2`}>
           {SLIDES.map((slide, i) => (
             <View
               key={slide.key}
@@ -106,14 +106,16 @@ export function WelcomeScreen({ navigation }: Props) {
           ))}
         </View>
 
-        {isLast ? (
-          <View style={tw`gap-3`}>
-            <Button size="lg" title="Get started" onPress={handleNext} />
-            <Button size="lg" title="Sign in" variant="outlined" onPress={handleSignIn} />
-          </View>
-        ) : (
-          <Button size="lg" title="Next" onPress={handleNext} />
-        )}
+        <View style={tw`gap-3`}>
+          <Button size="lg" title={isLast ? 'Get started' : 'Next'} onPress={handleNext} />
+          <Button
+            size="lg"
+            style={tw`${isLast ? '' : 'opacity-0'}`}
+            title="Sign in"
+            variant="outlined"
+            onPress={isLast ? handleSignIn : undefined}
+          />
+        </View>
       </View>
     </View>
   );
