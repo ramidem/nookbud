@@ -51,12 +51,18 @@ export function SignInScreen({ navigation }: Props) {
       return;
     }
 
-    // Navigate directly — onAuthStateChange fires too early
-    if (navigationRef.isReady()) {
-      const spaces = await SpaceService.listSpaces();
-      const target = spaces.length === 0 ? 'Setup' : 'Main';
-      navigationRef.reset({ index: 0, routes: [{ name: target }] });
-    }
+    // Navigate directly — retry until navigationRef is ready
+    const spaces = await SpaceService.listSpaces();
+    const target = spaces.length === 0 ? 'Setup' : 'Main';
+    const navigate = () => {
+      if (navigationRef.isReady()) {
+        navigationRef.reset({ index: 0, routes: [{ name: target }] });
+      } else {
+        setTimeout(navigate, 100);
+      }
+    };
+
+    navigate();
   };
 
   const handleGoogleSignIn = async () => {

@@ -63,11 +63,17 @@ export function SignUpScreen({ navigation }: Props) {
           return;
         }
 
-        if (navigationRef.isReady()) {
-          const spaces = await SpaceService.listSpaces();
-          const target = spaces.length === 0 ? 'Setup' : 'Main';
-          navigationRef.reset({ index: 0, routes: [{ name: target }] });
-        }
+        const spaces = await SpaceService.listSpaces();
+        const target = spaces.length === 0 ? 'Setup' : 'Main';
+        const navigateAfterSignIn = () => {
+          if (navigationRef.isReady()) {
+            navigationRef.reset({ index: 0, routes: [{ name: target }] });
+          } else {
+            setTimeout(navigateAfterSignIn, 100);
+          }
+        };
+
+        navigateAfterSignIn();
 
         return;
       }
@@ -79,11 +85,16 @@ export function SignUpScreen({ navigation }: Props) {
 
     setIsLoading(false);
 
-    // Navigate to Setup directly — onAuthStateChange fires too early
-    // before NavigationContainer is ready to accept navigation commands
-    if (navigationRef.isReady()) {
-      navigationRef.reset({ index: 0, routes: [{ name: 'Setup' }] });
-    }
+    // Navigate to Setup — retry a few times in case navigationRef isn't ready yet
+    const navigate = () => {
+      if (navigationRef.isReady()) {
+        navigationRef.reset({ index: 0, routes: [{ name: 'Setup' }] });
+      } else {
+        setTimeout(navigate, 100);
+      }
+    };
+
+    navigate();
   };
 
   const handleGoogleSignIn = async () => {
