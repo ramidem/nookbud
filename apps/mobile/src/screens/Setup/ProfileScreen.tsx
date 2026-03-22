@@ -48,42 +48,41 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
     LogService.info('setup', 'Profile submit started', { trace });
 
     try {
-      // Get Supabase auth user first so we can anchor existence check to their UID.
+      // Must have a live auth session to proceed.
       const authUser = await UserService.getCurrentAuthUser();
       LogService.debug('setup', 'Auth user fetched', { hasAuthUser: !!authUser, trace });
 
-      // If we have an auth UID, pin it in MMKV so hasUser() finds any existing row
-      // (handles the case where MMKV was cleared but the SQLite row already exists).
-      if (authUser?.id) {
-        UserService.setCurrentUserId(authUser.id);
+      if (!authUser) {
+        // Session expired or user was deleted mid-flow — send back to sign in.
+        LogService.warn('setup', 'No auth session on Profile submit — redirecting to Auth', {
+          trace,
+        });
+        LogService.clearTrace();
+        rootNavigation.reset({ index: 0, routes: [{ name: 'Auth' }] });
+
+        return;
       }
+
+      // Pin auth UID in MMKV so hasUser() / getCurrentUser() can find any existing row.
+      UserService.setCurrentUserId(authUser.id);
 
       const existing = await UserService.hasUser();
       LogService.debug('setup', 'User existence check', { existing, trace });
 
-      if (existing) {
-        await UserService.updateUser({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          middleName: data.middleName || undefined,
-        });
-        LogService.info('setup', 'User updated', { trace });
-      } else {
-        await UserService.createUser({
-          email: authUser?.email,
-          firstName: data.firstName,
-          id: authUser?.id,
-          lastName: data.lastName,
-          middleName: data.middleName || undefined,
-        });
-        LogService.info('setup', 'User created', { trace });
-      }
+      // upsert handles both create and retry-after-crash in one call
+      await UserService.upsertUser({
+        email: authUser.email,
+        firstName: data.firstName,
+        id: authUser.id,
+        lastName: data.lastName,
+        middleName: data.middleName || undefined,
+      });
+      LogService.info('setup', existing ? 'User upserted (update)' : 'User upserted (create)', {
+        trace,
+      });
 
-      // Sync to Supabase if we have an auth user
-      if (authUser?.id) {
-        await UserService.syncToSupabase(authUser.id);
-        LogService.info('setup', 'User synced to Supabase', { trace });
-      }
+      await UserService.syncToSupabase(authUser.id);
+      LogService.info('setup', 'User synced to Supabase', { trace });
 
       // Auto-create a default space so the user lands in Main immediately
       await SpaceService.createSpace('My Space');

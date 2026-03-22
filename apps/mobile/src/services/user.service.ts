@@ -257,4 +257,53 @@ export const UserService = {
 
     return this.getCurrentUser();
   },
+
+  /**
+   * Upsert a user by ID — safe for both first-time create and retry-after-crash.
+   * Uses onConflictDoUpdate so a duplicate id never throws.
+   */
+  async upsertUser(data: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+    email?: string;
+    role?: UserRole;
+    timezone?: string;
+    defaultCurrency?: string;
+  }): Promise<User> {
+    const now = new Date();
+    const row: NewUser = {
+      defaultCurrency: data.defaultCurrency ?? getDeviceCurrency(),
+      email: data.email,
+      firstName: data.firstName,
+      id: data.id,
+      lastName: data.lastName,
+      middleName: data.middleName,
+      role: data.role,
+      timezone: data.timezone ?? getDeviceTimezone(),
+    };
+
+    await db
+      .insert(users)
+      .values({ ...row, createdAt: now })
+      .onConflictDoUpdate({
+        set: {
+          defaultCurrency: row.defaultCurrency,
+          email: row.email,
+          firstName: row.firstName,
+          lastName: row.lastName,
+          middleName: row.middleName,
+          role: row.role,
+          timezone: row.timezone,
+        },
+        target: users.id,
+      });
+
+    storage.set(CURRENT_USER_ID_KEY, data.id);
+
+    const [user] = await db.select().from(users).where(eq(users.id, data.id));
+
+    return user;
+  },
 };
