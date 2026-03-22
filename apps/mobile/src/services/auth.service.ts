@@ -110,10 +110,6 @@ export const AuthService = {
    * Opens the system browser → Google consent → Supabase → coparent://auth/callback
    * The deep link handler in RootNavigator picks up the session from the URL fragment.
    */
-  // TODO: Cross-provider account linking — if a user signs up with email/password
-  // then later uses Google OAuth with the same email, Supabase creates a separate user
-  // instead of merging them. Auto-linking requires Supabase Pro (linkIdentity API).
-  // Implement post-launch. Track: memory/2026-03-22.md
   async signInWithGoogle(): Promise<{ error: string | null }> {
     const client = getSupabaseClient();
     if (!client) return { error: SUPABASE_NOT_CONFIGURED };
