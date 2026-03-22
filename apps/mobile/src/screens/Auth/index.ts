@@ -1,2 +1,2 @@
-export { SignInScreen } from './sign-in.screen';
-export { SignUpScreen } from './sign-up.screen';
+export { SignInScreen } from './SignInScreen';
+export { CheckEmailScreen } from './CheckEmailScreen';

@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import { createMMKV } from 'react-native-mmkv';
 
 import CONFIG from '@/config';
+import { getSupabaseClient } from '@/config/supabase';
 import { db } from '@/database';
 import { users, type User, type NewUser } from '@/database/schema';
 
@@ -123,6 +124,40 @@ export const UserService = {
     const user = await this.getUserById(userId);
 
     return user !== null;
+  },
+
+  /**
+   * Upsert the current local user into Supabase public.users.
+   * Called after Supabase auth is established so auth.uid() matches the row id.
+   * The Supabase user id (from auth) replaces the local UUID so RLS works correctly.
+   */
+  async syncToSupabase(supabaseUserId: string): Promise<void> {
+    const client = getSupabaseClient();
+    if (!client) return;
+
+    const localUser = await this.getCurrentUser();
+    if (!localUser) return;
+
+    const { error } = await client.from('users').upsert(
+      {
+        default_currency: localUser.defaultCurrency,
+        display_name: localUser.displayName,
+        email: localUser.email,
+        id: supabaseUserId,
+        timezone: localUser.timezone,
+      },
+      { onConflict: 'id' },
+    );
+
+    if (error) {
+      throw new Error(`Failed to sync user to Supabase: ${error.message}`);
+    }
+
+    // Update local user id to match Supabase auth.uid() so they stay in sync
+    if (localUser.id !== supabaseUserId) {
+      await db.update(users).set({ email: localUser.email }).where(eq(users.id, localUser.id));
+      storage.set(CURRENT_USER_ID_KEY, supabaseUserId);
+    }
   },
 
   /**
