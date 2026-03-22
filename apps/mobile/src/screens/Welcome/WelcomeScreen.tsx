@@ -76,16 +76,6 @@ export function WelcomeScreen({ navigation }: Props) {
         </View>
       )}
 
-      {/* Brand header */}
-      <View style={tw`items-center pb-2 pt-16`}>
-        <Typography style={tw`text-foreground font-serif-bold text-4xl italic tracking-tight`}>
-          CoParent
-        </Typography>
-        <Typography style={tw`text-subtitle mt-1 text-xs`}>
-          For everyone raising a child together.
-        </Typography>
-      </View>
-
       {/* Slides */}
       <PagerView
         ref={pagerRef}
