@@ -3,9 +3,9 @@ import React, { useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
-import CertificateIllustration from './illustrations/certificate.svg';
-import EverywhereTogether from './illustrations/everywhere-together.svg';
-import NotedIllustration from './illustrations/noted.svg';
+import SlideLog from './illustrations/slide-1-log.svg';
+import SlideCoordinate from './illustrations/slide-2-coordinate.svg';
+import SlideVerified from './illustrations/slide-3-verified.svg';
 
 import { Button, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
@@ -22,19 +22,19 @@ interface Slide {
 
 const SLIDES: Slide[] = [
   {
-    Illustration: NotedIllustration,
+    Illustration: SlideLog,
     body: 'Keep a record of every moment — notes, photos, and timestamps. All in one place.',
     headline: 'Log what happened.',
     key: 'log',
   },
   {
-    Illustration: EverywhereTogether,
+    Illustration: SlideCoordinate,
     body: 'Schedules, agreements, updates. Everyone involved stays on the same page.',
     headline: 'Stay coordinated.',
     key: 'coordinate',
   },
   {
-    Illustration: CertificateIllustration,
+    Illustration: SlideVerified,
     body: 'Every record is timestamped and tamper-proof. Always there when you need it.',
     headline: 'Everything verified.',
     key: 'verified',
