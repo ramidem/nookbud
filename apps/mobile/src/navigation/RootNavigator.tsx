@@ -8,17 +8,19 @@ import {
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, ActivityIndicator, Linking } from 'react-native';
 
+import { AuthNavigator } from './AuthNavigator';
 import { MainNavigator } from './MainNavigator';
 import { OnboardingNavigator } from './OnboardingNavigator';
 
 import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
-import { UserService, NotificationService, SpaceService } from '@/services';
+import { AuthService, UserService, NotificationService, SpaceService } from '@/services';
 import { useLocalStorageStore } from '@/stores';
 import { colors } from '@/tailwind';
 
 export type RootStackParamList = {
+  Auth: undefined;
   Onboarding: undefined;
   Main: undefined;
   AcceptInvite: { token?: string };
@@ -27,6 +29,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const INVITE_PREFIX = 'coparent://invite/';
+const AUTH_CALLBACK_PREFIX = 'coparent://auth/callback';
 const MIN_TOKEN_LENGTH = 6;
 
 function extractInviteToken(url: string): string | null {
@@ -39,9 +42,28 @@ function extractInviteToken(url: string): string | null {
   return null;
 }
 
+function extractAuthParams(url: string): { tokenHash: string; type: string } | null {
+  if (!url.startsWith(AUTH_CALLBACK_PREFIX)) return null;
+
+  try {
+    // Supabase magic link sends params as hash fragment or query string
+    const raw = url.includes('#') ? url.split('#')[1] : url.split('?')[1];
+    if (!raw) return null;
+
+    const params = new URLSearchParams(raw);
+    const tokenHash = params.get('token_hash');
+    const type = params.get('type') ?? 'magiclink';
+
+    if (!tokenHash) return null;
+
+    return { tokenHash, type };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Handles notification tap navigation.
- * Navigates to the Timeline tab > EntryDetail when a notification is tapped.
  */
 function NotificationHandler() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -63,37 +85,43 @@ function NotificationHandler() {
 }
 
 /**
- * Handles deep link navigation for invite URLs.
- * Separated into a child component so it has access to the navigation context.
+ * Handles deep links for invite URLs and auth callbacks.
  */
-function DeepLinkHandler() {
+function DeepLinkHandler({
+  onAuthCallback,
+}: {
+  onAuthCallback: (tokenHash: string, type: string) => Promise<void>;
+}) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleDeepLink = useCallback(
-    (event: { url: string }) => {
+    async (event: { url: string }) => {
+      // Auth callback (magic link)
+      const authParams = extractAuthParams(event.url);
+      if (authParams) {
+        await onAuthCallback(authParams.tokenHash, authParams.type);
+
+        return;
+      }
+
+      // Invite deep link
       const token = extractInviteToken(event.url);
       if (token) {
         navigation.navigate('AcceptInvite', { token });
       }
     },
-    [navigation],
+    [navigation, onAuthCallback],
   );
 
   useEffect(() => {
     const subscription = Linking.addEventListener('url', handleDeepLink);
 
-    // Handle deep link that opened the app
     Linking.getInitialURL().then((url) => {
-      if (url) {
-        const token = extractInviteToken(url);
-        if (token) {
-          navigation.navigate('AcceptInvite', { token });
-        }
-      }
+      if (url) handleDeepLink({ url });
     });
 
     return () => subscription.remove();
-  }, [handleDeepLink, navigation]);
+  }, [handleDeepLink]);
 
   return null;
 }
@@ -112,42 +140,89 @@ async function initializeActiveSpace() {
   }
 }
 
+type AppRoute = 'Auth' | 'Onboarding' | 'Main';
+
 export function RootNavigator() {
   const tw = useTw();
   const { error: migrationError, success: migrationSuccess } = useDbMigrations();
   const [isLoading, setIsLoading] = useState(true);
-  const [hasUser, setHasUser] = useState(false);
+  const [initialRoute, setInitialRoute] = useState<AppRoute>('Auth');
   const permissionRequested = useRef(false);
 
   useEffect(() => {
     if (migrationSuccess) {
-      checkUser();
+      bootstrap();
     }
   }, [migrationSuccess]);
 
-  const checkUser = async () => {
-    try {
-      const exists = await UserService.hasUser();
-      setHasUser(exists);
+  // Listen for Supabase auth state changes (e.g. token refresh, sign out)
+  useEffect(
+    () =>
+      AuthService.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') {
+          setInitialRoute('Auth');
+        } else if (event === 'SIGNED_IN' && session) {
+          // Sync user to Supabase public.users if needed
+          UserService.syncToSupabase(session.user.id).catch(() => {});
+        }
+      }),
+    [],
+  );
 
-      // Request notification permissions once after onboarding completes
-      if (exists && !permissionRequested.current && !NotificationService.hasRequestedPermission()) {
-        permissionRequested.current = true;
-        NotificationService.requestPermissions().catch(() => {});
+  const bootstrap = async () => {
+    try {
+      const [hasLocalUser, isAuthenticated] = await Promise.all([
+        UserService.hasUser(),
+        AuthService.isAuthenticated(),
+      ]);
+
+      if (!hasLocalUser) {
+        // New user — go through onboarding first, then auth
+        setInitialRoute('Onboarding');
+      } else if (!isAuthenticated) {
+        // Has local profile but not signed into Supabase
+        setInitialRoute('Auth');
+      } else {
+        // Fully set up
+        setInitialRoute('Main');
       }
 
-      // Initialize active Space context
-      if (exists) {
+      if (hasLocalUser) {
+        if (!permissionRequested.current && !NotificationService.hasRequestedPermission()) {
+          permissionRequested.current = true;
+          NotificationService.requestPermissions().catch(() => {});
+        }
+
         await initializeActiveSpace();
       }
     } catch {
-      // Silent fail — user check is non-critical
+      // Fallback to auth screen on error
+      setInitialRoute('Auth');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Show loading while migrations run or checking user
+  /**
+   * Called when the magic link deep link fires.
+   * Verifies the OTP token, syncs user to Supabase, navigates to Main.
+   */
+  const handleAuthCallback = useCallback(async (tokenHash: string, type: string) => {
+    try {
+      const { error, user } = await AuthService.verifyOtp(tokenHash, type as 'magiclink' | 'email');
+
+      if (error || !user) return;
+
+      // Sync local profile to Supabase public.users
+      await UserService.syncToSupabase(user.id).catch(() => {});
+
+      await initializeActiveSpace();
+      setInitialRoute('Main');
+    } catch {
+      // Silent — user stays on current screen
+    }
+  }, []);
+
   if (!migrationSuccess || isLoading) {
     return (
       <View style={tw`bg-surface flex-1 items-center justify-center`}>
@@ -166,15 +241,16 @@ export function RootNavigator() {
   return (
     <NavigationContainer>
       <BottomSheetModalProvider>
-        <DeepLinkHandler />
+        <DeepLinkHandler onAuthCallback={handleAuthCallback} />
         <NotificationHandler />
         <Stack.Navigator
-          initialRouteName={hasUser ? 'Main' : 'Onboarding'}
+          initialRouteName={initialRoute}
           screenOptions={{
             animation: 'fade',
             headerShown: false,
           }}
         >
+          <Stack.Screen component={AuthNavigator} name="Auth" />
           <Stack.Screen component={OnboardingNavigator} name="Onboarding" />
           <Stack.Screen component={MainNavigator} name="Main" />
           <Stack.Screen
