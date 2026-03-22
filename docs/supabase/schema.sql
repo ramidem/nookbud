@@ -6,15 +6,7 @@
 -- Row Level Security (RLS) restricts access to the user's own data.
 --
 -- Last updated: 2026-03-22
--- Reflects SQLite migrations 0000–0005:
---   0000 — core tables (users, relationships, children, entries, entry_versions,
---           attachments, acknowledgments, disputes, dispute_responses, audit_logs)
---   0001 — spaces abstraction (spaces, space_members; replaces relationships as
---           primary grouping unit)
---   0002 — RBAC simplification (roles: owner, editor, viewer)
---   0003 — space_members.label column
---   0004 — resources table
---   0005 — spaces.archived_at column
+-- Reflects SQLite migrations 0000–0005
 
 -- =============================================================================
 -- EXTENSIONS
@@ -23,40 +15,18 @@
 create extension if not exists "pgcrypto";
 
 -- =============================================================================
--- USERS
+-- TABLES
 -- =============================================================================
--- Local user profile. One row per device user, tied to auth.uid().
 
 create table users (
   id               uuid primary key default gen_random_uuid(),
   email            text,
   display_name     text not null,
   timezone         text not null default 'UTC',
-  default_currency text not null default 'USD',  -- ISO 4217
+  default_currency text not null default 'USD',
   created_at       timestamptz not null default now(),
   updated_at       timestamptz not null default now()
 );
-
-alter table users enable row level security;
-
-create policy "users_select_own"
-  on users for select
-  using (auth.uid() = id);
-
-create policy "users_insert_own"
-  on users for insert
-  with check (auth.uid() = id);
-
-create policy "users_update_own"
-  on users for update
-  using (auth.uid() = id);
-
--- =============================================================================
--- RELATIONSHIPS
--- =============================================================================
--- Legacy: a co-parenting relationship between two users.
--- Kept for data integrity; spaces now serve as the primary grouping unit.
--- parent_b_id is nullable until the partner accepts the invite.
 
 create table relationships (
   id                uuid primary key default gen_random_uuid(),
@@ -68,49 +38,16 @@ create table relationships (
   updated_at        timestamptz not null default now()
 );
 
-alter table relationships enable row level security;
-
-create policy "relationships_access"
-  on relationships for all
-  using (
-    auth.uid() = parent_a_id or auth.uid() = parent_b_id
-  );
-
--- =============================================================================
--- SPACES
--- =============================================================================
--- A named shared space (introduced in migration 0001 to replace relationships
--- as the primary grouping unit). Supports archiving (migration 0005).
-
 create table spaces (
   id          uuid primary key default gen_random_uuid(),
   name        text not null,
   emoji       text not null default '🏠',
   color       text not null default '#6F8F7B',
   created_by  uuid not null references users(id),
-  archived_at timestamptz,                        -- null = active (migration 0005)
+  archived_at timestamptz,
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now()
 );
-
-alter table spaces enable row level security;
-
--- Users can access spaces they are members of.
-create policy "spaces_access_via_membership"
-  on spaces for all
-  using (
-    exists (
-      select 1 from space_members sm
-      where sm.space_id = spaces.id
-        and sm.user_id = auth.uid()
-    )
-  );
-
--- =============================================================================
--- SPACE MEMBERS
--- =============================================================================
--- Members of a space with a role (owner | editor | viewer) and optional label.
--- Roles simplified in migration 0002; label column added in migration 0003.
 
 create table space_members (
   id          uuid primary key default gen_random_uuid(),
@@ -118,7 +55,7 @@ create table space_members (
   user_id     uuid not null references users(id),
   role        text not null default 'editor'
                 check (role in ('owner', 'editor', 'viewer')),
-  label       text                                -- migration 0003; nullable
+  label       text
                 check (label in (
                   'co-parent', 'guardian', 'grandparent', 'relative',
                   'lawyer', 'social-worker', 'assistant', 'other'
@@ -129,24 +66,6 @@ create table space_members (
   updated_at  timestamptz not null default now()
 );
 
-alter table space_members enable row level security;
-
--- Users can see members of spaces they belong to.
-create policy "space_members_access_via_space"
-  on space_members for all
-  using (
-    exists (
-      select 1 from space_members sm
-      where sm.space_id = space_members.space_id
-        and sm.user_id = auth.uid()
-    )
-  );
-
--- =============================================================================
--- CHILDREN
--- =============================================================================
--- Children associated with a relationship.
-
 create table children (
   id              uuid primary key default gen_random_uuid(),
   relationship_id uuid not null references relationships(id),
@@ -156,23 +75,6 @@ create table children (
   updated_at      timestamptz not null default now()
 );
 
-alter table children enable row level security;
-
-create policy "children_access_via_relationship"
-  on children for all
-  using (
-    exists (
-      select 1 from relationships r
-      where r.id = children.relationship_id
-        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
-    )
-  );
-
--- =============================================================================
--- ENTRIES
--- =============================================================================
--- Core record unit. Immutable once created; edits produce a new entry_version.
-
 create table entries (
   id                 uuid primary key default gen_random_uuid(),
   relationship_id    uuid not null references relationships(id),
@@ -181,27 +83,10 @@ create table entries (
   created_by         uuid not null references users(id),
   status             text not null default 'active'
                        check (status in ('active', 'deleted')),
-  current_version_id uuid,                        -- FK set after entry_versions insert
+  current_version_id uuid,
   created_at         timestamptz not null default now(),
   updated_at         timestamptz not null default now()
 );
-
-alter table entries enable row level security;
-
-create policy "entries_access_via_relationship"
-  on entries for all
-  using (
-    exists (
-      select 1 from relationships r
-      where r.id = entries.relationship_id
-        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
-    )
-  );
-
--- =============================================================================
--- ENTRY VERSIONS
--- =============================================================================
--- Immutable version history for each entry. Enables tamper detection.
 
 create table entry_versions (
   id             uuid primary key default gen_random_uuid(),
@@ -214,36 +99,17 @@ create table entry_versions (
   updated_at     timestamptz not null default now()
 );
 
--- Add deferred FK for entries.current_version_id now that entry_versions exists.
 alter table entries
   add constraint entries_current_version_id_fkey
   foreign key (current_version_id) references entry_versions(id)
   deferrable initially deferred;
-
-alter table entry_versions enable row level security;
-
-create policy "entry_versions_access_via_entry"
-  on entry_versions for all
-  using (
-    exists (
-      select 1 from entries e
-      join relationships r on r.id = e.relationship_id
-      where e.id = entry_versions.entry_id
-        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
-    )
-  );
-
--- =============================================================================
--- ATTACHMENTS
--- =============================================================================
--- Files attached to an entry version. SHA-256 hash for integrity verification.
 
 create table attachments (
   id                uuid primary key default gen_random_uuid(),
   entry_version_id  uuid not null references entry_versions(id),
   original_filename text not null,
   storage_path      text not null,
-  file_hash         text not null,        -- SHA-256
+  file_hash         text not null,
   file_size_bytes   integer not null,
   mime_type         text not null,
   uploaded_by       uuid not null references users(id),
@@ -252,53 +118,16 @@ create table attachments (
   updated_at        timestamptz not null default now()
 );
 
-alter table attachments enable row level security;
-
-create policy "attachments_access_via_entry_version"
-  on attachments for all
-  using (
-    exists (
-      select 1 from entry_versions ev
-      join entries e on e.id = ev.entry_id
-      join relationships r on r.id = e.relationship_id
-      where ev.id = attachments.entry_version_id
-        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
-    )
-  );
-
--- =============================================================================
--- ACKNOWLEDGMENTS
--- =============================================================================
--- Partner acknowledgment of an entry (pending | acknowledged | disputed).
-
 create table acknowledgments (
   id         uuid primary key default gen_random_uuid(),
   entry_id   uuid not null references entries(id),
   status     text not null default 'pending'
                check (status in ('pending', 'acknowledged', 'disputed')),
-  acted_by   uuid references users(id),    -- null until partner acts
+  acted_by   uuid references users(id),
   comment    text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
-
-alter table acknowledgments enable row level security;
-
-create policy "acknowledgments_access_via_entry"
-  on acknowledgments for all
-  using (
-    exists (
-      select 1 from entries e
-      join relationships r on r.id = e.relationship_id
-      where e.id = acknowledgments.entry_id
-        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
-    )
-  );
-
--- =============================================================================
--- DISPUTES
--- =============================================================================
--- A dispute raised against an entry by a partner.
 
 create table disputes (
   id          uuid primary key default gen_random_uuid(),
@@ -309,24 +138,6 @@ create table disputes (
   updated_at  timestamptz not null default now()
 );
 
-alter table disputes enable row level security;
-
-create policy "disputes_access_via_entry"
-  on disputes for all
-  using (
-    exists (
-      select 1 from entries e
-      join relationships r on r.id = e.relationship_id
-      where e.id = disputes.entry_id
-        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
-    )
-  );
-
--- =============================================================================
--- DISPUTE RESPONSES
--- =============================================================================
--- Text responses within a dispute thread.
-
 create table dispute_responses (
   id            uuid primary key default gen_random_uuid(),
   dispute_id    uuid not null references disputes(id),
@@ -335,26 +146,6 @@ create table dispute_responses (
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
 );
-
-alter table dispute_responses enable row level security;
-
-create policy "dispute_responses_access_via_dispute"
-  on dispute_responses for all
-  using (
-    exists (
-      select 1 from disputes d
-      join entries e on e.id = d.entry_id
-      join relationships r on r.id = e.relationship_id
-      where d.id = dispute_responses.dispute_id
-        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
-    )
-  );
-
--- =============================================================================
--- RESOURCES
--- =============================================================================
--- Shared documents/files linked to a space and optionally a child.
--- Supports soft-delete via deleted_at. (Migration 0004)
 
 create table resources (
   id                uuid primary key default gen_random_uuid(),
@@ -367,68 +158,175 @@ create table resources (
                         'medical', 'school', 'legal', 'financial',
                         'identity', 'insurance', 'other'
                       )),
-  file_hash         text not null,        -- SHA-256
+  file_hash         text not null,
   storage_path      text not null,
   original_filename text not null,
   file_size_bytes   integer not null,
   mime_type         text not null,
   uploaded_by       uuid not null references users(id),
-  deleted_at        timestamptz,          -- null = active; soft-delete
+  deleted_at        timestamptz,
   created_at        timestamptz not null default now(),
   updated_at        timestamptz not null default now()
 );
 
-alter table resources enable row level security;
+create table audit_logs (
+  id            uuid primary key default gen_random_uuid(),
+  user_id       uuid not null references users(id),
+  action        text not null
+                  check (action in (
+                    'create', 'update', 'soft_delete', 'acknowledge',
+                    'dispute', 'respond', 'archive'
+                  )),
+  entity_type   text not null
+                  check (entity_type in (
+                    'user', 'relationship', 'space', 'space_member',
+                    'child', 'entry', 'attachment', 'acknowledgment',
+                    'dispute', 'dispute_response', 'resource'
+                  )),
+  entity_id     text not null,
+  metadata_json text,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
 
-create policy "resources_access_via_space"
-  on resources for all
+-- =============================================================================
+-- ROW LEVEL SECURITY
+-- =============================================================================
+
+alter table users enable row level security;
+alter table relationships enable row level security;
+alter table spaces enable row level security;
+alter table space_members enable row level security;
+alter table children enable row level security;
+alter table entries enable row level security;
+alter table entry_versions enable row level security;
+alter table attachments enable row level security;
+alter table acknowledgments enable row level security;
+alter table disputes enable row level security;
+alter table dispute_responses enable row level security;
+alter table resources enable row level security;
+alter table audit_logs enable row level security;
+
+-- users
+create policy "users_select_own" on users for select using (auth.uid() = id);
+create policy "users_insert_own" on users for insert with check (auth.uid() = id);
+create policy "users_update_own" on users for update using (auth.uid() = id);
+
+-- relationships
+create policy "relationships_access" on relationships for all
+  using (auth.uid() = parent_a_id or auth.uid() = parent_b_id);
+
+-- spaces (via space_members — table now exists)
+create policy "spaces_access_via_membership" on spaces for all
   using (
     exists (
       select 1 from space_members sm
-      where sm.space_id = resources.space_id
-        and sm.user_id = auth.uid()
+      where sm.space_id = spaces.id and sm.user_id = auth.uid()
     )
   );
 
--- =============================================================================
--- AUDIT LOGS
--- =============================================================================
--- Complete audit trail for compliance. Records every mutation.
+-- space_members
+create policy "space_members_access_via_space" on space_members for all
+  using (
+    exists (
+      select 1 from space_members sm
+      where sm.space_id = space_members.space_id and sm.user_id = auth.uid()
+    )
+  );
 
-create table audit_logs (
-  id           uuid primary key default gen_random_uuid(),
-  user_id      uuid not null references users(id),
-  action       text not null
-                 check (action in (
-                   'create', 'update', 'soft_delete', 'acknowledge',
-                   'dispute', 'respond', 'archive'
-                 )),
-  entity_type  text not null
-                 check (entity_type in (
-                   'user', 'relationship', 'space', 'space_member',
-                   'child', 'entry', 'attachment', 'acknowledgment',
-                   'dispute', 'dispute_response', 'resource'
-                 )),
-  entity_id    text not null,
-  metadata_json text,
-  created_at   timestamptz not null default now(),
-  updated_at   timestamptz not null default now()
-);
+-- children
+create policy "children_access_via_relationship" on children for all
+  using (
+    exists (
+      select 1 from relationships r
+      where r.id = children.relationship_id
+        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
+    )
+  );
 
-alter table audit_logs enable row level security;
+-- entries
+create policy "entries_access_via_relationship" on entries for all
+  using (
+    exists (
+      select 1 from relationships r
+      where r.id = entries.relationship_id
+        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
+    )
+  );
 
-create policy "audit_logs_select_own"
-  on audit_logs for select
-  using (auth.uid() = user_id);
+-- entry_versions
+create policy "entry_versions_access_via_entry" on entry_versions for all
+  using (
+    exists (
+      select 1 from entries e
+      join relationships r on r.id = e.relationship_id
+      where e.id = entry_versions.entry_id
+        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
+    )
+  );
 
-create policy "audit_logs_insert_own"
-  on audit_logs for insert
-  with check (auth.uid() = user_id);
+-- attachments
+create policy "attachments_access_via_entry_version" on attachments for all
+  using (
+    exists (
+      select 1 from entry_versions ev
+      join entries e on e.id = ev.entry_id
+      join relationships r on r.id = e.relationship_id
+      where ev.id = attachments.entry_version_id
+        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
+    )
+  );
+
+-- acknowledgments
+create policy "acknowledgments_access_via_entry" on acknowledgments for all
+  using (
+    exists (
+      select 1 from entries e
+      join relationships r on r.id = e.relationship_id
+      where e.id = acknowledgments.entry_id
+        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
+    )
+  );
+
+-- disputes
+create policy "disputes_access_via_entry" on disputes for all
+  using (
+    exists (
+      select 1 from entries e
+      join relationships r on r.id = e.relationship_id
+      where e.id = disputes.entry_id
+        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
+    )
+  );
+
+-- dispute_responses
+create policy "dispute_responses_access_via_dispute" on dispute_responses for all
+  using (
+    exists (
+      select 1 from disputes d
+      join entries e on e.id = d.entry_id
+      join relationships r on r.id = e.relationship_id
+      where d.id = dispute_responses.dispute_id
+        and (auth.uid() = r.parent_a_id or auth.uid() = r.parent_b_id)
+    )
+  );
+
+-- resources
+create policy "resources_access_via_space" on resources for all
+  using (
+    exists (
+      select 1 from space_members sm
+      where sm.space_id = resources.space_id and sm.user_id = auth.uid()
+    )
+  );
+
+-- audit_logs
+create policy "audit_logs_select_own" on audit_logs for select using (auth.uid() = user_id);
+create policy "audit_logs_insert_own" on audit_logs for insert with check (auth.uid() = user_id);
 
 -- =============================================================================
 -- UPDATED_AT TRIGGERS
 -- =============================================================================
--- Auto-update `updated_at` on row modification for delta-sync queries.
 
 create or replace function update_updated_at()
 returns trigger as $$
@@ -438,37 +336,23 @@ begin
 end;
 $$ language plpgsql;
 
-create trigger users_updated_at
-  before update on users for each row execute function update_updated_at();
-create trigger relationships_updated_at
-  before update on relationships for each row execute function update_updated_at();
-create trigger spaces_updated_at
-  before update on spaces for each row execute function update_updated_at();
-create trigger space_members_updated_at
-  before update on space_members for each row execute function update_updated_at();
-create trigger children_updated_at
-  before update on children for each row execute function update_updated_at();
-create trigger entries_updated_at
-  before update on entries for each row execute function update_updated_at();
-create trigger entry_versions_updated_at
-  before update on entry_versions for each row execute function update_updated_at();
-create trigger attachments_updated_at
-  before update on attachments for each row execute function update_updated_at();
-create trigger acknowledgments_updated_at
-  before update on acknowledgments for each row execute function update_updated_at();
-create trigger disputes_updated_at
-  before update on disputes for each row execute function update_updated_at();
-create trigger dispute_responses_updated_at
-  before update on dispute_responses for each row execute function update_updated_at();
-create trigger resources_updated_at
-  before update on resources for each row execute function update_updated_at();
-create trigger audit_logs_updated_at
-  before update on audit_logs for each row execute function update_updated_at();
+create trigger users_updated_at before update on users for each row execute function update_updated_at();
+create trigger relationships_updated_at before update on relationships for each row execute function update_updated_at();
+create trigger spaces_updated_at before update on spaces for each row execute function update_updated_at();
+create trigger space_members_updated_at before update on space_members for each row execute function update_updated_at();
+create trigger children_updated_at before update on children for each row execute function update_updated_at();
+create trigger entries_updated_at before update on entries for each row execute function update_updated_at();
+create trigger entry_versions_updated_at before update on entry_versions for each row execute function update_updated_at();
+create trigger attachments_updated_at before update on attachments for each row execute function update_updated_at();
+create trigger acknowledgments_updated_at before update on acknowledgments for each row execute function update_updated_at();
+create trigger disputes_updated_at before update on disputes for each row execute function update_updated_at();
+create trigger dispute_responses_updated_at before update on dispute_responses for each row execute function update_updated_at();
+create trigger resources_updated_at before update on resources for each row execute function update_updated_at();
+create trigger audit_logs_updated_at before update on audit_logs for each row execute function update_updated_at();
 
 -- =============================================================================
 -- INDEXES
 -- =============================================================================
--- Optimize common sync and lookup queries.
 
 create index idx_spaces_created_by on spaces(created_by);
 create index idx_spaces_archived_at on spaces(archived_at);
