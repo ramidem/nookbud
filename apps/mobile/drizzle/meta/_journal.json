@@ -43,6 +43,13 @@
       "when": 1774569600000,
       "tag": "0005_space_archived",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1742601600000,
+      "tag": "0006_user_name_split",
+      "breakpoints": true
     }
   ]
 }

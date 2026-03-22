@@ -21,7 +21,10 @@ create extension if not exists "pgcrypto";
 create table users (
   id               uuid primary key default gen_random_uuid(),
   email            text,
-  display_name     text not null,
+  first_name       text not null default '',
+  middle_name      text,
+  last_name        text not null default '',
+  role             text check (role in ('mother', 'father', 'guardian', 'other')),
   timezone         text not null default 'UTC',
   default_currency text not null default 'USD',
   created_at       timestamptz not null default now(),

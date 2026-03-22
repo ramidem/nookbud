@@ -1,4 +1,5 @@
 import { Session, User } from '@supabase/supabase-js';
+import { Linking } from 'react-native';
 
 import { getSupabaseClient, hasSupabaseConfig } from '@/config/supabase';
 
@@ -34,6 +35,34 @@ export const AuthService = {
   },
 
   /**
+   * Exchange the URL fragment from an OAuth callback for a session.
+   * Called when the app receives coparent://auth/callback#access_token=...
+   */
+  async getSessionFromUrl(url: string): Promise<AuthResult> {
+    const client = getSupabaseClient();
+    if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
+
+    // Extract fragment params (OAuth uses hash, not query string)
+    const fragment = url.includes('#') ? url.split('#')[1] : url.split('?')[1] ?? '';
+    const params = new URLSearchParams(fragment);
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+
+    if (!accessToken || !refreshToken) {
+      return { error: 'Invalid callback URL', user: null };
+    }
+
+    const { data, error } = await client.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+
+    if (error) return { error: error.message, user: null };
+
+    return { error: null, user: data.user };
+  },
+
+  /**
    * Returns true if the user has an active Supabase session.
    */
   async isAuthenticated(): Promise<boolean> {
@@ -63,25 +92,6 @@ export const AuthService = {
   },
 
   /**
-   * Send a magic link to the given email address.
-   * User taps the link → deep link → session established.
-   */
-  async sendMagicLink(email: string): Promise<{ error: string | null }> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED };
-
-    const { error } = await client.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: REDIRECT_URL,
-        shouldCreateUser: true,
-      },
-    });
-
-    return { error: error?.message ?? null };
-  },
-
-  /**
    * Password-based sign in (kept for flexibility).
    */
   async signIn(email: string, password: string): Promise<AuthResult> {
@@ -93,6 +103,28 @@ export const AuthService = {
     if (error) return { error: error.message, user: null };
 
     return { error: null, user: data.user };
+  },
+
+  /**
+   * Sign in with Google via Supabase OAuth.
+   * Opens the system browser → Google consent → Supabase → coparent://auth/callback
+   * The deep link handler in RootNavigator picks up the session from the URL fragment.
+   */
+  async signInWithGoogle(): Promise<{ error: string | null }> {
+    const client = getSupabaseClient();
+    if (!client) return { error: SUPABASE_NOT_CONFIGURED };
+
+    const { data, error } = await client.auth.signInWithOAuth({
+      options: { redirectTo: REDIRECT_URL, skipBrowserRedirect: true },
+      provider: 'google',
+    });
+
+    if (error) return { error: error.message };
+    if (!data.url) return { error: 'No OAuth URL returned' };
+
+    await Linking.openURL(data.url);
+
+    return { error: null };
   },
 
   /**
@@ -115,24 +147,6 @@ export const AuthService = {
     if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
 
     const { data, error } = await client.auth.signUp({ email, password });
-
-    if (error) return { error: error.message, user: null };
-
-    return { error: null, user: data.user };
-  },
-
-  /**
-   * Verify a magic link token from a deep link URL.
-   * Called when the app receives a coparent://auth/callback?token_hash=...&type=... URL.
-   */
-  async verifyOtp(
-    tokenHash: string,
-    type: 'magiclink' | 'email' = 'magiclink',
-  ): Promise<AuthResult> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
-
-    const { data, error } = await client.auth.verifyOtp({ token_hash: tokenHash, type });
 
     if (error) return { error: error.message, user: null };
 
