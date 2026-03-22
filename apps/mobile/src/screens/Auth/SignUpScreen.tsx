@@ -46,7 +46,8 @@ export function SignUpScreen({ navigation }: Props) {
     setIsLoading(true);
     setServerError(null);
 
-    LogService.info('auth', 'Sign up attempt', { email: data.email });
+    const trace = LogService.startTrace();
+    LogService.info('auth', 'Sign up attempt', { email: data.email, trace });
     const { error, needsEmailConfirmation } = await AuthService.signUp(data.email, data.password);
 
     if (error) {

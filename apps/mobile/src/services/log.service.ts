@@ -30,6 +30,7 @@ interface LogEntry {
   message: string;
   metadataJson: string | null;
   tag: string;
+  traceId: string | null;
   userId: string | null;
 }
 
@@ -105,6 +106,20 @@ function generateId(): string {
 let currentUserId: string | null = null;
 
 // ------------------------------------------------------------------
+// Trace ID — correlate logs across a single logical flow
+// ------------------------------------------------------------------
+
+let currentTraceId: string | null = null;
+
+function generateTraceId(): string {
+  const RADIX = 36;
+  const ID_START = 2;
+  const ID_END = 9;
+
+  return `trace-${Date.now()}-${Math.random().toString(RADIX).slice(ID_START, ID_END)}`;
+}
+
+// ------------------------------------------------------------------
 // Core log function
 // ------------------------------------------------------------------
 
@@ -125,12 +140,14 @@ function log({ level, message, metadata, tag }: LogOptions): void {
     message,
     metadataJson: metadata ? JSON.stringify(metadata) : null,
     tag,
+    traceId: currentTraceId,
     userId: currentUserId,
   };
 
   // Always print to console in dev
   if (IS_DEV) {
-    const prefix = `[${level.toUpperCase()}][${tag}]`;
+    const traceTag = currentTraceId ? ` [${currentTraceId}]` : '';
+    const prefix = `[${level.toUpperCase()}][${tag}]${traceTag}`;
     if (level === 'error') {
       console.error(prefix, message, metadata ?? '');
     } else if (level === 'warn') {
@@ -171,6 +188,7 @@ async function flush(): Promise<void> {
     message: e.message,
     metadata_json: e.metadataJson,
     tag: e.tag,
+    trace_id: e.traceId,
     user_id: e.userId,
   }));
 
@@ -207,6 +225,13 @@ function stopAutoFlush(): void {
 // ------------------------------------------------------------------
 
 export const LogService = {
+  /**
+   * Clear the active trace ID. Call after a logical flow completes.
+   */
+  clearTrace(): void {
+    currentTraceId = null;
+  },
+
   debug(tag: string, message: string, metadata?: Record<string, unknown>): void {
     log({ level: 'debug', message, metadata, tag });
   },
@@ -222,13 +247,39 @@ export const LogService = {
     log({ level: 'info', message, metadata, tag });
   },
 
-  /** Set the current user id so logs are attributed correctly. */
+  /**
+   * Set a trace ID manually (e.g. from an incoming request header).
+   * All subsequent logs will carry this ID until cleared or replaced.
+   */
+  setTrace(id: string): void {
+    currentTraceId = id;
+  },
+
+  /**
+   * Set the current user id so logs are attributed correctly.
+   */
   setUserId(id: string | null): void {
     currentUserId = id;
   },
 
   /** Start periodic auto-flush (call on app start). */
   startAutoFlush,
+
+  /**
+   * Generate a new trace ID and activate it.
+   * Returns the ID so callers can reference or log it.
+   *
+   * Usage:
+   *   const trace = LogService.startTrace();
+   *   LogService.info('auth', 'Sign up started'); // carries trace
+   *   ...
+   *   LogService.clearTrace();
+   */
+  startTrace(): string {
+    currentTraceId = generateTraceId();
+
+    return currentTraceId;
+  },
 
   /** Stop periodic auto-flush (call on app background). */
   stopAutoFlush,
