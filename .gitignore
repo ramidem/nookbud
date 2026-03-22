@@ -146,4 +146,4 @@ web-build/
 !debug.keystore
 !dev.keystore
 !staging.keystore
-!production.keystore
+!production.keystoreclient_secret_*.json
