@@ -10,7 +10,7 @@ import {
   type NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, ActivityIndicator, Linking } from 'react-native';
+import { View, Text, Linking } from 'react-native';
 
 import { AuthNavigator } from './AuthNavigator';
 import { MainNavigator } from './MainNavigator';
@@ -21,7 +21,6 @@ import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
 import { AuthService, NotificationService, SpaceService, UserService } from '@/services';
 import { useLocalStorageStore } from '@/stores';
-import { colors } from '@/tailwind';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
@@ -231,11 +230,14 @@ export function RootNavigator() {
   if (!migrationSuccess || isLoading) {
     return (
       <View style={tw`bg-surface flex-1 items-center justify-center`}>
-        <ActivityIndicator color={colors.primary} size="large" />
+        <Text style={tw`text-foreground font-serif-bold text-5xl italic tracking-tight`}>
+          CoParent
+        </Text>
+        <Text style={tw`text-subtitle mt-2 text-sm`}>For everyone raising a child together.</Text>
         {migrationError && (
-          <View style={tw`mt-4 px-6`}>
+          <View style={tw`mt-8 px-6`}>
             <View style={tw`bg-error/15 rounded-xl p-4`}>
-              <Text style={tw`text-error`}>Migration error: {migrationError.message}</Text>
+              <Text style={tw`text-error text-sm`}>Migration error: {migrationError.message}</Text>
             </View>
           </View>
         )}
