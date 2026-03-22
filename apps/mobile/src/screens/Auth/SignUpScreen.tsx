@@ -8,7 +8,8 @@ import { z } from 'zod';
 import { Button, Divider, InputLayout, TextInput, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
-import { AuthService } from '@/services';
+import { navigationRef } from '@/navigation/RootNavigator';
+import { AuthService, SpaceService } from '@/services';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
@@ -58,9 +59,16 @@ export function SignUpScreen({ navigation }: Props) {
         setIsLoading(false);
         if (signInError) {
           setServerError('An account with this email already exists. Please sign in instead.');
+
+          return;
         }
 
-        // On success, onAuthStateChange handles navigation
+        if (navigationRef.isReady()) {
+          const spaces = await SpaceService.listSpaces();
+          const target = spaces.length === 0 ? 'Setup' : 'Main';
+          navigationRef.reset({ index: 0, routes: [{ name: target }] });
+        }
+
         return;
       }
       setIsLoading(false);
@@ -70,7 +78,12 @@ export function SignUpScreen({ navigation }: Props) {
     }
 
     setIsLoading(false);
-    // On success, RootNavigator's onAuthStateChange handles navigation
+
+    // Navigate to Setup directly — onAuthStateChange fires too early
+    // before NavigationContainer is ready to accept navigation commands
+    if (navigationRef.isReady()) {
+      navigationRef.reset({ index: 0, routes: [{ name: 'Setup' }] });
+    }
   };
 
   const handleGoogleSignIn = async () => {

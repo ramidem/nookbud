@@ -8,7 +8,8 @@ import { z } from 'zod';
 import { Button, Divider, InputLayout, TextInput, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
-import { AuthService } from '@/services';
+import { navigationRef } from '@/navigation/RootNavigator';
+import { AuthService, SpaceService } from '@/services';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
@@ -46,8 +47,16 @@ export function SignInScreen({ navigation }: Props) {
 
     if (error) {
       setServerError(error);
+
+      return;
     }
-    // On success, RootNavigator's onAuthStateChange handles navigation
+
+    // Navigate directly — onAuthStateChange fires too early
+    if (navigationRef.isReady()) {
+      const spaces = await SpaceService.listSpaces();
+      const target = spaces.length === 0 ? 'Setup' : 'Main';
+      navigationRef.reset({ index: 0, routes: [{ name: target }] });
+    }
   };
 
   const handleGoogleSignIn = async () => {
