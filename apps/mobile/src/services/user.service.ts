@@ -101,10 +101,11 @@ export const UserService = {
     middleName?: string;
     role?: UserRole;
     email?: string;
+    id?: string;
     timezone?: string;
     defaultCurrency?: string;
   }): Promise<User> {
-    const id = generateUUID();
+    const id = data.id ?? generateUUID();
     const newUser: NewUser = {
       defaultCurrency: data.defaultCurrency ?? getDeviceCurrency(),
       email: data.email,
@@ -124,6 +125,21 @@ export const UserService = {
     const [user] = await db.select().from(users).where(eq(users.id, id));
 
     return user;
+  },
+
+  /**
+   * Get the currently signed-in Supabase auth user (id + email).
+   * Returns null if Supabase is not configured or no session exists.
+   */
+  async getCurrentAuthUser(): Promise<{ id: string; email?: string } | null> {
+    const client = getSupabaseClient();
+    if (!client) return null;
+
+    const { data } = await client.auth.getUser();
+
+    if (!data.user) return null;
+
+    return { email: data.user.email, id: data.user.id };
   },
 
   /**

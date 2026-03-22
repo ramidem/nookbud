@@ -45,11 +45,31 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
     setServerError(null);
 
     try {
-      await UserService.updateUser({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        middleName: data.middleName || undefined,
-      });
+      const existing = await UserService.hasUser();
+
+      if (existing) {
+        await UserService.updateUser({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          middleName: data.middleName || undefined,
+        });
+      } else {
+        // First-time email/password sign up — no local user yet.
+        // Get Supabase auth user so the local row id matches auth.uid().
+        const authUser = await UserService.getCurrentAuthUser();
+        await UserService.createUser({
+          email: authUser?.email,
+          firstName: data.firstName,
+          id: authUser?.id,
+          lastName: data.lastName,
+          middleName: data.middleName || undefined,
+        });
+
+        // Sync to Supabase if we have an auth user
+        if (authUser?.id) {
+          await UserService.syncToSupabase(authUser.id);
+        }
+      }
 
       // Auto-create a default space so the user lands in Main immediately
       await SpaceService.createSpace('My Space');
