@@ -13,7 +13,7 @@ import { Button, InputLayout, TextInput, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import type { SetupStackParamList } from '@/navigation/SetupNavigator';
-import { SpaceService, UserService } from '@/services';
+import { LogService, SpaceService, UserService } from '@/services';
 
 type Props = NativeStackScreenProps<SetupStackParamList, 'Profile'>;
 
@@ -44,8 +44,12 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
     setIsLoading(true);
     setServerError(null);
 
+    const trace = LogService.startTrace();
+    LogService.info('setup', 'Profile submit started', { trace });
+
     try {
       const existing = await UserService.hasUser();
+      LogService.debug('setup', 'User existence check', { existing, trace });
 
       if (existing) {
         await UserService.updateUser({
@@ -53,10 +57,13 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
           lastName: data.lastName,
           middleName: data.middleName || undefined,
         });
+        LogService.info('setup', 'User updated', { trace });
       } else {
         // First-time email/password sign up — no local user yet.
         // Get Supabase auth user so the local row id matches auth.uid().
         const authUser = await UserService.getCurrentAuthUser();
+        LogService.debug('setup', 'Auth user fetched', { hasAuthUser: !!authUser, trace });
+
         await UserService.createUser({
           email: authUser?.email,
           firstName: data.firstName,
@@ -64,19 +71,26 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
           lastName: data.lastName,
           middleName: data.middleName || undefined,
         });
+        LogService.info('setup', 'User created', { trace });
 
         // Sync to Supabase if we have an auth user
         if (authUser?.id) {
           await UserService.syncToSupabase(authUser.id);
+          LogService.info('setup', 'User synced to Supabase', { trace });
         }
       }
 
       // Auto-create a default space so the user lands in Main immediately
       await SpaceService.createSpace('My Space');
+      LogService.info('setup', 'Default space created — navigating to Main', { trace });
 
+      LogService.clearTrace();
       rootNavigation.reset({ index: 0, routes: [{ name: 'Main' }] });
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : 'Failed to save profile');
+      const message = err instanceof Error ? err.message : 'Failed to save profile';
+      LogService.error('setup', 'Profile submit failed', { error: message, trace });
+      LogService.clearTrace();
+      setServerError(message);
     } finally {
       setIsLoading(false);
     }
