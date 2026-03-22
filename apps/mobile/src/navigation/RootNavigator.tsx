@@ -130,6 +130,8 @@ export function RootNavigator() {
   const tw = useTw();
   const { error: migrationError, success: migrationSuccess } = useDbMigrations();
   const [isLoading, setIsLoading] = useState(true);
+  const SPLASH_MIN_MS = 1500;
+  const splashShownAt = useRef(Date.now());
   const [initialRoute, setInitialRoute] = useState<AppRoute>('Auth');
   const permissionRequested = useRef(false);
 
@@ -196,7 +198,13 @@ export function RootNavigator() {
       // Fallback to auth screen on error
       setInitialRoute('Auth');
     } finally {
-      setIsLoading(false);
+      const elapsed = Date.now() - splashShownAt.current;
+      const remaining = Math.max(0, SPLASH_MIN_MS - elapsed);
+      if (remaining > 0) {
+        setTimeout(() => setIsLoading(false), remaining);
+      } else {
+        setIsLoading(false);
+      }
     }
   };
 
