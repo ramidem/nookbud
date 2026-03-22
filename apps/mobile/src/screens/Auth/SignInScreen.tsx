@@ -9,7 +9,7 @@ import { Button, Divider, InputLayout, TextInput, Typography } from '@/component
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
 import { navigationRef } from '@/navigation/RootNavigator';
-import { AuthService, SpaceService } from '@/services';
+import { AuthService, LogService, SpaceService } from '@/services';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
@@ -41,21 +41,25 @@ export function SignInScreen({ navigation }: Props) {
     setIsLoading(true);
     setServerError(null);
 
+    LogService.info('auth', 'Sign in attempt', { email: data.email });
     const { error } = await AuthService.signIn(data.email, data.password);
 
     setIsLoading(false);
 
     if (error) {
+      LogService.warn('auth', 'Sign in error', { error });
       setServerError(error);
 
       return;
     }
 
-    // Navigate directly — retry until navigationRef is ready
+    LogService.info('auth', 'Sign in success');
     const spaces = await SpaceService.listSpaces();
     const target = spaces.length === 0 ? 'Setup' : 'Main';
     const navigate = () => {
-      if (navigationRef.isReady()) {
+      const ready = navigationRef.isReady();
+      LogService.debug('nav', 'navigationRef ready check (signin)', { ready, target });
+      if (ready) {
         navigationRef.reset({ index: 0, routes: [{ name: target }] });
       } else {
         setTimeout(navigate, 100);
