@@ -20,6 +20,10 @@ interface Slide {
   key: string;
 }
 
+// TODO — SLIDE PROMISES (must be delivered before launch):
+// Slide 1: notes + photos + timestamps all in one entry creation flow
+// Slide 2: partner invite + shared space + both users see same data
+// Slide 3: entry versioning (immutability) + SHA-256 hashing + export
 const SLIDES: Slide[] = [
   {
     Illustration: SlideLog,
