@@ -59,6 +59,40 @@ export const UserService = {
   },
 
   /**
+   * Create a local user from Google OAuth metadata.
+   * Parses full_name into first/last and uses the Google email.
+   * Skips profile setup screen entirely.
+   */
+  async createFromGoogle(data: {
+    supabaseId: string;
+    email: string;
+    fullName?: string;
+  }): Promise<User> {
+    // Parse "First Last" or "First Middle Last" from Google's full_name
+    const parts = (data.fullName ?? '').trim().split(/\s+/);
+    const firstName = parts[0] ?? 'User';
+    const lastName = parts.length > 1 ? parts[parts.length - 1] : '';
+    const middleName = parts.length > 2 ? parts.slice(1, -1).join(' ') : undefined;
+
+    const newUser: NewUser = {
+      defaultCurrency: getDeviceCurrency(),
+      email: data.email,
+      firstName,
+      id: data.supabaseId,
+      lastName,
+      middleName,
+      timezone: getDeviceTimezone(),
+    };
+
+    await db.insert(users).values(newUser).onConflictDoNothing();
+    storage.set(CURRENT_USER_ID_KEY, data.supabaseId);
+
+    const [user] = await db.select().from(users).where(eq(users.id, data.supabaseId));
+
+    return user;
+  },
+
+  /**
    * Create a new user
    */
   async createUser(data: {

@@ -218,17 +218,32 @@ export function RootNavigator() {
 
       if (error || !user) return;
 
-      // Sync local profile to Supabase public.users
-      await UserService.syncToSupabase(user.id).catch(() => {});
-
-      // Check if they need to create their first Space
-      const spaces = await SpaceService.listSpaces();
-      const target = spaces.length === 0 ? 'Setup' : 'Main';
-      if (spaces.length > 0) await initializeActiveSpace();
-      if (navigationRef.isReady()) {
-        navigationRef.reset({ index: 0, routes: [{ name: target }] });
+      // For Google OAuth — auto-create local profile from Google metadata
+      // so we can skip the Profile setup screen entirely
+      const hasLocal = await UserService.hasUser();
+      if (!hasLocal) {
+        const meta = user.user_metadata ?? {};
+        await UserService.createFromGoogle({
+          email: user.email ?? '',
+          fullName: meta.full_name ?? meta.name ?? '',
+          supabaseId: user.id,
+        });
       } else {
-        setInitialRoute(target);
+        await UserService.syncToSupabase(user.id).catch(() => {});
+      }
+
+      // Auto-create space if none exists, then go straight to Main
+      const spaces = await SpaceService.listSpaces();
+      if (spaces.length === 0) {
+        await SpaceService.createSpace('My Space');
+      } else {
+        await initializeActiveSpace();
+      }
+
+      if (navigationRef.isReady()) {
+        navigationRef.reset({ index: 0, routes: [{ name: 'Main' }] });
+      } else {
+        setInitialRoute('Main');
       }
     } catch {
       // Silent — user stays on current screen
