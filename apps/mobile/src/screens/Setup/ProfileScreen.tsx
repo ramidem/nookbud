@@ -9,7 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { ScrollView, View } from 'react-native';
 import { z } from 'zod';
 
-import { Button, InputLayout, SelectDropdown, TextInput, Typography } from '@/components';
+import { Button, InputLayout, TextInput, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import type { SetupStackParamList } from '@/navigation/SetupNavigator';
@@ -24,8 +24,6 @@ const profileSchema = z.object({
 });
 
 type ProfileForm = z.infer<typeof profileSchema>;
-
-const ROLE_OPTIONS = USER_ROLES.map((r) => ({ id: r, label: USER_ROLE_DISPLAY[r] }));
 
 export function ProfileScreen({ navigation: _navigation }: Props) {
   const rootNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -121,21 +119,6 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
                 placeholder="Last name"
                 value={value}
                 onChangeText={onChange}
-              />
-            </InputLayout>
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="role"
-          render={({ field: { onChange, value } }) => (
-            <InputLayout error={errors.role?.message} label="Your role">
-              <SelectDropdown
-                options={ROLE_OPTIONS}
-                placeholder="Select your role"
-                selectedId={value}
-                onSelect={(id) => onChange(id)}
               />
             </InputLayout>
           )}
