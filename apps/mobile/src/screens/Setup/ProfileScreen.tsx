@@ -10,7 +10,6 @@ import { ScrollView, View } from 'react-native';
 import { z } from 'zod';
 
 import { Button, InputLayout, SelectDropdown, TextInput, Typography } from '@/components';
-import { USER_ROLES, USER_ROLE_DISPLAY } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import type { SetupStackParamList } from '@/navigation/SetupNavigator';
@@ -22,14 +21,11 @@ const profileSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   middleName: z.string().optional(),
-  role: z.enum(['mother', 'father', 'guardian', 'other'], {
-    required_error: 'Please select your role',
-  }),
 });
 
 type ProfileForm = z.infer<typeof profileSchema>;
 
-const ROLE_OPTIONS = USER_ROLES.map((r) => ({ label: USER_ROLE_DISPLAY[r], value: r }));
+const ROLE_OPTIONS = USER_ROLES.map((r) => ({ id: r, label: USER_ROLE_DISPLAY[r] }));
 
 export function ProfileScreen({ navigation: _navigation }: Props) {
   const rootNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -42,7 +38,7 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
     formState: { errors },
     handleSubmit,
   } = useForm<ProfileForm>({
-    defaultValues: { firstName: '', lastName: '', middleName: '', role: undefined },
+    defaultValues: { firstName: '', lastName: '', middleName: '' },
     resolver: zodResolver(profileSchema),
   });
 
@@ -55,7 +51,6 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
         firstName: data.firstName,
         lastName: data.lastName,
         middleName: data.middleName || undefined,
-        role: data.role,
       });
 
       // Auto-create a default space so the user lands in Main immediately
@@ -137,10 +132,10 @@ export function ProfileScreen({ navigation: _navigation }: Props) {
           render={({ field: { onChange, value } }) => (
             <InputLayout error={errors.role?.message} label="Your role">
               <SelectDropdown
-                data={ROLE_OPTIONS}
+                options={ROLE_OPTIONS}
                 placeholder="Select your role"
-                value={value}
-                onSelect={(item) => onChange(item.value)}
+                selectedId={value}
+                onSelect={(id) => onChange(id)}
               />
             </InputLayout>
           )}
