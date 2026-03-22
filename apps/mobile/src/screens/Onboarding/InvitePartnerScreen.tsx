@@ -12,10 +12,10 @@ import {
 } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { CheckCircleIcon, LightbulbIcon } from '@/icons';
-import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
+import type { SetupStackParamList } from '@/navigation/SetupNavigator';
 import { SpaceMemberService, type SpaceInvite } from '@/services';
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, 'InviteMembers'>;
+type Props = NativeStackScreenProps<SetupStackParamList, 'InviteMembers'>;
 
 const COPY_FEEDBACK_DURATION = 2000;
 

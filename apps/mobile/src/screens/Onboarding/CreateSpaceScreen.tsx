@@ -4,12 +4,12 @@ import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, EmojiText, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
-import type { OnboardingStackParamList } from '@/navigation/OnboardingNavigator';
+import type { SetupStackParamList } from '@/navigation/SetupNavigator';
 import { SpaceService } from '@/services';
 import { useLocalStorageStore } from '@/stores';
 import { colors, defaultInputContainerStyle, defaultInputTextStyle } from '@/tailwind';
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, 'CreateSpace'>;
+type Props = NativeStackScreenProps<SetupStackParamList, 'CreateSpace'>;
 
 const EXAMPLE_NAMES = ['Smith & Jones', "Lola Cora's Care", 'Portland Family', "Finn's Circle"];
 
