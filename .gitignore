@@ -147,3 +147,5 @@ web-build/
 !dev.keystore
 !staging.keystore
 !production.keystoreclient_secret_*.json
+*.png
+*.jpg
