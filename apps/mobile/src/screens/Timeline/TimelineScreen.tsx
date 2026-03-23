@@ -155,7 +155,7 @@ export function TimelineScreen({ navigation }: Props) {
     ({ item }: { item: TimelineEntry }) => (
       <EntryCard
         entry={item}
-        spaceInfo={isAllSpaces ? spaceInfoMap.get(item.spaceId) ?? null : null}
+        spaceInfo={isAllSpaces ? (spaceInfoMap.get(item.spaceId) ?? null) : null}
         onPress={handleEntryPress}
         onSpacePress={isAllSpaces ? handleSpacePress : undefined}
       />

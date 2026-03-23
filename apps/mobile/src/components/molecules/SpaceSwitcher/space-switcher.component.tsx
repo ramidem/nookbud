@@ -116,7 +116,7 @@ export const SpaceSwitcher = forwardRef<SpaceSwitcherRef, Props>((props, ref) =>
             style={tw`font-serif-semibold text-foreground max-w-[180px] text-lg`}
             variant="heading"
           >
-            {isAllSpaces ? 'All Spaces' : activeSpace?.name ?? 'Select Space'}
+            {isAllSpaces ? 'All Spaces' : (activeSpace?.name ?? 'Select Space')}
           </Typography>
           <ChevronDownIcon height={CHEVRON_SIZE} style={tw`text-subtitle`} width={CHEVRON_SIZE} />
         </Pressable>

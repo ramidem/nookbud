@@ -43,7 +43,7 @@ export const AuthService = {
     if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
 
     // Extract fragment params (OAuth uses hash, not query string)
-    const fragment = url.includes('#') ? url.split('#')[1] : url.split('?')[1] ?? '';
+    const fragment = url.includes('#') ? url.split('#')[1] : (url.split('?')[1] ?? '');
     const params = new URLSearchParams(fragment);
     const accessToken = params.get('access_token');
     const refreshToken = params.get('refresh_token');

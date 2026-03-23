@@ -93,7 +93,7 @@ export function ResourcesScreen({ navigation }: Props) {
       // Load child names for resources that reference a child
       const childIds = [...new Set(results.filter((r) => r.childId).map((r) => r.childId))];
       if (childIds.length > 0) {
-        const spaceId = isAllSpaces ? allSpaceIds[0] : activeSpaceId ?? '';
+        const spaceId = isAllSpaces ? allSpaceIds[0] : (activeSpaceId ?? '');
         const spaceChildren = await ChildService.listBySpace(spaceId);
         const map = new Map<string, Child>();
         for (const child of spaceChildren) {
