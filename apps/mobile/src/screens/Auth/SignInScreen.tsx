@@ -9,7 +9,7 @@ import { Button, Divider, InputLayout, TextInput, Typography } from '@/component
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
 import { navigationRef } from '@/navigation/RootNavigator';
-import { AuthService, LogService, SpaceService } from '@/services';
+import { AuthService, LogService, SpaceService, UserService } from '@/services';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
@@ -54,6 +54,14 @@ export function SignInScreen({ navigation }: Props) {
     }
 
     LogService.info('auth', 'Sign in success');
+
+    // Pin auth UID in MMKV so SpaceService.listSpaces() (and everything downstream)
+    // can find the current user — critical on fresh installs where MMKV is empty.
+    const authUser = await UserService.getCurrentAuthUser();
+    if (authUser?.id) {
+      UserService.setCurrentUserId(authUser.id);
+    }
+
     const spaces = await SpaceService.listSpaces();
     const target = spaces.length === 0 ? 'Setup' : 'Main';
     const navigate = () => {

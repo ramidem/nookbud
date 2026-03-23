@@ -160,6 +160,9 @@ export function RootNavigator() {
           LogService.setUserId(null);
           setInitialRoute('Auth');
         } else if (event === 'SIGNED_IN' && session) {
+          // Pin auth UID so all downstream calls work regardless of MMKV state.
+          UserService.setCurrentUserId(session.user.id);
+
           // Only sync if a local user already exists (i.e. returning user, not fresh sign-up).
           // Fresh sign-up goes to Setup first where upsertUser + syncToSupabase runs.
           UserService.hasUser()
@@ -203,6 +206,12 @@ export function RootNavigator() {
         LogService.info('boot', 'Not authenticated → Auth');
         setInitialRoute('Auth');
       } else {
+        // Pin auth UID in MMKV so all downstream service calls can find the user.
+        const authUser = await UserService.getCurrentAuthUser();
+        if (authUser?.id) {
+          UserService.setCurrentUserId(authUser.id);
+        }
+
         // Authenticated — check if setup is complete
         const spaces = await SpaceService.listSpaces();
         LogService.info('boot', 'Spaces check', { count: spaces.length });
