@@ -3,12 +3,14 @@ import React from 'react';
 
 import { SignInScreen } from '@/screens/Auth/SignInScreen';
 import { SignUpScreen } from '@/screens/Auth/SignUpScreen';
+import { VerifyOtpScreen } from '@/screens/Auth/VerifyOtpScreen';
 import { WelcomeScreen } from '@/screens/Welcome/WelcomeScreen';
 
 export type AuthStackParamList = {
   Welcome: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  VerifyOtp: { email: string };
 };
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
@@ -25,6 +27,7 @@ export function AuthNavigator() {
       <Stack.Screen component={WelcomeScreen} name="Welcome" />
       <Stack.Screen component={SignInScreen} name="SignIn" />
       <Stack.Screen component={SignUpScreen} name="SignUp" />
+      <Stack.Screen component={VerifyOtpScreen} name="VerifyOtp" />
     </Stack.Navigator>
   );
 }

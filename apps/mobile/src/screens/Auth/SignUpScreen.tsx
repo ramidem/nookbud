@@ -8,7 +8,6 @@ import { z } from 'zod';
 import { Button, Divider, InputLayout, TextInput, Typography } from '@/components';
 import { useTw } from '@/hooks/useTw';
 import type { AuthStackParamList } from '@/navigation/AuthNavigator';
-import { navigationRef } from '@/navigation/RootNavigator';
 import { AuthService, LogService } from '@/services';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
@@ -49,55 +48,31 @@ export function SignUpScreen({ navigation }: Props) {
 
     const trace = LogService.startTrace();
     LogService.info('auth', 'Sign up attempt', { trace });
-    const { error, needsEmailConfirmation } = await AuthService.signUp(data.email, data.password);
+
+    const { error } = await AuthService.signUp(data.email, data.password);
+
+    setIsLoading(false);
+    LogService.clearTrace();
 
     if (error) {
-      LogService.warn('auth', 'Sign up error', { error });
-      // If already registered, try signing in with same credentials silently.
-      // Keep isLoading=true — RootNavigator's onAuthStateChange handles navigation on SIGNED_IN.
+      LogService.warn('auth', 'Sign up error', { error, trace });
       if (
         error.toLowerCase().includes('already registered') ||
         error.toLowerCase().includes('already exists')
       ) {
-        const { error: signInError } = await AuthService.signIn(data.email, data.password);
-        if (signInError) {
-          setIsLoading(false);
-          setServerError('An account with this email already exists. Please sign in instead.');
-        }
+        setServerError('An account with this email already exists.');
 
-        // On success: leave isLoading=true; RootNavigator will navigate on SIGNED_IN event.
         return;
       }
 
-      setIsLoading(false);
       setServerError(error);
 
       return;
     }
 
-    if (needsEmailConfirmation) {
-      // Email confirmation required — no session yet.
-      LogService.info('auth', 'Sign up success — email confirmation required');
-      setIsLoading(false);
-
-      setServerError('Check your email to confirm your account, then sign in.');
-
-      return;
-    }
-
-    // Session is live — navigate to Setup directly.
-    // Don't wait for SIGNED_IN event (Supabase may fire INITIAL_SESSION instead on fresh signup).
-    LogService.info('auth', 'Sign up success — navigating to Setup');
-    setIsLoading(false);
-    const navigate = () => {
-      if (navigationRef.isReady()) {
-        navigationRef.reset({ index: 0, routes: [{ name: 'Setup' }] });
-      } else {
-        setTimeout(navigate, 100);
-      }
-    };
-
-    navigate();
+    // OTP sent — navigate to verify screen
+    LogService.info('auth', 'Sign up success — OTP sent');
+    navigation.navigate('VerifyOtp', { email: data.email });
   };
 
   const handleGoogleSignIn = async () => {

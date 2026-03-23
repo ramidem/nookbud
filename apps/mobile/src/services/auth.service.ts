@@ -92,6 +92,18 @@ export const AuthService = {
   },
 
   /**
+   * Resend OTP verification code to email.
+   */
+  async resendOtp(email: string): Promise<{ error: string | null }> {
+    const client = getSupabaseClient();
+    if (!client) return { error: SUPABASE_NOT_CONFIGURED };
+
+    const { error } = await client.auth.resend({ email, type: 'signup' });
+
+    return { error: error?.message ?? null };
+  },
+
+  /**
    * Password-based sign in (kept for flexibility).
    */
   async signIn(email: string, password: string): Promise<AuthResult> {
@@ -140,24 +152,31 @@ export const AuthService = {
   },
 
   /**
-   * Password-based sign up (kept for flexibility).
-   * Returns `needsEmailConfirmation: true` when Supabase requires the user
-   * to click a verification link before a session is issued.
+   * Password-based sign up.
+   * With email confirmation enabled, Supabase sends a 6-digit OTP to the email.
+   * The caller should navigate to VerifyOtp screen after this succeeds.
    */
-  async signUp(
-    email: string,
-    password: string,
-  ): Promise<AuthResult & { needsEmailConfirmation?: boolean }> {
+  async signUp(email: string, password: string): Promise<{ error: string | null }> {
+    const client = getSupabaseClient();
+    if (!client) return { error: SUPABASE_NOT_CONFIGURED };
+
+    const { error } = await client.auth.signUp({ email, password });
+
+    return { error: error?.message ?? null };
+  },
+
+  /**
+   * Verify a 6-digit OTP sent to email after sign-up.
+   * On success, Supabase issues a session — user is now authenticated.
+   */
+  async verifyOtp(email: string, token: string): Promise<AuthResult> {
     const client = getSupabaseClient();
     if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
 
-    const { data, error } = await client.auth.signUp({ email, password });
+    const { data, error } = await client.auth.verifyOtp({ email, token, type: 'signup' });
 
     if (error) return { error: error.message, user: null };
 
-    // When email confirmation is required, Supabase returns a user but no session.
-    const needsEmailConfirmation = !!data.user && !data.session;
-
-    return { error: null, needsEmailConfirmation, user: data.user };
+    return { error: null, user: data.user };
   },
 };
