@@ -304,7 +304,7 @@ export function RootNavigator() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <BottomSheetModalProvider>
         <DeepLinkHandler onAuthCallback={handleAuthCallback} />
         <NotificationHandler />

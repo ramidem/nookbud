@@ -1,14 +1,12 @@
 import React from 'react';
 
+import type { InputLayoutContract } from '@coparent/design-tokens';
+
 import { cn } from '../../utils/cn';
 
-type Props = {
+type Props = Omit<InputLayoutContract, 'children'> & {
   children?: React.ReactNode;
   className?: string;
-  error?: string;
-  isRequired?: boolean;
-  label?: string;
-  subtitle?: string;
 };
 
 export function InputLayout(props: Props) {

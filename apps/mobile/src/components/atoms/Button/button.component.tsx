@@ -1,3 +1,4 @@
+import { buttonSizes, type ButtonContract } from '@coparent/design-tokens';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -13,38 +14,56 @@ import { Typography } from '@/components/atoms/Typography';
 import { colors, disabledInputStyle, tw } from '@/tailwind';
 import { DefaultComponentProps } from '@/types';
 
-export type ButtonSize = 'sm' | 'md' | 'lg';
-export type ButtonVariant = 'primary' | 'outlined' | 'ghost' | 'danger';
+export type ButtonSize = ButtonContract['size'];
+export type ButtonVariant =
+  | 'danger'
+  | 'destructive'
+  | 'ghost'
+  | 'outlined'
+  | 'primary'
+  | 'secondary';
 
 type Props = DefaultComponentProps &
-  TouchableOpacityProps & {
+  TouchableOpacityProps &
+  ButtonContract & {
     activityIndicatorColor?: string;
     buttonStyle?: StyleProp<ViewStyle>;
     children?: React.ReactNode;
-    isLoading?: boolean;
-    size?: ButtonSize;
     textStyle?: StyleProp<TextStyle>;
     title?: string;
+    /** @deprecated Use variant="destructive" instead */
     variant?: ButtonVariant;
   };
 
 const ACTIVE_OPACITY = 0.5;
 
-const SIZE_STYLES: Record<ButtonSize, { button: string; text: string }> = {
-  lg: { button: 'px-8 py-4 min-h-[56px]', text: 'text-base' },
-  md: { button: 'px-6 py-3 min-h-[48px]', text: 'text-sm' },
-  sm: { button: 'px-4 py-2 min-h-[36px]', text: 'text-xs' },
+// SIZE_STYLES derived from shared design-tokens — single source of truth
+const SIZE_STYLES: Record<NonNullable<ButtonSize>, { button: string; text: string }> = {
+  lg: { button: buttonSizes.lg.twClass, text: buttonSizes.lg.textSize },
+  md: { button: buttonSizes.md.twClass, text: buttonSizes.md.textSize },
+  sm: { button: buttonSizes.sm.twClass, text: buttonSizes.sm.textSize },
 };
 
-const VARIANT_STYLES: Record<ButtonVariant, { button: string; text: string; indicator: string }> = {
-  danger: { button: 'bg-error', indicator: colors.white, text: 'text-white' },
-  ghost: { button: 'bg-transparent', indicator: colors.primary, text: 'text-primary' },
+const TEXT_WHITE = 'text-white';
+const TEXT_PRIMARY = 'text-primary';
+const BG_TRANSPARENT = 'bg-transparent';
+const BG_ERROR = 'bg-error';
+
+const DESTRUCTIVE_STYLE = { button: BG_ERROR, indicator: colors.white, text: TEXT_WHITE };
+
+const VARIANT_STYLES: Record<ButtonVariant, { button: string; indicator: string; text: string }> = {
+  // Backwards-compat alias
+  danger: DESTRUCTIVE_STYLE,
+  // Canonical names
+  destructive: DESTRUCTIVE_STYLE,
+  ghost: { button: BG_TRANSPARENT, indicator: colors.primary, text: TEXT_PRIMARY },
   outlined: {
-    button: 'border-primary border-2 bg-transparent',
+    button: `border-primary border-2 ${BG_TRANSPARENT}`,
     indicator: colors.primary,
-    text: 'text-primary',
+    text: TEXT_PRIMARY,
   },
-  primary: { button: 'bg-primary', indicator: colors.white, text: 'text-white' },
+  primary: { button: 'bg-primary', indicator: colors.white, text: TEXT_WHITE },
+  secondary: { button: 'bg-secondary', indicator: colors.foreground, text: 'text-foreground' },
 };
 
 export function Button(props: Props) {
@@ -64,7 +83,8 @@ export function Button(props: Props) {
   } = props;
 
   const disabled = isDisabled || isLoading;
-  const sizeStyle = SIZE_STYLES[size];
+  const currentSize: NonNullable<ButtonSize> = size ?? 'sm';
+  const sizeStyle = SIZE_STYLES[currentSize];
   const variantStyle = VARIANT_STYLES[variant];
   const indicatorColor = activityIndicatorColor ?? variantStyle.indicator;
 

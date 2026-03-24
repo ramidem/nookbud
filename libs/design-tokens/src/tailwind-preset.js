@@ -43,6 +43,8 @@ module.exports = {
         overlay: '#2F2F2F',
         sheet: '#ffffff',
         underlay: '#F7F3EE',
+        'surface-raised': '#F7F3EE',
+        border: '#C8BFB6',
 
         // Dark mode overrides
         'dark-background': '#1A1614',
@@ -51,6 +53,8 @@ module.exports = {
         'dark-divider': '#3D3632',
         'dark-sheet': '#2A2522',
         'dark-underlay': '#1A1614',
+        'dark-surface-raised': '#3D3632',
+        'dark-border': '#3D3632',
 
         // Feedback
         error: '#B76E6E',
