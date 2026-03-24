@@ -33,6 +33,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Showcase,
   Switch,
   Table,
   TableBody,
@@ -207,7 +208,7 @@ export function InteractiveDemos() {
         <Typography variant="heading" as="h2" className="font-serif-bold text-2xl">
           Form Controls
         </Typography>
-        <div className="max-w-lg space-y-6 rounded-xl border border-divider bg-surface p-6">
+        <Showcase className="max-w-lg space-y-6">
           <div>
             <p className="mb-3 text-xs uppercase tracking-wider text-subtitle">Checkbox</p>
             <div className="space-y-3">
@@ -253,7 +254,7 @@ export function InteractiveDemos() {
               </div>
             </RadioGroup>
           </div>
-        </div>
+        </Showcase>
       </section>
 
       <Divider />
@@ -264,20 +265,19 @@ export function InteractiveDemos() {
           Alert
         </Typography>
         <div className="space-y-3">
-          {/* Using raw Alert markup since it's not a client component */}
-          <div className="relative w-full rounded-xl border border-divider bg-surface p-4 text-sm text-foreground">
+          <div className="relative w-full rounded-xl bg-surface p-4 text-sm text-foreground">
             <h5 className="mb-1 font-semibold leading-none">Heads up</h5>
             <div className="text-sm opacity-90">Schedule changes require both parents to approve.</div>
           </div>
-          <div className="relative w-full rounded-xl border border-success/50 bg-success/10 p-4 text-sm text-success">
+          <div className="relative w-full rounded-xl bg-success/10 p-4 text-sm text-success">
             <h5 className="mb-1 font-semibold leading-none">Approved</h5>
             <div className="text-sm opacity-90">The schedule change has been approved by both parents.</div>
           </div>
-          <div className="relative w-full rounded-xl border border-warning/50 bg-warning/10 p-4 text-sm text-foreground">
+          <div className="relative w-full rounded-xl bg-warning/10 p-4 text-sm text-foreground">
             <h5 className="mb-1 font-semibold leading-none">Pending</h5>
             <div className="text-sm opacity-90">Waiting for your co-parent to review.</div>
           </div>
-          <div className="relative w-full rounded-xl border border-error/50 bg-error/10 p-4 text-sm text-error">
+          <div className="relative w-full rounded-xl bg-error/10 p-4 text-sm text-error">
             <h5 className="mb-1 font-semibold leading-none">Disputed</h5>
             <div className="text-sm opacity-90">This expense has been flagged for review.</div>
           </div>
@@ -393,10 +393,10 @@ export function InteractiveDemos() {
         <Typography variant="heading" as="h2" className="font-serif-bold text-2xl">
           Toast
         </Typography>
-        <div className="rounded-xl border border-divider bg-surface p-6">
+        <Showcase>
           <p className="mb-3 text-xs uppercase tracking-wider text-subtitle">Click to trigger</p>
           <ToastDemo />
-        </div>
+        </Showcase>
       </section>
     </ToastProvider>
   );

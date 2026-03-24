@@ -3,15 +3,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
 
 const alertVariants = cva(
-  'relative w-full rounded-xl border p-4 text-sm',
+  'relative w-full rounded-xl p-4 text-sm',
   {
     defaultVariants: { variant: 'default' },
     variants: {
       variant: {
-        default: 'border-divider bg-surface text-foreground dark:border-dark-divider dark:bg-dark-surface dark:text-dark-foreground',
-        destructive: 'border-error/50 bg-error/10 text-error',
-        success: 'border-success/50 bg-success/10 text-success',
-        warning: 'border-warning/50 bg-warning/10 text-foreground',
+        default: 'bg-surface text-foreground dark:bg-dark-surface dark:text-dark-foreground',
+        destructive: 'bg-error/10 text-error',
+        success: 'bg-success/10 text-success',
+        warning: 'bg-warning/10 text-foreground',
       },
     },
   },

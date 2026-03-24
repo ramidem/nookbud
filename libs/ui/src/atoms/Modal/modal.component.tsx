@@ -22,7 +22,7 @@ export function Modal(props: Props) {
         <Dialog.Content
           className={cn(
             'fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2',
-            'rounded-2xl bg-sheet p-6 shadow-xl dark:bg-dark-sheet',
+            'rounded-2xl bg-sheet p-6 dark:bg-dark-sheet',
             'data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in',
             className,
           )}

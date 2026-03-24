@@ -10,7 +10,7 @@ export const SheetTrigger = Dialog.Trigger;
 export const SheetClose = Dialog.Close;
 
 const sheetVariants = cva(
-  'fixed z-50 gap-4 bg-sheet p-6 shadow-xl transition dark:bg-dark-sheet',
+  'fixed z-50 gap-4 bg-sheet p-6 transition dark:bg-dark-sheet',
   {
     defaultVariants: { side: 'right' },
     variants: {

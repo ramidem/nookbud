@@ -4,6 +4,7 @@ import {
   Field,
   PageContainer,
   PageHeader,
+  Showcase,
   Skeleton,
   Typography,
 } from '@coparent/ui';
@@ -123,7 +124,7 @@ export default function DesignSystemPage() {
 
       {/* Typography */}
       <Section title="Typography">
-        <div className="space-y-4 rounded-xl border border-divider bg-surface p-6">
+        <Showcase className="space-y-4">
           <div>
             <p className="mb-1 text-xs uppercase tracking-wider text-subtitle">
               Heading — EB Garamond (serif)
@@ -151,22 +152,22 @@ export default function DesignSystemPage() {
               Body small — How vexingly quick daft zebras jump.
             </Typography>
           </div>
-        </div>
+        </Showcase>
       </Section>
 
       <Divider />
 
       {/* Buttons */}
       <Section title="Buttons">
-        <div className="space-y-6 rounded-xl border border-divider bg-surface p-6">
+        <Showcase className="space-y-6">
           <div>
             <p className="mb-3 text-xs uppercase tracking-wider text-subtitle">Variants</p>
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="primary" size="md">Primary</Button>
-              <Button variant="secondary" size="md">Secondary</Button>
-              <Button variant="outlined" size="md">Outlined</Button>
-              <Button variant="ghost" size="md">Ghost</Button>
-              <Button variant="destructive" size="md">Destructive</Button>
+              <Button variant="primary">Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="outlined">Outlined</Button>
+              <Button variant="ghost">Ghost</Button>
+              <Button variant="destructive">Destructive</Button>
             </div>
           </div>
           <div>
@@ -180,19 +181,19 @@ export default function DesignSystemPage() {
           <div>
             <p className="mb-3 text-xs uppercase tracking-wider text-subtitle">States</p>
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="primary" size="md" isLoading>Loading</Button>
-              <Button variant="primary" size="md" isDisabled>Disabled</Button>
-              <Button variant="outlined" size="md" isDisabled>Disabled Outlined</Button>
+              <Button variant="primary" isLoading>Loading</Button>
+              <Button variant="primary" isDisabled>Disabled</Button>
+              <Button variant="outlined" isDisabled>Disabled Outlined</Button>
             </div>
           </div>
-        </div>
+        </Showcase>
       </Section>
 
       <Divider />
 
       {/* Form Fields */}
       <Section title="Form Fields">
-        <div className="max-w-lg space-y-4 rounded-xl border border-divider bg-surface p-6">
+        <Showcase className="max-w-lg space-y-4">
           <Field.Text label="Email" placeholder="you@example.com" isRequired />
           <Field.Text
             label="Display Name"
@@ -202,43 +203,43 @@ export default function DesignSystemPage() {
           <Field.Text label="With Error" defaultValue="bad input" error="This field is required" />
           <Field.Text label="Disabled" placeholder="Cannot edit" isDisabled />
           <Field.Area label="Notes" placeholder="Write something..." rows={4} />
-        </div>
+        </Showcase>
       </Section>
 
       <Divider />
 
       {/* Skeleton */}
       <Section title="Skeleton">
-        <div className="max-w-lg space-y-3 rounded-xl border border-divider bg-surface p-6">
+        <Showcase className="max-w-lg space-y-3">
           <Skeleton className="h-6 w-3/4 rounded" />
           <Skeleton className="h-4 w-full rounded" />
           <Skeleton className="h-4 w-5/6 rounded" />
           <Skeleton className="h-32 w-full rounded-xl" />
-        </div>
+        </Showcase>
       </Section>
 
       <Divider />
 
       {/* Divider */}
       <Section title="Divider">
-        <div className="rounded-xl border border-divider bg-surface p-6">
+        <Showcase>
           <Typography>Content above</Typography>
           <Divider className="my-4" />
           <Typography>Content below</Typography>
-        </div>
+        </Showcase>
       </Section>
 
       <Divider />
 
       {/* Page Layout */}
       <Section title="PageHeader">
-        <div className="rounded-xl border border-divider bg-surface p-6">
+        <Showcase>
           <PageHeader
             title="Example Page"
             subtitle="This is how PageHeader renders"
             rightAction={<Button variant="primary" size="sm">Action</Button>}
           />
-        </div>
+        </Showcase>
       </Section>
 
       {/* Interactive Components (client-side) */}

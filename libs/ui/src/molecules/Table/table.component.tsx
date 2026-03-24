@@ -11,7 +11,7 @@ export function Table({ className, ...props }: React.HTMLAttributes<HTMLTableEle
 }
 
 export function TableHeader({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={cn('[&_tr]:border-b [&_tr]:border-divider dark:[&_tr]:border-dark-divider', className)} {...props} />;
+  return <thead className={cn('[&_tr]:border-b [&_tr]:border-background dark:[&_tr]:border-dark-divider', className)} {...props} />;
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
@@ -19,14 +19,14 @@ export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTabl
 }
 
 export function TableFooter({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <tfoot className={cn('border-t border-divider bg-neutral-50 font-medium dark:border-dark-divider dark:bg-neutral-900', className)} {...props} />;
+  return <tfoot className={cn('border-t border-background bg-neutral-50 font-medium dark:border-dark-background dark:bg-neutral-900', className)} {...props} />;
 }
 
 export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
       className={cn(
-        'border-b border-divider transition-colors hover:bg-neutral-50 dark:border-dark-divider dark:hover:bg-neutral-900',
+        'border-b border-background transition-colors hover:bg-neutral-50 dark:border-dark-background dark:hover:bg-neutral-900',
         'data-[state=selected]:bg-neutral-100 dark:data-[state=selected]:bg-neutral-800',
         className,
       )}

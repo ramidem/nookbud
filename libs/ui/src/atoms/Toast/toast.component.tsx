@@ -52,7 +52,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           <button
             key={t.id}
             className={cn(
-              'animate-in slide-in-from-bottom-5 fade-in-0 rounded-xl px-4 py-3 text-sm font-medium shadow-lg',
+              'animate-in slide-in-from-bottom-5 fade-in-0 rounded-xl px-4 py-3 text-sm font-medium',
               variantStyles[t.variant],
             )}
             onClick={() => dismiss(t.id)}

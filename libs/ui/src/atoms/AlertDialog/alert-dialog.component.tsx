@@ -17,7 +17,7 @@ export function AlertDialogContent({
       <AlertDialogPrimitive.Overlay className="fixed inset-0 z-50 bg-overlay/60 data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
       <AlertDialogPrimitive.Content
         className={cn(
-          'fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl bg-sheet p-6 shadow-xl dark:bg-dark-sheet',
+          'fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl bg-sheet p-6 dark:bg-dark-sheet',
           'data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           className,
         )}
@@ -58,12 +58,12 @@ export function AlertDialogAction({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>) {
-  return <AlertDialogPrimitive.Action className={cn(buttonVariants({ variant: 'primary', size: 'md' }), className)} {...props} />;
+  return <AlertDialogPrimitive.Action className={cn(buttonVariants({ variant: 'primary', size: 'sm' }), className)} {...props} />;
 }
 
 export function AlertDialogCancel({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>) {
-  return <AlertDialogPrimitive.Cancel className={cn(buttonVariants({ variant: 'outlined', size: 'md' }), className)} {...props} />;
+  return <AlertDialogPrimitive.Cancel className={cn(buttonVariants({ variant: 'outlined', size: 'sm' }), className)} {...props} />;
 }

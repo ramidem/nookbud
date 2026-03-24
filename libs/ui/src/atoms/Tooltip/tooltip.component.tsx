@@ -15,7 +15,7 @@ export function TooltipContent({ className, sideOffset = 4, ...props }: TooltipC
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
         className={cn(
-          'z-50 overflow-hidden rounded-lg bg-foreground px-3 py-1.5 text-xs text-white shadow-md',
+          'z-50 overflow-hidden rounded-lg bg-foreground px-3 py-1.5 text-xs text-white',
           'animate-in fade-in-0 zoom-in-95',
           'dark:bg-dark-foreground dark:text-foreground',
           className,

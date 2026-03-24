@@ -17,7 +17,7 @@ export function DropdownMenuContent({
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         className={cn(
-          'z-50 min-w-[8rem] overflow-hidden rounded-xl border border-divider bg-surface p-1 shadow-md',
+          'z-50 min-w-[8rem] overflow-hidden rounded-xl border border-divider bg-surface p-1',
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           'dark:border-dark-divider dark:bg-dark-surface',
           className,
