@@ -9,6 +9,8 @@ import {
 } from '@coparent/ui';
 import { colors } from '@coparent/design-tokens';
 
+import { InteractiveDemos } from './interactive-demos';
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-4">
@@ -238,6 +240,9 @@ export default function DesignSystemPage() {
           />
         </div>
       </Section>
+
+      {/* Interactive Components (client-side) */}
+      <InteractiveDemos />
 
       <div className="pb-12">
         <Divider className="my-8" />
