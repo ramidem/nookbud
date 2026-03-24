@@ -64,13 +64,20 @@ export function SignInScreen({ navigation }: Props) {
 
     const spaces = await SpaceService.listSpaces();
     const target = spaces.length === 0 ? 'Setup' : 'Main';
+    let attempts = 0;
+    const MAX_ATTEMPTS = 50; // 5 seconds max
     const navigate = () => {
       const ready = navigationRef.isReady();
       LogService.debug('nav', 'navigationRef ready check (signin)', { ready, target });
       if (ready) {
         navigationRef.reset({ index: 0, routes: [{ name: target }] });
-      } else {
+      } else if (attempts < MAX_ATTEMPTS) {
+        attempts += 1;
         setTimeout(navigate, 100);
+      } else {
+        LogService.error('nav', 'navigationRef never became ready after sign in — giving up');
+        setServerError('Navigation failed. Please restart the app.');
+        setIsLoading(false);
       }
     };
 

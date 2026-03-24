@@ -8,7 +8,8 @@ import {
   Skeleton,
   Typography,
 } from '@coparent/ui';
-import { colors } from '@coparent/design-tokens';
+import { colors, buttonSizes } from '@coparent/design-tokens';
+import type { ComponentSize } from '@coparent/design-tokens';
 
 import { InteractiveDemos } from './interactive-demos';
 
@@ -171,11 +172,26 @@ export default function DesignSystemPage() {
             </div>
           </div>
           <div>
-            <p className="mb-3 text-xs uppercase tracking-wider text-subtitle">Sizes</p>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button variant="primary" size="sm">Small</Button>
-              <Button variant="primary" size="md">Medium</Button>
-              <Button variant="primary" size="lg">Large</Button>
+            <p className="mb-3 text-xs uppercase tracking-wider text-subtitle">
+              Sizes{' '}
+              <span className="normal-case font-normal text-subtitle opacity-70">
+                — from{' '}
+                <code className="rounded bg-neutral-200 px-1 py-0.5 text-xs">
+                  @coparent/design-tokens
+                </code>
+              </span>
+            </p>
+            <div className="flex flex-wrap items-end gap-3">
+              {(['sm', 'md', 'lg'] as ComponentSize[]).map((size) => (
+                <div key={size} className="flex flex-col items-center gap-1">
+                  <Button variant="primary" size={size}>
+                    {size.toUpperCase()}
+                  </Button>
+                  <p className="font-mono text-xs text-subtitle">
+                    min-h: {buttonSizes[size].minHeight}px
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
           <div>

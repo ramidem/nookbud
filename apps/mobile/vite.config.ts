@@ -3,6 +3,33 @@ import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as esbuild from 'esbuild';
 import { readFileSync } from 'fs';
+import { parse } from 'dotenv';
+import path from 'path';
+
+// Load .env for the virtual @env module (never expose service role key)
+const envPath = path.resolve(__dirname, '.env');
+const envVars = parse(readFileSync(envPath, 'utf-8'));
+
+function envPlugin() {
+  const virtualId = '@env';
+  const resolvedId = '\0' + virtualId;
+  return {
+    name: 'vite-plugin-react-native-dotenv',
+    resolveId(id: string) {
+      if (id === virtualId) return resolvedId;
+    },
+    load(id: string) {
+      if (id === resolvedId) {
+        return `
+          export const IS_LIVE = ${JSON.stringify(envVars.IS_LIVE ?? 'false')};
+          export const STORAGE_KEY = ${JSON.stringify(envVars.STORAGE_KEY ?? '')};
+          export const API_BASE_URL = ${JSON.stringify(envVars.API_BASE_URL ?? '')};
+          export const SUPABASE_API_KEY = ${JSON.stringify(envVars.SUPABASE_API_KEY ?? '')};
+        `;
+      }
+    },
+  };
+}
 
 const extensions = [
   '.mjs',
@@ -70,7 +97,7 @@ export default defineConfig({
       loader: { '.js': 'jsx' },
     },
   },
-  plugins: [react(), nxViteTsPaths()],
+  plugins: [react(), nxViteTsPaths(), envPlugin()],
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [ nxViteTsPaths() ],

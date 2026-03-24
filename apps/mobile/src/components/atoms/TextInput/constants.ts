@@ -1,6 +1,10 @@
+// Import from shared design-tokens — keeps mobile and web input heights in sync
+import { INPUT_MIN_HEIGHT } from '@coparent/design-tokens';
 import { TextInputProps } from 'react-native';
 
-export const TEXT_INPUT_MIN_HEIGHT = 56;
+/** @deprecated Use INPUT_MIN_HEIGHT from @coparent/design-tokens */
+export const TEXT_INPUT_MIN_HEIGHT = INPUT_MIN_HEIGHT;
+
 export const TEXT_INPUT_LINE_HEIGHT = 21;
 
 export const DefaultPhonePadInputProps: TextInputProps = {
