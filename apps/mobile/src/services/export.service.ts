@@ -190,7 +190,7 @@ export const ExportService = {
 
     // Fetch space metadata
     const spaceIdList = isMultiSpace
-      ? filters.spaceIds ?? []
+      ? (filters.spaceIds ?? [])
       : filters.spaceId
         ? [filters.spaceId]
         : [];
@@ -422,7 +422,7 @@ at time of creation. Edit history is preserved in the application.
 
     // Fetch space metadata
     const spaceIdList = isMultiSpace
-      ? filters.spaceIds ?? []
+      ? (filters.spaceIds ?? [])
       : filters.spaceId
         ? [filters.spaceId]
         : [];

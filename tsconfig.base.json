@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@coparent/design-tokens": ["libs/design-tokens/src/index.ts"],
+      "@coparent/design-tokens/*": ["libs/design-tokens/src/*"],
+      "@coparent/ui": ["libs/ui/src/index.ts"],
+      "@coparent/ui/*": ["libs/ui/src/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
