@@ -1,0 +1,43 @@
+FROM node:22-alpine AS base
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy monorepo root files
+COPY package.json yarn.lock .yarnrc ./
+COPY .yarn ./.yarn
+COPY nx.json tsconfig.base.json ./
+
+# Copy only what admin needs
+COPY apps/admin ./apps/admin
+COPY libs ./libs
+
+# Install dependencies
+RUN yarn install --frozen-lockfile --ignore-scripts
+
+# Build — call next build directly, bypass NX
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+WORKDIR /app/apps/admin
+RUN ../../node_modules/.bin/next build
+
+# Production runner
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+COPY --from=base --chown=nextjs:nodejs /app/apps/admin/.next/standalone ./
+COPY --from=base --chown=nextjs:nodejs /app/apps/admin/.next/static /app/apps/admin/.next/static
+COPY --from=base /app/apps/admin/public /app/apps/admin/public
+COPY --from=base /app/apps/admin/start.sh ./start.sh
+RUN chmod +x ./start.sh
+
+USER nextjs
+EXPOSE 3000
+CMD ["sh", "./start.sh"]
