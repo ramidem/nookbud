@@ -15,9 +15,10 @@
 5. [Phase 1 — Core Evidence System (Complete)](#5-phase-1--core-evidence-system-complete)
 6. [Phase 2 — Native UX Improvements (Complete)](#6-phase-2--native-ux-improvements-complete)
 7. [Phase 3 — Spaces (Next)](#7-phase-3--spaces-next)
-8. [Phase 4 — Resources](#8-phase-4--resources)
-9. [Phase 5 — Intelligence](#9-phase-5--intelligence)
-10. [Phase 6 — Collaboration (Web)](#10-phase-6--collaboration-web)
+8. [Phase 3.5 — Tasks](#8-phase-35--tasks)
+9. [Phase 4 — Resources](#9-phase-4--resources)
+10. [Phase 5 — Intelligence](#10-phase-5--intelligence)
+11. [Phase 6 — Collaboration (Web)](#11-phase-6--collaboration-web)
 11. [Success Metrics](#11-success-metrics)
 12. [Technical Constraints](#12-technical-constraints)
 13. [Appendix](#13-appendix)
@@ -149,6 +150,7 @@ Three formats, all filterable by date range, child, entry type, and Space:
 | 1 | Core Evidence System | Complete | Timeline, entries, audit trail, export, acknowledgment, dispute |
 | 2 | Native UX Improvements | Complete | Date pickers, calendar, partner invite, Supabase, notifications |
 | 3 | Spaces | Next | Multi-space, roles, Space switcher, All Spaces view, onboarding rewrite |
+| 3.5 | Tasks | Planned | Collaborative task management — create, assign, and track tasks within a Space |
 | 4 | Resources | Planned | Reference documents per Space, integrity verification, Archive Space |
 | 5 | Intelligence | Planned | Expense summaries, care pattern insights, reminders |
 | 6 | Collaboration (Web) | Planned | Viewer portal, shared export links, read-only invite links, web portal |
@@ -470,7 +472,151 @@ Comprehensive QA pass covering: schema migration verification, Space CRUD, membe
 
 ---
 
-## 8. Phase 4 — Resources
+## 8. Phase 3.5 — Tasks
+
+Phase 3.5 adds collaborative task management to Spaces. Any member with editor or owner role can create tasks, assign them to other members, set due dates, and mark them complete. Tasks are scoped to a Space and optionally linked to a child.
+
+### Core Concept
+
+Tasks are **action items** — things that need to happen, not things that already happened. They complement the timeline (which records past events) by providing a shared to-do layer for coordinated care.
+
+**Examples:**
+- "Book Finn's dentist appointment" → assigned to Camille, due Friday
+- "Submit school consent form" → assigned to Liam, due next Monday
+- "Pick up prescription" → unassigned, open
+
+### Key Rules
+
+- **Any member** (owner or editor) can create tasks; viewers can only view
+- Tasks can be **assigned to any Space member** or left unassigned
+- Tasks can optionally be **linked to a child** in the Space
+- Completing a task **logs to the audit trail** (who completed, when)
+- Task creation and reassignment are **logged** for accountability
+- Deleted tasks are **soft-deleted** (not purged) for record integrity
+
+### Data Model
+
+```
+tasks
+  - id (UUID)
+  - space_id (FK: spaces)
+  - child_id (FK: children, nullable)
+  - title (text, required)
+  - description (text, nullable)
+  - status (enum: open | in_progress | done)
+  - priority (enum: low | medium | high, default: medium)
+  - assigned_to (FK: users, nullable)
+  - created_by (FK: users)
+  - due_date (date, nullable)
+  - completed_at (timestamp, nullable)
+  - completed_by (FK: users, nullable)
+  - created_at (timestamp)
+  - updated_at (timestamp)
+  - deleted_at (timestamp, nullable — soft delete)
+```
+
+### Phase 3.5 User Stories
+
+**T-01: Schema — tasks table**
+
+> *As a developer, I need to create the tasks table in the SQLite schema so that task data can be stored locally.*
+
+Create the `tasks` table in Drizzle ORM schema. Include all fields above. Add migration.
+
+- [ ] `tasks` table created with all fields
+- [ ] Status enum: `open`, `in_progress`, `done`
+- [ ] Priority enum: `low`, `medium`, `high`
+- [ ] Soft delete via `deleted_at` (nullable timestamp)
+- [ ] Migration runs cleanly
+- [ ] Schema exported from `schema/index.ts`
+
+**Files:** `apps/mobile/src/database/schema/tasks.ts`, migration file
+
+---
+
+**T-02: TaskService — CRUD + assign**
+
+> *As a Space member, I want to create, update, assign, and complete tasks so that our care circle can coordinate action items.*
+
+Implement `TaskService` with full CRUD. Authorization enforced: editors and owners can create/edit/assign; viewers read-only.
+
+- [ ] `createTask(spaceId, data, userId)` — creates task, logs to audit_logs
+- [ ] `updateTask(taskId, data, userId)` — updates title, description, priority, due date, assigned_to; logs change
+- [ ] `completeTask(taskId, userId)` — sets status=done, completed_at, completed_by; logs
+- [ ] `reopenTask(taskId, userId)` — sets status=open, clears completed fields; logs
+- [ ] `deleteTask(taskId, userId)` — soft delete; logs
+- [ ] `listTasks(spaceId, filters, userId)` — returns tasks for Space (filter by status, assignee, child); excludes soft-deleted
+- [ ] `getTaskById(taskId, userId)` — returns single task; viewer-safe
+- [ ] Role enforcement: viewers cannot create/update/delete
+- [ ] All writes logged to audit_logs
+
+**Files:** `apps/mobile/src/services/task.service.ts`
+
+---
+
+**T-03: Tasks screen — list view**
+
+> *As a Space member, I want to see all tasks in my Space so I know what needs to be done.*
+
+Create the Tasks tab/screen. Grouped by status (Open, In Progress, Done). Filterable by assignee and child.
+
+- [ ] Tasks screen accessible from bottom nav or Space tab
+- [ ] Tasks grouped: Open → In Progress → Done
+- [ ] Each task row shows: title, assignee avatar (or "Unassigned"), due date (red if overdue), priority indicator
+- [ ] Filter bar: All / Mine / Unassigned
+- [ ] Empty state per group
+- [ ] Tapping a task opens Task Detail
+
+**Files:** `apps/mobile/src/screens/tasks/tasks.screen.tsx`, task-item component
+
+---
+
+**T-04: Task creation — new task form**
+
+> *As an owner or editor, I want to create a new task and optionally assign it to a member so we can track action items.*
+
+Create the new task form/sheet.
+
+- [ ] FAB or "+" button on Tasks screen (visible to owner/editor only)
+- [ ] Fields: title (required), description (optional), assignee (member picker, optional), child (optional), due date (date picker, optional), priority (low/medium/high)
+- [ ] Validation: title required, cannot assign to non-member
+- [ ] On submit: creates task, shows in list
+- [ ] Viewers see no create button
+
+**Files:** `apps/mobile/src/screens/tasks/new-task.screen.tsx`
+
+---
+
+**T-05: Task detail — view, edit, complete, reassign**
+
+> *As a Space member, I want to view a task's full details and take action on it (complete, reassign, edit) so tasks stay current.*
+
+Task detail screen with full actions.
+
+- [ ] Shows: title, description, status badge, priority, assignee, child link, due date, created by, completed by/at
+- [ ] "Mark Complete" button (owner/editor; not viewers)
+- [ ] "Reopen" button for completed tasks (owner/editor)
+- [ ] "Edit" — inline or navigates to edit form (owner/editor)
+- [ ] "Reassign" — member picker (owner/editor)
+- [ ] "Delete" — soft delete with confirmation (owner only)
+- [ ] Audit trail section: shows log of changes (created, assigned, completed, etc.)
+
+**Files:** `apps/mobile/src/screens/tasks/task-detail.screen.tsx`
+
+---
+
+**T-06: Phase 3.5 QA**
+
+> *As a developer, I want all task stories to pass acceptance criteria before shipping.*
+
+- [ ] T-01 through T-05 all passing
+- [ ] No lint errors
+- [ ] TypeScript clean
+- [ ] Tested on iOS simulator
+
+---
+
+## 9. Phase 4 — Resources
 
 Phase 4 adds a reference document layer to Spaces — distinct from the timeline, purpose-built for documents that need to exist and be accessible rather than recorded as events.
 
@@ -505,7 +651,7 @@ A simple toggle to hide an inactive Space from the switcher while preserving all
 
 ---
 
-## 9. Phase 5 — Intelligence
+## 10. Phase 5 — Intelligence
 
 Phase 5 adds insights and automation on top of the verified record system.
 
@@ -520,7 +666,7 @@ Phase 5 adds insights and automation on top of the verified record system.
 
 ---
 
-## 10. Phase 6 — Collaboration (Web)
+## 11. Phase 6 — Collaboration (Web)
 
 Phase 6 extends Spaces with professional access and sharing capabilities via a web portal.
 
@@ -541,7 +687,7 @@ Phase 6 extends Spaces with professional access and sharing capabilities via a w
 
 ---
 
-## 11. Success Metrics
+## 12. Success Metrics
 
 ### North Star Metric
 **Active Spaces per month** — This measures whether users are creating and maintaining care arrangements across family structures. A growing number of active Spaces validates both the core product and the inclusive positioning.
@@ -573,7 +719,7 @@ Phase 6 extends Spaces with professional access and sharing capabilities via a w
 
 ---
 
-## 12. Technical Constraints
+## 13. Technical Constraints
 
 ### Platform Requirements
 
@@ -683,7 +829,7 @@ entries
 
 ---
 
-## 13. Appendix
+## 14. Appendix
 
 ### A. Neutral Language Guide
 

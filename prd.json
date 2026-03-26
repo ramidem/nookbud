@@ -1,5 +1,5 @@
 {
-  "name": "CoParent \u2014 All Phases",
+  "name": "CoParent — All Phases",
   "branchName": "feature/phase-1-mvp",
   "userStories": [
     {
@@ -26,7 +26,7 @@
     },
     {
       "id": "2",
-      "title": "Database schema \u2014 core tables",
+      "title": "Database schema — core tables",
       "description": "Define SQLite schema with Drizzle ORM: users, relationships, children, entries, entry_versions, attachments, acknowledgments, disputes, audit_logs. All tables support audit trail and immutability.",
       "priority": 2,
       "passes": true,
@@ -180,7 +180,7 @@
     },
     {
       "id": "8",
-      "title": "Entry service \u2014 create with versioning",
+      "title": "Entry service — create with versioning",
       "description": "Create EntryService for all entry types. Every entry starts at version 1. Content stored in entry_versions table. Entry table points to current_version_id.",
       "priority": 8,
       "passes": true,
@@ -204,7 +204,7 @@
     },
     {
       "id": "9",
-      "title": "Entry service \u2014 edit with version history",
+      "title": "Entry service — edit with version history",
       "description": "Implement entry editing that creates new versions. Original content preserved. Diff computed and stored.",
       "priority": 9,
       "passes": true,
@@ -229,7 +229,7 @@
     },
     {
       "id": "10",
-      "title": "Entry service \u2014 soft delete",
+      "title": "Entry service — soft delete",
       "description": "Implement soft delete for entries. No hard deletes allowed. Soft-deleted entries visible in audit trail but hidden from default views.",
       "priority": 10,
       "passes": true,
@@ -251,7 +251,7 @@
     },
     {
       "id": "11",
-      "title": "Entry content schemas \u2014 all 5 types",
+      "title": "Entry content schemas — all 5 types",
       "description": "Define TypeScript types and Zod schemas for all 5 entry content types: expense, event, agreement, communication, upload.",
       "priority": 11,
       "passes": true,
@@ -320,7 +320,7 @@
     },
     {
       "id": "14",
-      "title": "Timeline service \u2014 query and filter",
+      "title": "Timeline service — query and filter",
       "description": "Create TimelineService for querying entries. Support filtering by date range, child, entry type, status. Paginated results.",
       "priority": 14,
       "passes": true,
@@ -342,7 +342,7 @@
     },
     {
       "id": "15",
-      "title": "Onboarding screens \u2014 profile setup",
+      "title": "Onboarding screens — profile setup",
       "description": "Create onboarding flow: name, timezone, currency. Minimal signup (no email/password yet since no backend).",
       "priority": 15,
       "passes": true,
@@ -369,7 +369,7 @@
     },
     {
       "id": "16",
-      "title": "Onboarding screens \u2014 relationship and children",
+      "title": "Onboarding screens — relationship and children",
       "description": "Continue onboarding: create relationship, add children. Support 'invite partner later' flow.",
       "priority": 16,
       "passes": true,
@@ -393,7 +393,7 @@
     },
     {
       "id": "17",
-      "title": "Timeline screen \u2014 main feed",
+      "title": "Timeline screen — main feed",
       "description": "Create the main timeline screen showing all entries. This is the home screen of the app.",
       "priority": 17,
       "passes": true,
@@ -519,7 +519,7 @@
     {
       "id": "22",
       "title": "Add communication entry screen",
-      "description": "Create screen for structured communication entries. Not a chat \u2014 formal documented messages.",
+      "description": "Create screen for structured communication entries. Not a chat — formal documented messages.",
       "priority": 22,
       "passes": true,
       "acceptanceCriteria": [
@@ -595,7 +595,7 @@
     },
     {
       "id": "25",
-      "title": "PDF export \u2014 timeline report",
+      "title": "PDF export — timeline report",
       "description": "Generate court-ready PDF export of timeline entries. Formatted for legal use.",
       "priority": 25,
       "passes": true,
@@ -700,8 +700,8 @@
       "passes": true,
       "acceptanceCriteria": [
         "Bottom tabs: Timeline, Calendar (placeholder), Export, Settings",
-        "Timeline stack: TimelineScreen \u2192 EntryDetailScreen \u2192 Add screens",
-        "Settings stack: SettingsScreen \u2192 sub-settings screens",
+        "Timeline stack: TimelineScreen → EntryDetailScreen → Add screens",
+        "Settings stack: SettingsScreen → sub-settings screens",
         "Export stack: ExportScreen",
         "Root navigator switches between Onboarding and Main based on user state",
         "Deep linking structure defined"
@@ -794,7 +794,7 @@
     {
       "id": "33",
       "phase": "2",
-      "title": "Calendar screen \u2014 responsibility ledger",
+      "title": "Calendar screen — responsibility ledger",
       "description": "Replace Calendar placeholder tab with a real calendar view. Show events by date. Each day shows assigned parent and event status (completed/missed).",
       "priority": 33,
       "passes": true,
@@ -820,7 +820,7 @@
     {
       "id": "34",
       "phase": "2",
-      "title": "Partner invite \u2014 deep link accept flow",
+      "title": "Partner invite — deep link accept flow",
       "description": "Complete the partner onboarding flow. The inviting parent shares a link/code; the other parent installs the app, enters code, and gets linked to the same relationship.",
       "priority": 34,
       "passes": true,
@@ -848,7 +848,7 @@
     {
       "id": "35",
       "phase": "2",
-      "title": "Supabase sync \u2014 foundation",
+      "title": "Supabase sync — foundation",
       "description": "Set up Supabase client and auth. Implement the migration path from local-first to cloud-synced. Data stays local-first; sync is additive.",
       "priority": 35,
       "passes": true,
@@ -857,12 +857,12 @@
         "Supabase client configured with env vars (EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY)",
         "AuthService: signUp, signIn, signOut, getCurrentSession",
         "Supabase schema mirrors SQLite schema (migration SQL in docs/supabase/)",
-        "SyncService: pushEntry(entry), pullEntries(since) \u2014 basic up/down sync",
+        "SyncService: pushEntry(entry), pullEntries(since) — basic up/down sync",
         "Sync state tracked: last_synced_at per entity",
         "Local data survives offline (SQLite is source of truth)",
         "Auth screen: email + password sign up / sign in",
         "Existing local user can link to Supabase account",
-        "No data loss if sync fails \u2014 local always wins"
+        "No data loss if sync fails — local always wins"
       ],
       "files": [
         "apps/mobile/src/services/auth.service.ts",
@@ -902,7 +902,7 @@
     {
       "id": "37",
       "phase": "2",
-      "title": "End-to-end QA \u2014 Phase 2",
+      "title": "End-to-end QA — Phase 2",
       "description": "Full QA pass for Phase 2 features. Fix bugs, polish UI, ensure all new flows work correctly on iOS and Android.",
       "priority": 37,
       "passes": true,
@@ -926,16 +926,16 @@
     {
       "id": "38",
       "phase": "3",
-      "title": "Schema migration \u2014 spaces and space_members tables",
+      "title": "Schema migration — spaces and space_members tables",
       "description": "Replace the relationships table with spaces and space_members. Migrate existing relationship data. Re-link all entries, children, and acknowledgments to Spaces.",
       "priority": 38,
       "passes": true,
       "acceptanceCriteria": [
         "spaces table: id, name, emoji, color, created_by (FK users), created_at, updated_at",
         "space_members table: id, space_id (FK spaces), user_id (FK users), role (owner|parent|guardian|lawyer|viewer), joined_at, invited_by",
-        "children.relationship_id \u2192 children.space_id (FK spaces)",
-        "entries.relationship_id \u2192 entries.space_id (FK spaces)",
-        "Existing relationships migrated: each becomes a Space; parent_a \u2192 owner, parent_b \u2192 parent",
+        "children.relationship_id → children.space_id (FK spaces)",
+        "entries.relationship_id → entries.space_id (FK spaces)",
+        "Existing relationships migrated: each becomes a Space; parent_a → owner, parent_b → parent",
         "Migration is reversible (down migration exists)",
         "All entries, children, acknowledgments correctly linked post-migration",
         "relationships table dropped after verification"
@@ -951,18 +951,18 @@
     {
       "id": "39",
       "phase": "3",
-      "title": "SpaceService \u2014 create, list, getById, rename, delete, leave",
+      "title": "SpaceService — create, list, getById, rename, delete, leave",
       "description": "Core CRUD service for Spaces. A user can create a Space (becoming owner), list their Spaces, view details, rename, update appearance, soft-delete, or leave.",
       "priority": 39,
       "passes": true,
       "acceptanceCriteria": [
-        "createSpace(name, emoji?, color?) \u2014 creates Space, adds creator as owner",
-        "listSpaces(userId) \u2014 all Spaces the user is a member of, with member count and role",
-        "getSpaceById(spaceId, userId) \u2014 Space details with members, children, user's role (members only)",
-        "renameSpace(spaceId, name, userId) \u2014 owner only",
-        "updateSpaceAppearance(spaceId, emoji?, color?, userId) \u2014 owner only",
-        "deleteSpace(spaceId, userId) \u2014 owner only, soft-delete, entries preserved in audit",
-        "leaveSpace(spaceId, userId) \u2014 non-owner only; owner must transfer ownership first",
+        "createSpace(name, emoji?, color?) — creates Space, adds creator as owner",
+        "listSpaces(userId) — all Spaces the user is a member of, with member count and role",
+        "getSpaceById(spaceId, userId) — Space details with members, children, user's role (members only)",
+        "renameSpace(spaceId, name, userId) — owner only",
+        "updateSpaceAppearance(spaceId, emoji?, color?, userId) — owner only",
+        "deleteSpace(spaceId, userId) — owner only, soft-delete, entries preserved in audit",
+        "leaveSpace(spaceId, userId) — non-owner only; owner must transfer ownership first",
         "All operations logged in audit_logs",
         "Authorization: only members can access their Spaces"
       ],
@@ -977,17 +977,17 @@
     {
       "id": "40",
       "phase": "3",
-      "title": "SpaceMemberService \u2014 invite, accept, assign role, remove member",
+      "title": "SpaceMemberService — invite, accept, assign role, remove member",
       "description": "Manage Space membership. Owners generate invite codes/links with pre-assigned roles. Invited users accept to join. Owners can reassign roles and remove members.",
       "priority": 40,
       "passes": true,
       "acceptanceCriteria": [
-        "generateInviteCode(spaceId, role, userId) \u2014 6-char code, 7-day expiry, owner only",
-        "generateInviteLink(spaceId, role, userId) \u2014 deep link coparent://invite/{code}",
-        "acceptInvite(inviteCode, userId) \u2014 joins Space with pre-assigned role; code consumed",
-        "assignRole(spaceId, memberId, newRole, userId) \u2014 owner only, cannot change own role",
-        "removeMember(spaceId, memberId, userId) \u2014 owner only, cannot remove self",
-        "transferOwnership(spaceId, newOwnerId, userId) \u2014 current owner only",
+        "generateInviteCode(spaceId, role, userId) — 6-char code, 7-day expiry, owner only",
+        "generateInviteLink(spaceId, role, userId) — deep link coparent://invite/{code}",
+        "acceptInvite(inviteCode, userId) — joins Space with pre-assigned role; code consumed",
+        "assignRole(spaceId, memberId, newRole, userId) — owner only, cannot change own role",
+        "removeMember(spaceId, memberId, userId) — owner only, cannot remove self",
+        "transferOwnership(spaceId, newOwnerId, userId) — current owner only",
         "Invite codes: single-use, expire after 7 days",
         "Cannot join a Space already a member of",
         "All membership changes logged in audit_logs"
@@ -1003,7 +1003,7 @@
     {
       "id": "41",
       "phase": "3",
-      "title": "Active Space context \u2014 useActiveSpace() hook, MMKV persistence",
+      "title": "Active Space context — useActiveSpace() hook, MMKV persistence",
       "description": "Active Space determines which timeline, children, and members are shown. Persists across restarts. Supports 'All Spaces' mode.",
       "priority": 41,
       "passes": true,
@@ -1028,7 +1028,7 @@
     {
       "id": "42",
       "phase": "3",
-      "title": "Space switcher UI \u2014 header dropdown",
+      "title": "Space switcher UI — header dropdown",
       "description": "Space switcher in the app header. Shows current Space name + emoji. Tapping opens a bottom sheet listing all Spaces + All Spaces option.",
       "priority": 42,
       "passes": true,
@@ -1054,7 +1054,7 @@
     {
       "id": "43",
       "phase": "3",
-      "title": "All Spaces timeline \u2014 merged feed with Space indicators",
+      "title": "All Spaces timeline — merged feed with Space indicators",
       "description": "When All Spaces is active, timeline merges entries from all user's Spaces. Each entry tagged with Space emoji and color.",
       "priority": 43,
       "passes": true,
@@ -1065,7 +1065,7 @@
         "Tapping Space indicator switches active context to that Space",
         "Entry type filters work across all Spaces",
         "Pull-to-refresh fetches from all Spaces",
-        "Loads within 1 second for \u22645 Spaces, \u2264500 entries"
+        "Loads within 1 second for ≤5 Spaces, ≤500 entries"
       ],
       "files": [
         "apps/mobile/src/screens/Timeline/TimelineScreen.tsx",
@@ -1080,7 +1080,7 @@
     {
       "id": "44",
       "phase": "3",
-      "title": "Onboarding update \u2014 create and name first Space",
+      "title": "Onboarding update — create and name first Space",
       "description": "Replace relationship-based onboarding with Space creation. Inclusive language. User names their Space, adds first child, optionally invites members with roles.",
       "priority": 44,
       "passes": true,
@@ -1093,7 +1093,7 @@
         "After child, user prompted to invite members with role selection (optional, skippable)",
         "Role options: parent, guardian, lawyer, viewer (with brief descriptions)",
         "Creator becomes owner of the Space",
-        "Existing users with migrated relationships see Space already set up \u2014 no re-onboarding"
+        "Existing users with migrated relationships see Space already set up — no re-onboarding"
       ],
       "files": [
         "apps/mobile/src/screens/Onboarding/CreateSpaceScreen.tsx",
@@ -1109,7 +1109,7 @@
     {
       "id": "45",
       "phase": "3",
-      "title": "Settings \u2014 manage Spaces",
+      "title": "Settings — manage Spaces",
       "description": "My Spaces section in Settings. View all Spaces, manage members, invite new members, change roles, rename, update appearance, leave or delete.",
       "priority": 45,
       "passes": true,
@@ -1121,7 +1121,7 @@
         "Non-owner actions: leave Space (with confirmation)",
         "'Create New Space' button at bottom of Spaces list",
         "Invite flow: generate code or share link; select role for invitee",
-        "Role labels with descriptions (e.g. 'Lawyer \u2014 Read-only + export access')",
+        "Role labels with descriptions (e.g. 'Lawyer — Read-only + export access')",
         "Leave Space confirmation dialog",
         "Delete Space (owner): confirmation with data preservation warning"
       ],
@@ -1193,7 +1193,7 @@
       "priority": 48,
       "passes": true,
       "acceptanceCriteria": [
-        "All migrated data verified: relationships \u2192 Spaces, entries linked, no data loss",
+        "All migrated data verified: relationships → Spaces, entries linked, no data loss",
         "Space CRUD: create, list, view, rename, customize, delete, leave",
         "Member management: invite, accept, assign role, remove, transfer ownership",
         "Active Space: persists across restart, handles edge cases",
@@ -1226,7 +1226,7 @@
       "id": "49",
       "phase": "4",
       "title": "Schema: resources table",
-      "description": "Add resources table to the database. Resources are reference documents scoped to a Space (and optionally a child). Not timeline entries \u2014 no versioning, no acknowledgment.",
+      "description": "Add resources table to the database. Resources are reference documents scoped to a Space (and optionally a child). Not timeline entries — no versioning, no acknowledgment.",
       "priority": 49,
       "passes": true,
       "acceptanceCriteria": [
@@ -1249,16 +1249,16 @@
     {
       "id": "50",
       "phase": "4",
-      "title": "ResourceService \u2014 upload, list, getById, softDelete",
+      "title": "ResourceService — upload, list, getById, softDelete",
       "description": "Core service for managing resources. Upload copies file to storage and hashes it. List supports filtering by category and child.",
       "priority": 50,
       "passes": true,
       "acceptanceCriteria": [
-        "ResourceService.upload(spaceId, file, metadata) \u2014 saves file via FileService, inserts resource record",
-        "ResourceService.listBySpace(spaceId, filters?) \u2014 filter by category, childId; excludes soft-deleted",
-        "ResourceService.getById(resourceId) \u2014 returns resource or null",
-        "ResourceService.softDelete(resourceId) \u2014 sets deleted_at, logs to audit",
-        "ResourceService.verifyIntegrity(resourceId) \u2014 re-hashes file, compares to stored hash",
+        "ResourceService.upload(spaceId, file, metadata) — saves file via FileService, inserts resource record",
+        "ResourceService.listBySpace(spaceId, filters?) — filter by category, childId; excludes soft-deleted",
+        "ResourceService.getById(resourceId) — returns resource or null",
+        "ResourceService.softDelete(resourceId) — sets deleted_at, logs to audit",
+        "ResourceService.verifyIntegrity(resourceId) — re-hashes file, compares to stored hash",
         "All operations logged to AuditService",
         "Only owner and editor roles can upload/delete; viewer can read",
         "ResourceService exported from services/index.ts"
@@ -1274,7 +1274,7 @@
     {
       "id": "51",
       "phase": "4",
-      "title": "Resources tab \u2014 main navigation",
+      "title": "Resources tab — main navigation",
       "description": "Add Resources as a tab in the main bottom navigator. Replace or add alongside Export tab.",
       "priority": 51,
       "passes": true,
@@ -1283,7 +1283,7 @@
         "Uses BookOpenIcon (or similar) from @/icons",
         "Tapping navigates to ResourcesScreen",
         "Tab label: 'Resources'",
-        "Export moved to Settings or kept as tab (your call \u2014 but 5 tabs max)"
+        "Export moved to Settings or kept as tab (your call — but 5 tabs max)"
       ],
       "files": [
         "apps/mobile/src/navigation/MainNavigator.tsx",
@@ -1306,10 +1306,10 @@
         "Each resource row: icon for category, title, child name (if applicable), date uploaded",
         "Category filter chips: All, Medical, School, Legal, Financial, Identity, Insurance, Other",
         "Child filter if Space has multiple children",
-        "Empty state: 'No resources yet. Add important documents here \u2014 medical records, school forms, legal agreements.'",
+        "Empty state: 'No resources yet. Add important documents here — medical records, school forms, legal agreements.'",
         "FAB to add new resource",
         "Pull to refresh",
-        "Tap row \u2192 ResourceDetailScreen"
+        "Tap row → ResourceDetailScreen"
       ],
       "files": [
         "apps/mobile/src/screens/Resources/ResourcesScreen.tsx",
@@ -1330,8 +1330,8 @@
         "Title input (required)",
         "Description input (optional)",
         "Category picker: Medical, School, Legal, Financial, Identity, Insurance, Other",
-        "Child selector (optional \u2014 which child does this relate to?)",
-        "File picker \u2014 supports images and PDFs (use existing document picker)",
+        "Child selector (optional — which child does this relate to?)",
+        "File picker — supports images and PDFs (use existing document picker)",
         "Preview of selected file",
         "Upload button with loading state",
         "On success: navigate back to ResourcesScreen",
@@ -1349,15 +1349,15 @@
       "id": "54",
       "phase": "4",
       "title": "Resource detail screen",
-      "description": "View a single resource \u2014 file preview, metadata, integrity verification.",
+      "description": "View a single resource — file preview, metadata, integrity verification.",
       "priority": 54,
       "passes": true,
       "acceptanceCriteria": [
         "Shows: title, description, category badge, child (if applicable), uploaded by, upload date",
         "File preview: inline image or PDF viewer (use existing patterns from EntryDetail)",
         "File metadata: original filename, size, MIME type",
-        "Integrity section: SHA-256 hash + 'Verify' button that re-hashes and shows \u2713 Verified or \u2717 Modified",
-        "Delete button (owner/editor only) with confirmation \u2014 soft delete only",
+        "Integrity section: SHA-256 hash + 'Verify' button that re-hashes and shows ✓ Verified or ✗ Modified",
+        "Delete button (owner/editor only) with confirmation — soft delete only",
         "Uses ScreenContainer, ScreenHeader with hasBackButton"
       ],
       "files": [
@@ -1377,10 +1377,10 @@
       "acceptanceCriteria": [
         "Add archived_at (nullable timestamp) to spaces schema",
         "Migration: 0005_space_archived.sql",
-        "SpaceService.archiveSpace(spaceId) \u2014 sets archived_at, only owner can archive",
-        "SpaceService.unarchiveSpace(spaceId) \u2014 clears archived_at",
-        "SpaceService.listSpaces() \u2014 excludes archived Spaces by default",
-        "SpaceService.listSpaces({ includeArchived: true }) \u2014 includes archived",
+        "SpaceService.archiveSpace(spaceId) — sets archived_at, only owner can archive",
+        "SpaceService.unarchiveSpace(spaceId) — clears archived_at",
+        "SpaceService.listSpaces() — excludes archived Spaces by default",
+        "SpaceService.listSpaces({ includeArchived: true }) — includes archived",
         "SpaceSwitcher: excludes archived Spaces",
         "Settings > SpaceDetail: 'Archive Space' button (owner only) with confirmation",
         "Settings > SpacesSettings: 'Archived Spaces' section at bottom showing archived Spaces with Unarchive option",
@@ -1425,11 +1425,11 @@
       "priority": 57,
       "passes": true,
       "acceptanceCriteria": [
-        "Upload resource \u2014 file saves, hash stored",
-        "List resources \u2014 filters work, All Spaces mode shows resources from all Spaces",
-        "View resource \u2014 metadata correct, integrity verification works",
-        "Delete resource \u2014 soft delete, not visible in list",
-        "Archive Space \u2014 hidden from switcher, data intact, unarchive works",
+        "Upload resource — file saves, hash stored",
+        "List resources — filters work, All Spaces mode shows resources from all Spaces",
+        "View resource — metadata correct, integrity verification works",
+        "Delete resource — soft delete, not visible in list",
+        "Archive Space — hidden from switcher, data intact, unarchive works",
         "Export ZIP includes resources folder",
         "Role enforcement: viewer cannot upload/delete resources",
         "ESLint passes",
@@ -1458,9 +1458,9 @@
       "acceptanceCriteria": [
         "react-native-ml-kit (or equivalent) installed for on-device text recognition",
         "Camera scan option available in Add Entry picker and Add Resource screen",
-        "OCR runs on-device \u2014 no network required",
-        "Extracted dates highlighted \u2014 offer to create Event entry pre-filled with date",
-        "Extracted currency amounts highlighted \u2014 offer to create Expense entry pre-filled with amount",
+        "OCR runs on-device — no network required",
+        "Extracted dates highlighted — offer to create Event entry pre-filled with date",
+        "Extracted currency amounts highlighted — offer to create Expense entry pre-filled with amount",
         "Extracted text shown in scrollable preview before saving",
         "Full extracted text copyable to clipboard",
         "Option to save scanned image as Resource alongside extracted text",
@@ -1487,7 +1487,7 @@
         "label field added to space_members schema (nullable)",
         "Migration 0003_member_label.sql",
         "InvitePartnerScreen: optional label picker after role selection",
-        "SpaceDetailScreen: shows name \u00b7 label \u00b7 role when label is set"
+        "SpaceDetailScreen: shows name · label · role when label is set"
       ],
       "files": [
         "apps/mobile/src/database/schema/space-members.ts",
@@ -1503,7 +1503,7 @@
     {
       "id": "60",
       "phase": "ui",
-      "title": "Button component \u2014 size and variant system",
+      "title": "Button component — size and variant system",
       "description": "Extend Button with size (sm|md|lg) and variant (primary|outlined|ghost|danger) props. Single versatile component replaces all raw Pressable CTAs.",
       "priority": 60,
       "passes": true,
@@ -1526,10 +1526,10 @@
       "priority": 61,
       "passes": true,
       "acceptanceCriteria": [
-        "Field.Text \u2014 label + TextInput + error",
-        "Field.Area \u2014 label + TextInputArea + error",
-        "Field.Select \u2014 label + SelectDropdown + error",
-        "Field.Date \u2014 wraps DatePickerInput directly (already has InputLayout)",
+        "Field.Text — label + TextInput + error",
+        "Field.Area — label + TextInputArea + error",
+        "Field.Select — label + SelectDropdown + error",
+        "Field.Date — wraps DatePickerInput directly (already has InputLayout)",
         "Exported from @/components"
       ],
       "files": [
@@ -1559,16 +1559,16 @@
     {
       "id": "63",
       "phase": "dev",
-      "title": "Dev tooling \u2014 seed database + Components Showcase",
-      "description": "Seed database with realistic sample data (safe \u2014 only runs on empty DB). Components Showcase screen accessible from Settings Dev Tools in __DEV__ mode.",
+      "title": "Dev tooling — seed database + Components Showcase",
+      "description": "Seed database with realistic sample data (safe — only runs on empty DB). Components Showcase screen accessible from Settings Dev Tools in __DEV__ mode.",
       "priority": 63,
       "passes": true,
       "acceptanceCriteria": [
-        "seedDatabase() checks for existing users before seeding \u2014 never clears data",
+        "seedDatabase() checks for existing users before seeding — never clears data",
         "Inserts: 3 users, 2 Spaces, 4 members, 2 children, 9 entries, 3 acknowledgments, 3 resources",
-        "Settings \u2192 Dev Tools \u2192 Seed Database button (__DEV__ only)",
+        "Settings → Dev Tools → Seed Database button (__DEV__ only)",
         "ComponentsShowcaseScreen shows all components with sizes/variants/states",
-        "Settings \u2192 Dev Tools \u2192 Components Showcase link (__DEV__ only)"
+        "Settings → Dev Tools → Components Showcase link (__DEV__ only)"
       ],
       "files": [
         "apps/mobile/src/database/seed.ts",
@@ -1576,6 +1576,127 @@
         "apps/mobile/src/screens/Settings/SettingsScreen.tsx"
       ],
       "dependencies": []
+    },
+    {
+      "id": "64",
+      "title": "Tasks schema — tasks table",
+      "description": "Create the tasks table in Drizzle ORM SQLite schema. Tasks are scoped to a Space, optionally linked to a child, assignable to any Space member, with soft delete and full audit trail support.",
+      "priority": 64,
+      "passes": false,
+      "phase": "3.5",
+      "acceptanceCriteria": [
+        "tasks table created: id, space_id, child_id (nullable), title, description (nullable), status (open|in_progress|done), priority (low|medium|high, default medium), assigned_to (nullable FK: users), created_by (FK: users), due_date (nullable), completed_at (nullable), completed_by (nullable), created_at, updated_at, deleted_at (soft delete)",
+        "Status and priority enums defined",
+        "Migration runs cleanly without errors",
+        "Schema exported from apps/mobile/src/database/schema/index.ts"
+      ],
+      "files": [
+        "apps/mobile/src/database/schema/tasks.ts",
+        "apps/mobile/src/database/schema/index.ts",
+        "apps/mobile/drizzle/"
+      ]
+    },
+    {
+      "id": "65",
+      "title": "TaskService — CRUD + assign + complete",
+      "description": "Implement TaskService with full CRUD operations. Any Space member with owner or editor role can create, update, assign, and complete tasks. Viewers are read-only. All writes logged to audit_logs.",
+      "priority": 65,
+      "passes": false,
+      "phase": "3.5",
+      "acceptanceCriteria": [
+        "createTask(spaceId, data, userId) — creates task, logs to audit_logs",
+        "updateTask(taskId, data, userId) — updates title, description, priority, due date, assigned_to; logs change",
+        "completeTask(taskId, userId) — sets status=done, completed_at, completed_by; logs",
+        "reopenTask(taskId, userId) — sets status=open, clears completed fields; logs",
+        "deleteTask(taskId, userId) — soft delete (sets deleted_at); logs",
+        "listTasks(spaceId, filters, userId) — returns tasks for Space (filter by status, assignee, child); excludes soft-deleted",
+        "getTaskById(taskId, userId) — returns single task",
+        "Role enforcement: viewers cannot create/update/delete; throws PermissionError",
+        "All writes logged to audit_logs with action, entity_type=task, entity_id"
+      ],
+      "files": [
+        "apps/mobile/src/services/task.service.ts"
+      ]
+    },
+    {
+      "id": "66",
+      "title": "Tasks screen — list view with filters",
+      "description": "Create the Tasks screen showing all tasks in the active Space. Tasks grouped by status (Open, In Progress, Done). Filterable by assignee. Accessible from navigation.",
+      "priority": 66,
+      "passes": false,
+      "phase": "3.5",
+      "acceptanceCriteria": [
+        "Tasks screen accessible from bottom nav or Space tab",
+        "Tasks grouped: Open → In Progress → Done sections",
+        "Each task row shows: title, assignee name/avatar (or Unassigned), due date (red text if overdue), priority indicator",
+        "Filter bar: All / Mine / Unassigned",
+        "Empty state shown per group when no tasks match",
+        "Tapping a task navigates to Task Detail screen",
+        "FAB or + button visible to owner/editor only"
+      ],
+      "files": [
+        "apps/mobile/src/screens/tasks/tasks.screen.tsx",
+        "apps/mobile/src/components/tasks/task-item.component.tsx"
+      ]
+    },
+    {
+      "id": "67",
+      "title": "New task form — create and assign",
+      "description": "Create the new task form/bottom sheet. Any Space member with owner or editor role can create tasks. Includes assignee picker (Space members), optional child link, due date, and priority.",
+      "priority": 67,
+      "passes": false,
+      "phase": "3.5",
+      "acceptanceCriteria": [
+        "New task form accessible from Tasks screen FAB/+ (owner/editor only)",
+        "Fields: title (required), description (optional), assignee (member picker from Space, optional), child (optional, picker from Space children), due date (date picker, optional), priority (low/medium/high, default medium)",
+        "Validation: title is required; cannot assign to non-member of Space",
+        "On submit: task created, appears in Open group in list",
+        "Viewers see no create button and cannot access form",
+        "Form clears/dismisses after successful creation"
+      ],
+      "files": [
+        "apps/mobile/src/screens/tasks/new-task.screen.tsx"
+      ]
+    },
+    {
+      "id": "68",
+      "title": "Task detail — view, edit, complete, reassign, delete",
+      "description": "Task detail screen with full action support. Shows all task fields and audit trail. Owner/editor can complete, reopen, edit, reassign, or delete. Viewers are read-only.",
+      "priority": 68,
+      "passes": false,
+      "phase": "3.5",
+      "acceptanceCriteria": [
+        "Shows: title, description, status badge, priority badge, assignee, linked child (if any), due date, created by, completed by + at (if done)",
+        "Mark Complete button (owner/editor only, shown when status != done)",
+        "Reopen button (owner/editor only, shown when status = done)",
+        "Edit button (owner/editor only) — navigates to edit form or inline edit",
+        "Reassign — member picker (owner/editor only)",
+        "Delete (owner only) — soft delete with confirmation prompt",
+        "Audit trail section at bottom: shows log of task events (created, assigned to X, completed by Y, etc.)",
+        "Viewers see task details only — no action buttons"
+      ],
+      "files": [
+        "apps/mobile/src/screens/tasks/task-detail.screen.tsx"
+      ]
+    },
+    {
+      "id": "69",
+      "title": "Phase 3.5 QA — tasks feature",
+      "description": "Verify all Phase 3.5 task stories meet acceptance criteria. Run lint, typecheck, and manual smoke test on iOS simulator.",
+      "priority": 69,
+      "passes": false,
+      "phase": "3.5",
+      "acceptanceCriteria": [
+        "T-01 (schema) passing",
+        "T-02 (TaskService) passing",
+        "T-03 (tasks list screen) passing",
+        "T-04 (new task form) passing",
+        "T-05 (task detail) passing",
+        "yarn lint passes with 0 errors",
+        "tsc --noEmit passes",
+        "App runs on iOS simulator without crashes"
+      ],
+      "files": []
     }
   ]
 }
