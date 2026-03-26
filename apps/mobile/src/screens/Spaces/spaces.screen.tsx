@@ -6,7 +6,7 @@ import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { Button, EmojiText, PageHeader, Typography } from '@/components';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
-import { CheckCircleIcon, PencilLineIcon, UsersIcon } from '@/icons';
+import { CheckCircleIcon, ClipboardListIcon, PencilLineIcon, UsersIcon } from '@/icons';
 import type { SpacesStackParamList } from '@/navigation/SpacesNavigator';
 import { SpaceService, type SpaceWithRole } from '@/services';
 import { colors, tw } from '@/tailwind';
@@ -129,6 +129,23 @@ export function SpacesScreen({ navigation }: Props) {
               </Pressable>
             ))}
           </View>
+
+          {/* Tasks shortcut */}
+          {!isAllSpaces && activeSpaceId ? (
+            <Pressable
+              style={tw`bg-surface mt-4 flex-row items-center rounded-xl p-4`}
+              onPress={() => navigation.navigate('Tasks')}
+            >
+              <View
+                style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
+              >
+                <ClipboardListIcon height={20} style={tw`text-subtitle`} width={20} />
+              </View>
+              <Typography style={tw`text-foreground flex-1 text-base font-medium`}>
+                Tasks
+              </Typography>
+            </Pressable>
+          ) : null}
 
           <Button
             buttonStyle={tw`bg-primary mt-4 rounded-xl py-4`}

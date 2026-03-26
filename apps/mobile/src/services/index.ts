@@ -15,6 +15,12 @@ export {
 export { ExportService, type ExportFilters, type ExportResult } from './export.service';
 export { ResourceService, type ResourceFilters } from './resource.service';
 export {
+  TaskService,
+  type TaskFilters,
+  type CreateTaskData,
+  type UpdateTaskData,
+} from './task.service';
+export {
   SpaceService,
   type ListSpacesOptions,
   type SpaceWithRole,

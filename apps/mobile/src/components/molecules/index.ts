@@ -8,3 +8,4 @@ export * from './ScreenHeader';
 export * from './SectionTitle';
 export * from './SpaceSwitcher';
 export * from './StorageManager';
+export * from './TaskItem';

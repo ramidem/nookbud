@@ -33,6 +33,7 @@ export const AUDIT_ENTITY_TYPES = [
   'dispute',
   'dispute_response',
   'resource',
+  'task',
 ] as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number];
 

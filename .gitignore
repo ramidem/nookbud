@@ -148,4 +148,4 @@ web-build/
 !staging.keystore
 !production.keystoreclient_secret_*.json
 *.png
-*.jpg
+*.jpg.gcloudrc
