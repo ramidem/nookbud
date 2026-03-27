@@ -129,7 +129,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
   return (
     <View style={tw`bg-background flex-1`}>
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 pb-4 pt-14`}>
+      <View style={tw`bg-surface flex-row items-center justify-between px-4 pb-4 pt-14`}>
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
