@@ -146,7 +146,7 @@ export function SpacesScreen({ navigation }: Props) {
             <Pressable
               style={[
                 tw`border-background flex-row items-center border-b p-4`,
-                isAllSpaces && tw`bg-primary/8`,
+                isAllSpaces && tw`bg-primary/15`,
               ]}
               onPress={() => {
                 closeAllSwipeables();
@@ -188,7 +188,7 @@ export function SpacesScreen({ navigation }: Props) {
                       tw`flex-row items-center p-4 ${
                         index < spaces.length - 1 ? 'border-background border-b' : ''
                       }`,
-                      isActive && tw`bg-primary/8`,
+                      isActive && tw`bg-primary/15`,
                       isArchived && { opacity: 0.6 },
                     ]}
                     onPress={() => navigation.navigate('SpaceDetail', { spaceId: space.id })}

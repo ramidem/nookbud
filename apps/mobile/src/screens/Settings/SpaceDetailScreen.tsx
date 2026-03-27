@@ -484,12 +484,12 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                     style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
                   >
                     <Typography style={tw`text-foreground font-semibold`}>
-                      {member.user.displayName.charAt(0).toUpperCase()}
+                      {(`${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim().charAt(0) || '?').toUpperCase()}
                     </Typography>
                   </View>
                   <View style={tw`flex-1`}>
                     <Typography style={tw`text-foreground text-base font-medium`}>
-                      {member.user.displayName}
+                      {`${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim() || 'Unknown'}
                     </Typography>
                     <View style={tw`mt-0.5 flex-row items-center gap-2`}>
                       {member.label && (
@@ -533,7 +533,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                     </Pressable>
                     <Pressable
                       style={tw`bg-error/10 rounded-lg px-3 py-1.5`}
-                      onPress={() => handleRemoveMember(member.userId, member.user.displayName)}
+                      onPress={() => handleRemoveMember(member.userId, (`${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim())}
                     >
                       <Typography style={tw`text-error text-xs font-medium`}>Remove</Typography>
                     </Pressable>
