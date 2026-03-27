@@ -123,11 +123,6 @@ export function AddEntryPickerScreen({ navigation }: Props) {
       return;
     }
 
-    // Switch active space to match selection then navigate
-    if (selectedSpaceId !== activeSpaceId) {
-      switchToSpace(selectedSpaceId);
-    }
-
     navigation.navigate(screen as never);
   };
 
@@ -152,7 +147,10 @@ export function AddEntryPickerScreen({ navigation }: Props) {
             options={spaceOptions}
             placeholder="Select a space"
             selectedId={selectedSpaceId}
-            onSelect={(id) => setSelectedSpaceId(id)}
+            onSelect={(id) => {
+              setSelectedSpaceId(id);
+              switchToSpace(id);
+            }}
           />
         </View>
 
