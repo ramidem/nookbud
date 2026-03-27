@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Typography } from '@/components';
 import { BackButton } from '@/components/molecules/BackButton';
@@ -28,6 +29,7 @@ export function ScreenHeader(props: Props) {
     titleStyle,
   } = props;
 
+  const insets = useSafeAreaInsets();
   const hasExtraActionComponent = onExtraActionPress;
   const extraActionComponentDisplay = hasExtraActionComponent && (
     <TouchableOpacity
@@ -48,8 +50,10 @@ export function ScreenHeader(props: Props) {
   return (
     <View
       style={[
-        tw`bg-surface h-[64px]`,
+        tw`bg-surface`,
         {
+          paddingTop: insets.top,
+          height: 64 + insets.top,
           shadowColor: '#000',
           shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.06,
