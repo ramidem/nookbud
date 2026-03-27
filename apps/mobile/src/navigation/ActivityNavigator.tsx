@@ -5,7 +5,6 @@ import { ActivityTopTabs } from './ActivityTopTabs';
 
 import {
   AddAgreementScreen,
-  AddCommunicationScreen,
   AddEntryPickerScreen,
   AddEventScreen,
   AddExpenseScreen,
@@ -21,7 +20,6 @@ export type ActivityStackParamList = {
   AddExpense: undefined;
   AddEvent: undefined;
   AddAgreement: undefined;
-  AddCommunication: undefined;
   AddUpload: undefined;
   AddTask: undefined;
 };
@@ -41,7 +39,6 @@ export function ActivityNavigator() {
       <Stack.Screen component={AddExpenseScreen} name="AddExpense" />
       <Stack.Screen component={AddEventScreen} name="AddEvent" />
       <Stack.Screen component={AddAgreementScreen} name="AddAgreement" />
-      <Stack.Screen component={AddCommunicationScreen} name="AddCommunication" />
       <Stack.Screen component={AddUploadScreen} name="AddUpload" />
       <Stack.Screen component={AddTaskScreen} name="AddTask" />
     </Stack.Navigator>

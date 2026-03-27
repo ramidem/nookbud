@@ -149,10 +149,13 @@ function log({ level, message, metadata, tag }: LogOptions): void {
     const traceTag = currentTraceId ? ` [${currentTraceId}]` : '';
     const prefix = `[${level.toUpperCase()}][${tag}]${traceTag}`;
     if (level === 'error') {
+      // eslint-disable-next-line no-console
       console.error(prefix, message, metadata ?? '');
     } else if (level === 'warn') {
+      // eslint-disable-next-line no-console
       console.warn(prefix, message, metadata ?? '');
     } else {
+      // eslint-disable-next-line no-console
       console.log(prefix, message, metadata ?? '');
     }
   }

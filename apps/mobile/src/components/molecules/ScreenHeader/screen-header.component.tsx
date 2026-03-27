@@ -18,6 +18,7 @@ type Props = DefaultComponentProps & {
 };
 
 const ACTIVE_OPACITY = 0.5;
+const HEADER_HEIGHT = 64;
 export function ScreenHeader(props: Props) {
   const {
     extraActionComponent,
@@ -53,7 +54,7 @@ export function ScreenHeader(props: Props) {
         tw`bg-surface`,
         {
           elevation: 2,
-          height: 64 + insets.top,
+          height: HEADER_HEIGHT + insets.top,
           paddingTop: insets.top,
           shadowColor: '#000',
           shadowOffset: { height: 1, width: 0 },

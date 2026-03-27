@@ -73,7 +73,7 @@ export function SpacesScreen({ navigation }: Props) {
               </View>
               {isAllSpaces && (
                 <View style={tw`bg-primary rounded-full px-2 py-0.5`}>
-                  <Typography style={tw`text-white text-xs font-medium`}>Active</Typography>
+                  <Typography style={tw`text-xs font-medium text-white`}>Active</Typography>
                 </View>
               )}
             </Pressable>
@@ -135,7 +135,7 @@ export function SpacesScreen({ navigation }: Props) {
                   </View>
                   {isActive && (
                     <View style={tw`bg-primary rounded-full px-2 py-0.5`}>
-                      <Typography style={tw`text-white text-xs font-medium`}>Active</Typography>
+                      <Typography style={tw`text-xs font-medium text-white`}>Active</Typography>
                     </View>
                   )}
                 </Pressable>

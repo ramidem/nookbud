@@ -12,7 +12,6 @@ import {
   CheckCircleIcon,
   ChevronRightIcon,
   HandshakeIcon,
-  MessageCircleIcon,
   PaperclipIcon,
   WalletIcon,
 } from '@/icons';
@@ -50,13 +49,6 @@ const ENTRY_OPTIONS: Array<{
     screen: 'AddAgreement',
     title: 'Agreement',
     type: 'agreement',
-  },
-  {
-    Icon: MessageCircleIcon,
-    description: 'Send a documented message',
-    screen: 'AddCommunication',
-    title: 'Communication',
-    type: 'communication',
   },
   {
     Icon: PaperclipIcon,
