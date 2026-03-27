@@ -2,9 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useRef, useState } from 'react';
 import { Alert as RNAlert, ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
-import ReanimatedSwipeable, {
-  type SwipeableMethods,
-} from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import { Alert, Button, EmojiText, PageHeader, Typography } from '@/components';
 import { useActiveSpace } from '@/hooks';
@@ -29,7 +27,7 @@ export function SpacesScreen({ navigation }: Props) {
   const { activeSpaceId, isAllSpaces, switchToSpace } = useActiveSpace();
   const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const swipeableRefs = useRef<Record<string, SwipeableMethods | null>>({});
+  const swipeableRefs = useRef<Record<string, Swipeable | null>>({});
 
   const loadSpaces = useCallback(async () => {
     setIsLoading(true);
@@ -175,7 +173,7 @@ export function SpacesScreen({ navigation }: Props) {
               const isActive = space.id === activeSpaceId;
 
               return (
-                <ReanimatedSwipeable
+                <Swipeable
                   key={space.id}
                   ref={(ref) => {
                     swipeableRefs.current[space.id] = ref;
@@ -236,7 +234,7 @@ export function SpacesScreen({ navigation }: Props) {
                       </View>
                     </View>
                   </Pressable>
-                </ReanimatedSwipeable>
+                </Swipeable>
               );
             })}
           </View>
