@@ -58,10 +58,7 @@ export function SpacesScreen({ navigation }: Props) {
           <View style={tw`bg-surface overflow-hidden rounded-xl`}>
             {/* All Spaces row */}
             <Pressable
-              style={[
-                tw`border-background flex-row items-center border-b p-4`,
-                isAllSpaces && tw`bg-primary/15`,
-              ]}
+              style={tw`border-background flex-row items-center border-b p-4`}
               onPress={() => switchToSpace(null)}
             >
               <View
@@ -70,12 +67,15 @@ export function SpacesScreen({ navigation }: Props) {
                 <UsersIcon height={20} style={tw`text-subtitle`} width={20} />
               </View>
               <View style={tw`flex-1`}>
-                <Typography
-                  style={tw`text-base font-medium ${isAllSpaces ? 'text-primary' : 'text-foreground'}`}
-                >
+                <Typography style={tw`text-foreground text-base font-medium`}>
                   All Spaces
                 </Typography>
               </View>
+              {isAllSpaces && (
+                <View style={tw`bg-primary rounded-full px-2 py-0.5`}>
+                  <Typography style={tw`text-white text-xs font-medium`}>Active</Typography>
+                </View>
+              )}
             </Pressable>
 
             {/* Individual spaces */}
@@ -90,7 +90,6 @@ export function SpacesScreen({ navigation }: Props) {
                     tw`flex-row items-center p-4 ${
                       index < spaces.length - 1 ? 'border-background border-b' : ''
                     }`,
-                    isActive && tw`bg-primary/15`,
                     isArchived && { opacity: 0.6 },
                   ]}
                   onPress={() => navigation.navigate('SpaceDetail', { spaceId: space.id })}
@@ -106,9 +105,7 @@ export function SpacesScreen({ navigation }: Props) {
                     </Typography>
                   </View>
                   <View style={tw`flex-1`}>
-                    <Typography
-                      style={tw`text-base font-medium ${isActive ? 'text-primary' : 'text-foreground'}`}
-                    >
+                    <Typography style={tw`text-foreground text-base font-medium`}>
                       {space.name}
                     </Typography>
                     <View style={tw`mt-0.5 flex-row items-center gap-2`}>
@@ -136,6 +133,11 @@ export function SpacesScreen({ navigation }: Props) {
                       )}
                     </View>
                   </View>
+                  {isActive && (
+                    <View style={tw`bg-primary rounded-full px-2 py-0.5`}>
+                      <Typography style={tw`text-white text-xs font-medium`}>Active</Typography>
+                    </View>
+                  )}
                 </Pressable>
               );
             })}
