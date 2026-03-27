@@ -68,6 +68,8 @@
     "@tanstack/react-query-persist-client": "5.67.3",
     "axios": "1.13.2",
     "babel-plugin-module-resolver": "5.0.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "1.11.19",
