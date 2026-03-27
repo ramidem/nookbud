@@ -63,9 +63,7 @@ export function SpacesSettingsScreen({ navigation }: Props) {
   };
 
   return (
-    <ScreenContainer>
-      <ScreenHeader title="My Spaces" />
-
+    <ScreenContainer header={<ScreenHeader title="My Spaces" />}>
       {isLoading ? (
         <View style={tw`flex-1 items-center justify-center`}>
           <ActivityIndicator color={colors.primary} size="large" />

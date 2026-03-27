@@ -46,9 +46,7 @@ export function CreateSpaceSettingsScreen({ navigation }: Props) {
   };
 
   return (
-    <ScreenContainer>
-      <ScreenHeader title="Create Space" />
-
+    <ScreenContainer header={<ScreenHeader title="Create Space" />}>
       <ScrollView contentContainerStyle={tw`flex-grow px-6 pb-8 pt-4`}>
         <Typography style={tw`text-subtitle mb-6 text-base`}>
           A Space is your care circle for a child or group of children.

@@ -126,9 +126,11 @@ export function AddTaskScreen({ navigation }: Props) {
   };
 
   return (
-    <ScreenContainer>
-      <ScreenHeader hasBackButton title="New Task" onBackPress={() => navigation.goBack()} />
-
+    <ScreenContainer
+      header={
+        <ScreenHeader hasBackButton title="New Task" onBackPress={() => navigation.goBack()} />
+      }
+    >
       <View style={tw`px-4 pt-4`}>
         {/* Title */}
         <Controller

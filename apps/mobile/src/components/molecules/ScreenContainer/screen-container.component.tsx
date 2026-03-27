@@ -20,6 +20,7 @@ type Props = SafeAreaProviderProps & {
   excludedEdges?: Edge[];
   extraBottomPadding?: number;
   hasScroll?: boolean;
+  header?: ReactElement;
   refreshControl?: ReactElement;
   useSafeAreaView?: boolean;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -40,6 +41,7 @@ export function ScreenContainer(props: Props) {
     excludedEdges = [],
     extraBottomPadding = 0,
     hasScroll = true,
+    header,
     onScroll,
     refreshControl,
     scrollViewRef,
@@ -57,6 +59,7 @@ export function ScreenContainer(props: Props) {
   if (!useSafeAreaView) {
     return (
       <View style={[tw`dark:bg-dark-background bg-background flex-1`, style]}>
+        {header}
         {hasScroll ? (
           <KeyboardAwareScrollView
             containerStyle={defaultContainerStyle}
@@ -73,13 +76,18 @@ export function ScreenContainer(props: Props) {
     );
   }
 
+  const effectiveExcludedEdges = header
+    ? [...new Set([...excludedEdges, 'top' as Edge])]
+    : excludedEdges;
+
   const edges =
-    excludedEdges.length > 0
-      ? safeAreaViewEdges.filter((edge) => !excludedEdges.includes(edge))
+    effectiveExcludedEdges.length > 0
+      ? safeAreaViewEdges.filter((edge) => !effectiveExcludedEdges.includes(edge))
       : safeAreaViewEdges;
 
   return (
     <SafeAreaView edges={edges} style={[tw`dark:bg-dark-background bg-background flex-1`, style]}>
+      {header}
       {hasScroll ? (
         <KeyboardAwareScrollView
           containerStyle={defaultContainerStyle}

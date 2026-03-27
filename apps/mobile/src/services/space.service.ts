@@ -87,7 +87,16 @@ export const SpaceService = {
    * Create a new Space and add the creator as owner
    */
   async createSpace(name: string, emoji?: string, color?: string): Promise<Space> {
-    const PALETTE = ['#6F8F7B', '#C97C5D', '#D8A7A0', '#7B9EC4', '#9B8EC4', '#C4A97B', '#7BB5A0', '#B07BC4'];
+    const PALETTE = [
+      '#6F8F7B',
+      '#C97C5D',
+      '#D8A7A0',
+      '#7B9EC4',
+      '#9B8EC4',
+      '#C4A97B',
+      '#7BB5A0',
+      '#B07BC4',
+    ];
     const randomColor = PALETTE[Math.floor(Math.random() * PALETTE.length)];
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);

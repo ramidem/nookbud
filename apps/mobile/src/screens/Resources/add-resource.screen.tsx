@@ -149,9 +149,7 @@ export function AddResourceScreen({ navigation }: Props) {
   };
 
   return (
-    <ScreenContainer>
-      <ScreenHeader hasBackButton title="Add Resource" />
-
+    <ScreenContainer header={<ScreenHeader hasBackButton title="Add Resource" />}>
       <ScrollView contentContainerStyle={tw`px-4 pb-8 pt-4`}>
         {/* Space context pill */}
         {activeSpace && (

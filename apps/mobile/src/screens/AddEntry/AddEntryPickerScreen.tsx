@@ -78,17 +78,22 @@ export function AddEntryPickerScreen({ navigation }: Props) {
   const tw = useTw();
   const { activeSpaceId, switchToSpace } = useActiveSpace();
   const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
-  const [selectedSpaceId, setSelectedSpaceId] = useState<string | undefined>(activeSpaceId ?? undefined);
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string | undefined>(
+    activeSpaceId ?? undefined,
+  );
   const [canCreate, setCanCreate] = useState(false);
 
   useEffect(() => {
-    SpaceService.listSpaces({ includeArchived: false }).then(setSpaces).catch(() => {});
+    SpaceService.listSpaces({ includeArchived: false })
+      .then(setSpaces)
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
     async function checkPermission() {
       if (!selectedSpaceId) {
         setCanCreate(false);
+
         return;
       }
       const role = await SpaceService.getUserRole(selectedSpaceId);
@@ -105,6 +110,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
         message: 'Please select a Space before adding an entry.',
         title: 'No Space Selected',
       });
+
       return;
     }
 
@@ -113,6 +119,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
         message: 'Your role in this Space does not allow creating entries.',
         title: 'Access Denied',
       });
+
       return;
     }
 

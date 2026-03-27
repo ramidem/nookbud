@@ -23,11 +23,11 @@ export function PageHeader(props: Props) {
         tw`bg-surface px-4 pb-3`,
         { paddingTop: insets.top },
         {
+          elevation: 2,
           shadowColor: '#000',
           shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.06,
           shadowRadius: 4,
-          elevation: 2,
         },
         style,
       ]}

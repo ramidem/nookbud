@@ -8,7 +8,6 @@ import {
   Alert,
   BottomSheet,
   Button,
-
   ScreenContainer,
   ScreenHeader,
   SelectDropdown,
@@ -22,6 +21,7 @@ import {
   type SpaceMemberLabel,
   type SpaceRole,
 } from '@/database/schema';
+import { useActiveSpace } from '@/hooks';
 import {
   ArchiveIcon,
   ArchiveRestoreIcon,
@@ -29,7 +29,6 @@ import {
   PencilLineIcon,
   UsersIcon,
 } from '@/icons';
-import { useActiveSpace } from '@/hooks';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { SpaceMemberService, SpaceService, type SpaceDetails, type SpaceInvite } from '@/services';
 import { useLocalStorageStore } from '@/stores';
@@ -38,7 +37,6 @@ import { colors, defaultInputContainerStyle, defaultInputTextStyle, tw } from '@
 type Props = NativeStackScreenProps<SettingsStackParamList, 'SpaceDetail'>;
 
 const COPY_FEEDBACK_DURATION = 2000;
-
 
 const INVITE_ROLES: Array<{ role: SpaceRole; label: string; description: string }> = [
   { description: 'Can add and view care records', label: 'Editor', role: 'editor' },
@@ -319,8 +317,11 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
 
   if (isLoading || !space) {
     return (
-      <ScreenContainer>
-        <ScreenHeader title="Space" />
+      <ScreenContainer
+        header={
+          <ScreenHeader hasBackButton title="Space" onBackPress={() => navigation.goBack()} />
+        }
+      >
         <View style={tw`flex-1 items-center justify-center`}>
           <ActivityIndicator color={colors.primary} size="large" />
         </View>
@@ -329,16 +330,20 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
   }
 
   return (
-    <ScreenContainer>
-      <ScreenHeader title={space.name} />
-
+    <ScreenContainer
+      header={
+        <ScreenHeader hasBackButton title={space.name} onBackPress={() => navigation.goBack()} />
+      }
+    >
       <ScrollView contentContainerStyle={tw`px-4 pb-8 pt-4`}>
         {/* Select Space */}
         <Pressable
           style={tw`mb-4 flex-row items-center justify-center rounded-xl py-3 ${isActive ? 'bg-primary/15' : 'bg-surface'}`}
           onPress={() => switchToSpace(isActive ? null : spaceId)}
         >
-          <Typography style={tw`text-base font-medium ${isActive ? 'text-primary' : 'text-foreground'}`}>
+          <Typography
+            style={tw`text-base font-medium ${isActive ? 'text-primary' : 'text-foreground'}`}
+          >
             {isActive ? '✓ Active Space' : 'Set as Active Space'}
           </Typography>
         </Pressable>
@@ -383,7 +388,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                       { backgroundColor: space.color ?? colors.primary },
                     ]}
                   >
-                    <Typography style={tw`text-white text-lg font-semibold`}>
+                    <Typography style={tw`text-lg font-semibold text-white`}>
                       {space.name.trim().charAt(0).toUpperCase()}
                     </Typography>
                   </View>
@@ -394,8 +399,6 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                 </Pressable>
               )}
             </View>
-
-
           </View>
         )}
 
@@ -421,12 +424,17 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                     style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
                   >
                     <Typography style={tw`text-foreground font-semibold`}>
-                      {(`${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim().charAt(0) || '?').toUpperCase()}
+                      {(
+                        `${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`
+                          .trim()
+                          .charAt(0) || '?'
+                      ).toUpperCase()}
                     </Typography>
                   </View>
                   <View style={tw`flex-1`}>
                     <Typography style={tw`text-foreground text-base font-medium`}>
-                      {`${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim() || 'Unknown'}
+                      {`${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim() ||
+                        'Unknown'}
                     </Typography>
                     <View style={tw`mt-0.5 flex-row items-center gap-2`}>
                       {member.label && (
@@ -470,7 +478,12 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                     </Pressable>
                     <Pressable
                       style={tw`bg-error/10 rounded-lg px-3 py-1.5`}
-                      onPress={() => handleRemoveMember(member.userId, `${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim())}
+                      onPress={() =>
+                        handleRemoveMember(
+                          member.userId,
+                          `${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim(),
+                        )
+                      }
                     >
                       <Typography style={tw`text-error text-xs font-medium`}>Remove</Typography>
                     </Pressable>

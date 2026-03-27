@@ -193,8 +193,7 @@ export function ResourceDetailScreen({ navigation, route }: Props) {
 
   if (isLoading || !resource) {
     return (
-      <ScreenContainer>
-        <ScreenHeader hasBackButton title="Resource" />
+      <ScreenContainer header={<ScreenHeader hasBackButton title="Resource" />}>
         <View style={twHook`flex-1 items-center justify-center`}>
           <ActivityIndicator color={colors.primary} size="large" />
         </View>
@@ -207,20 +206,22 @@ export function ResourceDetailScreen({ navigation, route }: Props) {
   const isImage = isImageMimeType(resource.mimeType);
 
   return (
-    <ScreenContainer>
-      <ScreenHeader
-        hasBackButton
-        extraAction={
-          canDelete
-            ? {
-                icon: <Trash2Icon height={ICON_SIZE} style={tw`text-error`} width={ICON_SIZE} />,
-                onPress: handleDelete,
-              }
-            : undefined
-        }
-        title={resource.title}
-      />
-
+    <ScreenContainer
+      header={
+        <ScreenHeader
+          hasBackButton
+          extraAction={
+            canDelete
+              ? {
+                  icon: <Trash2Icon height={ICON_SIZE} style={tw`text-error`} width={ICON_SIZE} />,
+                  onPress: handleDelete,
+                }
+              : undefined
+          }
+          title={resource.title}
+        />
+      }
+    >
       <View style={tw`flex-1 px-4 pb-8 pt-4`}>
         {/* Category badge */}
         <View style={tw`mb-4 flex-row items-center`}>

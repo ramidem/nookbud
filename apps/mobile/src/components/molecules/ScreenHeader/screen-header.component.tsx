@@ -52,13 +52,13 @@ export function ScreenHeader(props: Props) {
       style={[
         tw`bg-surface`,
         {
-          paddingTop: insets.top,
+          elevation: 2,
           height: 64 + insets.top,
+          paddingTop: insets.top,
           shadowColor: '#000',
           shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.06,
           shadowRadius: 4,
-          elevation: 2,
         },
         style,
       ]}

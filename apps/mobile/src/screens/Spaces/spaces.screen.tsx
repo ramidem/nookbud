@@ -101,7 +101,7 @@ export function SpacesScreen({ navigation }: Props) {
                       { backgroundColor: space.color ?? colors.primary },
                     ]}
                   >
-                    <Typography style={tw`text-white text-sm font-semibold`}>
+                    <Typography style={tw`text-sm font-semibold text-white`}>
                       {space.name.trim().charAt(0).toUpperCase()}
                     </Typography>
                   </View>
