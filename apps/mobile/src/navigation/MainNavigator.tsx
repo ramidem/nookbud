@@ -49,18 +49,16 @@ function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const fabRotation = useSharedValue(0);
 
-  // Hide tab bar for tabs that opt out via tabBarStyle: { display: 'none' }
-  const currentRoute = state.routes[state.index];
-  const currentOptions = descriptors[currentRoute.key]?.options;
-  if ((currentOptions?.tabBarStyle as { display?: string } | undefined)?.display === 'none') {
-    return null;
-  }
-
   // Check if the Activity stack is currently on an Add* screen
   const activityRoute = state.routes.find((r) => r.name === 'ActivityTab');
   const nestedState = activityRoute?.state;
   const currentNestedRoute = nestedState?.routes[nestedState.index ?? 0];
   const isOnAddScreen = currentNestedRoute?.name?.startsWith('Add') ?? false;
+
+  // Check if current tab hides the tab bar
+  const currentRoute = state.routes[state.index];
+  const currentOptions = descriptors[currentRoute.key]?.options;
+  const isHidden = (currentOptions?.tabBarStyle as { display?: string } | undefined)?.display === 'none';
 
   useEffect(() => {
     fabRotation.value = withTiming(isOnAddScreen ? FAB_ROTATION_ANGLE : 0, {
@@ -71,6 +69,8 @@ function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
   const fabIconStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${fabRotation.value}deg` }],
   }));
+
+  if (isHidden) return null;
 
   const handleFabPress = () => {
     if (isOnAddScreen) {
