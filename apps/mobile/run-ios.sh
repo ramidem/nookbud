@@ -145,8 +145,8 @@ echo "Running: scheme=$SELECTED_SCHEME device=$SELECTED (udid=$UDID)"
 echo ""
 cd "$SCRIPT_DIR" && npx react-native run-ios --scheme="$SELECTED_SCHEME" --udid="$UDID"
 else
-# Simulator — strip [Booted] prefix to get "Name (version)"
-SIM_NAME=$(echo "$SELECTED" | sed 's/^\[Booted\] //')
+# Simulator — strip [Booted] prefix and version suffix to get just the name
+SIM_NAME=$(echo "$SELECTED" | sed 's/^\[Booted\] //' | sed 's/ ([0-9.]*)$//')
 echo "Running: scheme=$SELECTED_SCHEME simulator=$SIM_NAME"
 echo ""
 cd "$SCRIPT_DIR" && npx react-native run-ios --scheme="$SELECTED_SCHEME" --simulator="$SIM_NAME"
