@@ -202,19 +202,20 @@ export const UserService = {
     const localUser = await this.getCurrentUser();
     if (!localUser) return;
 
-    const { error } = await client.from('users').upsert(
-      {
-        default_currency: localUser.defaultCurrency,
-        email: localUser.email,
-        first_name: localUser.firstName,
-        id: supabaseUserId,
-        last_name: localUser.lastName,
-        middle_name: localUser.middleName,
-        role: localUser.role,
-        timezone: localUser.timezone,
-      },
-      { onConflict: 'id' },
-    );
+    const payload: Record<string, unknown> = {
+      default_currency: localUser.defaultCurrency,
+      email: localUser.email,
+      first_name: localUser.firstName,
+      id: supabaseUserId,
+      last_name: localUser.lastName,
+      middle_name: localUser.middleName,
+      timezone: localUser.timezone,
+    };
+    if (localUser.role) {
+      payload.role = localUser.role;
+    }
+
+    const { error } = await client.from('users').upsert(payload, { onConflict: 'id' });
 
     if (error) {
       throw new Error(`Failed to sync user to Supabase: ${error.message}`);
