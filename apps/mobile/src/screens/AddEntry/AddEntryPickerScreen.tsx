@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
-import { Alert } from '@/components/atoms';
+import { Alert, SelectDropdown } from '@/components/atoms';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import {
@@ -17,7 +17,7 @@ import {
   WalletIcon,
 } from '@/icons';
 import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
-import { SpaceService } from '@/services';
+import { SpaceService, type SpaceWithRole } from '@/services';
 
 type Props = NativeStackScreenProps<ActivityStackParamList, 'AddEntryPicker'>;
 
@@ -76,50 +76,35 @@ const ENTRY_OPTIONS: Array<{
 
 export function AddEntryPickerScreen({ navigation }: Props) {
   const tw = useTw();
-  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
-  const [canCreate, setCanCreate] = useState(true);
+  const { activeSpaceId, switchToSpace } = useActiveSpace();
+  const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string | undefined>(activeSpaceId ?? undefined);
+  const [canCreate, setCanCreate] = useState(false);
 
-  const isArchived = !!activeSpace?.archivedAt;
+  useEffect(() => {
+    SpaceService.listSpaces({ includeArchived: false }).then(setSpaces).catch(() => {});
+  }, []);
 
   useEffect(() => {
     async function checkPermission() {
-      if (isAllSpaces || !activeSpaceId) {
+      if (!selectedSpaceId) {
         setCanCreate(false);
-
         return;
       }
-
-      if (activeSpace?.archivedAt) {
-        setCanCreate(false);
-
-        return;
-      }
-
-      const role = await SpaceService.getUserRole(activeSpaceId);
-      if (role === 'viewer') {
-        setCanCreate(false);
-      }
+      const role = await SpaceService.getUserRole(selectedSpaceId);
+      setCanCreate(role !== 'viewer');
     }
     checkPermission();
-  }, [activeSpaceId, isAllSpaces, activeSpace]);
+  }, [selectedSpaceId]);
+
+  const selectedSpace = spaces.find((s) => s.id === selectedSpaceId);
 
   const handleNavigate = (screen: keyof ActivityStackParamList) => {
-    if (isAllSpaces || !activeSpaceId) {
+    if (!selectedSpaceId) {
       Alert.error({
-        message:
-          'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
+        message: 'Please select a Space before adding an entry.',
         title: 'No Space Selected',
       });
-
-      return;
-    }
-
-    if (isArchived) {
-      Alert.error({
-        message: 'This Space is archived. You cannot add new entries to an archived Space.',
-        title: 'Space Archived',
-      });
-
       return;
     }
 
@@ -128,12 +113,18 @@ export function AddEntryPickerScreen({ navigation }: Props) {
         message: 'Your role in this Space does not allow creating entries.',
         title: 'Access Denied',
       });
-
       return;
+    }
+
+    // Switch active space to match selection then navigate
+    if (selectedSpaceId !== activeSpaceId) {
+      switchToSpace(selectedSpaceId);
     }
 
     navigation.navigate(screen as never);
   };
+
+  const spaceOptions = spaces.map((s) => ({ id: s.id, label: s.name }));
 
   return (
     <View style={tw`bg-surface flex-1`}>
@@ -147,23 +138,25 @@ export function AddEntryPickerScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={tw`p-4`}>
-        {/* Space context pill */}
-        {activeSpace && (
-          <View style={tw`mb-4 self-start rounded-lg bg-neutral-200 px-3 py-1.5`}>
-            <Text style={tw`text-foreground text-sm`}>
-              {activeSpace.name}
-            </Text>
-          </View>
-        )}
+        {/* Space selector */}
+        <View style={tw`mb-6`}>
+          <SelectDropdown
+            label="Space"
+            options={spaceOptions}
+            placeholder="Select a space"
+            selectedId={selectedSpaceId}
+            onSelect={(id) => setSelectedSpaceId(id)}
+          />
+        </View>
 
-        {isArchived && (
+        {selectedSpace?.archivedAt ? (
           <View style={tw`bg-warning/15 mb-4 flex-row items-center rounded-xl px-4 py-3`}>
             <ArchiveIcon height={16} style={tw`text-warning mr-2`} width={16} />
             <Text style={tw`text-foreground flex-1 text-sm`}>
               This Space is archived. You cannot add new entries.
             </Text>
           </View>
-        )}
+        ) : null}
 
         <Text style={tw`text-subtitle mb-6`}>What would you like to record?</Text>
 
