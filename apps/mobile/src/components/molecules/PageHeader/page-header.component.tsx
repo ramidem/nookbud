@@ -18,7 +18,20 @@ export function PageHeader(props: Props) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[tw`bg-surface px-4 pb-3`, { paddingTop: insets.top }, style]}>
+    <View
+      style={[
+        tw`bg-surface px-4 pb-3`,
+        { paddingTop: insets.top },
+        {
+          shadowColor: '#000',
+          shadowOffset: { height: 1, width: 0 },
+          shadowOpacity: 0.06,
+          shadowRadius: 4,
+          elevation: 2,
+        },
+        style,
+      ]}
+    >
       <View style={tw`min-h-10 flex-row items-center justify-between`}>
         <View style={tw`flex-1 flex-row items-center`}>
           {leftAction}

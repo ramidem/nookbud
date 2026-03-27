@@ -46,7 +46,19 @@ export function ScreenHeader(props: Props) {
   );
 
   return (
-    <View style={[tw`h-[64px] border border-transparent`, style]}>
+    <View
+      style={[
+        tw`bg-surface h-[64px]`,
+        {
+          shadowColor: '#000',
+          shadowOffset: { height: 1, width: 0 },
+          shadowOpacity: 0.06,
+          shadowRadius: 4,
+          elevation: 2,
+        },
+        style,
+      ]}
+    >
       <View style={[tw`flex-row items-center justify-between border border-transparent p-4 pt-2`]}>
         {hasBackButton && <BackButton style={tw`z-10`} onPress={onBackPress} />}
         <Typography
