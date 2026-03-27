@@ -4,3 +4,4 @@ export { AddEventScreen } from './AddEventScreen';
 export { AddAgreementScreen } from './AddAgreementScreen';
 export { AddCommunicationScreen } from './AddCommunicationScreen';
 export { AddUploadScreen } from './AddUploadScreen';
+export { AddTaskScreen } from './AddTaskScreen';

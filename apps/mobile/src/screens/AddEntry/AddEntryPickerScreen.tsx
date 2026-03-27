@@ -9,6 +9,7 @@ import { useTw } from '@/hooks/useTw';
 import {
   ArchiveIcon,
   CalendarDaysIcon,
+  CheckCircleIcon,
   ChevronRightIcon,
   HandshakeIcon,
   MessageCircleIcon,
@@ -63,6 +64,13 @@ const ENTRY_OPTIONS: Array<{
     screen: 'AddUpload',
     title: 'Document',
     type: 'upload',
+  },
+  {
+    Icon: CheckCircleIcon,
+    description: 'Assign a task to a co-parent or yourself',
+    screen: 'AddTask',
+    title: 'Task',
+    type: 'task',
   },
 ];
 

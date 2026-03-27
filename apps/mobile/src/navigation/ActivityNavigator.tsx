@@ -9,6 +9,7 @@ import {
   AddEntryPickerScreen,
   AddEventScreen,
   AddExpenseScreen,
+  AddTaskScreen,
   AddUploadScreen,
 } from '@/screens/AddEntry';
 import { EntryDetailScreen } from '@/screens/EntryDetail';
@@ -22,6 +23,7 @@ export type ActivityStackParamList = {
   AddAgreement: undefined;
   AddCommunication: undefined;
   AddUpload: undefined;
+  AddTask: undefined;
 };
 
 const Stack = createNativeStackNavigator<ActivityStackParamList>();
@@ -41,6 +43,7 @@ export function ActivityNavigator() {
       <Stack.Screen component={AddAgreementScreen} name="AddAgreement" />
       <Stack.Screen component={AddCommunicationScreen} name="AddCommunication" />
       <Stack.Screen component={AddUploadScreen} name="AddUpload" />
+      <Stack.Screen component={AddTaskScreen} name="AddTask" />
     </Stack.Navigator>
   );
 }
