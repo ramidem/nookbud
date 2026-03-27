@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
-import { Alert, EmojiText } from '@/components/atoms';
+import { Alert } from '@/components/atoms';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import {
@@ -151,7 +151,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
         {activeSpace && (
           <View style={tw`mb-4 self-start rounded-lg bg-neutral-200 px-3 py-1.5`}>
             <Text style={tw`text-foreground text-sm`}>
-              <EmojiText>{activeSpace.emoji}</EmojiText> {activeSpace.name}
+              {activeSpace.name}
             </Text>
           </View>
         )}
