@@ -15,6 +15,7 @@ import {
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import {
+  ArchiveIcon,
   BookOpenIcon,
   ChevronRightIcon,
   HeartPulseIcon,
@@ -58,7 +59,8 @@ function formatDate(date: Date): string {
 
 export function ResourcesScreen({ navigation }: Props) {
   const tw = useTw();
-  const { activeSpaceId, isAllSpaces } = useActiveSpace();
+  const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
+  const isArchived = !!activeSpace?.archivedAt;
   const [resourceList, setResourceList] = useState<Resource[]>([]);
   const [childMap, setChildMap] = useState<Map<string, Child>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
@@ -172,6 +174,16 @@ export function ResourcesScreen({ navigation }: Props) {
     <ScreenContainer excludedEdges={['top']} hasScroll={false}>
       <PageHeader title={headerTitle} />
 
+      {/* Archived banner */}
+      {isArchived && (
+        <View style={tw`bg-warning/15 mx-4 mb-2 flex-row items-center rounded-xl px-4 py-3`}>
+          <ArchiveIcon height={16} style={tw`text-warning mr-2`} width={16} />
+          <Text style={tw`text-foreground flex-1 text-sm`}>
+            This Space is archived. Resources are read-only.
+          </Text>
+        </View>
+      )}
+
       {/* Category filter chips */}
       <View style={tw`pb-2`}>
         <ScrollView
@@ -221,7 +233,7 @@ export function ResourcesScreen({ navigation }: Props) {
           <Text style={tw`text-subtitle mb-6 text-center`}>
             {'Add important documents here —\nmedical records, school forms, legal agreements.'}
           </Text>
-          <Button title="Add Resource" onPress={handleAddResource} />
+          {!isArchived && <Button title="Add Resource" onPress={handleAddResource} />}
         </View>
       ) : (
         <LegendList
@@ -235,7 +247,7 @@ export function ResourcesScreen({ navigation }: Props) {
       )}
 
       {/* FAB */}
-      {resourceList.length > 0 && (
+      {resourceList.length > 0 && !isArchived && (
         <Pressable
           style={tw`bg-primary absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full shadow-lg`}
           onPress={handleAddResource}

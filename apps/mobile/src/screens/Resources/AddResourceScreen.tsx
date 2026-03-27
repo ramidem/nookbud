@@ -75,6 +75,16 @@ export function AddResourceScreen({ navigation }: Props) {
         return;
       }
 
+      if (activeSpace?.archivedAt) {
+        Alert.error({
+          message: 'This Space is archived. You cannot add resources to an archived Space.',
+          title: 'Space Archived',
+        });
+        navigation.goBack();
+
+        return;
+      }
+
       const role = await SpaceService.getUserRole(activeSpaceId);
       if (role === 'viewer') {
         Alert.error({
@@ -90,7 +100,7 @@ export function AddResourceScreen({ navigation }: Props) {
       setChildren(c);
     }
     load();
-  }, [activeSpaceId, isAllSpaces, navigation]);
+  }, [activeSpaceId, activeSpace, isAllSpaces, navigation]);
 
   const canSave = title.trim().length > 0 && pickedFile !== null && !isAllSpaces && !!activeSpaceId;
 

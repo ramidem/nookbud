@@ -18,6 +18,8 @@ export const AUDIT_ACTIONS = [
   'remove_member',
   'transfer_ownership',
   'upload',
+  'archive',
+  'unarchive',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

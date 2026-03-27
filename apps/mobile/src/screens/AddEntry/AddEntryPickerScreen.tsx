@@ -7,6 +7,7 @@ import { Alert, EmojiText } from '@/components/atoms';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import {
+  ArchiveIcon,
   CalendarDaysIcon,
   ChevronRightIcon,
   HandshakeIcon,
@@ -70,9 +71,17 @@ export function AddEntryPickerScreen({ navigation }: Props) {
   const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
   const [canCreate, setCanCreate] = useState(true);
 
+  const isArchived = !!activeSpace?.archivedAt;
+
   useEffect(() => {
     async function checkPermission() {
       if (isAllSpaces || !activeSpaceId) {
+        setCanCreate(false);
+
+        return;
+      }
+
+      if (activeSpace?.archivedAt) {
         setCanCreate(false);
 
         return;
@@ -84,7 +93,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
       }
     }
     checkPermission();
-  }, [activeSpaceId, isAllSpaces]);
+  }, [activeSpaceId, isAllSpaces, activeSpace]);
 
   const handleNavigate = (screen: keyof ActivityStackParamList) => {
     if (isAllSpaces || !activeSpaceId) {
@@ -92,6 +101,15 @@ export function AddEntryPickerScreen({ navigation }: Props) {
         message:
           'Please select a Space first. Tap the Space switcher at the top to choose which Space to log this entry to.',
         title: 'No Space Selected',
+      });
+
+      return;
+    }
+
+    if (isArchived) {
+      Alert.error({
+        message: 'This Space is archived. You cannot add new entries to an archived Space.',
+        title: 'Space Archived',
       });
 
       return;
@@ -126,6 +144,15 @@ export function AddEntryPickerScreen({ navigation }: Props) {
           <View style={tw`mb-4 self-start rounded-lg bg-neutral-200 px-3 py-1.5`}>
             <Text style={tw`text-foreground text-sm`}>
               <EmojiText>{activeSpace.emoji}</EmojiText> {activeSpace.name}
+            </Text>
+          </View>
+        )}
+
+        {isArchived && (
+          <View style={tw`bg-warning/15 mb-4 flex-row items-center rounded-xl px-4 py-3`}>
+            <ArchiveIcon height={16} style={tw`text-warning mr-2`} width={16} />
+            <Text style={tw`text-foreground flex-1 text-sm`}>
+              This Space is archived. You cannot add new entries.
             </Text>
           </View>
         )}
