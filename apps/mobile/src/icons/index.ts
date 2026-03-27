@@ -33,6 +33,7 @@ import PaperclipIcon from './paperclip.svg';
 import PencilLineIcon from './pencil-line.svg';
 import PlusIcon from './plus.svg';
 import ScaleIcon from './scale.svg';
+import SendHorizontalIcon from './send-horizontal.svg';
 import ShareIcon from './share.svg';
 import ShieldCheckIcon from './shield-check.svg';
 import ShirtIcon from './shirt.svg';
@@ -80,6 +81,7 @@ export {
   PencilLineIcon,
   PlusIcon,
   ScaleIcon,
+  SendHorizontalIcon,
   ShareIcon,
   ShieldCheckIcon,
   SlidersHorizontalIcon,

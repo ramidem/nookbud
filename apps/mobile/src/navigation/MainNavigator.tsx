@@ -6,17 +6,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type SvgProps } from 'react-native-svg';
 
 import { ActivityNavigator } from './ActivityNavigator';
-import { ResourcesNavigator } from './ResourcesNavigator';
+import { CommunicationNavigator } from './CommunicationNavigator';
 import { SettingsNavigator } from './SettingsNavigator';
 import { SpacesNavigator } from './SpacesNavigator';
 
 import { useTw } from '@/hooks/useTw';
-import { BookOpenIcon, ClipboardListIcon, GearIcon, LayersIcon, PlusIcon } from '@/icons';
+import { ClipboardListIcon, GearIcon, LayersIcon, MessageCircleIcon, PlusIcon } from '@/icons';
 
 export type MainTabParamList = {
   SpacesTab: undefined;
   ActivityTab: undefined;
-  ResourcesTab: undefined;
+  CommunicationTab: undefined;
   SettingsTab: undefined;
 };
 
@@ -36,7 +36,7 @@ const ANDROID_ELEVATION = 8;
 
 const TAB_ICONS: Record<string, React.FC<SvgProps>> = {
   ActivityTab: ClipboardListIcon,
-  ResourcesTab: BookOpenIcon,
+  CommunicationTab: MessageCircleIcon,
   SettingsTab: GearIcon,
   SpacesTab: LayersIcon,
 };
@@ -184,7 +184,7 @@ export function MainNavigator() {
     >
       <Tab.Screen component={SpacesNavigator} name="SpacesTab" />
       <Tab.Screen component={ActivityNavigator} name="ActivityTab" />
-      <Tab.Screen component={ResourcesNavigator} name="ResourcesTab" />
+      <Tab.Screen component={CommunicationNavigator} name="CommunicationTab" />
       <Tab.Screen component={SettingsNavigator} name="SettingsTab" />
     </Tab.Navigator>
   );
