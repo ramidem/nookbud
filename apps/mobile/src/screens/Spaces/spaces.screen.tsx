@@ -1,10 +1,9 @@
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useCallback, useRef, useState } from 'react';
-import { Alert as RNAlert, ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
-import { Alert, Button, EmojiText, PageHeader, Typography } from '@/components';
+import { Button, EmojiText, PageHeader, Typography } from '@/components';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { ArchiveIcon, UsersIcon } from '@/icons';
@@ -27,7 +26,6 @@ export function SpacesScreen({ navigation }: Props) {
   const { activeSpaceId, isAllSpaces, switchToSpace } = useActiveSpace();
   const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const swipeableRefs = useRef<Record<string, Swipeable | null>>({});
 
   const loadSpaces = useCallback(async () => {
     setIsLoading(true);
@@ -47,90 +45,6 @@ export function SpacesScreen({ navigation }: Props) {
     }, [loadSpaces]),
   );
 
-  const closeAllSwipeables = (exceptId?: string) => {
-    Object.entries(swipeableRefs.current).forEach(([id, ref]) => {
-      if (id !== exceptId) ref?.close();
-    });
-  };
-
-  const handleEdit = (spaceId: string) => {
-    swipeableRefs.current[spaceId]?.close();
-    navigation.navigate('SpaceDetail', { spaceId });
-  };
-
-  const handleArchive = async (space: SpaceWithRole) => {
-    swipeableRefs.current[space.id]?.close();
-    try {
-      if (space.archivedAt) {
-        await SpaceService.unarchiveSpace(space.id);
-      } else {
-        await SpaceService.archiveSpace(space.id);
-      }
-      loadSpaces();
-    } catch (err) {
-      Alert.error({
-        message: err instanceof Error ? err.message : 'Failed to update space.',
-        title: 'Error',
-      });
-    }
-  };
-
-  const handleDelete = (space: SpaceWithRole) => {
-    swipeableRefs.current[space.id]?.close();
-    RNAlert.alert(
-      'Delete Space',
-      `Are you sure you want to delete "${space.name}"? This cannot be undone.`,
-      [
-        { style: 'cancel', text: 'Cancel' },
-        {
-          style: 'destructive',
-          text: 'Delete',
-          onPress: async () => {
-            try {
-              await SpaceService.deleteSpace(space.id);
-              loadSpaces();
-            } catch (err) {
-              Alert.error({
-                message: err instanceof Error ? err.message : 'Failed to delete space.',
-                title: 'Error',
-              });
-            }
-          },
-        },
-      ],
-    );
-  };
-
-  const ACTION_WIDTH = 72;
-
-  const renderRightActions = (space: SpaceWithRole) => {
-    const isArchived = !!space.archivedAt;
-    return (
-      <View style={{ flexDirection: 'row', width: ACTION_WIDTH * 3 }}>
-        <Pressable
-          style={{ alignItems: 'center', backgroundColor: '#4F8EF7', justifyContent: 'center', width: ACTION_WIDTH }}
-          onPress={() => handleEdit(space.id)}
-        >
-          <Typography style={tw`text-white text-sm font-medium`}>Edit</Typography>
-        </Pressable>
-        <Pressable
-          style={{ alignItems: 'center', backgroundColor: '#F97316', justifyContent: 'center', width: ACTION_WIDTH }}
-          onPress={() => handleArchive(space)}
-        >
-          <Typography style={tw`text-white text-sm font-medium`}>
-            {isArchived ? 'Unarchive' : 'Archive'}
-          </Typography>
-        </Pressable>
-        <Pressable
-          style={{ alignItems: 'center', backgroundColor: '#EF4444', justifyContent: 'center', width: ACTION_WIDTH }}
-          onPress={() => handleDelete(space)}
-        >
-          <Typography style={tw`text-white text-sm font-medium`}>Delete</Typography>
-        </Pressable>
-      </View>
-    );
-  };
-
   return (
     <View style={twHook`bg-background flex-1`}>
       <PageHeader title="Spaces" />
@@ -148,10 +62,7 @@ export function SpacesScreen({ navigation }: Props) {
                 tw`border-background flex-row items-center border-b p-4`,
                 isAllSpaces && tw`bg-primary/15`,
               ]}
-              onPress={() => {
-                closeAllSwipeables();
-                switchToSpace(null);
-              }}
+              onPress={() => switchToSpace(null)}
             >
               <View
                 style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
@@ -173,68 +84,57 @@ export function SpacesScreen({ navigation }: Props) {
               const isActive = space.id === activeSpaceId;
 
               return (
-                <Swipeable
+                <Pressable
                   key={space.id}
-                  ref={(ref) => {
-                    swipeableRefs.current[space.id] = ref;
-                  }}
-                  friction={2}
-                  renderRightActions={() => renderRightActions(space)}
-                  rightThreshold={40}
-                  onSwipeableWillOpen={() => closeAllSwipeables(space.id)}
+                  style={[
+                    tw`flex-row items-center p-4 ${
+                      index < spaces.length - 1 ? 'border-background border-b' : ''
+                    }`,
+                    isActive && tw`bg-primary/15`,
+                    isArchived && { opacity: 0.6 },
+                  ]}
+                  onPress={() => navigation.navigate('SpaceDetail', { spaceId: space.id })}
                 >
-                  <Pressable
+                  <View
                     style={[
-                      tw`flex-row items-center p-4 ${
-                        index < spaces.length - 1 ? 'border-background border-b' : ''
-                      }`,
-                      isActive && tw`bg-primary/15`,
-                      isArchived && { opacity: 0.6 },
+                      tw`mr-3 h-10 w-10 items-center justify-center rounded-full`,
+                      { backgroundColor: space.color ?? colors.primary },
                     ]}
-                    onPress={() => navigation.navigate('SpaceDetail', { spaceId: space.id })}
-                    onLongPress={() => switchToSpace(space.id)}
                   >
-                    <View
-                      style={[
-                        tw`mr-3 h-10 w-10 items-center justify-center rounded-full`,
-                        { backgroundColor: space.color ?? colors.primary },
-                      ]}
+                    <EmojiText style={tw`text-lg`}>{space.emoji || '🏠'}</EmojiText>
+                  </View>
+                  <View style={tw`flex-1`}>
+                    <Typography
+                      style={tw`text-base font-medium ${isActive ? 'text-primary' : 'text-foreground'}`}
                     >
-                      <EmojiText style={tw`text-lg`}>{space.emoji || '🏠'}</EmojiText>
-                    </View>
-                    <View style={tw`flex-1`}>
-                      <Typography
-                        style={tw`text-base font-medium ${isActive ? 'text-primary' : 'text-foreground'}`}
-                      >
-                        {space.name}
+                      {space.name}
+                    </Typography>
+                    <View style={tw`mt-0.5 flex-row items-center gap-2`}>
+                      <Typography style={tw`text-subtitle text-sm`}>
+                        {space.memberCount} {space.memberCount === 1 ? 'member' : 'members'}
                       </Typography>
-                      <View style={tw`mt-0.5 flex-row items-center gap-2`}>
-                        <Typography style={tw`text-subtitle text-sm`}>
-                          {space.memberCount} {space.memberCount === 1 ? 'member' : 'members'}
+                      <View style={tw`bg-primary/15 rounded-full px-2 py-0.5`}>
+                        <Typography style={tw`text-primary text-xs font-medium`}>
+                          {ROLE_LABELS[space.userRole] ?? space.userRole}
                         </Typography>
-                        <View style={tw`bg-primary/15 rounded-full px-2 py-0.5`}>
-                          <Typography style={tw`text-primary text-xs font-medium`}>
-                            {ROLE_LABELS[space.userRole] ?? space.userRole}
+                      </View>
+                      {isArchived && (
+                        <View
+                          style={tw`flex-row items-center gap-1 rounded-full bg-neutral-200 px-2 py-0.5`}
+                        >
+                          <ArchiveIcon
+                            height={ARCHIVE_ICON_SIZE}
+                            style={tw`text-subtitle`}
+                            width={ARCHIVE_ICON_SIZE}
+                          />
+                          <Typography style={tw`text-subtitle text-xs font-medium`}>
+                            Archived
                           </Typography>
                         </View>
-                        {isArchived && (
-                          <View
-                            style={tw`flex-row items-center gap-1 rounded-full bg-neutral-200 px-2 py-0.5`}
-                          >
-                            <ArchiveIcon
-                              height={ARCHIVE_ICON_SIZE}
-                              style={tw`text-subtitle`}
-                              width={ARCHIVE_ICON_SIZE}
-                            />
-                            <Typography style={tw`text-subtitle text-xs font-medium`}>
-                              Archived
-                            </Typography>
-                          </View>
-                        )}
-                      </View>
+                      )}
                     </View>
-                  </Pressable>
-                </Swipeable>
+                  </View>
+                </Pressable>
               );
             })}
           </View>
