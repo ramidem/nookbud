@@ -8,7 +8,7 @@ import {
   Alert,
   BottomSheet,
   Button,
-  EmojiText,
+
   ScreenContainer,
   ScreenHeader,
   SelectDropdown,
@@ -39,11 +39,6 @@ type Props = NativeStackScreenProps<SettingsStackParamList, 'SpaceDetail'>;
 
 const COPY_FEEDBACK_DURATION = 2000;
 
-const EMOJI_OPTIONS = ['🏠', '👨‍👩‍👧', '🌿', '⭐', '🌸', '🏡', '💙', '🌻'];
-const COLOR_OPTIONS = ['#6F8F7B', '#C97C5D', '#D8A7A0', '#7B9EC4', '#9B8EC4', '#C4A97B'];
-const COLOR_SWATCH_SIZE = 36;
-const COLOR_SWATCH_BORDER_PADDING = 4;
-const COLOR_SWATCH_BORDER_SIZE = COLOR_SWATCH_SIZE + COLOR_SWATCH_BORDER_PADDING;
 
 const INVITE_ROLES: Array<{ role: SpaceRole; label: string; description: string }> = [
   { description: 'Can add and view care records', label: 'Editor', role: 'editor' },
@@ -128,26 +123,6 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
       });
     } finally {
       setIsSavingName(false);
-    }
-  };
-
-  const handleChangeEmoji = async (emoji: string) => {
-    if (!isOwner) return;
-    try {
-      await SpaceService.updateSpaceAppearance(spaceId, emoji, undefined);
-      await loadSpace();
-    } catch {
-      // Silent fail
-    }
-  };
-
-  const handleChangeColor = async (color: string) => {
-    if (!isOwner) return;
-    try {
-      await SpaceService.updateSpaceAppearance(spaceId, undefined, color);
-      await loadSpace();
-    } catch {
-      // Silent fail
     }
   };
 
@@ -420,59 +395,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
               )}
             </View>
 
-            {/* Emoji picker */}
-            <View style={tw`border-background border-b p-4`}>
-              <Typography style={tw`text-subtitle mb-2 text-sm font-medium`}>Icon</Typography>
-              <ScrollView
-                horizontal
-                contentContainerStyle={tw`gap-2`}
-                showsHorizontalScrollIndicator={false}
-              >
-                {EMOJI_OPTIONS.map((emoji) => (
-                  <Pressable
-                    key={emoji}
-                    style={tw`h-10 w-10 items-center justify-center rounded-full ${
-                      space.emoji === emoji ? 'bg-primary' : 'bg-background'
-                    }`}
-                    onPress={() => handleChangeEmoji(emoji)}
-                  >
-                    <EmojiText style={tw`text-xl`}>{emoji}</EmojiText>
-                  </Pressable>
-                ))}
-              </ScrollView>
-            </View>
 
-            {/* Color picker */}
-            <View style={tw`p-4`}>
-              <Typography style={tw`text-subtitle mb-2 text-sm font-medium`}>Color</Typography>
-              <View style={tw`flex-row gap-3`}>
-                {COLOR_OPTIONS.map((color) => (
-                  <Pressable
-                    key={color}
-                    style={[
-                      tw`items-center justify-center rounded-full ${
-                        space.color === color
-                          ? 'border-foreground border-2'
-                          : 'border-2 border-transparent'
-                      }`,
-                      { height: COLOR_SWATCH_BORDER_SIZE, width: COLOR_SWATCH_BORDER_SIZE },
-                    ]}
-                    onPress={() => handleChangeColor(color)}
-                  >
-                    <View
-                      style={[
-                        tw`rounded-full`,
-                        {
-                          backgroundColor: color,
-                          height: COLOR_SWATCH_SIZE,
-                          width: COLOR_SWATCH_SIZE,
-                        },
-                      ]}
-                    />
-                  </Pressable>
-                ))}
-              </View>
-            </View>
           </View>
         )}
 
