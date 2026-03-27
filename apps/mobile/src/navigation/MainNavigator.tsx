@@ -49,6 +49,13 @@ function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const fabRotation = useSharedValue(0);
 
+  // Hide tab bar for tabs that opt out via tabBarStyle: { display: 'none' }
+  const currentRoute = state.routes[state.index];
+  const currentOptions = descriptors[currentRoute.key]?.options;
+  if ((currentOptions?.tabBarStyle as { display?: string } | undefined)?.display === 'none') {
+    return null;
+  }
+
   // Check if the Activity stack is currently on an Add* screen
   const activityRoute = state.routes.find((r) => r.name === 'ActivityTab');
   const nestedState = activityRoute?.state;
@@ -184,7 +191,11 @@ export function MainNavigator() {
     >
       <Tab.Screen component={SpacesNavigator} name="SpacesTab" />
       <Tab.Screen component={ActivityNavigator} name="ActivityTab" />
-      <Tab.Screen component={CommunicationNavigator} name="CommunicationTab" />
+      <Tab.Screen
+        component={CommunicationNavigator}
+        name="CommunicationTab"
+        options={{ tabBarStyle: { display: 'none' } }}
+      />
       <Tab.Screen component={SettingsNavigator} name="SettingsTab" />
     </Tab.Navigator>
   );

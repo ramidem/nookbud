@@ -6,7 +6,7 @@ import { View, Text, Pressable, FlatList, TextInput, ActivityIndicator } from 'r
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PageHeader } from '@/components';
+import { BackButton, PageHeader } from '@/components';
 import { db } from '@/database';
 import { entries, entryVersions, auditLogs, type AuditLog } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
@@ -81,7 +81,7 @@ function formatDateSeparator(date: Date): string {
   return date.toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-export function CommunicationScreen(_props: Props) {
+export function CommunicationScreen({ navigation }: Props) {
   const tw = useTw();
   const insets = useSafeAreaInsets();
   const { activeSpace, activeSpaceId, isAllSpaces } = useActiveSpace();
@@ -198,7 +198,7 @@ export function CommunicationScreen(_props: Props) {
   if (!activeSpaceId || isAllSpaces) {
     return (
       <View style={tw`bg-background flex-1`}>
-        <PageHeader title="Messages" />
+        <PageHeader leftAction={<BackButton onPress={() => navigation.goBack()} />} title="Messages" />
         <View style={tw`flex-1 items-center justify-center px-8`}>
           <Text style={tw`text-subtitle text-center text-base`}>
             Select a specific space to view messages.
@@ -244,7 +244,7 @@ export function CommunicationScreen(_props: Props) {
 
   return (
     <View style={tw`bg-background flex-1`}>
-      <PageHeader title={spaceName} />
+      <PageHeader leftAction={<BackButton onPress={() => navigation.goBack()} />} title={spaceName} />
 
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} style={tw`flex-1`}>
         {isLoading ? (
