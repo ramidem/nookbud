@@ -55,7 +55,7 @@ export function SpacesScreen({ navigation }: Props) {
         </View>
       ) : (
         <ScrollView contentContainerStyle={tw`px-4 pb-8 pt-4`}>
-          <View style={tw`bg-surface overflow-hidden rounded-xl`}>
+          <View style={tw`bg-surface rounded-xl`}>
             {/* All Spaces row */}
             <Pressable
               style={[
