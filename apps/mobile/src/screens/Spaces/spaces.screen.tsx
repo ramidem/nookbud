@@ -103,18 +103,20 @@ export function SpacesScreen({ navigation }: Props) {
     );
   };
 
+  const ACTION_WIDTH = 72;
+
   const renderRightActions = (space: SpaceWithRole) => {
     const isArchived = !!space.archivedAt;
     return (
-      <View style={tw`flex-row`}>
+      <View style={{ flexDirection: 'row', width: ACTION_WIDTH * 3 }}>
         <Pressable
-          style={tw`bg-primary w-20 items-center justify-center`}
+          style={{ alignItems: 'center', backgroundColor: '#4F8EF7', justifyContent: 'center', width: ACTION_WIDTH }}
           onPress={() => handleEdit(space.id)}
         >
           <Typography style={tw`text-white text-sm font-medium`}>Edit</Typography>
         </Pressable>
         <Pressable
-          style={tw`w-24 items-center justify-center bg-orange-400`}
+          style={{ alignItems: 'center', backgroundColor: '#F97316', justifyContent: 'center', width: ACTION_WIDTH }}
           onPress={() => handleArchive(space)}
         >
           <Typography style={tw`text-white text-sm font-medium`}>
@@ -122,7 +124,7 @@ export function SpacesScreen({ navigation }: Props) {
           </Typography>
         </Pressable>
         <Pressable
-          style={tw`bg-error w-20 items-center justify-center`}
+          style={{ alignItems: 'center', backgroundColor: '#EF4444', justifyContent: 'center', width: ACTION_WIDTH }}
           onPress={() => handleDelete(space)}
         >
           <Typography style={tw`text-white text-sm font-medium`}>Delete</Typography>
