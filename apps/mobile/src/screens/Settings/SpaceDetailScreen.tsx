@@ -533,7 +533,7 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                     </Pressable>
                     <Pressable
                       style={tw`bg-error/10 rounded-lg px-3 py-1.5`}
-                      onPress={() => handleRemoveMember(member.userId, (`${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim())}
+                      onPress={() => handleRemoveMember(member.userId, `${member.user.firstName ?? ''} ${member.user.lastName ?? ''}`.trim())}
                     >
                       <Typography style={tw`text-error text-xs font-medium`}>Remove</Typography>
                     </Pressable>
