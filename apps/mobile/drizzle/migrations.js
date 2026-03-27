@@ -9,6 +9,7 @@ import m0005 from './0005_space_archived.sql';
 import m0006 from './0006_user_name_split.sql';
 import m0007 from './0007_child_role.sql';
 import m0008 from './0008_tasks.sql';
+import m0009 from './0009_fix_display_name.sql';
 import journal from './meta/_journal.json';
 
 export default {
@@ -23,5 +24,6 @@ export default {
     m0006,
     m0007,
     m0008,
+    m0009,
   },
 };
