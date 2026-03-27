@@ -127,7 +127,7 @@ export function AddEntryPickerScreen({ navigation }: Props) {
   const spaceOptions = spaces.map((s) => ({ id: s.id, label: s.name }));
 
   return (
-    <View style={tw`bg-surface flex-1`}>
+    <View style={tw`bg-background flex-1`}>
       {/* Header */}
       <View style={tw`flex-row items-center justify-between px-4 pb-4 pt-14`}>
         <Pressable onPress={() => navigation.goBack()}>
@@ -163,10 +163,10 @@ export function AddEntryPickerScreen({ navigation }: Props) {
         {ENTRY_OPTIONS.map((option) => (
           <Pressable
             key={option.type}
-            style={tw`bg-background mb-3 flex-row items-center rounded-xl p-4`}
+            style={tw`bg-surface mb-3 flex-row items-center rounded-xl p-4`}
             onPress={() => handleNavigate(option.screen)}
           >
-            <View style={tw`bg-surface mr-4 h-12 w-12 items-center justify-center rounded-full`}>
+            <View style={tw`bg-background mr-4 h-12 w-12 items-center justify-center rounded-full`}>
               <option.Icon
                 height={PICKER_ICON_SIZE}
                 style={tw`text-foreground`}
