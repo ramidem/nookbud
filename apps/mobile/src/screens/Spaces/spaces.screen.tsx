@@ -58,23 +58,22 @@ export function SpacesScreen({ navigation }: Props) {
           <View style={tw`bg-surface overflow-hidden rounded-xl`}>
             {/* All Spaces row */}
             <Pressable
-              style={[
-                tw`border-background flex-row items-center border-b p-4`,
-                isAllSpaces && tw`bg-primary/15`,
-              ]}
+              style={tw`border-background border-b px-2 py-1`}
               onPress={() => switchToSpace(null)}
             >
-              <View
-                style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
-              >
-                <UsersIcon height={20} style={tw`text-subtitle`} width={20} />
-              </View>
-              <View style={tw`flex-1`}>
-                <Typography
-                  style={tw`text-base font-medium ${isAllSpaces ? 'text-primary' : 'text-foreground'}`}
+              <View style={[tw`flex-row items-center rounded-xl p-3`, isAllSpaces && tw`bg-primary/15`]}>
+                <View
+                  style={tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-neutral-200`}
                 >
-                  All Spaces
-                </Typography>
+                  <UsersIcon height={20} style={tw`text-subtitle`} width={20} />
+                </View>
+                <View style={tw`flex-1`}>
+                  <Typography
+                    style={tw`text-base font-medium ${isAllSpaces ? 'text-primary' : 'text-foreground'}`}
+                  >
+                    All Spaces
+                  </Typography>
+                </View>
               </View>
             </Pressable>
 
@@ -87,14 +86,12 @@ export function SpacesScreen({ navigation }: Props) {
                 <Pressable
                   key={space.id}
                   style={[
-                    tw`flex-row items-center p-4 ${
-                      index < spaces.length - 1 ? 'border-background border-b' : ''
-                    }`,
-                    isActive && tw`bg-primary/15`,
+                    tw`px-2 py-1 ${index < spaces.length - 1 ? 'border-background border-b' : ''}`,
                     isArchived && { opacity: 0.6 },
                   ]}
                   onPress={() => navigation.navigate('SpaceDetail', { spaceId: space.id })}
                 >
+                  <View style={[tw`flex-row items-center rounded-xl p-3`, isActive && tw`bg-primary/15`]}>
                   <View
                     style={[
                       tw`mr-3 h-10 w-10 items-center justify-center rounded-full`,
@@ -135,6 +132,7 @@ export function SpacesScreen({ navigation }: Props) {
                         </View>
                       )}
                     </View>
+                  </View>
                   </View>
                 </Pressable>
               );
