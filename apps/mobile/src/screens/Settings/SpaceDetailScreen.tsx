@@ -29,6 +29,7 @@ import {
   PencilLineIcon,
   UsersIcon,
 } from '@/icons';
+import { useActiveSpace } from '@/hooks';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { SpaceMemberService, SpaceService, type SpaceDetails, type SpaceInvite } from '@/services';
 import { useLocalStorageStore } from '@/stores';
@@ -57,6 +58,8 @@ const ROLE_LABELS: Record<string, string> = {
 
 export function SpaceDetailScreen({ navigation, route }: Props) {
   const { spaceId } = route.params;
+  const { activeSpaceId, switchToSpace } = useActiveSpace();
+  const isActive = activeSpaceId === spaceId;
 
   const [space, setSpace] = useState<SpaceDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -355,6 +358,15 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
       <ScreenHeader title={space.name} />
 
       <ScrollView contentContainerStyle={tw`px-4 pb-8 pt-4`}>
+        {/* Select Space */}
+        <Pressable
+          style={tw`mb-4 flex-row items-center justify-center rounded-xl py-3 ${isActive ? 'bg-primary/15' : 'bg-surface'}`}
+          onPress={() => switchToSpace(isActive ? null : spaceId)}
+        >
+          <Typography style={tw`text-base font-medium ${isActive ? 'text-primary' : 'text-foreground'}`}>
+            {isActive ? '✓ Active Space' : 'Set as Active Space'}
+          </Typography>
+        </Pressable>
         {/* Space Appearance (owner only) */}
         {isOwner && (
           <View style={tw`bg-surface mb-4 rounded-xl`}>
