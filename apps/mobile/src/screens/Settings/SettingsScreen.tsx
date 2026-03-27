@@ -15,7 +15,7 @@ import { Alert, Button, PageHeader } from '@/components';
 import type { User, Child } from '@/database/schema';
 import { seedDatabase } from '@/database/seed';
 import { useTw } from '@/hooks/useTw';
-import { BabyIcon, ChevronRightIcon, ShareIcon, UserIcon, UsersIcon } from '@/icons';
+import { BabyIcon, BookOpenIcon, ChevronRightIcon, ShareIcon, UserIcon, UsersIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import {
   UserService,
@@ -275,6 +275,25 @@ export function SettingsScreen({ navigation }: Props) {
               <Text style={tw`text-subtitle text-sm`}>
                 Generate court-ready reports and evidence bundles
               </Text>
+            </View>
+            <ChevronRightIcon height={20} style={tw`text-placeholder`} width={20} />
+          </Pressable>
+        </View>
+
+        {/* Resources Section */}
+        <View style={tw`bg-surface mb-4 rounded-xl`}>
+          <Pressable
+            style={tw`flex-row items-center p-4`}
+            onPress={() => navigation.navigate('Resources')}
+          >
+            <View
+              style={tw`mr-4 h-12 w-12 items-center justify-center rounded-full bg-neutral-200`}
+            >
+              <BookOpenIcon height={24} style={tw`text-primary`} width={24} />
+            </View>
+            <View style={tw`flex-1`}>
+              <Text style={tw`text-foreground text-lg font-medium`}>Resources</Text>
+              <Text style={tw`text-subtitle text-sm`}>Manage uploaded documents and files</Text>
             </View>
             <ChevronRightIcon height={20} style={tw`text-placeholder`} width={20} />
           </Pressable>
