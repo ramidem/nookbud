@@ -408,7 +408,9 @@ export function SpaceDetailScreen({ navigation, route }: Props) {
                       { backgroundColor: space.color ?? colors.primary },
                     ]}
                   >
-                    <EmojiText style={tw`text-2xl`}>{space.emoji ?? '🏠'}</EmojiText>
+                    <Typography style={tw`text-white text-lg font-semibold`}>
+                      {space.name.trim().charAt(0).toUpperCase()}
+                    </Typography>
                   </View>
                   <Typography style={tw`text-foreground flex-1 text-lg font-medium`}>
                     {space.name}

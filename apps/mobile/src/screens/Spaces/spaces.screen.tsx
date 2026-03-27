@@ -3,7 +3,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
-import { Button, EmojiText, PageHeader, Typography } from '@/components';
+import { Button, PageHeader, Typography } from '@/components';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { ArchiveIcon, UsersIcon } from '@/icons';
@@ -101,7 +101,9 @@ export function SpacesScreen({ navigation }: Props) {
                       { backgroundColor: space.color ?? colors.primary },
                     ]}
                   >
-                    <EmojiText style={tw`text-lg`}>{space.emoji || '🏠'}</EmojiText>
+                    <Typography style={tw`text-white text-sm font-semibold`}>
+                      {space.name.trim().charAt(0).toUpperCase()}
+                    </Typography>
                   </View>
                   <View style={tw`flex-1`}>
                     <Typography
