@@ -55,13 +55,12 @@ export function SpacesScreen({ navigation }: Props) {
         </View>
       ) : (
         <ScrollView contentContainerStyle={tw`px-4 pb-8 pt-4`}>
-          <View style={tw`bg-surface rounded-xl`}>
+          <View style={tw`bg-surface overflow-hidden rounded-xl`}>
             {/* All Spaces row */}
             <Pressable
               style={[
                 tw`border-background flex-row items-center border-b p-4`,
                 isAllSpaces && tw`bg-primary/15`,
-                isAllSpaces && { borderColor: 'rgba(79,142,247,0.3)', borderWidth: 1 },
               ]}
               onPress={() => switchToSpace(null)}
             >
@@ -92,7 +91,6 @@ export function SpacesScreen({ navigation }: Props) {
                       index < spaces.length - 1 ? 'border-background border-b' : ''
                     }`,
                     isActive && tw`bg-primary/15`,
-                    isActive && { borderColor: 'rgba(79,142,247,0.3)', borderWidth: 1 },
                     isArchived && { opacity: 0.6 },
                   ]}
                   onPress={() => navigation.navigate('SpaceDetail', { spaceId: space.id })}
