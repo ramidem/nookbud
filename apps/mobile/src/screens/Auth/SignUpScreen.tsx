@@ -70,9 +70,9 @@ export function SignUpScreen({ navigation }: Props) {
       return;
     }
 
-    // OTP sent — navigate to verify screen
-    LogService.info('auth', 'Sign up success — OTP sent');
-    navigation.navigate('VerifyOtp', { email: data.email });
+    // Email confirmation is disabled — Supabase fires SIGNED_IN immediately.
+    // RootNavigator handles routing to Setup. Nothing to do here.
+    LogService.info('auth', 'Sign up success — awaiting auth state change');
   };
 
   const handleGoogleSignIn = async () => {
