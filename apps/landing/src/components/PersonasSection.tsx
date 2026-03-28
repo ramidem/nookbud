@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { personas } from '../data/personas';
 import { FadeIn } from './ui/Animate';
@@ -10,6 +10,8 @@ import { SectionHeading } from './ui/SectionHeading';
 export function PersonasSection() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [paused, setPaused] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const prev = () => {
     setDirection(-1);
@@ -19,6 +21,15 @@ export function PersonasSection() {
     setDirection(1);
     setCurrent((c) => (c === personas.length - 1 ? 0 : c + 1));
   };
+
+  useEffect(() => {
+    if (paused) return;
+    intervalRef.current = setInterval(() => {
+      setDirection(1);
+      setCurrent((c) => (c === personas.length - 1 ? 0 : c + 1));
+    }, 4000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [paused]);
 
   return (
     <Section bg="white" compact>
@@ -37,7 +48,11 @@ export function PersonasSection() {
       </div>
 
       <FadeIn delay={0.3}>
-        <div className="relative mx-auto mt-16 w-full max-w-3xl">
+        <div
+          className="relative mx-auto mt-16 w-full max-w-3xl"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           {/* Card stack */}
           <div className="relative mb-8 h-[480px] w-full">
             {/* Background stacked cards */}
