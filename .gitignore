@@ -159,5 +159,7 @@ web-build/
 !apps/landing/public/**
 !apps/landing/public/*.png
 
+package-lock.json
+
 .claude/worktrees
 .claude/settings.local.json
