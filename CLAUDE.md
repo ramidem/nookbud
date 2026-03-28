@@ -44,6 +44,16 @@ yarn check-env:mobile     # Verify env vars
 yarn clean                # Clean generated outputs
 ```
 
+## Git Workflow (coparent)
+
+> ⚠️ This overrides global CLAUDE.md rules for this repo.
+
+- Push **directly to main** — no branching, no PRs needed
+- Pre-push branch gate is disabled (Med's preference, 2026-03-28)
+- Pre-commit lint hook still runs — fix lint before committing
+
+---
+
 ## Dev Workflow
 
 React Native has two parts that need to run together: the **native app** (on a simulator/device) and **Metro** (the JS bundler/dev server). Metro alone does not launch a simulator.
@@ -108,7 +118,7 @@ apps/mobile/src/
 - **Path alias**: `@/` maps to `./src`
 - **Linting**: ESLint (Airbnb TS base) + Prettier (single quotes, trailing commas, 100 char width)
 - **Max constraints**: line length 125 (ESLint), print width 100 (Prettier), nesting depth 3, function params 3
-- **Git hooks** (Husky): pre-commit runs `lint:all`, pre-push blocks pushes to main/staging/development
+- **Git hooks** (Husky): pre-commit runs `lint:all`, pre-push branch gate **disabled** — push directly to main
 
 ### File Naming
 
