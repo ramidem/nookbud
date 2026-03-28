@@ -25,11 +25,7 @@ export function WhatItIsSection() {
           </FadeIn>
           <FadeIn delay={0.15}>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-brand-charcoal/70 md:text-2xl">
-              Schedules. Messages. Expenses. Milestones. Everything in one shared
-              space — timestamped, verified, and always accessible to both parents.
-            </p>
-            <p className="mt-4 text-base font-medium text-brand-sage">
-              Co-parenting, organized.
+              Schedules. Messages. Expenses. All in one place.
             </p>
           </FadeIn>
         </div>

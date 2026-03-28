@@ -25,9 +25,7 @@ export function RecordSection() {
           </FadeIn>
           <FadeIn delay={0.15}>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-brand-charcoal/70 md:text-2xl">
-              Every entry is timestamped and preserved. Edits create new versions —
-              the original is never lost. When it matters, the record is already
-              there.
+              Every entry is timestamped. Nothing can be changed silently.
             </p>
           </FadeIn>
         </div>

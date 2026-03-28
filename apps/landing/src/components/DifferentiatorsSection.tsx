@@ -37,12 +37,7 @@ export function DifferentiatorsSection() {
         <FadeIn>
           <SectionHeading>Why NookBud is different</SectionHeading>
         </FadeIn>
-        <FadeIn delay={0.15}>
-          <p className="mx-auto mt-4 max-w-xl text-xl text-brand-charcoal/70">
-            Every co-parenting app assumes two parents, one child, one
-            arrangement. Families are more complex than that.
-          </p>
-        </FadeIn>
+
       </div>
 
       <StaggerChildren

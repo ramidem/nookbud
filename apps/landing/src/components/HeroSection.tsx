@@ -37,15 +37,7 @@ export function HeroSection() {
           >
             Everything in one place — for them.
           </motion.h1>
-          <motion.p
-            className="mt-6 max-w-lg text-lg leading-relaxed text-brand-charcoal/70 md:text-2xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            A safe place for shared care. Stay organized, communicate clearly,
-            and keep the focus on your child.
-          </motion.p>
+
           <motion.div
             className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
             initial={{ opacity: 0, y: 20 }}
