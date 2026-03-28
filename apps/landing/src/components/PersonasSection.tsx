@@ -27,7 +27,7 @@ export function PersonasSection() {
     intervalRef.current = setInterval(() => {
       setDirection(1);
       setCurrent((c) => (c === personas.length - 1 ? 0 : c + 1));
-    }, 4000);
+    }, 6000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [paused]);
 
@@ -54,7 +54,7 @@ export function PersonasSection() {
           onMouseLeave={() => setPaused(false)}
         >
           {/* Card stack */}
-          <div className="relative mb-8 h-[360px] w-full md:h-[420px]">
+          <div className="relative mb-8 h-[420px] w-full md:h-[460px]">
             {/* Background stacked cards */}
             {[3, 2, 1].map((offset) => (
               <div
