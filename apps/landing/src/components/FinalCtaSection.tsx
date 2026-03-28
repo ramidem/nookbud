@@ -39,7 +39,7 @@ export function FinalCtaSection() {
             </p>
           </FadeIn>
           <FadeIn delay={0.45}>
-            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col items-start gap-3">
               {/* App Store */}
               <a href="#" className="transition-opacity hover:opacity-80">
                 <Image
@@ -55,9 +55,9 @@ export function FinalCtaSection() {
                 <Image
                   src="/badge-google-play.png"
                   alt="Get it on Google Play"
-                  width={160}
-                  height={48}
-                  className="h-[48px] w-auto"
+                  width={140}
+                  height={42}
+                  className="h-[42px] w-auto"
                 />
               </a>
             </div>
