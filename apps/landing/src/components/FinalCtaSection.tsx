@@ -39,7 +39,7 @@ export function FinalCtaSection() {
             </p>
           </FadeIn>
           <FadeIn delay={0.45}>
-            <div className="mt-6 flex flex-col items-start gap-3">
+            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               {/* App Store */}
               <a href="#" className="transition-opacity hover:opacity-80">
                 <Image
