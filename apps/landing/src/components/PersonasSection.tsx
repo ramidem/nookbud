@@ -85,7 +85,7 @@ export function PersonasSection() {
                     ✓ {personas[current].outcome}
                   </p>
                 )}
-                <p className="flex-1 font-serif text-lg italic leading-relaxed text-brand-charcoal md:text-2xl">
+                <p className="font-serif text-lg italic leading-relaxed text-brand-charcoal md:text-2xl">
                   &ldquo;{personas[current].quote}&rdquo;
                 </p>
                 <div className="mt-6 border-t border-brand-border pt-4">
@@ -101,8 +101,8 @@ export function PersonasSection() {
                         {personas[current].feature}
                       </span>
                     </div>
-                    {/* Arrows below name */}
-                    <div className="flex items-center gap-2">
+                    {/* Arrows below name — centered */}
+                    <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={next}
                         className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
