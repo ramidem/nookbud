@@ -46,7 +46,7 @@ export function PricingSection() {
       <div className="mt-8 flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-center md:gap-0">
         {/* Left — monthly */}
         <FadeIn className="text-center">
-          <div className="rounded-tl-2xl rounded-bl-2xl border-2 border-r-0 border-brand-sage px-8 py-14">
+          <div className="px-8 py-14">
             <div className="flex items-baseline justify-center gap-1.5">
               <span className="font-serif font-semibold text-brand-sage">
                 <span className="text-2xl md:text-3xl">$</span>
