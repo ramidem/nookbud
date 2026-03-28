@@ -27,6 +27,11 @@ export function PersonasSection() {
         {personas.map((persona) => (
           <StaggerItem key={persona.name}>
             <div className="flex h-full flex-col rounded-2xl border border-brand-border bg-brand-offwhite p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+              {persona.outcome && (
+                <p className="mb-4 text-sm font-semibold text-brand-sage">
+                  ✓ {persona.outcome}
+                </p>
+              )}
               <p className="flex-1 font-serif text-base italic leading-relaxed text-brand-charcoal md:text-lg">
                 &ldquo;{persona.quote}&rdquo;
               </p>

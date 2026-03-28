@@ -1,15 +1,15 @@
 export const differentiators = [
   {
-    title: 'Built for every family',
+    title: 'One parent pays. Everyone joins.',
     description:
-      'Not just divorce. OFW families, grandparent guardians, blended families, open adoption — NookBud works for any arrangement where a child is shared between caregivers.',
-    icon: '🏡',
+      'Invite your co-parent, a grandparent, a guardian — they join free. No per-seat fees. No gotchas.',
+    icon: '💚',
   },
   {
-    title: 'Multiple Spaces',
+    title: 'Court-ready in one tap',
     description:
-      "One app for all your care arrangements. Each Space is a care circle — create as many as you need. Competitors lock you into one arrangement.",
-    icon: '🔗',
+      'Export a complete record bundle — PDF timeline, file attachments, hash verification manifest. Organized for lawyers, courts, and institutions.',
+    icon: '📋',
   },
   {
     title: 'Tamper-proof records',
@@ -18,15 +18,15 @@ export const differentiators = [
     icon: '🔒',
   },
   {
-    title: 'Court-ready in one tap',
+    title: 'Multiple Spaces',
     description:
-      'Export a complete evidence bundle — PDF timeline, file attachments, hash verification manifest. Organized for lawyers, courts, and institutions.',
-    icon: '📋',
+      "One app for all your care arrangements. Each Space is its own care circle. Competitors lock you into one arrangement.",
+    icon: '🔗',
   },
   {
-    title: 'One parent pays. Everyone joins.',
+    title: 'Built for every family',
     description:
-      'Invite your co-parent, a grandparent, a guardian — they join for free. No per-seat pricing. ~$6/month covers everything.',
-    icon: '💚',
+      'Not just divorce. Blended families, grandparent guardians, open adoption, long-distance parents — NookBud works for any arrangement where a child is shared.',
+    icon: '🏡',
   },
 ];

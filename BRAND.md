@@ -151,10 +151,10 @@ Records are always export-ready. Court-ready format baked in — but never menti
 | | |
 |---|---|
 | **Free Trial** | 14 days, full access, no credit card required |
-| **Nookbud** | ₱349/month or ₱2,499/year (~2 months free) |
+| **Nookbud** | $9.99/month or $99/year (~2 months free) |
 | **Includes** | All features. Unlimited co-parent invites. |
 | **Invited co-parents** | Free access to the shared space |
-| **Their own separate account** | They pay their own ₱349/mo |
+| **Their own separate account** | They pay their own $9.99/mo |
 
 **Philosophy:** One parent pays. Everyone stays in the loop. No seat fees, no tiers, no nickel-and-diming. If an invited parent wants to manage a *different* co-parenting situation of their own, they get their own plan.
 
@@ -190,7 +190,7 @@ Records are always export-ready. Court-ready format baked in — but never menti
 **Objection handling:**
 - *Is my data private?* → Yes, your records are yours alone.
 - *Does the other parent have to use it?* → You can use it solo too.
-- *What happens after the trial?* → ₱349/month. Cancel anytime.
+- *What happens after the trial?* → $9.99/month. Cancel anytime.
 
 **Final CTA:**
 > "Try free for 14 days."

@@ -10,8 +10,13 @@ export const faqs = [
       "No. You can start logging on your own — schedules, expenses, communications. If your co-parent joins later, they'll see the shared record. If they don't, you still have a verified personal log.",
   },
   {
+    question: 'What can I actually do with the exported records?',
+    answer:
+      'Everything. Court submissions, school enrollment, insurance claims, custody mediation. One tap exports a PDF timeline or a full ZIP bundle with file attachments and a tamper-proof hash manifest. Your lawyer will know exactly what to do with it.',
+  },
+  {
     question: 'What happens after the trial?',
     answer:
-      "After 14 days, it's ₱349/month or ₱2,499/year (save 2 months). One plan, all features. Your co-parent joins free — they never pay.",
+      "After 14 days, it's $9.99/month or $99/year. One plan, all features. Your co-parent joins free — they never pay.",
   },
 ];

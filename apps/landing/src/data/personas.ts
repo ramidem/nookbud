@@ -1,37 +1,42 @@
 export const personas = [
   {
     name: 'Marcus',
-    context: 'Separated father, Atlanta',
+    context: 'Separated father · Atlanta, GA',
+    outcome: 'Walked into court with 6 months of organized records. Case resolved in weeks, not years.',
     quote:
-      'I paid my lawyer $2,000 just to sort my own records. If I had NookBud from day one, I would have walked into court with everything organized.',
+      'I paid my lawyer $2,000 just to sort records I should have had from day one.',
     feature: 'Court-ready export',
   },
   {
-    name: 'Jun',
-    context: 'OFW father, deployed to Saudi Arabia',
+    name: 'Lila',
+    context: 'Single mother · Phoenix, AZ',
+    outcome: 'Stopped the back-and-forth arguments cold. Everything is timestamped — there\'s nothing to dispute.',
     quote:
-      "Immigration said 'show us proof you're an involved parent.' I had WhatsApp calls and remittance receipts. That's it.",
-    feature: 'Spaces with 3+ members',
+      "There's always a 'that's not what happened.' Now I just pull up the record.",
+    feature: 'Tamper-proof timeline',
   },
   {
-    name: 'Lola Cora',
-    context: 'Guardian grandmother, Pampanga',
+    name: 'Grandma Carol',
+    context: 'Guardian grandmother · Nashville, TN',
+    outcome: 'Proved primary caregiver status to the school district and insurance — in one export.',
     quote:
-      "The hospital won't authorize treatment because I'm not the legal parent. I need proof I'm the primary caregiver.",
+      "The school kept asking for documentation I didn't know how to organize.",
     feature: 'Institutional-ready records',
   },
   {
     name: 'Sarah & David',
-    context: 'Adoptive parents with open arrangement, Portland',
+    context: 'Adoptive parents with open arrangement · Portland, OR',
+    outcome: 'A calm, shared record that keeps everyone on the same page — without the drama.',
     quote:
-      'We have a beautiful relationship with our daughter\'s birth mother. We just need a calm, shared record — not a conflict tool.',
+      "We have a beautiful relationship with our daughter's birth mother. We just needed a system, not a conflict tool.",
     feature: 'Non-adversarial design',
   },
   {
     name: 'Camille',
-    context: 'Blended family, 3 arrangements, Melbourne',
+    context: 'Blended family · Seattle, WA',
+    outcome: 'Manages three care arrangements in one app. No more juggling spreadsheets and group chats.',
     quote:
-      "I manage three separate care arrangements with two ex-partners. No app supports that. They all assume two parents, one child.",
+      "I have three separate arrangements with two ex-partners. No app supported that — they all assume two parents, one child.",
     feature: 'Multiple Spaces',
   },
 ];

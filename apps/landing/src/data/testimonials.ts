@@ -1,20 +1,23 @@
 export const testimonials = [
   {
     quote:
-      'I used to screenshot every conversation and save every receipt in a folder. Now everything is in one place, timestamped, and I actually trust it.',
-    name: 'Verified Parent',
+      "My lawyer asked for a complete timeline. I exported everything in one tap — she said it was the most organized case file she'd ever seen.",
+    name: 'Maria S.',
+    context: 'Parent · Los Angeles, CA',
     stars: 5,
   },
   {
     quote:
-      "We're not in conflict — we just needed a shared system. NookBud keeps us both accountable without making it feel adversarial.",
-    name: 'Verified Parent',
+      "We're not in conflict. We just needed a shared system. NookBud keeps us both accountable without making it feel adversarial.",
+    name: 'James R.',
+    context: 'Co-parent · Austin, TX',
     stars: 5,
   },
   {
     quote:
-      "My lawyer asked for a timeline of everything. I exported it in one tap. She said it was the most organized case file she'd ever seen.",
-    name: 'Verified Parent',
+      "I used to screenshot every conversation and save every receipt. Now everything is timestamped and I actually trust it.",
+    name: 'Ana L.',
+    context: 'Parent of 2 · Chicago, IL',
     stars: 5,
   },
 ];

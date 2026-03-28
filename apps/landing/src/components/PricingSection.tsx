@@ -25,18 +25,25 @@ export function PricingSection() {
         </p>
       </FadeIn>
 
-      <div className="mt-16 flex flex-col items-center gap-16 md:flex-row md:items-start md:justify-center md:gap-20">
+      {/* Price anchor */}
+      <FadeIn delay={0.15}>
+        <p className="mx-auto mt-6 max-w-sm text-center text-sm font-medium text-brand-gray">
+          One hour with a family lawyer costs more than a year of Nookbud.
+        </p>
+      </FadeIn>
+
+      <div className="mt-12 flex flex-col items-center gap-16 md:flex-row md:items-start md:justify-center md:gap-20">
         {/* Left — price + CTA */}
         <FadeIn className="text-center">
           <div className="flex items-baseline justify-center gap-1.5">
             <span className="font-serif font-semibold text-brand-sage">
-              <span className="text-4xl md:text-5xl">&#8369;</span>
-              <span className="text-7xl md:text-8xl">349</span>
+              <span className="text-4xl md:text-5xl">$</span>
+              <span className="text-7xl md:text-8xl">9.99</span>
             </span>
             <span className="text-xl text-brand-gray">/month</span>
           </div>
           <p className="mt-3 text-brand-gray">
-            or &#8369;2,499/year{' '}
+            or $99/year{' '}
             <span className="rounded-full bg-brand-sage/10 px-3 py-1 text-sm font-medium text-brand-sage">
               save 2 months
             </span>

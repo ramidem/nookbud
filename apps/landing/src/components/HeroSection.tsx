@@ -10,6 +10,14 @@ export function HeroSection() {
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 md:flex-row md:gap-16">
         {/* Text */}
         <div className="flex-1 text-center md:text-left">
+          <motion.p
+            className="mb-4 text-sm font-medium text-brand-gray md:text-base"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            Tired of lost messages, missed pickups, and &ldquo;that&rsquo;s not what you said&rdquo;?
+          </motion.p>
           <motion.h1
             className="font-serif text-3xl leading-[1.1] text-brand-charcoal md:text-7xl"
             initial={{ opacity: 0, y: 30 }}
