@@ -51,13 +51,13 @@ export function FinalCtaSection() {
                 />
               </a>
               {/* Google Play */}
-              <a href="#" className="transition-opacity hover:opacity-80">
+              <a href="#" className="-ml-2 transition-opacity hover:opacity-80">
                 <Image
                   src="/badge-google-play.png"
                   alt="Get it on Google Play"
-                  width={140}
-                  height={42}
-                  className="h-[42px] w-[140px] object-contain"
+                  width={160}
+                  height={48}
+                  className="h-[48px] w-[160px] object-contain"
                 />
               </a>
             </div>
