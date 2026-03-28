@@ -20,15 +20,7 @@ export function PricingSection() {
           One plan. Everything included.
         </SectionHeading>
         <p className="mx-auto mt-4 max-w-lg text-center text-lg text-brand-gray md:text-xl">
-          No tiers. No per-seat pricing. One parent subscribes — everyone else
-          joins free.
-        </p>
-      </FadeIn>
-
-      {/* Price anchor */}
-      <FadeIn delay={0.15}>
-        <p className="mx-auto mt-6 max-w-sm text-center text-sm font-medium text-brand-gray">
-          One hour with a family lawyer costs more than a year of Nookbud.
+          One subscription covers your whole family. No tiers, no per-seat fees.
         </p>
       </FadeIn>
 
