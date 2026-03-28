@@ -19,6 +19,9 @@ export function WhatItIsSection() {
               Schedules. Messages. Expenses. Milestones. Everything in one shared
               space — timestamped, verified, and always accessible to both parents.
             </p>
+            <p className="mt-4 text-sm font-medium text-brand-primary">
+              Co-parenting, organized.
+            </p>
           </FadeIn>
         </div>
 

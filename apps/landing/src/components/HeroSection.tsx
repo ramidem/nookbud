@@ -16,9 +16,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            Two homes.
-            <br />
-            One childhood.
+            Everything in one place — for them.
           </motion.h1>
           <motion.p
             className="mt-6 max-w-xl text-base leading-relaxed text-brand-gray md:text-xl"
@@ -26,8 +24,8 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            Stay organized, communicate clearly, and build a shared record that
-            keeps the focus on your child — not the conflict.
+            A safe place for shared care. Stay organized, communicate clearly,
+            and keep the focus on your child.
           </motion.p>
           <motion.div
             className="mt-10 flex flex-col items-center gap-3 md:items-start"

@@ -28,7 +28,7 @@ No explanation needed. No translation required. Works in any market.
 Nookbud gives you clarity — about schedules, records, communication — so you can focus on the child, not the chaos.
 
 **One-liner:**  
-*"Two homes. One source of truth."*
+*"Everything in one place — for them."*
 
 **Alt taglines:**
 - *"Co-parenting, clearly."*
@@ -165,7 +165,7 @@ Records are always export-ready. Court-ready format baked in — but never menti
 ## 💬 Landing Page Copy (Locked)
 
 **Hero:**
-> "Two homes. One childhood."
+> "Everything in one place — for them."
 > Nookbud helps co-parents stay organized, communicate clearly, and keep the focus on what matters.
 
 **Section 2:**
