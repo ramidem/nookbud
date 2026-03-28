@@ -26,10 +26,10 @@ export function TestimonialsSection() {
           <StaggerItem key={i}>
             <div className="flex h-full flex-col rounded-2xl bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
               <Stars />
-              <p className="mt-4 flex-1 italic leading-relaxed text-brand-charcoal">
+              <p className="mt-4 flex-1 text-base italic leading-relaxed text-brand-charcoal md:text-lg">
                 &ldquo;{t.quote}&rdquo;
               </p>
-              <p className="mt-6 text-sm font-medium text-brand-gray">
+              <p className="mt-6 text-base font-medium text-brand-gray">
                 — {t.name}
               </p>
             </div>

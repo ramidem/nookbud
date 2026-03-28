@@ -1,41 +1,39 @@
 import Image from 'next/image';
 import { FadeIn } from './ui/Animate';
-import { Section } from './ui/Section';
 import { SectionHeading } from './ui/SectionHeading';
 
 export function WhatItIsSection() {
   return (
-    <Section bg="white">
-      <div className="flex flex-col items-center gap-12 md:flex-row-reverse md:gap-16">
-        {/* Text */}
-        <div className="flex-1 text-center md:text-left">
+    <section className="relative flex h-full items-center overflow-hidden bg-white py-20 px-6 md:py-28">
+      {/* Background illustration — bottom right, full width */}
+      <div className="pointer-events-none absolute bottom-0 right-0 h-3/4 w-full opacity-[0.2]">
+        <Image
+          src="/illustrations/undraw_fatherhood_eldm.svg"
+          alt=""
+          width={800}
+          height={600}
+          className="h-full w-full object-contain object-right-bottom"
+        />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-5xl">
+        <div className="text-left">
           <FadeIn>
-            <SectionHeading>
-              Built around your child, not the conflict.
+            <SectionHeading className="!text-6xl">
+              Built around your child,<br />not the conflict.
             </SectionHeading>
           </FadeIn>
           <FadeIn delay={0.15}>
-            <p className="mt-6 text-lg leading-relaxed text-brand-gray">
+            <p className="mt-6 max-w-lg text-2xl leading-relaxed text-brand-charcoal/70">
               Schedules. Messages. Expenses. Milestones. Everything in one shared
               space — timestamped, verified, and always accessible to both parents.
             </p>
-            <p className="mt-4 text-sm font-medium text-brand-primary">
+            <p className="mt-4 text-base font-medium text-brand-sage">
               Co-parenting, organized.
             </p>
           </FadeIn>
         </div>
-
-        {/* Illustration */}
-        <FadeIn direction="left" className="flex-1">
-          <Image
-            src="/illustrations/undraw_football-with-dad_w7m1.svg"
-            alt="Parent and child playing"
-            width={420}
-            height={340}
-            className="mx-auto w-full max-w-[200px] md:max-w-md"
-          />
-        </FadeIn>
       </div>
-    </Section>
+    </section>
   );
 }

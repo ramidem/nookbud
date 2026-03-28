@@ -30,7 +30,7 @@ export function FinalCtaSection() {
             />
           </FadeIn>
           <FadeIn delay={0.15}>
-            <h2 className="mt-6 font-serif text-2xl text-white md:text-5xl md:text-left">
+            <h2 className="mt-6 font-serif text-3xl text-white md:text-6xl md:text-left">
               For the child you both love.
             </h2>
           </FadeIn>
@@ -49,7 +49,7 @@ export function FinalCtaSection() {
                 Download for Android
               </CtaButton>
             </div>
-            <p className="mt-4 text-sm text-white/60 md:text-left">
+            <p className="mt-4 text-base text-white/60 md:text-left">
               14-day trial. No credit card. Cancel anytime.
             </p>
           </FadeIn>

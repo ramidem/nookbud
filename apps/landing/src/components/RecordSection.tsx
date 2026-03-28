@@ -1,37 +1,37 @@
 import Image from 'next/image';
 import { FadeIn } from './ui/Animate';
-import { Section } from './ui/Section';
 import { SectionHeading } from './ui/SectionHeading';
 
 export function RecordSection() {
   return (
-    <Section bg="surface">
-      <div className="flex flex-col items-center gap-12 md:flex-row md:gap-16">
-        {/* Text */}
-        <div className="flex-1 text-center md:text-left">
+    <section className="relative flex h-full items-center overflow-hidden bg-brand-surface py-20 px-6 md:py-28">
+      {/* Background illustration — bottom right, full width */}
+      <div className="pointer-events-none absolute bottom-0 right-0 h-3/4 w-full -scale-x-100 opacity-[0.2]">
+        <Image
+          src="/illustrations/undraw_collecting_3zyb.svg"
+          alt=""
+          width={800}
+          height={600}
+          className="h-full w-full object-contain object-left-bottom"
+        />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-5xl">
+        <div className="text-left">
           <FadeIn>
-            <SectionHeading>Everything recorded. Nothing forgotten.</SectionHeading>
+            <SectionHeading className="!text-6xl">
+              Everything recorded.<br />Nothing forgotten.
+            </SectionHeading>
           </FadeIn>
           <FadeIn delay={0.15}>
-            <p className="mt-6 text-lg leading-relaxed text-brand-gray">
+            <p className="mt-6 max-w-lg text-2xl leading-relaxed text-brand-charcoal/70">
               Every entry is timestamped and preserved. Edits create new versions —
               the original is never lost. When it matters, the record is already
               there.
             </p>
           </FadeIn>
         </div>
-
-        {/* Illustration */}
-        <FadeIn direction="right" className="flex-1">
-          <Image
-            src="/illustrations/undraw_private-files_m2bw.svg"
-            alt="Secure private files"
-            width={420}
-            height={340}
-            className="mx-auto w-full max-w-[200px] md:max-w-md"
-          />
-        </FadeIn>
       </div>
-    </Section>
+    </section>
   );
 }

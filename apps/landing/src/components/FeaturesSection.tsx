@@ -1,62 +1,70 @@
-import Image from 'next/image';
 import { FadeIn, StaggerChildren, StaggerItem } from './ui/Animate';
 import { Section } from './ui/Section';
 import { SectionHeading } from './ui/SectionHeading';
 
 const features = [
   {
-    title: 'Shared Schedule',
+    title: "No more 'I didn't know about that'",
     description:
-      'One calendar, two homes. Log pickups, drop-offs, and appointments — both parents see the same truth.',
-    illustration: '/illustrations/undraw_digital-calendar_180l.svg',
+      'One shared calendar. Log pickups, drop-offs, and appointments — both parents see the same truth.',
   },
   {
-    title: 'Clear Communication',
+    title: 'The record speaks for itself',
     description:
-      'Every message timestamped and preserved. No more "I never said that" — the record speaks for itself.',
-    illustration: '/illustrations/undraw_email_b5yu.svg',
+      'Every message timestamped and preserved. No more disputed conversations — the record is already there.',
   },
   {
-    title: 'Expense Tracking',
+    title: 'No more disputed costs',
     description:
       'Log expenses, split costs, attach receipts. Every transaction is hashed and verifiable.',
-    illustration: '/illustrations/undraw_pay-with-credit-card_77g6.svg',
   },
   {
-    title: 'Document Storage',
+    title: 'Every document, always accessible',
     description:
-      'Medical records, school forms, legal agreements — stored with SHA-256 verification so nothing can be silently altered.',
-    illustration: '/illustrations/undraw_security-on_3ykb.svg',
+      'Medical records, school forms, legal agreements — stored securely so nothing can be silently altered.',
   },
 ];
 
+function CircleCheckIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-sage">
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
+
 export function FeaturesSection() {
   return (
-    <Section id="features" bg="surface">
+    <Section id="features" bg="surface" className="[&>div]:max-w-none">
       <div className="text-center">
         <FadeIn>
           <SectionHeading>
-            Everything you need. Nothing you don&apos;t.
+            Everything you need.<br />Nothing you don&apos;t.
           </SectionHeading>
         </FadeIn>
       </div>
-      <StaggerChildren className="mt-16 grid gap-8 sm:grid-cols-2" stagger={0.12} delay={0.2}>
-        {features.map((feature) => (
+      <StaggerChildren
+        className="mx-auto mt-16 max-w-3xl overflow-hidden rounded-2xl"
+        stagger={0.12}
+        delay={0.2}
+      >
+        {features.map((feature, i) => (
           <StaggerItem key={feature.title}>
-            <div className="flex h-full flex-col rounded-2xl bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-              <Image
-                src={feature.illustration}
-                alt={feature.title}
-                width={240}
-                height={180}
-                className="mx-auto mb-6 h-40 w-auto"
-              />
-              <h3 className="font-serif text-xl text-brand-charcoal">
-                {feature.title}
-              </h3>
-              <p className="mt-3 leading-relaxed text-brand-gray">
-                {feature.description}
-              </p>
+            <div className={`flex items-start gap-5 bg-white p-8 ${
+              i < features.length - 1 ? 'border-b border-brand-surface' : ''
+            }`}>
+              <div className="mt-1 shrink-0">
+                <CircleCheckIcon />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-serif text-2xl text-brand-sage md:text-3xl">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-lg leading-relaxed text-brand-charcoal/70">
+                  {feature.description}
+                </p>
+              </div>
             </div>
           </StaggerItem>
         ))}

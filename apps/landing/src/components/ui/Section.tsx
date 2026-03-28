@@ -19,8 +19,8 @@ export function Section({
   bg = 'offwhite',
 }: SectionProps) {
   return (
-    <section id={id} className={`${bgMap[bg]} py-20 px-6 md:py-28 ${className}`}>
-      <div className="mx-auto max-w-5xl">{children}</div>
+    <section id={id} className={`${bgMap[bg]} flex min-h-screen items-center py-20 px-6 md:py-28 ${className}`}>
+      <div className="mx-auto w-full max-w-5xl">{children}</div>
     </section>
   );
 }

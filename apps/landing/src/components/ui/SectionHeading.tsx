@@ -11,7 +11,7 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <h2
-      className={`font-serif text-2xl leading-tight md:text-5xl ${
+      className={`font-serif text-3xl leading-tight md:text-6xl ${
         light ? 'text-white' : 'text-brand-charcoal'
       } ${className}`}
     >

@@ -14,19 +14,33 @@ import { WhatItIsSection } from '../components/WhatItIsSection';
 export default function LandingPage() {
   return (
     <>
-      <Nav />
-      <main>
+      {/* Hero + Nav — fixed background */}
+      <div className="fixed inset-0 z-0 flex h-[95svh] flex-col">
+        <Nav />
         <HeroSection />
-        <WhatItIsSection />
-        <RecordSection />
-        <DifferentiatorsSection />
-        <PersonasSection />
-        <FeaturesSection />
-        <TestimonialsSection />
-        <PricingSection />
-        <FaqSection />
-        <FinalCtaSection />
-      </main>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="relative z-10 mt-[95svh]">
+        {/* Sticky sections that stack */}
+        <div className="sticky top-0 z-[5] h-[95svh]">
+          <WhatItIsSection />
+        </div>
+        <div className="sticky top-0 z-[6] h-[95svh]">
+          <RecordSection />
+        </div>
+
+        {/* Normal scrolling sections */}
+        <div className="relative z-[7]">
+          <DifferentiatorsSection />
+          <PersonasSection />
+          <FeaturesSection />
+          <TestimonialsSection />
+          <PricingSection />
+          <FaqSection />
+          <FinalCtaSection />
+        </div>
+      </div>
       <Footer />
     </>
   );

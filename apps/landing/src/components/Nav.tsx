@@ -3,7 +3,7 @@ import Image from 'next/image';
 export function Nav() {
   return (
     <nav className="w-full bg-brand-offwhite">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
         <a href="/" className="flex items-center gap-2.5">
           <Image
             src="/icon.png"

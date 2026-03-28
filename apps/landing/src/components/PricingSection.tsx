@@ -19,7 +19,7 @@ export function PricingSection() {
         <SectionHeading className="text-center">
           One plan. Everything included.
         </SectionHeading>
-        <p className="mx-auto mt-4 max-w-lg text-center text-lg text-brand-gray">
+        <p className="mx-auto mt-4 max-w-lg text-center text-lg text-brand-gray md:text-xl">
           No tiers. No per-seat pricing. One parent subscribes — everyone else
           joins free.
         </p>
@@ -64,7 +64,7 @@ export function PricingSection() {
                 <svg className="mt-1 h-4 w-4 shrink-0 text-brand-sage" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 6 9 17l-5-5" />
                 </svg>
-                <span className="text-lg text-brand-charcoal">{item}</span>
+                <span className="text-lg text-brand-charcoal md:text-xl">{item}</span>
               </div>
             </StaggerItem>
           ))}
