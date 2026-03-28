@@ -17,6 +17,6 @@ export const faqs = [
   {
     question: 'What happens after the trial?',
     answer:
-      "After 14 days, it's $9.99/month or $99/year. One plan, all features. Your co-parent joins free — they never pay.",
+      "After 14 days, it's $17.99/month or $149.99/year. One plan, all features. Your co-parent joins free — they never pay.",
   },
 ];

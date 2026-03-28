@@ -38,14 +38,14 @@ export function PricingSection() {
           <div className="flex items-baseline justify-center gap-1.5">
             <span className="font-serif font-semibold text-brand-sage">
               <span className="text-4xl md:text-5xl">$</span>
-              <span className="text-7xl md:text-8xl">9.99</span>
+              <span className="text-7xl md:text-8xl">17.99</span>
             </span>
             <span className="text-xl text-brand-gray">/month</span>
           </div>
           <p className="mt-3 text-brand-gray">
-            or $99/year{' '}
+            or $149.99/year{' '}
             <span className="rounded-full bg-brand-sage/10 px-3 py-1 text-sm font-medium text-brand-sage">
-              save 2 months
+              save $65
             </span>
           </p>
           <div className="mt-10">
