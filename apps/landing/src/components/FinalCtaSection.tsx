@@ -13,19 +13,19 @@ export function FinalCtaSection() {
             alt="Family creating together"
             width={380}
             height={300}
-            className="mx-auto w-full max-w-[100px] md:max-w-sm"
+            className="mx-auto w-full max-w-[140px] md:max-w-sm"
           />
         </FadeIn>
 
         {/* CTA content */}
-        <div className="flex-1 text-center md:text-left">
+        <div className="flex-1 text-left">
           <FadeIn>
             <Image
               src="/icon.png"
               alt="NookBud"
               width={56}
               height={56}
-              className="mx-auto rounded-2xl md:mx-0"
+              className="rounded-2xl"
             />
           </FadeIn>
           <FadeIn delay={0.15}>
@@ -39,7 +39,7 @@ export function FinalCtaSection() {
             </p>
           </FadeIn>
           <FadeIn delay={0.45}>
-            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row md:justify-start">
+            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row">
               {/* App Store */}
               <a href="#" className="transition-opacity hover:opacity-80">
                 <Image
