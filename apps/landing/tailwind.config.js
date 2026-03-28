@@ -10,8 +10,17 @@ module.exports = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        garamond: ['"EB Garamond"', 'ui-serif', 'Georgia', 'serif'],
+      colors: {
+        brand: {
+          sage: '#4A7C59',
+          'sage-light': '#5A9A6B',
+          offwhite: '#FAF8F4',
+          amber: '#D4845A',
+          charcoal: '#2C2C2C',
+          gray: '#9A9490',
+          surface: '#EDF3EF',
+          border: '#E8E4DF',
+        },
       },
     },
   },

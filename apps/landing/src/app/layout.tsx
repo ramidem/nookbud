@@ -1,24 +1,41 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './global.css';
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
-  title: 'Nookbud — Two homes. One childhood.',
+  title: 'NookBud — Two homes. One childhood.',
   description:
-    'Nookbud helps co-parents stay organized, communicate clearly, and keep the focus on what matters.',
+    'The shared care records platform for every family structure. Organize schedules, track expenses, and build tamper-proof records — whether you\u2019re co-parenting after separation, working overseas, or managing a blended family.',
   openGraph: {
-    title: 'Nookbud — Two homes. One childhood.',
+    title: 'NookBud — Two homes. One childhood.',
     description:
-      'Nookbud helps co-parents stay organized, communicate clearly, and keep the focus on what matters.',
+      'The shared care records platform for every family structure. Tamper-proof records, shared schedules, and court-ready exports.',
     url: 'https://nookbud.com',
-    siteName: 'Nookbud',
+    siteName: 'NookBud',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NookBud — Two homes. One childhood.',
+    description:
+      'The shared care records platform for every family structure.',
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="overflow-x-hidden">{children}</body>
     </html>
   );
 }
