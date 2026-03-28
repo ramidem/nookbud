@@ -19,12 +19,12 @@ export function RecordSection() {
       <div className="relative mx-auto w-full max-w-5xl">
         <div className="text-left">
           <FadeIn>
-            <SectionHeading className="!text-6xl">
+            <SectionHeading>
               Everything recorded.<br />Nothing forgotten.
             </SectionHeading>
           </FadeIn>
           <FadeIn delay={0.15}>
-            <p className="mt-6 max-w-lg text-2xl leading-relaxed text-brand-charcoal/70">
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-brand-charcoal/70 md:text-2xl">
               Every entry is timestamped and preserved. Edits create new versions —
               the original is never lost. When it matters, the record is already
               there.

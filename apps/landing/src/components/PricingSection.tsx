@@ -42,7 +42,7 @@ export function PricingSection() {
             <div className="flex items-baseline justify-center gap-1.5">
               <span className="font-serif font-semibold text-brand-sage">
                 <span className="text-2xl md:text-3xl">$</span>
-                <span className="text-5xl md:text-6xl">17.99</span>
+                <span className="text-4xl md:text-5xl md:text-6xl">17.99</span>
               </span>
               <span className="text-xl text-brand-gray">/month</span>
             </div>
@@ -61,7 +61,7 @@ export function PricingSection() {
             <div className="flex items-baseline justify-center gap-1.5">
               <span className="font-serif font-semibold text-brand-sage">
                 <span className="text-3xl md:text-4xl">$</span>
-                <span className="text-6xl md:text-7xl">149.99</span>
+                <span className="text-5xl md:text-6xl md:text-7xl">149.99</span>
               </span>
               <span className="text-xl text-brand-gray">/year</span>
             </div>

@@ -22,7 +22,7 @@ export function HeroSection() {
       <div className="relative mx-auto w-full max-w-5xl">
         <div className="text-left">
           <motion.p
-            className="mb-6 inline-block rounded-2xl rounded-bl-sm bg-white px-5 py-3 text-xl font-medium text-brand-gray shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+            className="mb-6 inline-block rounded-2xl rounded-bl-sm bg-white px-4 py-2 text-sm font-medium text-brand-gray md:px-5 md:py-3 md:text-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
@@ -30,7 +30,7 @@ export function HeroSection() {
             Tired of lost messages, missed pickups, and &ldquo;that&rsquo;s not what you said&rdquo;?
           </motion.p>
           <motion.h1
-            className="font-serif text-6xl leading-[1.1] text-brand-charcoal"
+            className="font-serif text-4xl leading-[1.1] text-brand-charcoal md:text-6xl"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
@@ -38,7 +38,7 @@ export function HeroSection() {
             Everything in one place — for them.
           </motion.h1>
           <motion.p
-            className="mt-6 max-w-lg text-2xl leading-relaxed text-brand-charcoal/70"
+            className="mt-6 max-w-lg text-lg leading-relaxed text-brand-charcoal/70 md:text-2xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
