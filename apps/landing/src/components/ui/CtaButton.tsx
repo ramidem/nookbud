@@ -23,7 +23,7 @@ export function CtaButton({
         : 'px-8 py-3 text-base';
   const variantClass =
     variant === 'primary'
-      ? 'bg-brand-sage text-white hover:bg-brand-sage-light shadow-md hover:shadow-lg'
+      ? 'border-2 border-transparent bg-brand-sage text-white hover:bg-brand-sage-light shadow-md hover:shadow-lg'
       : variant === 'outline'
         ? 'border-2 border-brand-sage text-brand-sage hover:bg-brand-sage hover:text-white'
         : 'text-brand-charcoal/70 hover:text-brand-charcoal';
