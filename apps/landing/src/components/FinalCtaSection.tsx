@@ -47,7 +47,7 @@ export function FinalCtaSection() {
                   alt="Download on the App Store"
                   width={140}
                   height={42}
-                  className="h-[42px] w-auto"
+                  className="h-[42px] w-[140px] object-contain"
                 />
               </a>
               {/* Google Play */}
@@ -57,7 +57,7 @@ export function FinalCtaSection() {
                   alt="Get it on Google Play"
                   width={140}
                   height={42}
-                  className="h-[42px] w-auto"
+                  className="h-[42px] w-[140px] object-contain"
                 />
               </a>
             </div>
