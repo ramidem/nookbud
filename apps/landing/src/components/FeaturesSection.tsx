@@ -58,10 +58,10 @@ export function FeaturesSection() {
                 <CircleCheckIcon />
               </div>
               <div className="flex-1">
-                <h3 className="font-serif text-2xl text-brand-sage md:text-3xl">
+                <h3 className="font-serif text-lg text-brand-sage md:text-2xl">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-lg leading-relaxed text-brand-charcoal/70">
+                <p className="mt-2 text-sm leading-relaxed text-brand-charcoal/70 md:text-lg">
                   {feature.description}
                 </p>
               </div>
