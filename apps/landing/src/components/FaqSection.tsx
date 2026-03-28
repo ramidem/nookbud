@@ -6,7 +6,7 @@ import { SectionHeading } from './ui/SectionHeading';
 
 export function FaqSection() {
   return (
-    <Section bg="offwhite">
+    <Section bg="offwhite" compact>
       <div className="mx-auto max-w-2xl">
         <div className="text-center">
           <FadeIn>

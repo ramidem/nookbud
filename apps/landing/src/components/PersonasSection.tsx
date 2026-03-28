@@ -21,7 +21,7 @@ export function PersonasSection() {
   };
 
   return (
-    <Section bg="white">
+    <Section bg="white" compact>
       <div className="text-center">
         <FadeIn>
           <SectionHeading>

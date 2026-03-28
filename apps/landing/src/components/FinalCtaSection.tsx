@@ -5,7 +5,7 @@ import { Section } from './ui/Section';
 
 export function FinalCtaSection() {
   return (
-    <Section bg="sage" className="text-center">
+    <Section bg="sage" compact className="text-center">
       <div className="flex flex-col items-center gap-10 md:flex-row md:gap-16">
         {/* Illustration */}
         <FadeIn direction="left" className="flex-1">

@@ -36,7 +36,7 @@ function CircleCheckIcon() {
 
 export function FeaturesSection() {
   return (
-    <Section id="features" bg="surface" className="[&>div]:max-w-none">
+    <Section id="features" bg="surface" compact className="[&>div]:max-w-none">
       <div className="text-center">
         <FadeIn>
           <SectionHeading>

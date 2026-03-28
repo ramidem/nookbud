@@ -3,6 +3,7 @@ type SectionProps = {
   className?: string;
   id?: string;
   bg?: 'offwhite' | 'white' | 'surface' | 'sage';
+  compact?: boolean;
 };
 
 const bgMap = {
@@ -17,9 +18,14 @@ export function Section({
   className = '',
   id,
   bg = 'offwhite',
+  compact = false,
 }: SectionProps) {
+  const sizeClass = compact
+    ? 'py-16 px-6 md:py-20'
+    : 'flex min-h-screen items-center py-20 px-6 md:py-28';
+
   return (
-    <section id={id} className={`${bgMap[bg]} flex min-h-screen items-center py-20 px-6 md:py-28 ${className}`}>
+    <section id={id} className={`${bgMap[bg]} ${sizeClass} ${className}`}>
       <div className="mx-auto w-full max-w-5xl">{children}</div>
     </section>
   );

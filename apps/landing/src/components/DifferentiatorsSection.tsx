@@ -32,7 +32,7 @@ const differentiators = [
 
 export function DifferentiatorsSection() {
   return (
-    <Section id="why-nookbud" bg="offwhite" className="[&>div]:max-w-none">
+    <Section id="why-nookbud" bg="offwhite" compact className="[&>div]:max-w-none">
       <div className="text-center">
         <FadeIn>
           <SectionHeading>Why NookBud is different</SectionHeading>

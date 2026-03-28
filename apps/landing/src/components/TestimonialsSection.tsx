@@ -49,7 +49,7 @@ export function TestimonialsSection() {
   const row2 = [...testimonials.slice(4), ...testimonials.slice(4)];
 
   return (
-    <Section bg="offwhite" className="overflow-hidden">
+    <Section bg="offwhite" compact className="overflow-hidden">
       <div className="text-center">
         <FadeIn>
           <SectionHeading>From parents like you.</SectionHeading>
