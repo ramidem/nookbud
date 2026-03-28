@@ -144,6 +144,60 @@ Records are always export-ready. Court-ready format baked in — but never menti
 
 ---
 
+## 💰 Pricing
+
+**One plan. No tiers. No confusion.**
+
+| | |
+|---|---|
+| **Free Trial** | 14 days, full access, no credit card required |
+| **Nookbud** | ₱349/month or ₱2,499/year (~2 months free) |
+| **Includes** | All features. Unlimited co-parent invites. |
+| **Invited co-parents** | Free access to the shared space |
+| **Their own separate account** | They pay their own ₱349/mo |
+
+**Philosophy:** One parent pays. Everyone stays in the loop. No seat fees, no tiers, no nickel-and-diming. If an invited parent wants to manage a *different* co-parenting situation of their own, they get their own plan.
+
+**CTA copy:** *"Try free for 14 days — no card needed."*
+
+---
+
+## 💬 Landing Page Copy (Locked)
+
+**Hero:**
+> "Two homes. One childhood."
+> Nookbud helps co-parents stay organized, communicate clearly, and keep the focus on what matters.
+
+**Section 2:**
+> "Built around your child, not the conflict."
+> Schedules, messages, expenses, milestones — all in one place, shared between both parents.
+
+**Section 3:**
+> "Everything recorded. Nothing forgotten."
+> Every update is timestamped and preserved. So when it matters, you already have the record.
+
+**Features (benefit-led):**
+- 🌱 Shared schedule — One calendar both parents trust.
+- 💬 Clear communication — Messages that stay on record, without the noise.
+- 📋 Expense tracking — Log shared costs simply. No more disputes.
+- 📁 Document storage — Passports, medical records, school files — always accessible.
+
+**Social proof:**
+- "Finally, something that makes co-parenting feel manageable."
+- "We stopped arguing about pickups the week we started using it."
+- "My kids see us coordinate smoothly. That alone is worth everything."
+
+**Objection handling:**
+- *Is my data private?* → Yes, your records are yours alone.
+- *Does the other parent have to use it?* → You can use it solo too.
+- *What happens after the trial?* → ₱349/month. Cancel anytime.
+
+**Final CTA:**
+> "Try free for 14 days."
+> For the child you both love.
+
+---
+
 ## 🗂️ App Naming Conventions
 
 | Element | Name |
