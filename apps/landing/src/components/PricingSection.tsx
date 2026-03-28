@@ -59,7 +59,7 @@ export function PricingSection() {
 
         {/* Middle — yearly */}
         <FadeIn className="text-center" delay={0.1}>
-          <div className="rounded-2xl border-2 border-brand-sage bg-white px-8 py-8">
+          <div className="rounded-2xl border-2 border-brand-sage bg-white px-8 py-14">
             <div className="flex items-baseline justify-center gap-1.5">
               <span className="font-serif font-semibold text-brand-sage">
                 <span className="text-3xl md:text-4xl">$</span>
