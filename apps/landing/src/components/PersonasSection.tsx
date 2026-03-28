@@ -27,7 +27,7 @@ export function PersonasSection() {
     intervalRef.current = setInterval(() => {
       setDirection(1);
       setCurrent((c) => (c === personas.length - 1 ? 0 : c + 1));
-    }, 6000);
+    }, 10000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [paused]);
 
