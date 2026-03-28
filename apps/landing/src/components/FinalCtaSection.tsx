@@ -5,7 +5,7 @@ import { Section } from './ui/Section';
 export function FinalCtaSection() {
   return (
     <Section bg="sage" compact>
-      <div className="flex flex-col items-center gap-10 md:flex-row md:gap-16">
+      <div className="grid grid-cols-2 items-center gap-6 md:gap-16">
         {/* Illustration — always left */}
         <FadeIn direction="left" className="flex-1">
           <Image
@@ -13,7 +13,7 @@ export function FinalCtaSection() {
             alt="Family creating together"
             width={380}
             height={300}
-            className="mx-auto w-full max-w-[180px] md:max-w-sm"
+            className="mx-auto w-full max-w-[100px] md:max-w-sm"
           />
         </FadeIn>
 
