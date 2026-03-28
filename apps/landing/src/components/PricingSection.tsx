@@ -53,7 +53,7 @@ export function PricingSection() {
             <span className="text-xl text-brand-gray">/month</span>
           </div>
           <div className="mt-10">
-            <CtaButton size="large">Get Monthly</CtaButton>
+            <CtaButton>Get Monthly</CtaButton>
           </div>
         </FadeIn>
 
@@ -73,7 +73,7 @@ export function PricingSection() {
             </span>
           </p>
           <div className="mt-10">
-            <CtaButton size="large">Get Yearly</CtaButton>
+            <CtaButton>Get Yearly</CtaButton>
             <p className="mt-4 text-sm text-brand-gray">
               Best value.
             </p>
