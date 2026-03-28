@@ -1,17 +1,20 @@
-# CoParent — Ideal Customer Profile (ICP)
+# Nookbud — Ideal Customer Profile (ICP)
 
-> **Date:** 2026-03-21
-> **Product:** CoParent — shared records for everyone raising a child
+> **Date:** 2026-03-21 (updated 2026-03-28 for rebrand)
+> **Product:** Nookbud — Two homes. One childhood.
+> **Domain:** nookbud.com | **Pricing:** ₱349/mo or ₱2,499/yr | **Trial:** 14 days, no card
 
 ---
 
 ## Executive Summary
 
-CoParent's ideal customers are defined not by a single family structure but by a shared need: **a verified, shared record of a child's care that everyone in the care circle can trust.**
+Nookbud's ideal customers are defined not by a single family structure but by a shared need: **a calm, organized place where everyone raising a child can stay coordinated, clear, and covered.**
+
+Nookbud is not marketed as a legal tool. It's marketed as the app that makes co-parenting feel manageable — for separated parents, OFW families, grandparent guardians, blended households, and open adoption arrangements. The legal readiness is real and baked in, but it's never the lead. The lead is care.
 
 Across five distinct personas spanning separated parents, OFW families, grandparent guardians, open adoption triads, and blended family managers, the same core pattern emerges: multiple people share responsibility for a child's wellbeing, and they lack a single, organized, verifiable record of who did what, when, and whether it was acknowledged.
 
-The legal stakes vary — some face custody hearings, others face immigration petitions, school enrollment challenges, or simply the erosion of trust between family members. But the product need is the same: a shared care record that works across family structures, supports multiple caregivers with defined roles, and produces documentation that holds up when it matters.
+The stakes vary — some face custody hearings, others face immigration petitions, school enrollment challenges, or simply the erosion of trust between family members. But the product need is the same: a shared care record that works across family structures, supports multiple caregivers with defined roles, and produces documentation that holds up when it matters.
 
 **The five personas:**
 
@@ -134,7 +137,7 @@ Getting a clean, organized, verified report from any existing tool requires sign
 "I never agreed to that." "I never received that." Without a system requiring formal acknowledgment, these gaps become legal and institutional vulnerabilities.
 
 ### 7. Financial hardship compounds everything
-The families who most need documentation — lower-income, OFW families, grandparent guardians — are the least able to afford $200–$550/year on existing tools.
+The families who most need documentation — lower-income, OFW families, grandparent guardians — are the least able to afford $200–$550/year on existing tools. Nookbud at ₱349/mo (~$6 USD) is accessible at OFW income levels, with a 14-day free trial requiring no card. Invited co-parents access the shared space for free — the account holder pays once, and the whole care circle benefits.
 
 ---
 
@@ -169,7 +172,7 @@ He's looking for something that would have let him press a button and produce a 
 - Can't prove what *didn't* happen — missed pickups, declined expenses, unanswered messages
 - Fear that the other side is better at packaging evidence
 
-**What He Needs from CoParent**
+**What He Needs from Nookbud**
 - One Space where every entry (expense, pickup, message, agreement) is logged and immutable
 - Server-side timestamps he didn't set himself
 - Acknowledgment tracking — proof the other parent saw and responded to each entry
@@ -178,7 +181,7 @@ He's looking for something that would have let him press a button and produce a 
 
 **Features that matter most:** Timeline, audit trail, acknowledgment system, verified export (PDF + ZIP)
 
-**Willingness to Pay:** High — $15–25/month feels like nothing compared to $2,000 in legal prep fees.
+**Willingness to Pay:** High — ₱349/mo (about ₱12/day) feels like nothing compared to paying a lawyer ₱5,000–₱10,000 to organize records. **14-day free trial** removes any hesitation to start.
 
 **Acquisition Channel:** Lawyer recommendation, Reddit r/Divorce, r/coparenting
 
@@ -213,7 +216,7 @@ His bigger fear: what happens when he comes home after this contract. He's heard
 - Remittances are tracked but spending accountability is informal — leads to family tension
 - Fear of losing practical custody/relationship upon return
 
-**What He Needs from CoParent**
+**What He Needs from Nookbud**
 - A Space where he, Maricel, and Lola Cora all participate — logging care events, expenses, decisions, and milestones
 - Entry types that capture: school enrollment decisions, medical visits, expense allocation of remittances, and daily care activities
 - Verified export that immigration, schools, or courts would accept as proof of involvement
@@ -222,7 +225,7 @@ His bigger fear: what happens when he comes home after this contract. He's heard
 
 **Features that matter most:** Spaces (3-member arrangement), editor role, expense tracking (remittance accountability), verified export, mobile-first
 
-**Willingness to Pay:** Moderate — $5–10/month is feasible on his income. Would pay more if it demonstrably helps his immigration case.
+**Willingness to Pay:** Moderate — ₱349/mo (~$6 USD) is feasible on his income at current OFW rates. The **14-day free trial** and **free access for invited co-parents** (Maricel and Lola Cora) mean Jun can try the full arrangement before committing. Would pay more if it demonstrably helps his immigration case.
 
 **Acquisition Channel:** OFW Facebook groups, Philippine consulate partnerships, word-of-mouth in OFW communities, remittance service partnerships
 
@@ -259,7 +262,7 @@ She doesn't need a co-parenting app. She needs a **shared care record** that doc
 - Jun sometimes questions expense allocation; she has no verified record to show
 - Afraid that if something happens to a grandchild on her watch, she'll have no documentation of the care she's been providing
 
-**What She Needs from CoParent**
+**What She Needs from Nookbud**
 - A record that shows she is a recognized guardian in the care circle, authorized by the parents
 - Ability to log daily care events: school attendance, medical visits, meals, activities
 - Expense logging that's simpler than her handwritten notebook — photo receipt, tap, done
@@ -268,7 +271,7 @@ She doesn't need a co-parenting app. She needs a **shared care record** that doc
 
 **Features that matter most:** Editor role in Space, simple entry logging, expense tracking with photo receipts, acknowledgment system, verified export for institutions
 
-**Willingness to Pay:** Low — on a pension. Must be covered by the free tier (1 Space free). Jun would pay for the family's Space if needed.
+**Willingness to Pay:** Low — on a pension. Lola Cora joins the Space for free as an invited co-parent. Jun pays for the family's Space (₱349/mo). The **free trial** lets them all test it before any money changes hands.
 
 **Acquisition Channel:** Through Jun (OFW networks), barangay health centers, DSWD partnerships, public school guidance counselors, word-of-mouth in her community
 
@@ -306,7 +309,7 @@ She doesn't want a "co-parenting conflict" app. She wants a **shared record** of
 - If the arrangement changes, there's no documented history of what was agreed and what happened
 - Existing co-parenting apps are designed for conflict — the language and framing feel wrong for their situation
 
-**What They Need from CoParent**
+**What They Need from Nookbud**
 - A Space where all three adults (Sarah, David, Mia) can participate with appropriate roles
 - Entry types for: milestone updates (photo + description), visit logs, agreement documentation, and communications
 - Acknowledgment system — when Sarah sends a quarterly update, Mia can acknowledge receipt
@@ -315,7 +318,7 @@ She doesn't want a "co-parenting conflict" app. She wants a **shared record** of
 
 **Features that matter most:** Spaces (3-member arrangement), milestone/upload entries, acknowledgment system, neutral UX, verified export
 
-**Willingness to Pay:** Moderate — $8–15/month. Sarah would pay as part of her commitment to maintaining the arrangement properly.
+**Willingness to Pay:** Moderate — ₱349/mo (~$6 USD) is easily within range for Sarah's household income. Mia joins for free as an invited member. **14-day free trial** lets all three try it together before committing.
 
 **Acquisition Channel:** Adoption agency referrals, Creating a Family forums, adoptive parent Facebook groups, family law attorney recommendation
 
@@ -357,7 +360,7 @@ She needs **Spaces.**
 - Can't see or help coordinate step-daughter Ella's arrangement without formal membership
 - Juggling calendars across arrangements is chaotic — risk of missed pickups and scheduling conflicts
 
-**What She Needs from CoParent**
+**What She Needs from Nookbud**
 - Three separate Spaces — each with its own members, children, timeline, and records
 - Space switcher that lets her move between arrangements quickly
 - All Spaces view that merges timelines across arrangements for a consolidated calendar
@@ -367,7 +370,7 @@ She needs **Spaces.**
 
 **Features that matter most:** Multi-Space support, Space switcher, All Spaces timeline, expense tracking with acknowledgment, role flexibility across Spaces, verified export
 
-**Willingness to Pay:** High — $15–20/month easily justified by the complexity she's managing. She'd pay $25/month for a tool that actually works for her situation.
+**Willingness to Pay:** High — ₱349/mo (~$6 USD) is trivially affordable for Camille's household income. She'd pay far more for a tool that actually handles her three-arrangement reality. All Space members join for free as invited co-parents; she pays once as the account holder.
 
 **Acquisition Channel:** Step-parenting Facebook groups, Reddit r/StepParents, family law attorney recommendation, word-of-mouth from other blended families
 
@@ -386,13 +389,13 @@ She needs **Spaces.**
 1. "This app looks like it's for divorced parents" — need inclusive onboarding that asks about their arrangement, not their marital status
 2. "The other member won't join" — need a one-sided entry model that's still valuable; invitation incentive helps
 3. "Is this actually recognized by [court/school/hospital]?" — need clear explanation of what verified records mean
-4. "I can't afford it" — need generous free tier (1 Space free) that covers the basic arrangement
-5. "I don't want to create conflict by introducing this" — need neutral framing ("shared care records, not surveillance")
+4. "I can't afford it" — ₱349/mo with 14-day free trial (no card) keeps the barrier low. Invited co-parents are free, so the whole care circle can join without everyone paying.
+5. "I don't want to create conflict by introducing this" — need warm, neutral framing ("organized, shared records for the child" — not surveillance, not a weapon)
 
 ### Key Insight: The Timing Problem
 All five personas share the same moment of regret: **starting documentation too late.** Marcus wishes he'd started when they separated. Jun wishes he'd had verified records from his first deployment. Lola Cora's handwritten notebook is irreplaceable but unverifiable. Sarah's email trail is loving but unstructured. Camille's spreadsheets are about to matter in court and they're not going to hold up.
 
-CoParent's messaging should address this directly: **"The record you build today speaks for itself tomorrow."**
+Nookbud's messaging should address this directly: **"The record you build today speaks for itself tomorrow."**
 
 ### Key Insight: The Spaces Unlock
 Three of the five personas (Jun, Sarah, Camille) need a Space with more than two members. Two (Jun, Camille) need roles beyond "editor." One (Camille) needs multiple Spaces. None of these use cases are served by any existing competitor. **The Spaces model isn't a nice-to-have — it's the product-market fit unlock for the inclusive market.**
@@ -431,6 +434,7 @@ Three of the five personas (Jun, Sarah, Camille) need a Space with more than two
 
 ---
 
-*This ICP document is part of the CoParent discovery phase.*
-*Input sources: BRIEF.md, market-research.md, competitor-analysis.md*
+*This ICP document is part of the Nookbud discovery phase.*
+*Updated 2026-03-28 for rebrand. Pricing updated to ₱349/mo. Personas updated to reflect care-first framing, Filipino family context, and inclusive positioning.*
+*Input sources: BRIEF.md, market-research.md, competitor-analysis.md, BRAND.md*
 *Next: PRD — Full product requirements with Spaces as a core primitive*

@@ -1,7 +1,8 @@
-# CoParent — Market Research
+# Nookbud — Market Research
 
-**Date:** 2026-03-21
-**Product:** CoParent — shared records for everyone raising a child
+**Date:** 2026-03-21 (updated 2026-03-28 for rebrand)
+**Product:** Nookbud — Two homes. One childhood.
+**Domain:** nookbud.com
 
 ---
 
@@ -9,17 +10,21 @@
 
 The market for shared child care records extends far beyond separated parents in conflict. An estimated **150–200 million adults globally** share responsibility for raising a child with someone outside a traditional nuclear household — spanning divorced/separated parents, OFW families, grandparent guardians, blended families, open adoption arrangements, and other guardianship structures.
 
+Nookbud is not a tool built for conflict. It is built for **everyone who shares responsibility for a child** — care-first, warmth-first, with legal readiness implied but never shouted. The product works in peace and holds up when things get complicated.
+
 The broader **parenting apps market** sits at ~$1.7–1.9B in 2024–2025 and is projected to reach $2.8–6B by 2032–2035 (CAGR of 8–20% depending on segment). The **co-parenting sub-segment** is growing fastest, but no player has addressed the full spectrum of shared care arrangements. The **global legal technology market** is $27–34B and growing at 9–10% CAGR.
 
 **The critical market gap:** Every existing co-parenting app assumes a two-parent, post-divorce conflict model. None supports multiple care arrangements (Spaces), none treats guardians or extended family as first-class members, and none produces verified records usable beyond courts — for schools, hospitals, immigration, and social services.
 
-CoParent is positioned at the intersection of four growing categories:
+Nookbud is positioned at the intersection of four growing categories:
 - Family coordination tools
 - Legal evidence management
 - Family law technology
-- OFW/migration family services
+- OFW/migration family services (Philippines and global diaspora)
 
 **Market timing is strong.** AI-fabricated evidence is an emerging legal threat. OFW migration continues to grow globally. Blended and non-traditional family structures are now the norm, not the exception. Courts, schools, and agencies all need better documentation — and families need a single tool that works across all of these contexts.
+
+**Philippines context:** Nookbud is priced for the Philippine market at ₱349/month or ₱2,499/year — making it accessible to OFW families, grandparent guardians, and middle-income households who are currently the most underserved by existing tools. Extended family care (lola, tita, ate raising children) is a cultural default for millions of Filipino families, not an exception.
 
 ---
 
@@ -112,7 +117,7 @@ Shared custody is now the norm in most jurisdictions. More active co-parenting r
 In the Philippines, it is culturally standard for grandparents (lola/lolo) to raise grandchildren while parents work in Manila or abroad. These guardians need documentation for school enrollment, medical consent, government benefits, and — increasingly — formal legal recognition. No app serves this market.
 
 **4. Blended families are now the statistical norm**
-~16M US adults live in step-family households. A remarried parent with children from two different relationships needs separate record systems for each arrangement. No existing tool supports this. CoParent's Spaces model is built for exactly this reality.
+~16M US adults live in step-family households. A remarried parent with children from two different relationships needs separate record systems for each arrangement. No existing tool supports this. Nookbud's Spaces model is built for exactly this reality.
 
 **5. Open adoption is increasingly common and documented**
 ~60% of US adoptions now include some form of openness agreement between adoptive and biological parents. These arrangements benefit from shared, verified records of contact, updates, and milestones — but no tool exists for this.
@@ -121,7 +126,7 @@ In the Philippines, it is culturally standard for grandparents (lola/lolo) to ra
 Multiple legal publications document AI-generated deepfakes, fabricated messages, and forged documents being used in custody disputes. Courts are actively seeking platforms that can prove evidence has not been tampered with. This creates urgent demand for cryptographically verified records.
 
 **7. Digital records as standard documentation**
-Courts, schools, hospitals, and immigration agencies now routinely accept digital records. The infrastructure for CoParent's output exists across institutions — not just family courts.
+Courts, schools, hospitals, and immigration agencies now routinely accept digital records. The infrastructure for Nookbud's output exists across institutions — not just family courts.
 
 **8. 72% of family law cases involve self-represented litigants (Clio 2026)**
 Most parents in custody situations can't afford continuous legal counsel. Tools that help them document their own case compliantly and professionally are extremely high-value.
@@ -178,13 +183,13 @@ Post-COVID, more families are geographically distributed. Remote work enables pa
 **Pain:** Need reliable client documentation; reduce prep time; stronger case files
 **WTP:** High ($30–100/month for professional access)
 **Geography:** US, UK, Canada, Australia
-**Key insight:** Lawyers are a distribution multiplier. Each lawyer who adopts CoParent brings 8–12 client families per year.
+**Key insight:** Lawyers are a distribution multiplier. Each lawyer who adopts Nookbud brings 8–12 client families per year.
 
 ---
 
 ## Philippines Context: The OFW Opportunity
 
-The Philippines represents CoParent's most significant expansion market beyond the traditional divorce segment.
+The Philippines represents Nookbud's most significant expansion market beyond the traditional divorce segment.
 
 ### By the Numbers
 - **10.2M OFWs** deployed globally (PSA 2024)
@@ -204,14 +209,15 @@ OFW parents face a unique set of documentation challenges that no existing tool 
 
 ### Cultural Context
 - **Extended family guardianship is normal** — Lola, tita, ate raising children while parents work is not unusual; it's the cultural default for millions of families
-- **"Bayanihan" spirit** — communal responsibility for children is deeply embedded; CoParent's Spaces model maps naturally to this
+- **"Bayanihan" spirit** — communal responsibility for children is deeply embedded; Nookbud's Spaces model maps naturally to this
 - **Strong mobile adoption** — Philippines has one of the highest social media and smartphone penetration rates in the world
 - **GCash/Maya ecosystem** — Digital payments are normalized; in-app payments are feasible
 
 ### Revenue Model for Philippines
-- Freemium: 1 Space free (covers the basic OFW + guardian arrangement)
-- Paid: Multiple Spaces, lawyer access, premium export features
-- Potential partnerships: OFW deployment agencies, remittance services, Philippine consulates
+- **One plan:** ₱349/month or ₱2,499/year — full access, no tiers
+- **14-day free trial**, no card required — removes friction for first-time users
+- **Invited co-parents are free** — they join a Space at no cost; pay only if they want their own account
+- Potential partnerships: OFW deployment agencies, remittance services, Philippine consulates, DSWD
 
 ---
 
@@ -262,7 +268,7 @@ Family courts in US, UK, Canada, and Australia routinely admit digital records. 
 72% of family law cases involve at least one self-represented party. These families need tools that are simple, trustworthy, and produce professional output.
 
 **6. The co-parenting app market is established but narrow**
-OFW has validated court-ordered app adoption. But the entire market is locked into a 2-parent, post-divorce model. CoParent's Spaces model addresses a market 3–5x larger.
+OFW has validated court-ordered app adoption. But the entire market is locked into a 2-parent, post-divorce model. Nookbud's Spaces model addresses a market 3–5x larger.
 
 ### Market Maturity Assessment
 | Dimension | Status |
@@ -276,26 +282,27 @@ OFW has validated court-ordered app adoption. But the entire market is locked in
 | Willingness to pay (OFW/guardian) | Untested but high motivation — stakes are immigration, custody, child welfare |
 | Distribution channels | Established for divorce (courts, lawyers); emerging for OFW (agencies, consulates, community orgs) |
 
-**Verdict: The divorce segment is early growth. The OFW/guardian/blended segment is greenfield. Combined, the opportunity is 3–5x larger than competitors realize.**
+**Verdict: The divorce segment is early growth. The OFW/guardian/blended segment is greenfield. Combined, the opportunity is 3–5x larger than competitors realize. Nookbud's care-first framing and Philippines-first pricing unlock this market from day one.**
 
 ---
 
 ## Revenue Model
 
-### Freemium with Spaces-Based Pricing
+### One Plan. No Tiers. No Confusion.
 
-| Tier | Price | Includes |
-|------|-------|---------|
-| Free | $0 | 1 Space, 2 members, basic timeline, limited exports (5/month) |
-| Plus | ~$9.99/mo | Unlimited Spaces, unlimited members, unlimited PDF exports |
-| Complete | ~$14.99/mo | Evidence bundle exports (ZIP + hash manifest), dispute tools, All Spaces view |
-| Professional | ~$79.99/mo | Lawyer/viewer portal, multi-client management (Phase 4) |
+| | |
+|---|---|
+| **Free Trial** | 14 days, full access, no credit card required |
+| **Nookbud** | ₱349/month or ₱2,499/year (~2 months free) |
+| **Includes** | All features. Unlimited co-parent invites. |
+| **Invited co-parents** | Free access to the shared space |
+| **Their own separate account** | They pay their own ₱349/mo |
 
-**Key pricing decisions:**
-- **1 Space free** — covers the most basic arrangement (OFW parent + guardian, or separated parents with one set of children). This is the growth engine.
-- **Paid for complexity** — multiple Spaces, advanced exports, professional access. Users who need more Spaces have more complex situations and higher willingness to pay.
-- **Per-account, not per-Space** — one subscription unlocks features across all your Spaces. Reduces friction for blended family managers.
-- **Free access for DV survivors and financial hardship** — following AppClose's model, with verification.
+**Pricing philosophy:**
+- One parent pays. Everyone stays in the loop. No seat fees, no tiers, no nickel-and-diming.
+- If an invited parent wants to manage a *different* co-parenting situation of their own, they get their own plan.
+- **₱349/mo is ~$6 USD** — affordable relative to alternatives, competitive with global co-parenting tools ($8–$27/mo), and accessible for OFW income levels.
+- **CTA:** *"Try free for 14 days — no card needed."*
 
 ---
 
@@ -351,4 +358,5 @@ Getting a clean, organized, verified report from any existing tool requires sign
 
 ---
 
-*This document is part of the CoParent discovery phase. Next: Competitor Analysis → ICP Development → PRD.*
+*This document is part of the Nookbud discovery phase. Updated 2026-03-28 for rebrand (CoParent → Nookbud, nookbud.com, ₱349/mo pricing, care-first framing).*
+*Next: Competitor Analysis → ICP Development → PRD.*

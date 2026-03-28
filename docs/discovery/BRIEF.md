@@ -1,6 +1,6 @@
-# CoParent — Discovery Brief
+# Nookbud — Discovery Brief
 
-> Shared records for everyone raising a child.
+> Two homes. One childhood.
 
 ---
 
@@ -23,7 +23,7 @@ Current solutions:
 
 ## 2. Product Vision
 
-CoParent is a **shared care records platform** — a single source of truth for everyone raising a child together.
+Nookbud is a **shared care records platform** — a calm, organized home base for everyone raising a child together. The product is care-first and warmth-first. Legal readiness is baked in from day one, but never the lead.
 
 It answers, with proof:
 - What happened?
@@ -37,7 +37,7 @@ It answers, with proof:
 - Part verified record system
 - Part coordination layer for shared responsibility
 
-CoParent works in peace and proves in conflict. Most users will never need court. But every record they create is court-ready from day one — because the same architecture that makes records trustworthy for a family also makes them trustworthy for a judge.
+Nookbud works in peace and holds up in conflict. Most users will never need court. But every record they create is export-ready from day one — because the same architecture that keeps a family organized also makes records trustworthy for schools, hospitals, lawyers, and judges.
 
 ---
 
@@ -55,7 +55,7 @@ CoParent works in peace and proves in conflict. Most users will never need court
 
 ## 4. Core Concept: Spaces
 
-A **Space** is a care circle — one arrangement around a child or group of children. It is the organizing primitive of CoParent.
+A **Space** is a care circle — one arrangement around a child or group of children. It is the organizing primitive of Nookbud.
 
 **Why Spaces:**
 - A father with children from two different relationships needs two separate Spaces — with different members, different children, different records
@@ -314,10 +314,12 @@ audit_logs
 ### Care-Aware Design
 - No aggressive notifications
 - No blame framing
+- No alarm colors unless action is actually needed
 - Equal visibility for all Space members
-- Calm, professional tone
+- Calm, warm, and present — like a dependable friend who's also competent
 - Inclusive of all family structures — the UI never assumes two parents
 - Member labels (co-parent, guardian, grandparent, lawyer, etc.) provide human-readable relationship context without affecting permissions — role controls access, label describes relationship
+- Write like this: short sentences, one idea at a time. "Added. Both parents can see it." Not "Event successfully added to the co-parenting timeline."
 
 ### Simplicity
 Backend is complex. **Frontend must feel simple.**
@@ -332,27 +334,33 @@ Backend is complex. **Frontend must feel simple.**
 
 **Most family coordination apps:**
 - Assume two parents in conflict
-- Track expenses and allow chat
-- Focus on scheduling
+- Cold, clinical interface built for adversaries
+- Track expenses and allow chat, but no structured records
+- Focus on scheduling, not documentation
 
-**CoParent:**
+**Nookbud:**
+- Care-first, warmth-first — the child is always the center
 - Works for any care arrangement — not just divorce
 - Spaces model supports multiple caregivers with defined roles
 - Creates verified, defensible records — not just logs
 - Inclusive by design: all caregivers and extended family are first-class members with defined roles
-- Works in peace, proves when it matters
+- One plan only — no tiers, no confusion. Invited co-parents are free. They pay only if they want their own separate account.
+- Works in peace, holds up when it matters
 
 ---
 
 ## 12. Positioning Statement
 
-> **CoParent** — Shared records for everyone raising a child.
+> **Nookbud** — Two homes. One childhood.
+
+**Domain:** nookbud.com
 
 ### Tagline Options
-- "Every child deserves a clear record of their care."
-- "Shared responsibility. Verified records."
-- "For everyone raising a child, together."
-- "Build the record now. It speaks for itself later."
+- "Two homes. One childhood." *(primary)*
+- "Co-parenting, clearly."
+- "For the child between two homes."
+- "The calm between two homes."
+- "Everything in one place — for them."
 
 ---
 
@@ -372,6 +380,24 @@ The market is not "divorced parents." The market is **everyone who shares respon
 
 ---
 
+## 13. Pricing
+
+**One plan. No tiers. No confusion.**
+
+| | |
+|---|---|
+| **Free Trial** | 14 days, full access, no credit card required |
+| **Nookbud** | ₱349/month or ₱2,499/year (~2 months free) |
+| **Includes** | All features. Unlimited co-parent invites. |
+| **Invited co-parents** | Free access to the shared space |
+| **Their own separate account** | They pay their own ₱349/mo |
+
+**Philosophy:** One parent pays. Everyone stays in the loop. No seat fees, no tiers, no nickel-and-diming. If an invited parent wants to manage a *different* co-parenting situation of their own, they get their own plan.
+
+**CTA copy:** *"Try free for 14 days — no card needed."*
+
+---
+
 ## Next Steps
 
 1. **Market Research** — Validate broader market beyond divorce, size the opportunity across family structures
@@ -381,4 +407,5 @@ The market is not "divorced parents." The market is **everyone who shares respon
 
 ---
 
-*This brief is the input for discovery. All discovery docs should reflect the inclusive framing and Spaces model defined here.*
+*This brief is the input for discovery. All discovery docs should reflect the inclusive, care-first framing and Spaces model defined here.*
+*Brand locked: 2026-03-28. See BRAND.md for full visual identity and copy guidelines.*

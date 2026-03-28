@@ -1,8 +1,8 @@
-# CoParent — Product Requirements Document
+# Nookbud — Product Requirements Document
 
-> **Version:** 2.0
-> **Date:** 2026-03-21
-> **Status:** Phases 1–2 Complete — Phase 3 (Spaces) Next
+> **Version:** 2.1
+> **Date:** 2026-03-21 (updated 2026-03-28 for rebrand)
+> **Status:** Phases 1–4 Complete — Phase 5 (Intelligence) Next
 
 ---
 
@@ -28,19 +28,22 @@
 ## 1. Overview
 
 ### Product Name
-**CoParent**
+**Nookbud**
 
 ### Tagline
-*"Shared records for everyone raising a child."*
+*"Two homes. One childhood."*
+
+### Domain
+nookbud.com
 
 ### One-Line Description
-A shared care records platform that works across family structures — verified, immutable, and exportable for courts, schools, hospitals, and immigration.
+A shared care records platform that keeps co-parents organized, calm, and covered — for every family structure, not just divorce.
 
 ### Vision
-CoParent becomes the definitive record system for shared child care: a platform that any combination of caregivers — parents, guardians, extended family, lawyers — can trust, contribute to, and rely on when documentation matters. Not because of a marketing claim, but because the technical architecture makes tampering verifiably impossible and the product design includes every family structure.
+Nookbud becomes the definitive record system for shared child care: a platform that any combination of caregivers — parents, guardians, extended family, lawyers — can trust, contribute to, and rely on when documentation matters. Care-first, warmth-first. Legal readiness baked in, never the lead.
 
 ### Positioning Statement
-CoParent is the first shared care records platform built for **every family structure** — not just divorced parents. Where competitors create communication logs, CoParent creates verified care records across Spaces.
+Nookbud is the first shared care records platform built for **every family structure** — not just divorced parents. Where competitors create communication logs and legal arsenals, Nookbud creates verified care records that feel calm to use and hold up when it matters.
 
 ### Target Audience (Summary)
 - **Primary:** Separated/divorced parents needing defensible care records
@@ -53,10 +56,11 @@ CoParent is the first shared care records platform built for **every family stru
 - **Phase 6+:** Web portal (PWA or dedicated web app)
 
 ### Business Model
-- Freemium: 1 Space free (covers basic arrangement)
-- Paid: Multiple Spaces, advanced exports, professional access
-- Professional tier for lawyers/mediators (Phase 6)
-- Free access for domestic violence survivors and financial hardship cases
+**One plan. No tiers. No confusion.**
+- **₱349/month or ₱2,499/year** (~$6 USD/mo) — full access to all features
+- **14-day free trial**, no credit card required — CTA: *"Try free for 14 days — no card needed."*
+- **Invited co-parents are free** — they join a Space at no cost; pay only if they want their own account
+- Professional tier for lawyers/mediators (Phase 6+)
 
 ---
 
@@ -106,9 +110,9 @@ No existing tool:
 
 ## 3. Solution
 
-### How CoParent Solves It
+### How Nookbud Solves It
 
-CoParent provides **Spaces** — care circles where every member can log immutable, verifiable care records. Each Space has its own members, children, timeline, and roles. A user can belong to multiple Spaces and switch between them.
+Nookbud provides **Spaces** — care circles where every member can log immutable, verifiable care records. Each Space has its own members, children, timeline, and roles. A user can belong to multiple Spaces and switch between them.
 
 ### Core Capabilities
 
@@ -205,7 +209,7 @@ Phase 2 improved the native experience and laid the Supabase foundation for sync
 
 ### Overview
 
-Phase 3 transforms CoParent from a 2-parent app into a **multi-Space, multi-role shared care records platform.** This is the architectural pivot that unlocks the inclusive market — OFW families, grandparent guardians, blended families, and open adoption arrangements.
+Phase 3 transforms Nookbud from a 2-parent app into a **multi-Space, multi-role shared care records platform.** This is the architectural pivot that unlocks the inclusive market — OFW families, grandparent guardians, blended families, and open adoption arrangements.
 
 ### Key Changes
 - `relationships` table → `spaces` + `space_members` tables
@@ -963,7 +967,8 @@ audit_logs
 ### C. Export Hash Manifest Format
 
 ```
-CoParent Verified Care Report — Hash Manifest
+Nookbud Verified Care Report — Hash Manifest
+nookbud.com
 Generated: 2026-03-21T14:32:00Z
 Export ID: exp_01HXXXXX
 Space: "Finn & Ava's Space" (space_01HAAAAAA)
@@ -1003,21 +1008,25 @@ Verification instructions:
 | SOM (3–5 year horizon) | $12M–$54M ARR |
 | Benchmark: OurFamilyWizard ARR (2024) | ~$10.5M |
 
-### E. Pricing Direction (To Be Validated)
+### E. Pricing (Locked 2026-03-28)
 
-| Tier | Price | Includes |
-|------|-------|---------|
-| Free | $0 | 1 Space, 2 members, basic timeline, limited export (5/month) |
-| Plus | ~$9.99/mo | Unlimited Spaces, unlimited members, unlimited PDF exports |
-| Complete | ~$14.99/mo | Evidence bundle exports (ZIP + hash manifest), dispute tools, All Spaces view |
-| Professional | ~$79.99/mo | Lawyer portal, multi-Space management (Phase 6) |
+**One plan. No tiers. No confusion.**
 
-*Per-account pricing — one subscription unlocks features across all Spaces.*
-*Free access for DV survivors and financial hardship cases.*
+| | |
+|---|---|
+| **Free Trial** | 14 days, full access, no credit card required |
+| **Nookbud** | ₱349/month or ₱2,499/year (~2 months free) |
+| **Includes** | All features. Unlimited co-parent invites. |
+| **Invited co-parents** | Free access to the shared space |
+| **Their own separate account** | They pay their own ₱349/mo |
+
+*₱349/mo ≈ $6 USD — affordable at OFW income levels; competitive with all global alternatives ($8–$27/mo).*
+*One parent pays. Everyone stays in the loop. No seat fees, no tiers.*
+*CTA: "Try free for 14 days — no card needed."*
 
 ### F. Competitive Positioning Summary
 
-| Competitor | Their Moat | CoParent Advantage |
+| Competitor | Their Moat | Nookbud Advantage |
 |-----------|------------|-------------------|
 | OurFamilyWizard | Court brand (20+ years) | Spaces model, inclusive positioning, superior technical architecture |
 | TalkingParents | Communication immutability; free tier | Full-spectrum evidence (all types), multi-Space, inclusive roles |
@@ -1026,6 +1035,7 @@ Verification instructions:
 
 ---
 
-*This PRD is the output of the CoParent discovery rerun with inclusive framing and Spaces.*
-*Discovery inputs: BRIEF.md, market-research.md, competitor-analysis.md, icp.md*
-*Next: Phase 3 implementation per user stories S3-01 through S3-11.*
+*This PRD is the output of the Nookbud discovery phase with inclusive, care-first framing and Spaces.*
+*Updated 2026-03-28 for rebrand. Product name: Nookbud. Domain: nookbud.com. Tagline: "Two homes. One childhood." Pricing: ₱349/mo or ₱2,499/yr.*
+*Discovery inputs: BRIEF.md, market-research.md, competitor-analysis.md, icp.md, BRAND.md*
+*Next: Phase 5 — Intelligence (expense summaries, care pattern insights, smart reminders).*

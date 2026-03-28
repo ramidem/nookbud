@@ -1,21 +1,25 @@
-# CoParent — Competitor Analysis
+# Nookbud — Competitor Analysis
 
-> Date: 2026-03-21
-> For: CoParent discovery phase
+> Date: 2026-03-21 (updated 2026-03-28 for rebrand)
+> For: Nookbud discovery phase
+> Domain: nookbud.com | Pricing: ₱349/mo (~$6 USD) or ₱2,499/yr | Tagline: "Two homes. One childhood."
 
 ---
 
 ## Executive Summary
 
-The co-parenting app market is dominated by tools built for **one scenario: two divorced parents in conflict.** They focus on communication, scheduling, and expense tracking — treating legal defensibility as an afterthought or a premium add-on.
+The co-parenting app market is dominated by tools built for **one scenario: two divorced parents in conflict.** They focus on communication, scheduling, and expense tracking — treating legal defensibility as an afterthought or a premium add-on. Their UX is cold, clinical, and adversarial.
 
 Every competitor shares the same structural limitation: **they assume a two-parent model with fixed roles (Parent A / Parent B).** None supports multiple care arrangements per user (Spaces), none treats guardians or extended family as first-class members, and none is designed for the broader reality of how children are actually raised — by grandparents, OFW families, blended households, and adoptive arrangements.
 
-The gap CoParent exploits is twofold:
-1. **Technical:** No competitor offers SHA-256 file integrity hashing, immutable version-diffed entry history across all data types, a structured acknowledgment + dispute layer, or a court-export bundle with hash manifest
-2. **Structural:** No competitor supports multiple Spaces, role-based access beyond "Parent A / Parent B," or inclusive onboarding for non-divorce family structures
+Nookbud is different in two fundamental ways:
+1. **Brand and framing:** Care-first, warmth-first. Built for everyone who shares responsibility for a child — not just parents in conflict. Inclusive, calm, non-judgmental.
+2. **Technical:** SHA-256 file integrity hashing, immutable version-diffed entry history across all data types, a structured acknowledgment + dispute layer, and a verified care report bundle with hash manifest.
+3. **Structural:** Multiple Spaces per user, role-based access (owner/editor/viewer), inclusive onboarding for any family structure.
 
-**The Spaces model is CoParent's deepest moat.** Competitors would need a fundamental re-architecture to support it — not a feature addition, but a database and product redesign.
+**The Spaces model is Nookbud's deepest moat.** Competitors would need a fundamental re-architecture to support it — not a feature addition, but a database and product redesign.
+
+**Pricing advantage:** Nookbud at ₱349/mo (~$6 USD) is the most affordable full-featured co-parenting record platform on the market — undercutting OFW ($9–$23/parent), TalkingParents ($12–$27), and AppClose ($8.99), with a simpler model: one plan, invited co-parents free.
 
 ---
 
@@ -71,8 +75,8 @@ Founded 2001. The most recognized co-parenting app in the legal ecosystem. Court
 - PDF-only export; no machine-readable bundle
 - No Spaces concept — one account = one arrangement
 
-**CoParent Opportunity:**
-OFW's court brand is its moat, but it's architecturally locked into the 2-parent model. It cannot serve a grandparent guardian, an OFW family, or a blended family manager without a fundamental redesign. CoParent's Spaces model + cryptographic integrity + inclusive positioning targets a market 3–5x larger than OFW's addressable base.
+**Nookbud Opportunity:**
+OFW's court brand is its moat, but it's architecturally locked into the 2-parent model. It cannot serve a grandparent guardian, an OFW family, or a blended family manager without a fundamental redesign. Nookbud's Spaces model + cryptographic integrity + inclusive positioning targets a market 3–5x larger than OFW's addressable base.
 
 ---
 
@@ -120,7 +124,7 @@ Founded 2012. Positioned around "unalterable records" of communication. Strong e
 - No cryptographic file integrity
 - Legal professionals note that extracting records adds billable time
 
-**CoParent Opportunity:**
+**Nookbud Opportunity:**
 TalkingParents users get good communication records but nothing for expenses, events, agreements, or disputes. And the platform cannot accommodate a grandmother, a step-parent, or a professional as a first-class member of the care arrangement.
 
 ---
@@ -171,8 +175,8 @@ Comprehensive feature set at a competitive price. Free accounts for domestic vio
 - No structured evidence bundle (PDF + ZIP + hash manifest)
 - Dispute layer is informal
 
-**CoParent Opportunity:**
-AppClose is the closest functional competitor and is moving in the right direction on legal features. But it remains locked into the 2-parent model. It cannot serve an OFW family, a grandparent guardian, or a blended family manager. CoParent's Spaces model + inclusive onboarding + cryptographic integrity addresses a fundamentally different market.
+**Nookbud Opportunity:**
+AppClose is the closest functional competitor and is moving in the right direction on legal features. But it remains locked into the 2-parent model. It cannot serve an OFW family, a grandparent guardian, or a blended family manager. Nookbud's Spaces model + inclusive onboarding + cryptographic integrity addresses a fundamentally different market.
 
 ---
 
@@ -205,8 +209,8 @@ European-origin app with multilingual and multi-currency support. Clean interfac
 - Minimal audit trail
 - No acknowledgment or dispute workflows
 
-**CoParent Opportunity:**
-2Houses serves cooperative, low-conflict pairs. Not competing for legal defensibility or inclusive family structures. The Spaces model makes CoParent a fundamentally different product.
+**Nookbud Opportunity:**
+2Houses serves cooperative, low-conflict pairs. Not competing for legal defensibility or inclusive family structures. The Spaces model makes Nookbud a fundamentally different product.
 
 ---
 
@@ -236,14 +240,14 @@ General family organizing app — shared calendar, to-do lists, shopping lists. 
 - Not recognized by any court
 - Single-family model — no multi-arrangement support
 
-**CoParent Opportunity:**
-Cozi users who transition from cooperative to complex family situations are an acquisition target. When their casual calendar tool is no longer enough, CoParent is the upgrade path.
+**Nookbud Opportunity:**
+Cozi users who transition from cooperative to complex family situations are an acquisition target. When their casual calendar tool is no longer enough, Nookbud is the upgrade path.
 
 ---
 
 ## Competitive Matrix
 
-| Feature | OFW | TalkingParents | AppClose | 2Houses | Cozi | **CoParent** |
+| Feature | OFW | TalkingParents | AppClose | 2Houses | Cozi | **Nookbud** |
 |---------|-----|----------------|----------|---------|------|------------|
 | **Multiple Spaces (arrangements)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Role-based access (owner/editor/viewer)** | Partial (2 parents + viewer) | ❌ | Partial (2 + pro) | ❌ | ❌ | ✅ |
@@ -264,7 +268,10 @@ Cozi users who transition from cooperative to complex family situations are an a
 | **Court recognition** | ✅✅✅ | ✅✅ | ✅ (growing) | ❌ | ❌ | — |
 | **Free tier** | ❌ | ✅ (limited) | ✅ (qualifying) | ❌ | ✅ | ✅ |
 | **Inclusive onboarding (non-divorce)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Price/mo (per parent)** | $9–$23 | $0–$27 | $8.99 flat | $8.25 | $0–$3.25 | TBD |
+| **Price/mo (per parent)** | $9–$23 | $0–$27 | $8.99 flat | $8.25 | $0–$3.25 | ₱349/mo (~$6) |
+| **Invited co-parent free** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Free trial (no card)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ (14 days) |
+| **One plan (no tiers)** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
 ---
 
@@ -273,56 +280,56 @@ Cozi users who transition from cooperative to complex family situations are an a
 ### Gap 1: No one supports multiple care arrangements (Spaces)
 **The problem:** Every competitor assumes one account = one co-parenting relationship = two parents. A father with children from two relationships must create two separate accounts — or worse, mix records. A grandmother involved in two grandchildren's care has no option at all.
 
-**The opportunity:** CoParent's Spaces model is the organizing primitive. Each Space is a separate care circle with its own members, children, timeline, and records. One user can belong to multiple Spaces and switch between them. This serves blended families, multi-arrangement parents, and guardians involved in multiple children's care — a market no competitor can address without fundamental re-architecture.
+**The opportunity:** Nookbud's Spaces model is the organizing primitive. Each Space is a separate care circle with its own members, children, timeline, and records. One user can belong to multiple Spaces and switch between them. This serves blended families, multi-arrangement parents, and guardians involved in multiple children's care — a market no competitor can address without fundamental re-architecture.
 
 ---
 
 ### Gap 2: No one treats guardians, extended family, or professionals as first-class members
 **The problem:** OFW has "Parent A" and "Parent B." TalkingParents has the same. AppClose's "circle" concept is slightly broader but still centers on two parents. A grandparent raising a grandchild, a step-parent, an older sibling with caregiving responsibilities — none of these have a place in existing tools.
 
-**The opportunity:** CoParent's role system (owner, editor, viewer) gives every member of the care circle a defined, appropriate level of access. A lola in Manila can be an "editor" in a Space with full read/write access. A family lawyer can be a "viewer" with read-only access and export. This is not a permission hack — it's a product design decision that makes CoParent work for how families actually function.
+**The opportunity:** Nookbud's role system (owner, editor, viewer) gives every member of the care circle a defined, appropriate level of access. A lola in Manila can be an "editor" in a Space with full read/write access. A family lawyer can be a "viewer" with read-only access and export. This is not a permission hack — it's a product design decision that makes Nookbud work for how families actually function.
 
 ---
 
 ### Gap 3: No one treats the entire record as evidence — only messages
 **The problem:** All competitors lock tamper-proof guarantees to messaging. Calendar changes, expense disputes, agreement modifications, file uploads — none have the same legal rigor as messages.
 
-**The opportunity:** CoParent's immutable versioning applies to every entry type. An expense edited three times shows every version, who changed what, and when. A pickup event marked "missed" and then disputed — full history, fully verified.
+**The opportunity:** Nookbud's immutable versioning applies to every entry type. An expense edited three times shows every version, who changed what, and when. A pickup event marked "missed" and then disputed — full history, fully verified.
 
 ---
 
 ### Gap 4: No cryptographic file integrity
 **The problem:** Every app stores files, but none verifies that the file uploaded is the file exported. No hash manifest proving documents weren't tampered with.
 
-**The opportunity:** CoParent hashes every file at upload (SHA-256) and includes the manifest in every export. A lawyer, judge, school administrator, or immigration officer can verify file integrity without trusting the platform.
+**The opportunity:** Nookbud hashes every file at upload (SHA-256) and includes the manifest in every export. A lawyer, judge, school administrator, or immigration officer can verify file integrity without trusting the platform.
 
 ---
 
 ### Gap 5: No structured evidence bundle for professionals
 **The problem:** OFW and TalkingParents produce PDFs. Lawyers wade through long printouts without structure. Schools and agencies receive unverified attachments.
 
-**The opportunity:** CoParent's verified care report (PDF + JSON + attachments + hash manifest) is designed for any professional who needs to trust the record — lawyers, judges, school administrators, hospital staff, immigration officers.
+**The opportunity:** Nookbud's verified care report (PDF + JSON + attachments + hash manifest) is designed for any professional who needs to trust the record — lawyers, judges, school administrators, hospital staff, immigration officers.
 
 ---
 
 ### Gap 6: No separate reference document layer with integrity verification
 **The problem:** All competitors treat documents as attachments to messages or timeline events. None offers a dedicated reference document layer — a place for static documents like vaccination records, custody orders, or school forms that need to exist and be accessible, not recorded as events. And none provides integrity verification for these documents distinct from the activity timeline.
 
-**The opportunity:** CoParent's Resources feature is a purpose-built reference document layer per Space. Documents are SHA-256 verified, categorized (medical, school, legal, financial, identity, insurance), optionally linked to a child, and included in verified care report exports. No competitor offers this — they would need to design an entirely new document model separate from their event/message architecture.
+**The opportunity:** Nookbud's Resources feature is a purpose-built reference document layer per Space. Documents are SHA-256 verified, categorized (medical, school, legal, financial, identity, insurance), optionally linked to a child, and included in verified care report exports. No competitor offers this — they would need to design an entirely new document model separate from their event/message architecture.
 
 ---
 
 ### Gap 7: Pricing excludes the most vulnerable users
 **The problem:** OFW requires both parents to subscribe ($220–$552/year per household). The families who most need documentation — lower-income, OFW families, grandparent guardians — can't afford it.
 
-**The opportunity:** Freemium with 1 Space free. The basic arrangement (OFW parent + guardian, or separated parents with one set of children) works at no cost. Paid tiers unlock complexity (multiple Spaces, professional access, advanced exports). Free access for DV survivors and financial hardship.
+**The opportunity:** Nookbud at ₱349/mo (~$6 USD) is a single-account price that includes invited co-parents for free. One parent pays; everyone in the care circle gets access. No seat fees, no per-parent pricing, no tiers. 14-day free trial with no card required removes the final barrier to adoption. This is structurally cheaper for a household than any competitor — and purpose-built for the OFW and guardian segments that competitors ignore entirely.
 
 ---
 
 ### Gap 8: No one acknowledges non-divorce use cases
 **The problem:** Every competitor's marketing, onboarding, and feature set assumes divorce. An OFW parent searching for "app to document my involvement with my child" finds nothing. A grandparent searching for "app to keep records of caring for my grandchild" finds nothing. These families are invisible to the current market.
 
-**The opportunity:** CoParent's inclusive positioning — "Shared records for everyone raising a child" — and its Spaces model make it the first tool that acknowledges and serves the full spectrum of shared care arrangements. This is not just a marketing angle — it's a structural product advantage that opens a market 3–5x larger than the divorce segment alone.
+**The opportunity:** Nookbud's inclusive positioning — "Shared records for everyone raising a child" — and its Spaces model make it the first tool that acknowledges and serves the full spectrum of shared care arrangements. This is not just a marketing angle — it's a structural product advantage that opens a market 3–5x larger than the divorce segment alone.
 
 ---
 
@@ -339,29 +346,32 @@ Cozi users who transition from cooperative to complex family situations are an a
 | Notes apps (Apple Notes, Notion) | Personal record-keeping | No tamper-proof guarantee, no shared visibility, timestamps are user-controlled |
 | Facebook Messenger | Family group chat | Deletable, no export, no verification, no legal defensibility |
 
-**The migration path:** Users across all these alternatives are already trying to solve the shared care record problem with tools that weren't built for it. CoParent needs to import from these and give them a verified, structured record going forward.
+**The migration path:** Users across all these alternatives are already trying to solve the shared care record problem with tools that weren't built for it. Nookbud needs to import from these and give them a verified, structured record going forward.
 
 ---
 
 ## Recommended Positioning
 
 ### Core Position
-> **CoParent is the first shared care records platform — built for every family structure, not just divorce.**
+> **Nookbud is the first shared care records platform built for every family structure, not just divorce — care-first, warmth-first, with legal readiness baked in.**
 
 ### Who to Win First
-**Primary:** Separated parents in conflict — they understand the stakes, they're already spending money, and they're the most likely to convert from existing competitors.
+**Primary:** Separated parents — they understand the stakes, they're already spending money, and they're the most likely to convert from existing competitors.
 
-**Secondary:** OFW families — massive, completely unserved market. The proof-of-involvement use case is compelling and has no competition.
+**Secondary:** OFW families — massive, completely unserved market. The proof-of-involvement use case is compelling and has no competition. Philippines-first pricing (₱349/mo) is designed for this segment.
 
 **Tertiary:** Grandparent/relative guardians — invisible to existing tools, high documentation needs, strong word-of-mouth potential in community networks.
 
 **Phase 2:** Blended family managers, open adoption families, legal professionals.
 
 ### Messaging Angles Against Incumbents
-- **vs. OurFamilyWizard:** "OFW was built for two parents in court. CoParent was built for everyone raising a child."
-- **vs. TalkingParents:** "TalkingParents documents what you say. CoParent documents everything that happens — across every arrangement."
-- **vs. AppClose:** "AppClose is catching up on legal features. CoParent started with the architecture — and built for every family structure."
-- **vs. WhatsApp/Sheets/Email:** "You're already documenting. CoParent makes it verified, organized, and defensible."
+- **vs. OurFamilyWizard:** "Built for two parents in court. Nookbud is built for everyone raising a child — and costs less than one coffee a week."
+- **vs. TalkingParents:** "TalkingParents documents what you say. Nookbud documents everything that matters — across every arrangement, for everyone in the care circle."
+- **vs. AppClose:** "AppClose is catching up on legal features. Nookbud started with the architecture — and was built care-first from day one."
+- **vs. WhatsApp/Sheets/Email:** "You're already documenting. Nookbud makes it organized, clear, and trustworthy."
+
+### Brand Tone Reminder
+Nookbud is **not** a legal weapon. It's a calm, capable presence for families navigating shared responsibility. The product should feel like: "Here's today. Here's what's next." Not: "We know this is a tough time."
 
 ### Defensible Moats
 1. **Spaces model:** Multi-arrangement support requires fundamental architecture decisions that competitors can't bolt on
@@ -378,9 +388,9 @@ Cozi users who transition from cooperative to complex family situations are an a
 
 ---
 
-## Summary: Where CoParent Wins
+## Summary: Where Nookbud Wins
 
-| Dimension | CoParent Advantage |
+| Dimension | Nookbud Advantage |
 |-----------|-------------------|
 | Family structure support | Spaces model — any arrangement, any number of members, any role |
 | Inclusive access | Owner, editor, viewer roles — not just "Parent A / Parent B" |
@@ -390,9 +400,10 @@ Cozi users who transition from cooperative to complex family situations are an a
 | Dispute capture | Structured per-entry acknowledgment + dispute workflow |
 | Market scope | 3–5x larger addressable market than divorce-only competitors |
 | Pricing fairness | Freemium with 1 Space free; paid for complexity |
-| UX philosophy | Inclusive, calm, non-adversarial — works for all family structures |
+| UX philosophy | Care-first, warm, calm, non-adversarial — works for all family structures |
 | Trust model | User-verifiable, not just "trust us" |
 
 ---
 
 *Sources: OurFamilyWizard (ourfamilywizard.com), TalkingParents (talkingparents.com), AppClose (appclose.com), 2Houses (2houses.com), Cozi (cozi.com), law firm reviews, user reviews (Sitejabber, Trustpilot, Reddit), AppClose PR (November 2025).*
+*Updated 2026-03-28 for Nookbud rebrand. Pricing updated to ₱349/mo (~$6 USD). Positioning updated to care-first, warmth-first framing.*
