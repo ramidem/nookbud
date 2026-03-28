@@ -1,5 +1,9 @@
+'use client';
+
+import { useRef } from 'react';
+import { useScroll, useTransform, motion } from 'framer-motion';
 import { testimonials } from '../data/testimonials';
-import { FadeIn, StaggerChildren, StaggerItem } from './ui/Animate';
+import { FadeIn } from './ui/Animate';
 import { Section } from './ui/Section';
 import { SectionHeading } from './ui/SectionHeading';
 
@@ -13,29 +17,69 @@ function Stars() {
   );
 }
 
-export function TestimonialsSection() {
+function TestimonialCard({ quote, name, context }: { quote: string; name: string; context: string }) {
   return (
-    <Section bg="offwhite">
+    <div className="flex w-80 flex-shrink-0 flex-col rounded-2xl bg-white p-8 shadow-sm">
+      <Stars />
+      <p className="mt-4 flex-1 text-base italic leading-relaxed text-brand-charcoal">
+        &ldquo;{quote}&rdquo;
+      </p>
+      <div className="mt-6">
+        <p className="text-sm font-semibold text-brand-charcoal">{name}</p>
+        <p className="text-xs text-brand-gray">{context}</p>
+      </div>
+    </div>
+  );
+}
+
+export function TestimonialsSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+
+  // Row 1: moves left as you scroll
+  const x1 = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
+  // Row 2: moves right as you scroll
+  const x2 = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+
+  // Double up for seamless feel
+  const row1 = [...testimonials.slice(0, 5), ...testimonials.slice(0, 5)];
+  const row2 = [...testimonials.slice(4), ...testimonials.slice(4)];
+
+  return (
+    <Section bg="offwhite" className="overflow-hidden">
       <div className="text-center">
         <FadeIn>
           <SectionHeading>From parents like you.</SectionHeading>
         </FadeIn>
+        <FadeIn delay={0.15}>
+          <p className="mx-auto mt-4 max-w-lg text-base text-brand-gray">
+            Real families. Real situations. Real records that held up when it mattered.
+          </p>
+        </FadeIn>
       </div>
-      <StaggerChildren className="mt-16 grid gap-6 md:grid-cols-3" stagger={0.12} delay={0.2}>
-        {testimonials.map((t, i) => (
-          <StaggerItem key={i}>
-            <div className="flex h-full flex-col rounded-2xl bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-              <Stars />
-              <p className="mt-4 flex-1 text-base italic leading-relaxed text-brand-charcoal md:text-lg">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <p className="mt-6 text-base font-medium text-brand-gray">
-                — {t.name}
-              </p>
-            </div>
-          </StaggerItem>
-        ))}
-      </StaggerChildren>
+
+      <div ref={ref} className="mt-16 space-y-6">
+        {/* Row 1 — scrolls left */}
+        <div className="overflow-hidden">
+          <motion.div style={{ x: x1 }} className="flex gap-6">
+            {row1.map((t, i) => (
+              <TestimonialCard key={i} quote={t.quote} name={t.name} context={t.context} />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Row 2 — scrolls right */}
+        <div className="overflow-hidden">
+          <motion.div style={{ x: x2 }} className="flex gap-6">
+            {row2.map((t, i) => (
+              <TestimonialCard key={i} quote={t.quote} name={t.name} context={t.context} />
+            ))}
+          </motion.div>
+        </div>
+      </div>
     </Section>
   );
 }
