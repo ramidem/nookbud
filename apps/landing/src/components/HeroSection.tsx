@@ -47,7 +47,7 @@ export function HeroSection() {
             and keep the focus on your child.
           </motion.p>
           <motion.div
-            className="mt-10 flex flex-row items-center gap-5"
+            className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
