@@ -10,6 +10,7 @@ export function Footer() {
             <a href="/" className="flex items-center gap-2.5">
               <Image
                 src="/icon.png"
+                  unoptimized
                 alt="NookBud"
                 width={32}
                 height={32}

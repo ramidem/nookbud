@@ -22,6 +22,7 @@ export function FinalCtaSection() {
           <FadeIn>
             <Image
               src="/icon.png"
+                  unoptimized
               alt="NookBud"
               width={56}
               height={56}

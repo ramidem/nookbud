@@ -7,6 +7,7 @@ export function Nav() {
         <a href="/" className="flex items-center gap-2.5">
           <Image
             src="/icon.png"
+                  unoptimized
             alt="NookBud"
             width={36}
             height={36}
