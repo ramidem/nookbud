@@ -42,9 +42,9 @@ export function PricingSection() {
             </span>
           </p>
           <div className="mt-10">
-            <CtaButton size="large">Try free for 14 days</CtaButton>
+            <CtaButton size="large">Try Free</CtaButton>
             <p className="mt-4 text-sm text-brand-gray">
-              No credit card needed
+              14-day trial. No credit card.
             </p>
           </div>
         </FadeIn>

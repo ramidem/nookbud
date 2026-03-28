@@ -31,13 +31,8 @@ export function FinalCtaSection() {
           </FadeIn>
           <FadeIn delay={0.15}>
             <h2 className="mt-6 font-serif text-2xl text-white md:text-5xl md:text-left">
-              Try free for 14 days.
-            </h2>
-          </FadeIn>
-          <FadeIn delay={0.3}>
-            <p className="mt-4 text-base text-white/80 md:text-left">
               For the child you both love.
-            </p>
+            </h2>
           </FadeIn>
           <FadeIn delay={0.45}>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row md:justify-start">
@@ -55,7 +50,7 @@ export function FinalCtaSection() {
               </CtaButton>
             </div>
             <p className="mt-4 text-sm text-white/60 md:text-left">
-              No credit card needed. Cancel anytime.
+              14-day trial. No credit card. Cancel anytime.
             </p>
           </FadeIn>
         </div>
