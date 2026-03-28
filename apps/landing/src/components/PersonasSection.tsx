@@ -37,7 +37,7 @@ export function PersonasSection() {
       </div>
 
       <FadeIn delay={0.3}>
-        <div className="relative mx-auto mt-16 w-full max-w-3xl">
+        <div className="relative mx-auto mt-16 w-full max-w-3xl pr-16 md:pr-20">
           {/* Card stack */}
           <div className="relative mb-4 h-[480px] w-full md:mb-8 md:h-[400px]">
             {/* Background stacked cards */}
