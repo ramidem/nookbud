@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export function Footer() {
   return (
-    <footer className="relative z-10 border-t-2 border-white/10 px-6 py-20 md:py-24" style={{ backgroundColor: '#2C2C2C' }}>
+    <footer className="relative z-10 border-t-2 border-white/10 px-6 py-10 md:py-16" style={{ backgroundColor: '#2C2C2C' }}>
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-16 md:flex-row md:justify-between">
           {/* Brand */}
@@ -101,7 +101,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-16 border-t border-white/10 pt-8 text-center text-sm text-white/60">
+        <div className="mt-10 border-t border-white/10 pt-6 text-center text-sm text-white/60">
           &copy; {new Date().getFullYear()} NookBud. All rights reserved.
         </div>
       </div>
