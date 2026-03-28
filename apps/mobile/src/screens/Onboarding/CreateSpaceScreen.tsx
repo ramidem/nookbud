@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, EmojiText, Typography } from '@/components';
+import { DEFAULT_SPACE_COLOR, SPACE_COLOR_OPTIONS } from '@/config/space';
 import { useTw } from '@/hooks/useTw';
 import type { SetupStackParamList } from '@/navigation/SetupNavigator';
 import { SpaceService } from '@/services';
@@ -15,7 +16,7 @@ const EXAMPLE_NAMES = ['Smith & Jones', "Lola Cora's Care", 'Portland Family', "
 
 const EMOJI_OPTIONS = ['🏠', '👨‍👩‍👧', '🌿', '⭐', '🌸', '🏡', '💙', '🌻'];
 
-const COLOR_OPTIONS = ['#6F8F7B', '#C97C5D', '#D8A7A0', '#7B9EC4', '#9B8EC4', '#C4A97B'];
+const COLOR_OPTIONS = SPACE_COLOR_OPTIONS;
 
 const MIN_NAME_LENGTH = 2;
 const COLOR_SWATCH_SIZE = 40;
@@ -26,7 +27,7 @@ export function CreateSpaceScreen({ navigation }: Props) {
   const tw = useTw();
   const [name, setName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('🏠');
-  const [selectedColor, setSelectedColor] = useState('#6F8F7B');
+  const [selectedColor, setSelectedColor] = useState(DEFAULT_SPACE_COLOR);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

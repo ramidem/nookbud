@@ -60,20 +60,18 @@ React Native has two parts that need to run together: the **native app** (on a s
 
 ### Starting the app
 
-
 | Command             | What it does                                                                                                                                                           |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `yarn ios`          | Builds the native iOS app, launches the Simulator, and starts Metro. Interactive — prompts you to pick a scheme and simulator/device.                                  |
 | `yarn android`      | Builds the native Android app, launches on an emulator/device, and starts Metro. Interactive — prompts you to pick a build variant and device.                         |
 | `yarn serve:mobile` | Starts Metro only. Use this to restart the JS bundler without rebuilding native code (e.g., if you closed the terminal but the simulator still has the app installed). |
 
-
 ### Typical flow
 
-1. Run `**yarn ios`** (or `yarn android`). The interactive picker will ask you to select a scheme/variant and a device.
+1. Run `**yarn ios`\*\* (or `yarn android`). The interactive picker will ask you to select a scheme/variant and a device.
 2. The native app builds, installs on the simulator/device, and launches. Metro starts automatically.
 3. Edit your TypeScript/JSX files — **hot reload** updates the app instantly.
-4. If Metro crashes or you close its terminal, run `**yarn serve:mobile`** to restart it without a full native rebuild.
+4. If Metro crashes or you close its terminal, run `**yarn serve:mobile`\*\* to restart it without a full native rebuild.
 5. You only need to re-run `yarn ios`/`yarn android` when you change native code (add a new RN package with native modules, modify `Info.plist`, change `build.gradle`, etc.).
 
 ### When to rebuild native
@@ -147,3 +145,27 @@ npx nx run mobile:lint
 This covers both ESLint rules and Prettier formatting.
 
 **When creating new components or screens**, review the code for hardcoded hex color values (e.g., `#2F2F2F`, `#C8BFB6`) **and Tailwind default palette classes** (e.g., `gray-*`, `blue-*`, `red-*`). Replace them with semantic color tokens from `tailwind.config.js` (e.g., `text-foreground`, `bg-surface`, `bg-neutral-200`). See the styling docs for the full token reference and mapping table. If no token exists, add one to `tailwind.config.js` before using it.
+
+<!-- nx configuration start-->
+<!-- Leave the start & end comments to automatically receive updates. -->
+
+## General Guidelines for working with Nx
+
+- For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
+- When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
+- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `npm exec nx test`) - avoids using globally installed CLI
+- You have access to the Nx MCP server and its tools, use them to help the user
+- For Nx plugin best practices, check `node_modules/@nx/<plugin>/PLUGIN.md`. Not all plugins have this file - proceed without it if unavailable.
+- NEVER guess CLI flags - always check nx_docs or `--help` first when unsure
+
+## Scaffolding & Generators
+
+- For scaffolding tasks (creating apps, libs, project structure, setup), ALWAYS invoke the `nx-generate` skill FIRST before exploring or calling MCP tools
+
+## When to use nx_docs
+
+- USE for: advanced config options, unfamiliar flags, migration guides, plugin configuration, edge cases
+- DON'T USE for: basic generator syntax (`nx g @nx/react:app`), standard commands, things you already know
+- The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
+
+<!-- nx configuration end-->

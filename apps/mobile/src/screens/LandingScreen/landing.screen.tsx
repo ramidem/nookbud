@@ -9,14 +9,17 @@
  */
 
 import React from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
+import { ScreenContainer } from '@/components';
 import { tw } from '@/tailwind';
 
 export function LandingScreen() {
   return (
-    <View style={tw`bg-background flex-1 items-center justify-center`}>
-      <ActivityIndicator color={tw.color('primary')} />
-    </View>
+    <ScreenContainer hasScroll={false}>
+      <View style={tw`flex-1 items-center justify-center`}>
+        <ActivityIndicator color={tw.color('primary')} />
+      </View>
+    </ScreenContainer>
   );
 }

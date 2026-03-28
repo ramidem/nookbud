@@ -1,7 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CommonActions } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { View, Text, Pressable, ActivityIndicator, TextInput } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
+import { z } from 'zod';
 
 import { useTw } from '@/hooks/useTw';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
@@ -13,38 +16,37 @@ type Props = NativeStackScreenProps<RootStackParamList, 'AcceptInvite'>;
 const MAX_TOKEN_LENGTH = 8;
 const MIN_TOKEN_LENGTH = 6;
 
+const acceptInviteSchema = z.object({
+  code: z
+    .string()
+    .min(MIN_TOKEN_LENGTH, 'Code must be at least 6 characters')
+    .max(MAX_TOKEN_LENGTH),
+});
+
+type AcceptInviteFormData = z.infer<typeof acceptInviteSchema>;
+
 export function AcceptInviteScreen({ navigation, route }: Props) {
   const tw = useTw();
   const initialToken = route.params?.token ?? '';
-  const [code, setCode] = useState(initialToken);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const isCodeValid = code.length >= MIN_TOKEN_LENGTH;
+  const {
+    control,
+    formState: { isValid },
+    handleSubmit,
+  } = useForm<AcceptInviteFormData>({
+    defaultValues: { code: initialToken },
+    mode: 'onChange',
+    resolver: zodResolver(acceptInviteSchema),
+  });
 
-  const handleCodeChange = (text: string) => {
-    setCode(
-      text
-        .toUpperCase()
-        .replace(/[^A-Z0-9]/g, '')
-        .slice(0, MAX_TOKEN_LENGTH),
-    );
-    if (error) setError('');
-  };
-
-  const handleJoin = async () => {
-    if (!isCodeValid) {
-      setError('Code must be at least 6 characters');
-
-      return;
-    }
-
+  const onSubmit = async (data: AcceptInviteFormData) => {
     setIsLoading(true);
     setError('');
 
     try {
-      await SpaceMemberService.acceptInvite(code);
-      // Navigate to main app after successful join
+      await SpaceMemberService.acceptInvite(data.code);
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -76,16 +78,30 @@ export function AcceptInviteScreen({ navigation, route }: Props) {
 
       <View style={tw`mb-4`}>
         <Text style={tw`text-foreground mb-2 text-sm font-medium`}>Invite Code</Text>
-        <TextInput
-          autoCapitalize="characters"
-          autoCorrect={false}
-          editable={!isLoading}
-          maxLength={MAX_TOKEN_LENGTH}
-          placeholder="ABCD1234"
-          placeholderTextColor={colors.placeholder}
-          style={tw`border-divider bg-surface text-foreground rounded-xl border px-4 py-4 text-center font-mono text-2xl font-bold tracking-widest`}
-          value={code}
-          onChangeText={handleCodeChange}
+        <Controller
+          control={control}
+          name="code"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              autoCapitalize="characters"
+              autoCorrect={false}
+              editable={!isLoading}
+              maxLength={MAX_TOKEN_LENGTH}
+              placeholder="ABCD1234"
+              placeholderTextColor={colors.placeholder}
+              style={tw`border-divider bg-surface text-foreground rounded-xl border px-4 py-4 text-center font-mono text-2xl font-bold tracking-widest`}
+              value={value}
+              onChangeText={(text) => {
+                onChange(
+                  text
+                    .toUpperCase()
+                    .replace(/[^A-Z0-9]/g, '')
+                    .slice(0, MAX_TOKEN_LENGTH),
+                );
+                if (error) setError('');
+              }}
+            />
+          )}
         />
       </View>
 
@@ -96,11 +112,11 @@ export function AcceptInviteScreen({ navigation, route }: Props) {
       ) : null}
 
       <Pressable
-        disabled={!isCodeValid || isLoading}
+        disabled={!isValid || isLoading}
         style={tw`mb-4 items-center rounded-xl py-4 ${
-          !isCodeValid || isLoading ? 'bg-disabled' : 'bg-primary'
+          !isValid || isLoading ? 'bg-disabled' : 'bg-primary'
         }`}
-        onPress={handleJoin}
+        onPress={handleSubmit(onSubmit)}
       >
         {isLoading ? (
           <ActivityIndicator color={colors.white} />

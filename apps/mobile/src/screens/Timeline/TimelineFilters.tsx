@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, Modal, ScrollView } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 
+import { Modal } from '@/components';
 import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { ChildService } from '@/services';
@@ -90,7 +91,7 @@ export function TimelineFilters({ filters, onApply, onClose, spaceId, spaceIds, 
     localFilters.dateTo !== null;
 
   return (
-    <Modal animationType="slide" presentationStyle="pageSheet" visible={visible}>
+    <Modal isVisible={visible} onBackButtonPress={onClose} onBackdropPress={onClose}>
       <View style={tw`bg-surface flex-1`}>
         {/* Header */}
         <View

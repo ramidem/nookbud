@@ -158,3 +158,6 @@ web-build/
 # Allow landing public assets
 !apps/landing/public/**
 !apps/landing/public/*.png
+
+.claude/worktrees
+.claude/settings.local.json

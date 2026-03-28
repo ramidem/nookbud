@@ -1,16 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import dayjs from 'dayjs';
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { z } from 'zod';
 
 import { Alert, EmojiText } from '@/components/atoms';
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
@@ -21,6 +16,15 @@ import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { EntryService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
 
+const agreementFormSchema = z.object({
+  effectiveDate: z.date({ required_error: 'Effective date is required' }),
+  expirationDate: z.date().optional(),
+  termsText: z.string().min(1, 'Terms are required'),
+  title: z.string().min(1, 'Title is required'),
+});
+
+type AgreementFormData = z.infer<typeof agreementFormSchema>;
+
 type Props = NativeStackScreenProps<ActivityStackParamList, 'AddAgreement'>;
 
 export function AddAgreementScreen({ navigation }: Props) {
@@ -29,11 +33,23 @@ export function AddAgreementScreen({ navigation }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasPermission, setHasPermission] = useState(true);
 
-  // Form state
-  const [title, setTitle] = useState('');
-  const [termsText, setTermsText] = useState('');
-  const [effectiveDate, setEffectiveDate] = useState<Date | undefined>(undefined);
-  const [expirationDate, setExpirationDate] = useState<Date | undefined>(undefined);
+  const {
+    control,
+    formState: { isValid },
+    handleSubmit,
+    watch,
+  } = useForm<AgreementFormData>({
+    defaultValues: {
+      effectiveDate: undefined,
+      expirationDate: undefined,
+      termsText: '',
+      title: '',
+    },
+    mode: 'onChange',
+    resolver: zodResolver(agreementFormSchema),
+  });
+
+  const effectiveDateValue = watch('effectiveDate');
 
   useEffect(() => {
     async function load() {
@@ -62,24 +78,21 @@ export function AddAgreementScreen({ navigation }: Props) {
     load();
   }, [activeSpaceId, isAllSpaces, navigation]);
 
-  const canSave =
-    title.trim().length > 0 &&
-    termsText.trim().length > 0 &&
-    effectiveDate !== undefined &&
-    hasPermission &&
-    !isAllSpaces;
+  const canSave = isValid && hasPermission && !isAllSpaces;
 
-  const handleSave = async () => {
-    if (!canSave || !activeSpaceId) return;
+  const onSubmit = async (data: AgreementFormData) => {
+    if (!activeSpaceId) return;
 
     setIsLoading(true);
     try {
       await EntryService.create({
         content: {
-          effectiveDate: dayjs(effectiveDate).format('YYYY-MM-DD'),
-          expirationDate: expirationDate ? dayjs(expirationDate).format('YYYY-MM-DD') : undefined,
-          termsText: termsText.trim(),
-          title: title.trim(),
+          effectiveDate: dayjs(data.effectiveDate).format('YYYY-MM-DD'),
+          expirationDate: data.expirationDate
+            ? dayjs(data.expirationDate).format('YYYY-MM-DD')
+            : undefined,
+          termsText: data.termsText.trim(),
+          title: data.title.trim(),
         },
         spaceId: activeSpaceId,
         type: 'agreement',
@@ -97,10 +110,7 @@ export function AddAgreementScreen({ navigation }: Props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`bg-surface flex-1`}
-    >
+    <KeyboardAvoidingView behavior="padding" style={tw`bg-surface flex-1`}>
       {/* Header */}
       <View
         style={tw`border-background flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
@@ -109,7 +119,7 @@ export function AddAgreementScreen({ navigation }: Props) {
           <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
         <Text style={tw`text-foreground font-serif-semibold text-lg`}>Add Agreement</Text>
-        <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
+        <Pressable disabled={!canSave || isLoading} onPress={handleSubmit(onSubmit)}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
@@ -144,48 +154,72 @@ export function AddAgreementScreen({ navigation }: Props) {
         {/* Title */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Agreement Title *</Text>
-          <TextInput
-            placeholder="e.g., Holiday Schedule 2026"
-            placeholderTextColor={colors.placeholder}
-            style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
-            value={title}
-            onChangeText={setTitle}
+          <Controller
+            control={control}
+            name="title"
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                placeholder="e.g., Holiday Schedule 2026"
+                placeholderTextColor={colors.placeholder}
+                style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
           />
         </View>
 
         {/* Terms */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Terms *</Text>
-          <TextInput
-            multiline
-            placeholder="Write the full terms of this agreement..."
-            placeholderTextColor={colors.placeholder}
-            style={tw`border-divider text-foreground min-h-40 rounded-xl border px-4 py-3`}
-            textAlignVertical="top"
-            value={termsText}
-            onChangeText={setTermsText}
+          <Controller
+            control={control}
+            name="termsText"
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                multiline
+                placeholder="Write the full terms of this agreement..."
+                placeholderTextColor={colors.placeholder}
+                style={tw`border-divider text-foreground min-h-40 rounded-xl border px-4 py-3`}
+                textAlignVertical="top"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
           />
         </View>
 
         {/* Dates */}
         <View style={tw`mb-6 flex-row`}>
-          <DatePickerInput
-            isRequired
-            label="Effective Date"
-            mode="date"
-            placeholder="Select date"
-            style={tw`mr-2 flex-1`}
-            value={effectiveDate}
-            onChange={setEffectiveDate}
+          <Controller
+            control={control}
+            name="effectiveDate"
+            render={({ field: { onChange, value } }) => (
+              <DatePickerInput
+                isRequired
+                label="Effective Date"
+                mode="date"
+                placeholder="Select date"
+                style={tw`mr-2 flex-1`}
+                value={value}
+                onChange={onChange}
+              />
+            )}
           />
-          <DatePickerInput
-            label="Expires"
-            minimumDate={effectiveDate}
-            mode="date"
-            placeholder="Optional"
-            style={tw`ml-2 flex-1`}
-            value={expirationDate}
-            onChange={setExpirationDate}
+          <Controller
+            control={control}
+            name="expirationDate"
+            render={({ field: { onChange, value } }) => (
+              <DatePickerInput
+                label="Expires"
+                minimumDate={effectiveDateValue}
+                mode="date"
+                placeholder="Optional"
+                style={tw`ml-2 flex-1`}
+                value={value}
+                onChange={onChange}
+              />
+            )}
           />
         </View>
       </ScrollView>

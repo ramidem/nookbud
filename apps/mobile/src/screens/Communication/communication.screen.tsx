@@ -1,12 +1,13 @@
+import { LegendList } from '@legendapp/list';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { and, desc, eq, ne } from 'drizzle-orm';
 import React, { useState, useCallback, useRef } from 'react';
-import { View, Text, Pressable, FlatList, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BackButton, PageHeader } from '@/components';
+import { BackButton, PageHeader, ScreenContainer } from '@/components';
 import { db } from '@/database';
 import { entries, entryVersions, auditLogs, type AuditLog } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
@@ -89,7 +90,7 @@ export function CommunicationScreen({ navigation }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [messageText, setMessageText] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const flatListRef = useRef<FlatList<ChatItem>>(null);
+  const listRef = useRef(null);
   const currentUserId = UserService.getCurrentUserId();
 
   const loadMessages = useCallback(async () => {
@@ -197,7 +198,7 @@ export function CommunicationScreen({ navigation }: Props) {
   // No active space or All Spaces
   if (!activeSpaceId || isAllSpaces) {
     return (
-      <View style={tw`bg-background flex-1`}>
+      <ScreenContainer excludedEdges={['top']} hasScroll={false}>
         <PageHeader
           leftAction={<BackButton onPress={() => navigation.goBack()} />}
           title="Messages"
@@ -207,7 +208,7 @@ export function CommunicationScreen({ navigation }: Props) {
             Select a specific space to view messages.
           </Text>
         </View>
-      </View>
+      </ScreenContainer>
     );
   }
 
@@ -246,7 +247,7 @@ export function CommunicationScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={tw`bg-background flex-1`}>
+    <ScreenContainer excludedEdges={['top', 'bottom']} hasScroll={false}>
       <PageHeader
         leftAction={<BackButton onPress={() => navigation.goBack()} />}
         title={spaceName}
@@ -264,11 +265,12 @@ export function CommunicationScreen({ navigation }: Props) {
             </Text>
           </View>
         ) : (
-          <FlatList
-            ref={flatListRef}
+          <LegendList
+            ref={listRef}
             inverted
             contentContainerStyle={tw`px-4 py-2`}
             data={items}
+            estimatedItemSize={80}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
           />
@@ -305,7 +307,7 @@ export function CommunicationScreen({ navigation }: Props) {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </ScreenContainer>
   );
 }
 

@@ -3,9 +3,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
-import { Button, PageHeader, Typography } from '@/components';
+import { Button, PageHeader, ScreenContainer, Typography } from '@/components';
 import { useActiveSpace } from '@/hooks';
-import { useTw } from '@/hooks/useTw';
 import { ArchiveIcon, UsersIcon } from '@/icons';
 import type { SpacesStackParamList } from '@/navigation/SpacesNavigator';
 import { SpaceService, type SpaceWithRole } from '@/services';
@@ -22,7 +21,6 @@ const ROLE_LABELS: Record<string, string> = {
 const ARCHIVE_ICON_SIZE = 14;
 
 export function SpacesScreen({ navigation }: Props) {
-  const twHook = useTw();
   const { activeSpaceId, isAllSpaces, switchToSpace } = useActiveSpace();
   const [spaces, setSpaces] = useState<SpaceWithRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +44,7 @@ export function SpacesScreen({ navigation }: Props) {
   );
 
   return (
-    <View style={twHook`bg-background flex-1`}>
+    <ScreenContainer excludedEdges={['top']} hasScroll={false}>
       <PageHeader title="Spaces" />
 
       {isLoading ? (
@@ -151,6 +149,6 @@ export function SpacesScreen({ navigation }: Props) {
           />
         </ScrollView>
       )}
-    </View>
+    </ScreenContainer>
   );
 }

@@ -1,15 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { z } from 'zod';
 
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
 import { CHILD_ROLES, CHILD_ROLE_DISPLAY, type ChildRole } from '@/database/schema';
@@ -20,56 +15,52 @@ import { colors } from '@/tailwind';
 
 type Props = NativeStackScreenProps<SetupStackParamList, 'AddChild'>;
 
-type ChildInput = {
-  dateOfBirth: Date | undefined;
-  id: string;
-  name: string;
-  role: ChildRole | undefined;
-};
+const childInputSchema = z.object({
+  dateOfBirth: z.date().optional(),
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  role: z.custom<ChildRole>((val) => typeof val === 'string' && val.length > 0, {
+    message: 'Role is required',
+  }),
+});
+
+const addChildrenSchema = z.object({
+  children: z.array(childInputSchema).min(1),
+});
+
+type AddChildrenFormData = z.infer<typeof addChildrenSchema>;
 
 const ROLE_OPTIONS = CHILD_ROLES.map((r) => ({ label: CHILD_ROLE_DISPLAY[r], value: r }));
 
 export function AddChildScreen({ navigation, route }: Props) {
   const tw = useTw();
   const { spaceId } = route.params;
-  const [childList, setChildList] = useState<ChildInput[]>([
-    { dateOfBirth: undefined, id: '1', name: '', role: undefined },
-  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const addChild = () => {
-    setChildList([
-      ...childList,
-      { dateOfBirth: undefined, id: String(Date.now()), name: '', role: undefined },
-    ]);
-  };
+  const {
+    control,
+    formState: { isValid },
+    handleSubmit,
+  } = useForm<AddChildrenFormData>({
+    defaultValues: {
+      children: [{ dateOfBirth: undefined, name: '', role: undefined }],
+    },
+    mode: 'onChange',
+    resolver: zodResolver(addChildrenSchema),
+  });
 
-  const updateChild = (id: string, patch: Partial<ChildInput>) => {
-    setChildList(childList.map((c) => (c.id === id ? { ...c, ...patch } : c)));
-  };
+  const { append, fields, remove } = useFieldArray({ control, name: 'children' });
 
-  const removeChild = (id: string) => {
-    if (childList.length > 1) {
-      setChildList(childList.filter((c) => c.id !== id));
-    }
-  };
-
-  const validChildren = childList.filter((c) => c.name.trim().length >= 2 && c.role);
-  const canContinue = validChildren.length > 0;
-
-  const handleContinue = async () => {
-    if (!canContinue) return;
-
+  const onSubmit = async (data: AddChildrenFormData) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      for (const child of validChildren) {
+      for (const child of data.children) {
         await ChildService.create({
           dateOfBirth: child.dateOfBirth ?? undefined,
           name: child.name.trim(),
-          role: child.role,
+          role: child.role as ChildRole,
           spaceId,
         });
       }
@@ -83,74 +74,92 @@ export function AddChildScreen({ navigation, route }: Props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`bg-surface flex-1`}
-    >
+    <KeyboardAvoidingView behavior="padding" style={tw`bg-surface flex-1`}>
       <ScrollView contentContainerStyle={tw`px-6 pb-8 pt-16`}>
         <Text style={tw`text-foreground font-serif-bold mb-2 text-3xl`}>Add your children</Text>
         <Text style={tw`text-subtitle mb-8 text-base`}>You can add more later in settings.</Text>
 
-        {childList.map((child, index) => (
-          <View key={child.id} style={tw`bg-background mb-6 rounded-xl p-4`}>
+        {fields.map((field, index) => (
+          <View key={field.id} style={tw`bg-background mb-6 rounded-xl p-4`}>
             <View style={tw`mb-4 flex-row items-center justify-between`}>
               <Text style={tw`text-subtitle text-sm font-medium`}>Child {index + 1}</Text>
-              {childList.length > 1 && (
-                <Pressable onPress={() => removeChild(child.id)}>
+              {fields.length > 1 && (
+                <Pressable onPress={() => remove(index)}>
                   <Text style={tw`text-error text-sm`}>Remove</Text>
                 </Pressable>
               )}
             </View>
 
-            <TextInput
-              autoCapitalize="words"
-              placeholder="Child's name"
-              placeholderTextColor={colors.placeholder}
-              style={tw`border-divider bg-surface text-foreground mb-3 rounded-lg border px-4 py-3 text-base`}
-              value={child.name}
-              onChangeText={(value) => updateChild(child.id, { name: value })}
+            <Controller
+              control={control}
+              name={`children.${index}.name`}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <TextInput
+                  autoCapitalize="words"
+                  placeholder="Child's name"
+                  placeholderTextColor={colors.placeholder}
+                  style={tw`border-divider bg-surface text-foreground mb-3 rounded-lg border px-4 py-3 text-base`}
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                />
+              )}
             />
 
-            <DatePickerInput
-              label="Date of Birth"
-              maximumDate={new Date()}
-              mode="date"
-              placeholder="Select date of birth"
-              value={child.dateOfBirth}
-              onChange={(value) => updateChild(child.id, { dateOfBirth: value })}
+            <Controller
+              control={control}
+              name={`children.${index}.dateOfBirth`}
+              render={({ field: { onChange, value } }) => (
+                <DatePickerInput
+                  label="Date of Birth"
+                  maximumDate={new Date()}
+                  mode="date"
+                  placeholder="Select date of birth"
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
             />
 
             {/* Role selector */}
             <Text style={tw`text-subtitle mb-2 mt-3 text-xs font-medium uppercase tracking-wide`}>
               Your relationship to this child
             </Text>
-            <View style={tw`flex-row flex-wrap gap-2`}>
-              {ROLE_OPTIONS.map((option) => {
-                const isSelected = child.role === option.value;
+            <Controller
+              control={control}
+              name={`children.${index}.role`}
+              render={({ field: { onChange, value } }) => (
+                <View style={tw`flex-row flex-wrap gap-2`}>
+                  {ROLE_OPTIONS.map((option) => {
+                    const isSelected = value === option.value;
 
-                return (
-                  <Pressable
-                    key={option.value}
-                    style={tw`rounded-full border px-3 py-1.5 ${
-                      isSelected ? 'bg-primary border-primary' : 'border-divider bg-surface'
-                    }`}
-                    onPress={() => updateChild(child.id, { role: option.value })}
-                  >
-                    <Text
-                      style={tw`text-sm font-medium ${isSelected ? 'text-white' : 'text-foreground'}`}
-                    >
-                      {option.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+                    return (
+                      <Pressable
+                        key={option.value}
+                        style={tw`rounded-full border px-3 py-1.5 ${
+                          isSelected ? 'bg-primary border-primary' : 'border-divider bg-surface'
+                        }`}
+                        onPress={() => onChange(option.value)}
+                      >
+                        <Text
+                          style={tw`text-sm font-medium ${isSelected ? 'text-white' : 'text-foreground'}`}
+                        >
+                          {option.label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              )}
+            />
           </View>
         ))}
 
         <Pressable
           style={tw`border-divider mb-8 rounded-xl border-2 border-dashed py-4`}
-          onPress={addChild}
+          onPress={() =>
+            append({ dateOfBirth: undefined, name: '', role: undefined as unknown as ChildRole })
+          }
         >
           <Text style={tw`text-primary text-center text-base font-medium`}>
             + Add another child
@@ -164,9 +173,9 @@ export function AddChildScreen({ navigation, route }: Props) {
         )}
 
         <Pressable
-          disabled={!canContinue || isLoading}
-          style={tw`${canContinue && !isLoading ? 'bg-primary' : 'bg-disabled'} flex-row justify-center rounded-xl py-4`}
-          onPress={handleContinue}
+          disabled={!isValid || isLoading}
+          style={tw`${isValid && !isLoading ? 'bg-primary' : 'bg-disabled'} flex-row justify-center rounded-xl py-4`}
+          onPress={handleSubmit(onSubmit)}
         >
           {isLoading ? (
             <ActivityIndicator color="white" />

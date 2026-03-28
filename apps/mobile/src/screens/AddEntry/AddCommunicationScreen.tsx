@@ -1,15 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { z } from 'zod';
 
 import { Alert, EmojiText } from '@/components/atoms';
 import { useActiveSpace } from '@/hooks';
@@ -18,12 +13,19 @@ import { AlertTriangleIcon, MessageCircleIcon } from '@/icons';
 import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { EntryService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
-import type { CommunicationImportance } from '@/types/entry-content.types';
 
 type Props = NativeStackScreenProps<ActivityStackParamList, 'AddCommunication'>;
 
 const ACTIVE_TEXT = 'text-white';
 const INACTIVE_TEXT = 'text-foreground';
+
+const communicationFormSchema = z.object({
+  body: z.string().min(1, 'Message is required'),
+  importance: z.enum(['normal', 'high']),
+  subject: z.string().min(1, 'Subject is required'),
+});
+
+type CommunicationFormData = z.infer<typeof communicationFormSchema>;
 
 export function AddCommunicationScreen({ navigation }: Props) {
   const tw = useTw();
@@ -31,10 +33,13 @@ export function AddCommunicationScreen({ navigation }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasPermission, setHasPermission] = useState(true);
 
-  // Form state
-  const [subject, setSubject] = useState('');
-  const [body, setBody] = useState('');
-  const [importance, setImportance] = useState<CommunicationImportance>('normal');
+  const { control, formState, handleSubmit } = useForm<CommunicationFormData>({
+    defaultValues: { body: '', importance: 'normal' as const, subject: '' },
+    mode: 'onChange',
+    resolver: zodResolver(communicationFormSchema),
+  });
+
+  const { isValid } = formState;
 
   useEffect(() => {
     async function load() {
@@ -63,19 +68,18 @@ export function AddCommunicationScreen({ navigation }: Props) {
     load();
   }, [activeSpaceId, isAllSpaces, navigation]);
 
-  const canSave =
-    subject.trim().length > 0 && body.trim().length > 0 && hasPermission && !isAllSpaces;
+  const canSave = isValid && hasPermission && !isAllSpaces;
 
-  const handleSave = async () => {
-    if (!canSave || !activeSpaceId) return;
+  const onSubmit = async (data: CommunicationFormData) => {
+    if (!activeSpaceId) return;
 
     setIsLoading(true);
     try {
       await EntryService.create({
         content: {
-          body: body.trim(),
-          importance,
-          subject: subject.trim(),
+          body: data.body.trim(),
+          importance: data.importance,
+          subject: data.subject.trim(),
         },
         spaceId: activeSpaceId,
         type: 'communication',
@@ -93,10 +97,7 @@ export function AddCommunicationScreen({ navigation }: Props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`bg-surface flex-1`}
-    >
+    <KeyboardAvoidingView behavior="padding" style={tw`bg-surface flex-1`}>
       {/* Header */}
       <View
         style={tw`border-background flex-row items-center justify-between border-b px-4 pb-4 pt-14`}
@@ -105,7 +106,7 @@ export function AddCommunicationScreen({ navigation }: Props) {
           <Text style={tw`text-primary text-base`}>Cancel</Text>
         </Pressable>
         <Text style={tw`text-foreground font-serif-semibold text-lg`}>Send Message</Text>
-        <Pressable disabled={!canSave || isLoading} onPress={handleSave}>
+        <Pressable disabled={!canSave || isLoading} onPress={handleSubmit(onSubmit)}>
           {isLoading ? (
             <ActivityIndicator size="small" />
           ) : (
@@ -140,57 +141,77 @@ export function AddCommunicationScreen({ navigation }: Props) {
         {/* Subject */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Subject *</Text>
-          <TextInput
-            placeholder="What is this about?"
-            placeholderTextColor={colors.placeholder}
-            style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
-            value={subject}
-            onChangeText={setSubject}
+          <Controller
+            control={control}
+            name="subject"
+            render={({ field: { onBlur, onChange, value } }) => (
+              <TextInput
+                placeholder="What is this about?"
+                placeholderTextColor={colors.placeholder}
+                style={tw`border-divider text-foreground rounded-xl border px-4 py-3`}
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+              />
+            )}
           />
         </View>
 
         {/* Body */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Message *</Text>
-          <TextInput
-            multiline
-            placeholder="Write your message..."
-            placeholderTextColor={colors.placeholder}
-            style={tw`border-divider text-foreground min-h-40 rounded-xl border px-4 py-3`}
-            textAlignVertical="top"
-            value={body}
-            onChangeText={setBody}
+          <Controller
+            control={control}
+            name="body"
+            render={({ field: { onBlur, onChange, value } }) => (
+              <TextInput
+                multiline
+                placeholder="Write your message..."
+                placeholderTextColor={colors.placeholder}
+                style={tw`border-divider text-foreground min-h-40 rounded-xl border px-4 py-3`}
+                textAlignVertical="top"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+              />
+            )}
           />
         </View>
 
         {/* Importance */}
         <View style={tw`mb-6`}>
           <Text style={tw`text-subtitle mb-2 text-sm font-medium`}>Priority</Text>
-          <View style={tw`flex-row gap-2`}>
-            <Pressable
-              style={tw`flex-1 rounded-lg py-3 ${importance === 'normal' ? 'bg-primary' : 'bg-neutral-200'}`}
-              onPress={() => setImportance('normal')}
-            >
-              <Text
-                style={tw`text-center ${importance === 'normal' ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}
-              >
-                Normal
-              </Text>
-            </Pressable>
-            <Pressable
-              style={tw`flex-1 flex-row items-center justify-center rounded-lg py-3 ${importance === 'high' ? 'bg-error' : 'bg-neutral-200'}`}
-              onPress={() => setImportance('high')}
-            >
-              <AlertTriangleIcon
-                height={16}
-                style={tw`mr-1 ${importance === 'high' ? ACTIVE_TEXT : INACTIVE_TEXT}`}
-                width={16}
-              />
-              <Text style={tw`${importance === 'high' ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}>
-                High Priority
-              </Text>
-            </Pressable>
-          </View>
+          <Controller
+            control={control}
+            name="importance"
+            render={({ field: { onChange, value } }) => (
+              <View style={tw`flex-row gap-2`}>
+                <Pressable
+                  style={tw`flex-1 rounded-lg py-3 ${value === 'normal' ? 'bg-primary' : 'bg-neutral-200'}`}
+                  onPress={() => onChange('normal')}
+                >
+                  <Text
+                    style={tw`text-center ${value === 'normal' ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}
+                  >
+                    Normal
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={tw`flex-1 flex-row items-center justify-center rounded-lg py-3 ${value === 'high' ? 'bg-error' : 'bg-neutral-200'}`}
+                  onPress={() => onChange('high')}
+                >
+                  <AlertTriangleIcon
+                    height={16}
+                    style={tw`mr-1 ${value === 'high' ? ACTIVE_TEXT : INACTIVE_TEXT}`}
+                    width={16}
+                  />
+                  <Text style={tw`${value === 'high' ? ACTIVE_TEXT : INACTIVE_TEXT} font-medium`}>
+                    High Priority
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
