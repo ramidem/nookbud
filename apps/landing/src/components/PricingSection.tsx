@@ -86,7 +86,7 @@ export function PricingSection() {
 
       {/* Features list below */}
       <div className="mt-12 flex justify-center">
-        <StaggerChildren className="grid grid-cols-1 gap-3 sm:grid-cols-2" stagger={0.06} delay={0.2}>
+        <StaggerChildren className="space-y-3" stagger={0.06} delay={0.2}>
           {included.map((item) => (
             <StaggerItem key={item}>
               <div className="flex items-center gap-3">
