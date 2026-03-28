@@ -155,3 +155,6 @@ web-build/
 !assets/brand/**/*.png
 !assets/brand/**/*.jpg
 !assets/brand/**/*.svg
+# Allow landing public assets
+!apps/landing/public/**
+!apps/landing/public/*.png
