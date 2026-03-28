@@ -32,7 +32,17 @@ export function PricingSection() {
         </p>
       </FadeIn>
 
-      <div className="mt-12 flex flex-col items-center gap-16 md:flex-row md:items-start md:justify-center md:gap-20">
+      {/* Try Free */}
+      <FadeIn delay={0.2}>
+        <div className="mt-8 text-center">
+          <a href="#" className="text-sm font-medium text-brand-sage underline underline-offset-4 hover:opacity-70">
+            Try free for 14 days →
+          </a>
+          <p className="mt-1 text-xs text-brand-gray">No credit card needed.</p>
+        </div>
+      </FadeIn>
+
+      <div className="mt-8 flex flex-col items-center gap-10 md:flex-row md:items-start md:justify-center md:gap-10">
         {/* Left — price + CTA */}
         <FadeIn className="text-center">
           <div className="flex items-baseline justify-center gap-1.5">
@@ -42,16 +52,30 @@ export function PricingSection() {
             </span>
             <span className="text-xl text-brand-gray">/month</span>
           </div>
+          <div className="mt-10">
+            <CtaButton size="large">Get Monthly</CtaButton>
+          </div>
+        </FadeIn>
+
+        {/* Middle — yearly */}
+        <FadeIn className="text-center" delay={0.1}>
+          <div className="flex items-baseline justify-center gap-1.5">
+            <span className="font-serif font-semibold text-brand-sage">
+              <span className="text-4xl md:text-5xl">$</span>
+              <span className="text-7xl md:text-8xl">149.99</span>
+            </span>
+            <span className="text-xl text-brand-gray">/year</span>
+          </div>
           <p className="mt-3 text-brand-gray">
-            or $149.99/year{' '}
+            ~$12.50/month{' '}
             <span className="rounded-full bg-brand-sage/10 px-3 py-1 text-sm font-medium text-brand-sage">
               save $65
             </span>
           </p>
           <div className="mt-10">
-            <CtaButton size="large">Try Free</CtaButton>
+            <CtaButton size="large">Get Yearly</CtaButton>
             <p className="mt-4 text-sm text-brand-gray">
-              14-day trial. No credit card.
+              Best value.
             </p>
           </div>
         </FadeIn>
