@@ -14,7 +14,7 @@ const included = [
 
 export function PricingSection() {
   return (
-    <Section id="pricing" bg="surface" compact>
+    <Section id="pricing" bg="surface" compact className="py-24 md:py-32">
       <FadeIn>
         <SectionHeading className="text-center">
           One plan. Everything included.
