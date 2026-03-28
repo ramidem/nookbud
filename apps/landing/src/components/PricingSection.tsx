@@ -46,8 +46,8 @@ export function PricingSection() {
               </span>
               <span className="text-sm text-brand-gray md:text-xl">/month</span>
             </div>
-            <div className="mt-10">
-              <CtaButton variant="outline">Get Monthly</CtaButton>
+            <div className="mt-4">
+              <CtaButton variant="outline" size="small">Get Monthly</CtaButton>
             </div>
           </div>
         </FadeIn>
@@ -55,7 +55,7 @@ export function PricingSection() {
         {/* Right — yearly */}
         <FadeIn className="text-center" delay={0.1}>
           <div className="relative rounded-2xl bg-white px-4 py-8 md:px-10 md:py-20">
-            <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full border-2 border-red-500 bg-white px-5 py-1.5 text-sm font-semibold text-red-500">
+            <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full border border-red-500 bg-white px-3 py-0.5 text-xs font-semibold text-red-500">
               Best value
             </span>
             <div className="flex items-baseline justify-center gap-1.5">
@@ -65,13 +65,13 @@ export function PricingSection() {
               </span>
               <span className="text-sm text-brand-gray md:text-xl">/year</span>
             </div>
-            <p className="mt-3 text-brand-gray">
-              ~$12.50/month{' '}
-              <span className="rounded-full bg-brand-sage/10 px-3 py-1 text-sm font-medium text-brand-sage">
+            <p className="mt-2 text-xs text-brand-gray md:text-sm">
+              ~$12.50/mo{' '}
+              <span className="rounded-full bg-brand-sage/10 px-2 py-0.5 text-xs font-medium text-brand-sage">
                 save $65
               </span>
             </p>
-            <div className="mt-6">
+            <div className="mt-4">
               <CtaButton>Get Yearly</CtaButton>
 
             </div>
