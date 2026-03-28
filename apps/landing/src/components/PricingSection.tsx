@@ -42,7 +42,7 @@ export function PricingSection() {
         </div>
       </FadeIn>
 
-      <div className="mt-8 flex flex-col items-center gap-10 md:flex-row md:items-start md:justify-center md:gap-10">
+      <div className="mt-8 flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-center md:gap-10">
         {/* Left — price + CTA */}
         <FadeIn className="text-center">
           <div className="flex items-baseline justify-center gap-1.5">
