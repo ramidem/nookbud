@@ -34,7 +34,7 @@ RUN addgroup --system --gid 1001 nodejs && \
 
 COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/standalone ./
 COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/static /app/apps/landing/.next/static
-COPY --from=base /app/apps/landing/public /app/apps/landing/public
+COPY --from=base --chown=nextjs:nodejs /app/apps/landing/public /app/apps/landing/public
 
 USER nextjs
 EXPOSE 3000
