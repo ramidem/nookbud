@@ -85,10 +85,10 @@ export function PersonasSection() {
                     ✓ {personas[current].outcome}
                   </p>
                 )}
-                <p className="font-serif text-lg italic leading-relaxed text-brand-charcoal md:text-2xl">
+                <p className="flex-1 font-serif text-lg italic leading-relaxed text-brand-charcoal md:text-2xl">
                   &ldquo;{personas[current].quote}&rdquo;
                 </p>
-                <div className="mt-6 border-t border-brand-border pt-4">
+                <div className="mt-auto border-t border-brand-border pt-4">
                   <div className="flex flex-col gap-4">
                     <div>
                       <p className="text-base font-semibold text-brand-charcoal">
