@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export function Footer() {
   return (
-    <footer className="border-t-2 border-white/10 px-6 py-20 md:py-24" style={{ backgroundColor: '#2C2C2C' }}>
+    <footer className="relative z-10 border-t-2 border-white/10 px-6 py-20 md:py-24" style={{ backgroundColor: '#2C2C2C' }}>
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-16 md:flex-row md:justify-between">
           {/* Brand */}
