@@ -39,16 +39,17 @@ export function PersonasSection() {
       <FadeIn delay={0.3}>
         <div className="relative mx-auto mt-16 w-full max-w-3xl">
           {/* Card stack */}
-          <div className="relative mb-8 min-h-[400px] w-full">
+          <div className="relative mb-8 h-[480px] w-full">
             {/* Background stacked cards */}
             {[3, 2, 1].map((offset) => (
               <div
                 key={offset}
-                className="absolute inset-0 rounded-3xl border border-brand-border bg-brand-offwhite"
+                className="absolute rounded-3xl border border-brand-border bg-brand-offwhite"
                 style={{
-                  top: `${offset * 8}px`,
+                  bottom: `-${offset * 10}px`,
                   left: `${offset * 12}px`,
                   right: `${offset * 12}px`,
+                  height: '100%',
                   zIndex: 10 - offset,
                 }}
               />
@@ -58,7 +59,7 @@ export function PersonasSection() {
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={current}
-                className="relative z-20 flex flex-col rounded-3xl border border-brand-border bg-brand-offwhite p-10 shadow-sm md:p-14"
+                className="absolute inset-0 z-20 flex flex-col rounded-3xl border border-brand-border bg-brand-offwhite p-10 shadow-sm md:p-14"
                 initial={{ opacity: 0, y: direction * 80 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: direction * -80 }}
