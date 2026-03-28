@@ -90,7 +90,7 @@ export function PersonasSection() {
           </div>
 
           {/* Arrows — right side, stacked vertically */}
-          <div className="absolute -right-16 top-1/2 z-30 flex -translate-y-1/2 flex-col items-center gap-2">
+          <div className="absolute -right-4 top-1/2 z-30 flex -translate-y-1/2 flex-col items-center gap-2 md:-right-16">
             <button
               onClick={prev}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
