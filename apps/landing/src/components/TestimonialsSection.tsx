@@ -63,18 +63,32 @@ export function TestimonialsSection() {
 
       {/* Break out of max-w-5xl container to full viewport width */}
       <div ref={ref} className="relative mt-16 space-y-6" style={{ left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw', width: '100vw' }}>
-        {/* Row 1 — scrolls left */}
+        {/* Row 1 — scrolls left, draggable */}
         <div className="overflow-hidden px-6">
-          <motion.div style={{ x: x1 }} className="flex gap-6">
+          <motion.div
+            style={{ x: x1 }}
+            drag="x"
+            dragConstraints={{ left: -2000, right: 0 }}
+            dragElastic={0.1}
+            whileDrag={{ cursor: 'grabbing' }}
+            className="flex cursor-grab gap-6 active:cursor-grabbing"
+          >
             {row1.map((t, i) => (
               <TestimonialCard key={i} quote={t.quote} name={t.name} context={t.context} />
             ))}
           </motion.div>
         </div>
 
-        {/* Row 2 — scrolls right */}
+        {/* Row 2 — scrolls right, draggable */}
         <div className="overflow-hidden px-6">
-          <motion.div style={{ x: x2 }} className="flex gap-6">
+          <motion.div
+            style={{ x: x2 }}
+            drag="x"
+            dragConstraints={{ left: -2000, right: 2000 }}
+            dragElastic={0.1}
+            whileDrag={{ cursor: 'grabbing' }}
+            className="flex cursor-grab gap-6 active:cursor-grabbing"
+          >
             {row2.map((t, i) => (
               <TestimonialCard key={i} quote={t.quote} name={t.name} context={t.context} />
             ))}
