@@ -25,7 +25,7 @@ export function FinalCtaSection() {
               alt="NookBud"
               width={56}
               height={56}
-              className="rounded-2xl"
+              className=""
             />
           </FadeIn>
           <FadeIn delay={0.15}>

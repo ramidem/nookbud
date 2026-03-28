@@ -13,7 +13,7 @@ export function Footer() {
                 alt="NookBud"
                 width={32}
                 height={32}
-                className="rounded-lg"
+                className=""
               />
               <span className="font-serif text-xl font-semibold text-white">
                 NookBud
