@@ -59,24 +59,24 @@ export function PricingSection() {
 
         {/* Middle — yearly */}
         <FadeIn className="text-center" delay={0.1}>
-          <div className="flex items-baseline justify-center gap-1.5">
-            <span className="font-serif font-semibold text-brand-sage">
-              <span className="text-3xl md:text-4xl">$</span>
-              <span className="text-6xl md:text-7xl">149.99</span>
-            </span>
-            <span className="text-xl text-brand-gray">/year</span>
-          </div>
-          <p className="mt-3 text-brand-gray">
-            ~$12.50/month{' '}
-            <span className="rounded-full bg-brand-sage/10 px-3 py-1 text-sm font-medium text-brand-sage">
-              save $65
-            </span>
-          </p>
-          <div className="mt-10">
-            <CtaButton>Get Yearly</CtaButton>
-            <p className="mt-4 text-sm text-brand-gray">
-              Best value.
+          <div className="rounded-2xl bg-white px-8 py-8 shadow-md">
+            <div className="flex items-baseline justify-center gap-1.5">
+              <span className="font-serif font-semibold text-brand-sage">
+                <span className="text-3xl md:text-4xl">$</span>
+                <span className="text-6xl md:text-7xl">149.99</span>
+              </span>
+              <span className="text-xl text-brand-gray">/year</span>
+            </div>
+            <p className="mt-3 text-brand-gray">
+              ~$12.50/month{' '}
+              <span className="rounded-full bg-brand-sage/10 px-3 py-1 text-sm font-medium text-brand-sage">
+                save $65
+              </span>
             </p>
+            <div className="mt-6">
+              <CtaButton>Get Yearly</CtaButton>
+              <p className="mt-3 text-sm text-brand-gray">Best value.</p>
+            </div>
           </div>
         </FadeIn>
 
