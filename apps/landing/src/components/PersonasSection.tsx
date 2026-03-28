@@ -54,7 +54,7 @@ export function PersonasSection() {
           onMouseLeave={() => setPaused(false)}
         >
           {/* Card stack */}
-          <div className="relative mb-8 h-[480px] w-full">
+          <div className="relative mb-8 h-[360px] w-full md:h-[420px]">
             {/* Background stacked cards */}
             {[3, 2, 1].map((offset) => (
               <div
