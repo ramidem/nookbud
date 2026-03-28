@@ -62,7 +62,10 @@ export function PricingSection() {
 
         {/* Right — yearly */}
         <FadeIn className="text-center" delay={0.1}>
-          <div className="rounded-2xl border-2 border-brand-sage bg-white px-8 py-14">
+          <div className="relative rounded-2xl bg-white px-8 py-14">
+            <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-brand-sage px-5 py-1.5 text-sm font-semibold text-white">
+              Best value
+            </span>
             <div className="flex items-baseline justify-center gap-1.5">
               <span className="font-serif font-semibold text-brand-sage">
                 <span className="text-3xl md:text-4xl">$</span>
@@ -78,7 +81,7 @@ export function PricingSection() {
             </p>
             <div className="mt-6">
               <CtaButton>Get Yearly</CtaButton>
-              <p className="mt-3 text-sm text-brand-gray">Best value.</p>
+
             </div>
           </div>
         </FadeIn>
