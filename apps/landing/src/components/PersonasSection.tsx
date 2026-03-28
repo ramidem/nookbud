@@ -90,7 +90,7 @@ export function PersonasSection() {
                     {/* Arrows inline with name */}
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={prev}
+                        onClick={next}
                         className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -99,7 +99,7 @@ export function PersonasSection() {
                       </button>
                       <span className="text-sm text-brand-gray">{current + 1}/{personas.length}</span>
                       <button
-                        onClick={next}
+                        onClick={prev}
                         className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
