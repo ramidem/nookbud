@@ -74,34 +74,34 @@ export function PersonasSection() {
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={current}
-                className="absolute inset-0 z-20 flex flex-col rounded-3xl border border-brand-border bg-brand-offwhite p-10 shadow-sm md:p-14"
+                className="absolute inset-0 z-20 flex flex-col rounded-3xl border border-brand-border bg-brand-offwhite p-6 shadow-sm md:p-10"
                 initial={{ opacity: 0, y: direction * 80 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: direction * -80 }}
                 transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
               >
                 {personas[current].outcome && (
-                  <p className="mb-4 text-lg font-semibold text-brand-sage">
+                  <p className="mb-3 text-sm font-semibold text-brand-sage md:text-lg">
                     ✓ {personas[current].outcome}
                   </p>
                 )}
-                <p className="flex-1 font-serif text-2xl italic leading-relaxed text-brand-charcoal md:text-3xl">
+                <p className="flex-1 font-serif text-lg italic leading-relaxed text-brand-charcoal md:text-2xl">
                   &ldquo;{personas[current].quote}&rdquo;
                 </p>
-                <div className="mt-8 border-t border-brand-border pt-6">
-                  <div className="flex items-center justify-between">
+                <div className="mt-6 border-t border-brand-border pt-4">
+                  <div className="flex flex-col gap-4">
                     <div>
-                      <p className="text-xl font-semibold text-brand-charcoal">
+                      <p className="text-base font-semibold text-brand-charcoal">
                         {personas[current].name}
                       </p>
-                      <p className="text-lg text-brand-gray">
+                      <p className="text-sm text-brand-gray">
                         {personas[current].context}
                       </p>
-                      <span className="mt-3 inline-block rounded-full bg-brand-surface px-4 py-1.5 text-sm font-medium text-brand-sage">
+                      <span className="mt-2 inline-block rounded-full bg-brand-surface px-3 py-1 text-xs font-medium text-brand-sage">
                         {personas[current].feature}
                       </span>
                     </div>
-                    {/* Arrows inline with name */}
+                    {/* Arrows below name */}
                     <div className="flex items-center gap-2">
                       <button
                         onClick={next}
