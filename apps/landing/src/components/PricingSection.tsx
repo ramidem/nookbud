@@ -42,8 +42,9 @@ export function PricingSection() {
         </div>
       </FadeIn>
 
+      {/* Price cards */}
       <div className="mt-8 flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-center md:gap-0">
-        {/* Left — price + CTA */}
+        {/* Left — monthly */}
         <FadeIn className="text-center">
           <div className="rounded-tl-2xl rounded-bl-2xl border-2 border-r-0 border-brand-sage px-8 py-14">
             <div className="flex items-baseline justify-center gap-1.5">
@@ -59,7 +60,7 @@ export function PricingSection() {
           </div>
         </FadeIn>
 
-        {/* Middle — yearly */}
+        {/* Right — yearly */}
         <FadeIn className="text-center" delay={0.1}>
           <div className="rounded-2xl border-2 border-brand-sage bg-white px-8 py-14">
             <div className="flex items-baseline justify-center gap-1.5">
@@ -81,16 +82,18 @@ export function PricingSection() {
             </div>
           </div>
         </FadeIn>
+      </div>
 
-        {/* Right — features list */}
-        <StaggerChildren className="ml-12 space-y-4" stagger={0.06} delay={0.2}>
+      {/* Features list below */}
+      <div className="mt-12 flex justify-center">
+        <StaggerChildren className="grid grid-cols-1 gap-3 sm:grid-cols-2" stagger={0.06} delay={0.2}>
           {included.map((item) => (
             <StaggerItem key={item}>
-              <div className="flex items-start gap-3">
-                <svg className="mt-1 h-4 w-4 shrink-0 text-brand-sage" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <div className="flex items-center gap-3">
+                <svg className="h-4 w-4 shrink-0 text-brand-sage" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 6 9 17l-5-5" />
                 </svg>
-                <span className="text-lg text-brand-charcoal md:text-xl">{item}</span>
+                <span className="text-base text-brand-charcoal">{item}</span>
               </div>
             </StaggerItem>
           ))}
