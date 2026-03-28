@@ -10,9 +10,19 @@ export const faqs = [
       "No. You can start logging on your own — schedules, expenses, communications. If your co-parent joins later, they'll see the shared record. If they don't, you still have a verified personal log.",
   },
   {
-    question: 'What can I actually do with the exported records?',
+    question: "What if my co-parent won't use it?",
     answer:
-      'Everything. Court submissions, school enrollment, insurance claims, custody mediation. One tap exports a PDF timeline or a full ZIP bundle with file attachments and a tamper-proof hash manifest. Your lawyer will know exactly what to do with it.',
+      "That's completely fine. Nookbud works solo. You can log everything on your own — schedules, expenses, messages, documents. Your records are yours regardless of whether the other parent participates.",
+  },
+  {
+    question: 'Is this only for separated parents?',
+    answer:
+      "Not at all. Nookbud works for any arrangement where a child is shared — blended families, grandparent guardians, overseas parents, open adoption, or any situation where more than one person is responsible for a child's care.",
+  },
+  {
+    question: 'What happens to my records if I cancel?',
+    answer:
+      "Your data stays accessible for 30 days after cancellation. Export everything before you go — PDF timeline, full record bundle, all attachments. Your records belong to you.",
   },
   {
     question: 'What happens after the trial?',
