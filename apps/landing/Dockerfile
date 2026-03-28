@@ -14,11 +14,14 @@ COPY libs ./libs
 # Install dependencies
 RUN yarn install --frozen-lockfile --ignore-scripts
 
-# Build — call next build directly, bypass NX
+# Build
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 WORKDIR /app/apps/landing
 RUN ../../node_modules/.bin/next build
+
+# Verify standalone output
+RUN ls -la .next/standalone/ && find .next/standalone -name "server.js" | head -5
 
 # Production runner
 FROM node:22-alpine AS runner
@@ -32,12 +35,14 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
+# Copy standalone output (server.js ends up at /app/server.js)
 COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/standalone ./
-COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/static /app/apps/landing/.next/static
-COPY --from=base /app/apps/landing/public /app/apps/landing/public
-COPY --from=base /app/apps/landing/start.sh ./start.sh
-RUN chmod +x ./start.sh && chown nextjs:nodejs ./start.sh
+# Copy static assets to the path Next.js expects
+COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/static ./apps/landing/.next/static
+COPY --from=base --chown=nextjs:nodejs /app/apps/landing/public ./apps/landing/public
 
 USER nextjs
 EXPOSE 3000
-CMD ["sh", "./start.sh"]
+
+# server.js is at /app/server.js after standalone copy
+CMD ["node", "server.js"]
