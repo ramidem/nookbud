@@ -43,7 +43,7 @@ export function FinalCtaSection() {
               {/* App Store */}
               <a href="#" className="transition-opacity hover:opacity-80">
                 <Image
-                  src="/badge-app-store.svg"
+                  src="/badge-app-store.png"
                   alt="Download on the App Store"
                   width={140}
                   height={42}
