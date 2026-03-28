@@ -35,9 +35,7 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/standalone ./
 COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/static /app/apps/landing/.next/static
 COPY --from=base /app/apps/landing/public /app/apps/landing/public
-COPY --from=base /app/apps/landing/start.sh ./start.sh
-RUN chmod +x ./start.sh
 
 USER nextjs
 EXPOSE 3000
-CMD ["sh", "./start.sh"]
+CMD ["node", "apps/landing/server.js"]
