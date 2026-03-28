@@ -198,7 +198,10 @@ export function CommunicationScreen({ navigation }: Props) {
   if (!activeSpaceId || isAllSpaces) {
     return (
       <View style={tw`bg-background flex-1`}>
-        <PageHeader leftAction={<BackButton onPress={() => navigation.goBack()} />} title="Messages" />
+        <PageHeader
+          leftAction={<BackButton onPress={() => navigation.goBack()} />}
+          title="Messages"
+        />
         <View style={tw`flex-1 items-center justify-center px-8`}>
           <Text style={tw`text-subtitle text-center text-base`}>
             Select a specific space to view messages.
@@ -244,7 +247,10 @@ export function CommunicationScreen({ navigation }: Props) {
 
   return (
     <View style={tw`bg-background flex-1`}>
-      <PageHeader leftAction={<BackButton onPress={() => navigation.goBack()} />} title={spaceName} />
+      <PageHeader
+        leftAction={<BackButton onPress={() => navigation.goBack()} />}
+        title={spaceName}
+      />
 
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} style={tw`flex-1`}>
         {isLoading ? (

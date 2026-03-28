@@ -58,7 +58,8 @@ function FloatingTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
   // Check if current tab hides the tab bar
   const currentRoute = state.routes[state.index];
   const currentOptions = descriptors[currentRoute.key]?.options;
-  const isHidden = (currentOptions?.tabBarStyle as { display?: string } | undefined)?.display === 'none';
+  const isHidden =
+    (currentOptions?.tabBarStyle as { display?: string } | undefined)?.display === 'none';
 
   useEffect(() => {
     fabRotation.value = withTiming(isOnAddScreen ? FAB_ROTATION_ANGLE : 0, {
