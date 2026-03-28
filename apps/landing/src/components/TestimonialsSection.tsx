@@ -19,9 +19,9 @@ function Stars() {
 
 function TestimonialCard({ quote, name, context }: { quote: string; name: string; context: string }) {
   return (
-    <div className="flex w-80 flex-shrink-0 flex-col rounded-2xl bg-white p-8 shadow-sm">
+    <div className="flex w-64 md:w-80 flex-shrink-0 flex-col rounded-2xl bg-white p-8 shadow-sm">
       <Stars />
-      <p className="mt-4 flex-1 text-base italic leading-relaxed text-brand-charcoal">
+      <p className="mt-4 flex-1 text-sm italic md:text-base leading-relaxed text-brand-charcoal">
         &ldquo;{quote}&rdquo;
       </p>
       <div className="mt-6">

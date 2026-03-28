@@ -16,7 +16,7 @@ export function FaqItem({ question, answer }: FaqItemProps) {
         className="flex w-full items-center justify-between py-6 text-left"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="pr-4 text-lg font-medium text-brand-charcoal">
+        <span className="pr-4 text-base font-medium text-brand-charcoal">
           {question}
         </span>
         <span

@@ -17,10 +17,10 @@ export function CtaButton({
     'inline-flex items-center justify-center rounded-full font-semibold transition-all duration-200';
   const sizeClass =
     size === 'large'
-      ? 'px-10 py-4 text-lg'
+      ? 'px-6 py-2.5 text-sm md:px-10 md:py-4 md:text-lg'
       : size === 'small'
         ? 'px-5 py-2 text-sm'
-        : 'px-8 py-3 text-base';
+        : 'px-5 py-2 text-sm md:px-8 md:py-3 md:text-base';
   const variantClass =
     variant === 'primary'
       ? 'border-2 border-transparent bg-brand-sage text-white hover:bg-brand-sage-light shadow-md hover:shadow-lg'
