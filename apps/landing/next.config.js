@@ -8,6 +8,7 @@ const { composePlugins, withNx } = require('@nx/next');
  **/
 const nextConfig = {
   nx: {},
+  /** @type {'standalone'} */
   output: 'standalone',
   transpilePackages: ['@coparent/ui'],
 };
