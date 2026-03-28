@@ -55,7 +55,7 @@ export function PricingSection() {
         {/* Right — yearly */}
         <FadeIn className="text-center" delay={0.1}>
           <div className="relative rounded-2xl bg-white px-10 py-20">
-            <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-brand-sage px-5 py-1.5 text-sm font-semibold text-white">
+            <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full border-2 border-red-500 bg-white px-5 py-1.5 text-sm font-semibold text-red-500">
               Best value
             </span>
             <div className="flex items-baseline justify-center gap-1.5">
