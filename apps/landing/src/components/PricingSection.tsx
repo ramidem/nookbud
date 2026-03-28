@@ -39,12 +39,12 @@ export function PricingSection() {
         {/* Left — monthly */}
         <FadeIn className="text-center">
           <div className="px-4 py-8 md:px-10 md:py-20">
-            <div className="flex items-baseline justify-center gap-1.5">
+            <div className="flex flex-col items-center">
               <span className="font-serif font-semibold text-brand-sage">
                 <span className="text-lg md:text-3xl">$</span>
                 <span className="text-3xl md:text-5xl">17.99</span>
               </span>
-              <span className="text-sm text-brand-gray md:text-xl">/month</span>
+              <span className="text-xs text-brand-gray md:text-sm">/month</span>
             </div>
             <div className="mt-4">
               <CtaButton variant="outline" size="small">Get Monthly</CtaButton>
@@ -58,12 +58,12 @@ export function PricingSection() {
             <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full border border-red-500 bg-white px-3 py-0.5 text-xs font-semibold text-red-500">
               Best value
             </span>
-            <div className="flex items-baseline justify-center gap-1.5">
+            <div className="flex flex-col items-center">
               <span className="font-serif font-semibold text-brand-sage">
-                <span className="text-3xl md:text-4xl">$</span>
-                <span className="text-5xl md:text-6xl md:text-7xl">149.99</span>
+                <span className="text-2xl md:text-4xl">$</span>
+                <span className="text-4xl md:text-6xl">149.99</span>
               </span>
-              <span className="text-sm text-brand-gray md:text-xl">/year</span>
+              <span className="text-xs text-brand-gray md:text-sm">/year</span>
             </div>
             <p className="mt-2 text-xs text-brand-gray md:text-sm">
               ~$12.50/mo{' '}
