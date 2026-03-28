@@ -36,7 +36,7 @@ COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/standalone ./
 COPY --from=base --chown=nextjs:nodejs /app/apps/landing/.next/static /app/apps/landing/.next/static
 COPY --from=base /app/apps/landing/public /app/apps/landing/public
 COPY --from=base /app/apps/landing/start.sh ./start.sh
-RUN chmod +x ./start.sh
+RUN chmod +x ./start.sh && chown nextjs:nodejs ./start.sh
 
 USER nextjs
 EXPOSE 3000
