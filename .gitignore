@@ -149,3 +149,9 @@ web-build/
 !production.keystoreclient_secret_*.json
 *.png
 *.jpg.gcloudrc
+
+# Allow brand assets
+!assets/brand/**
+!assets/brand/**/*.png
+!assets/brand/**/*.jpg
+!assets/brand/**/*.svg
