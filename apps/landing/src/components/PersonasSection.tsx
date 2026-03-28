@@ -37,7 +37,7 @@ export function PersonasSection() {
       </div>
 
       <FadeIn delay={0.3}>
-        <div className="relative mx-auto mt-16 w-full max-w-3xl pr-16 md:pr-20">
+        <div className="relative mx-auto mt-16 w-full max-w-3xl">
           {/* Card stack */}
           <div className="relative mb-8 h-[400px] w-full">
             {/* Background stacked cards */}
@@ -75,39 +75,42 @@ export function PersonasSection() {
                   &ldquo;{personas[current].quote}&rdquo;
                 </p>
                 <div className="mt-8 border-t border-brand-border pt-6">
-                  <p className="text-xl font-semibold text-brand-charcoal">
-                    {personas[current].name}
-                  </p>
-                  <p className="text-lg text-brand-gray">
-                    {personas[current].context}
-                  </p>
-                  <span className="mt-3 inline-block rounded-full bg-brand-surface px-4 py-1.5 text-sm font-medium text-brand-sage">
-                    {personas[current].feature}
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xl font-semibold text-brand-charcoal">
+                        {personas[current].name}
+                      </p>
+                      <p className="text-lg text-brand-gray">
+                        {personas[current].context}
+                      </p>
+                      <span className="mt-3 inline-block rounded-full bg-brand-surface px-4 py-1.5 text-sm font-medium text-brand-sage">
+                        {personas[current].feature}
+                      </span>
+                    </div>
+                    {/* Arrows inline with name */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={prev}
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="m15 18-6-6 6-6" />
+                        </svg>
+                      </button>
+                      <span className="text-sm text-brand-gray">{current + 1}/{personas.length}</span>
+                      <button
+                        onClick={next}
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="m9 18 6-6-6-6" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
-          </div>
-
-          {/* Arrows — right side, stacked vertically */}
-          <div className="absolute -right-4 top-1/2 z-30 flex -translate-y-1/2 flex-col items-center gap-2 md:-right-16">
-            <button
-              onClick={prev}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m18 15-6-6-6 6" />
-              </svg>
-            </button>
-            <span className="text-sm text-brand-gray">{current + 1}/{personas.length}</span>
-            <button
-              onClick={next}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-brand-border bg-white text-brand-charcoal shadow-sm transition-all hover:bg-brand-sage hover:text-white"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </button>
           </div>
         </div>
       </FadeIn>
