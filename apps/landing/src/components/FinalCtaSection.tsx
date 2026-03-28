@@ -45,9 +45,9 @@ export function FinalCtaSection() {
                 <Image
                   src="/badge-app-store.png"
                   alt="Download on the App Store"
-                  width={160}
-                  height={53}
-                  className="h-[53px] w-[160px] object-contain"
+                  width={1568}
+                  height={480}
+                  className="h-[48px] w-auto"
                 />
               </a>
               {/* Google Play */}
@@ -55,9 +55,9 @@ export function FinalCtaSection() {
                 <Image
                   src="/badge-google-play.png"
                   alt="Get it on Google Play"
-                  width={160}
-                  height={53}
-                  className="h-[53px] w-[160px] object-contain"
+                  width={1560}
+                  height={480}
+                  className="h-[48px] w-auto"
                 />
               </a>
             </div>
