@@ -52,7 +52,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            <CtaButton size="large">View Pricing</CtaButton>
+            <CtaButton size="large">Try Free</CtaButton>
           </motion.div>
         </div>
       </div>

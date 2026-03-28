@@ -11,7 +11,7 @@ export function Nav() {
             alt="NookBud"
             width={36}
             height={36}
-            className="rounded-lg"
+            className=""
           />
           <span className="font-serif text-xl font-semibold text-brand-charcoal">
             NookBud
