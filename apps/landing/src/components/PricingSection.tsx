@@ -42,18 +42,20 @@ export function PricingSection() {
         </div>
       </FadeIn>
 
-      <div className="mt-8 flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-center md:gap-10">
+      <div className="mt-8 flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-center md:gap-0">
         {/* Left — price + CTA */}
         <FadeIn className="text-center">
-          <div className="flex items-baseline justify-center gap-1.5">
-            <span className="font-serif font-semibold text-brand-sage">
-              <span className="text-2xl md:text-3xl">$</span>
-              <span className="text-5xl md:text-6xl">17.99</span>
-            </span>
-            <span className="text-xl text-brand-gray">/month</span>
-          </div>
-          <div className="mt-10">
-            <CtaButton>Get Monthly</CtaButton>
+          <div className="rounded-tl-2xl rounded-bl-2xl border-2 border-r-0 border-brand-sage px-8 py-14">
+            <div className="flex items-baseline justify-center gap-1.5">
+              <span className="font-serif font-semibold text-brand-sage">
+                <span className="text-2xl md:text-3xl">$</span>
+                <span className="text-5xl md:text-6xl">17.99</span>
+              </span>
+              <span className="text-xl text-brand-gray">/month</span>
+            </div>
+            <div className="mt-10">
+              <CtaButton>Get Monthly</CtaButton>
+            </div>
           </div>
         </FadeIn>
 
@@ -81,7 +83,7 @@ export function PricingSection() {
         </FadeIn>
 
         {/* Right — features list */}
-        <StaggerChildren className="space-y-4" stagger={0.06} delay={0.2}>
+        <StaggerChildren className="ml-12 space-y-4" stagger={0.06} delay={0.2}>
           {included.map((item) => (
             <StaggerItem key={item}>
               <div className="flex items-start gap-3">
