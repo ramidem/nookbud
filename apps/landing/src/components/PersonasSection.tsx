@@ -39,16 +39,16 @@ export function PersonasSection() {
       <FadeIn delay={0.3}>
         <div className="relative mx-auto mt-16 w-full max-w-3xl pr-16 md:pr-20">
           {/* Card stack */}
-          <div className="relative mb-4 h-[480px] w-full md:mb-8 md:h-[400px]">
+          <div className="relative mb-8 h-[400px] w-full">
             {/* Background stacked cards */}
             {[3, 2, 1].map((offset) => (
               <div
                 key={offset}
                 className="absolute rounded-3xl border border-brand-border bg-brand-offwhite"
                 style={{
-                  bottom: `-${offset * 8}px`,
-                  left: `${offset * 8}px`,
-                  right: `${offset * 8}px`,
+                  bottom: `-${offset * 10}px`,
+                  left: `${offset * 12}px`,
+                  right: `${offset * 12}px`,
                   height: '100%',
                   zIndex: 10 - offset,
                   opacity: 1,
@@ -60,7 +60,7 @@ export function PersonasSection() {
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={current}
-                className="absolute inset-0 z-20 flex flex-col rounded-3xl border border-brand-border bg-brand-offwhite p-6 shadow-sm md:p-10"
+                className="absolute inset-0 z-20 flex flex-col rounded-3xl border border-brand-border bg-brand-offwhite p-10 shadow-sm md:p-14"
                 initial={{ opacity: 0, y: direction * 80 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: direction * -80 }}
@@ -71,7 +71,7 @@ export function PersonasSection() {
                     ✓ {personas[current].outcome}
                   </p>
                 )}
-                <p className="flex-1 font-serif text-xl italic leading-relaxed text-brand-charcoal md:text-2xl">
+                <p className="flex-1 font-serif text-2xl italic leading-relaxed text-brand-charcoal md:text-3xl">
                   &ldquo;{personas[current].quote}&rdquo;
                 </p>
                 <div className="mt-8 border-t border-brand-border pt-6">
