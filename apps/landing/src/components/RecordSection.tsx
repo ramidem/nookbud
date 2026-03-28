@@ -4,7 +4,7 @@ import { SectionHeading } from './ui/SectionHeading';
 
 export function RecordSection() {
   return (
-    <section className="relative flex h-full items-center overflow-hidden bg-brand-surface py-20 px-6 md:py-28">
+    <section className="relative overflow-hidden bg-brand-surface py-20 px-6 md:py-28">
       {/* Background illustration — bottom right, full width */}
       <div className="pointer-events-none absolute bottom-0 right-0 h-3/4 w-full -scale-x-100 opacity-[0.2]">
         <Image

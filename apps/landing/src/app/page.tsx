@@ -22,13 +22,9 @@ export default function LandingPage() {
 
       {/* Scrollable content */}
       <div className="relative z-10 mt-[95svh]">
-        {/* Sticky sections that stack */}
-        <div className="sticky top-0 z-[5] h-[95svh]">
-          <WhatItIsSection />
-        </div>
-        <div className="sticky top-0 z-[6] h-[95svh]">
-          <RecordSection />
-        </div>
+        {/* Content sections */}
+        <WhatItIsSection />
+        <RecordSection />
 
         {/* Normal scrolling sections */}
         <div className="relative z-[7]">
