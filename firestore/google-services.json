@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "594948517850",
+    "project_id": "nookbud-dev",
+    "storage_bucket": "nookbud-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594948517850:android:d545a9355c2740bab6dae3",
+        "android_client_info": {
+          "package_name": "com.bulakao.nookbud"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu7BoVHGUS0JYXU5wSacldMKan5c5iBbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
