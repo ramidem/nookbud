@@ -76,11 +76,11 @@ android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
-    namespace "com.mobile"
+    namespace "com.bulakao.nookbud"
     flavorDimensions "default"
 
     defaultConfig {
-        applicationId "com.mobile"
+        applicationId "com.bulakao.nookbud"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -120,17 +120,17 @@ android {
     productFlavors {
         dev {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId "com.mobile"
+            applicationId "com.bulakao.nookbud"
             applicationIdSuffix ".dev"
             targetSdkVersion rootProject.ext.targetSdkVersion
-            resValue "string", "build_config_package", "com.mobile.dev"
+            resValue "string", "build_config_package", "com.bulakao.nookbud.dev"
             signingConfig signingConfigs.dev
         }
         production {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId "com.mobile"
+            applicationId "com.bulakao.nookbud"
             targetSdkVersion rootProject.ext.targetSdkVersion
-            resValue "string", "build_config_package", "com.mobile"
+            resValue "string", "build_config_package", "com.bulakao.nookbud"
             signingConfig signingConfigs.production
         }
     }
