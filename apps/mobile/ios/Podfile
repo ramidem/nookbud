@@ -21,6 +21,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+use_modular_headers!
+
 target 'Mobile' do
   config = use_native_modules!
 
