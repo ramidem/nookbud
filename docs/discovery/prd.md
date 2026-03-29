@@ -56,10 +56,27 @@ Nookbud is the first shared care records platform built for **every family struc
 - **Phase 6+:** Web portal (PWA or dedicated web app)
 
 ### Business Model
-**One plan. No tiers. No confusion.**
-- **₱349/month or ₱2,499/year** (~$6 USD/mo) — full access to all features
-- **14-day free trial**, no credit card required — CTA: *"Try free for 14 days — no card needed."*
-- **Invited co-parents are free** — they join a Space at no cost; pay only if they want their own account
+**Family Plan — one subscription covers everyone in the Space.**
+
+| | Price |
+|---|---|
+| Monthly | **$17.99/mo** |
+| Annual | **$149.99/yr** ($12.50/mo — save 30%) |
+| Free trial | 14 days, no credit card required |
+| Co-parents | Join for free — subscriber pays, invitees don't |
+
+**What's gated behind Family Plan:**
+- Multiple Spaces
+- Co-parent / member invitations
+- File uploads (attachments, resources)
+
+**What's free forever:**
+- 1 Space, solo use
+- Text entries (expense, event, agreement, communication)
+- Court-ready export (text/metadata only)
+
+> **Storage model:** File uploads use Firebase Storage (Blaze pay-as-you-go). Free tier: 5GB/1GB download/day — sufficient for early stage. Storage is a premium feature gated behind Family Plan; storage limits can be tiered in future.
+
 - Professional tier for lawyers/mediators (Phase 6+)
 
 ---
@@ -152,7 +169,7 @@ Three formats, all filterable by date range, child, entry type, and Space:
 | Phase | Name | Status | Core Deliverable |
 |-------|------|--------|-----------------|
 | 1 | Core Evidence System | Complete | Timeline, entries, audit trail, export, acknowledgment, dispute |
-| 2 | Native UX Improvements | Complete | Date pickers, calendar, partner invite, Supabase, notifications |
+| 2 | Native UX Improvements | Complete | Date pickers, calendar, partner invite, notifications |
 | 3 | Spaces | Next | Multi-space, roles, Space switcher, All Spaces view, onboarding rewrite |
 | 3.5 | Tasks | Planned | Collaborative task management — create, assign, and track tasks within a Space |
 | 4 | Resources | Planned | Reference documents per Space, integrity verification, Archive Space |
@@ -193,15 +210,16 @@ Phase 1 established the evidence architecture and the core care record loop.
 
 ## 6. Phase 2 — Native UX Improvements (Complete)
 
-Phase 2 improved the native experience and laid the Supabase foundation for sync and collaboration.
+Phase 2 improved the native experience.
 
 | Feature | Description | Status |
 |---------|-------------|--------|
 | Native date pickers | Platform-native date/time selection | Complete |
 | Calendar view | Responsibility ledger with schedule visualization | Complete |
 | Partner invite improvements | Improved invitation flow | Complete |
-| Supabase foundation | Client + auth service scaffolded; real-time sync wired in a future phase | Complete |
 | Push notifications | Local notifications for care events | Complete |
+
+> **Note:** Supabase was removed 2026-03-29 in favour of Firebase/Firestore. See `docs/firebase-spec.md`.
 
 ---
 
@@ -731,11 +749,11 @@ Phase 6 extends Spaces with professional access and sharing capabilities via a w
 |-------|-----------|-----------|
 | Mobile app | React Native 0.83 + React 19 | Cross-platform; established codebase |
 | Language | TypeScript 5.8 (strict) | End-to-end type safety |
-| Backend | Supabase (PostgreSQL + Auth + Storage) | Foundation laid in Phase 2 |
+| Backend | Firebase (Firestore + Auth + Storage) | Replaced Supabase 2026-03-29; offline-first built-in, real-time sync, cost-effective at scale |
 | State | Zustand + Jotai + React Query | Established in Phase 1–2 |
 | Local storage | MMKV | Active Space persistence, UI prefs, invite codes |
-| Local DB | SQLite (op-sqlite + Drizzle) | Client-side cache; Supabase is source of truth |
-| File storage | Supabase Storage (S3-compatible) | Encrypted at rest |
+| Local DB | Firestore offline cache (IndexedDB/SQLite) | Built into Firebase SDK — no separate SQLite/Drizzle needed |
+| File storage | Firebase Storage (Blaze plan, pay-as-you-go) | Free tier: 5GB storage, 1GB/day download. Gated behind Family Plan. |
 | Hashing | SHA-256 (crypto) | File integrity verification |
 | Navigation | React Navigation | Established in codebase |
 | Styling | twrnc (Tailwind) | Established in codebase |
