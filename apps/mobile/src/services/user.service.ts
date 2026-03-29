@@ -1,10 +1,7 @@
-import { eq } from 'drizzle-orm';
 import { createMMKV } from 'react-native-mmkv';
 
 import CONFIG from '@/config';
-import { getSupabaseClient } from '@/config/supabase';
-import { db } from '@/database';
-import { users, type User, type NewUser, type UserRole } from '@/database/schema';
+import type { User, UserRole } from '@/types';
 
 // MMKV storage for quick key-value access
 const storage = createMMKV({
@@ -13,22 +10,6 @@ const storage = createMMKV({
 });
 
 const CURRENT_USER_ID_KEY = 'current_user_id';
-
-const UUID_RADIX = 16;
-const UUID_VARIANT_MASK = 0x3;
-const UUID_VARIANT_VALUE = 0x8;
-
-/**
- * Generate a UUID v4
- */
-function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * UUID_RADIX) | 0;
-    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
-
-    return v.toString(UUID_RADIX);
-  });
-}
 
 /**
  * Get device timezone
@@ -45,8 +26,6 @@ function getDeviceTimezone(): string {
  * Get device locale currency (defaults to USD)
  */
 function getDeviceCurrency(): string {
-  // In a real app, you'd use react-native-localize
-  // For now, default to USD
   return 'USD';
 }
 
@@ -55,7 +34,7 @@ export const UserService = {
    * Clear current user (for logout/reset)
    */
   clearCurrentUser(): void {
-    storage.delete(CURRENT_USER_ID_KEY);
+    storage.remove(CURRENT_USER_ID_KEY);
   },
 
   /**
@@ -68,13 +47,16 @@ export const UserService = {
     email: string;
     fullName?: string;
   }): Promise<User> {
-    // Parse "First Last" or "First Middle Last" from Google's full_name
+    // TODO: Firebase Auth — implement with Firebase Auth + Firestore
     const parts = (data.fullName ?? '').trim().split(/\s+/);
     const firstName = parts[0] ?? 'User';
     const lastName = parts.length > 1 ? parts[parts.length - 1] : '';
     const middleName = parts.length > 2 ? parts.slice(1, -1).join(' ') : undefined;
 
-    const newUser: NewUser = {
+    storage.set(CURRENT_USER_ID_KEY, data.supabaseId);
+
+    return {
+      createdAt: new Date(),
       defaultCurrency: getDeviceCurrency(),
       email: data.email,
       firstName,
@@ -83,13 +65,6 @@ export const UserService = {
       middleName,
       timezone: getDeviceTimezone(),
     };
-
-    await db.insert(users).values(newUser).onConflictDoNothing();
-    storage.set(CURRENT_USER_ID_KEY, data.supabaseId);
-
-    const [user] = await db.select().from(users).where(eq(users.id, data.supabaseId));
-
-    return user;
   },
 
   /**
@@ -105,8 +80,12 @@ export const UserService = {
     timezone?: string;
     defaultCurrency?: string;
   }): Promise<User> {
-    const id = data.id ?? generateUUID();
-    const newUser: NewUser = {
+    // TODO: Firebase — implement with Firestore
+    const id = data.id ?? `local-${Date.now()}`;
+    storage.set(CURRENT_USER_ID_KEY, id);
+
+    return {
+      createdAt: new Date(),
       defaultCurrency: data.defaultCurrency ?? getDeviceCurrency(),
       email: data.email,
       firstName: data.firstName,
@@ -116,42 +95,23 @@ export const UserService = {
       role: data.role,
       timezone: data.timezone ?? getDeviceTimezone(),
     };
-
-    await db.insert(users).values(newUser);
-
-    // Set as current user
-    storage.set(CURRENT_USER_ID_KEY, id);
-
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-
-    return user;
   },
 
   /**
-   * Get the currently signed-in Supabase auth user (id + email).
-   * Returns null if Supabase is not configured or no session exists.
+   * Get the currently signed-in auth user (id + email).
+   * Returns null if not configured or no session exists.
    */
   async getCurrentAuthUser(): Promise<{ id: string; email?: string } | null> {
-    const client = getSupabaseClient();
-    if (!client) return null;
-
-    const { data } = await client.auth.getUser();
-
-    if (!data.user) return null;
-
-    return { email: data.user.email, id: data.user.id };
+    // TODO: Firebase Auth — implement with Firebase Auth
+    return null;
   },
 
   /**
    * Get current user from database
    */
   async getCurrentUser(): Promise<User | null> {
-    const userId = this.getCurrentUserId();
-    if (!userId) return null;
-
-    const [user] = await db.select().from(users).where(eq(users.id, userId));
-
-    return user ?? null;
+    // TODO: Firebase — implement with Firestore
+    return null;
   },
 
   /**
@@ -164,68 +124,34 @@ export const UserService = {
   /**
    * Get user by ID
    */
-  async getUserById(id: string): Promise<User | null> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-
-    return user ?? null;
+  async getUserById(_id: string): Promise<User | null> {
+    // TODO: Firebase — implement with Firestore
+    return null;
   },
 
   /**
    * Check if user exists (for onboarding flow)
    */
   async hasUser(): Promise<boolean> {
+    // TODO: Firebase — implement with Firestore
     const userId = this.getCurrentUserId();
-    if (!userId) return false;
 
-    const user = await this.getUserById(userId);
-
-    return user !== null;
+    return userId !== null;
   },
 
   /**
    * Manually set the current user ID in storage.
-   * Use to re-anchor MMKV after a cleared state when the SQLite row already exists.
    */
   setCurrentUserId(id: string): void {
     storage.set(CURRENT_USER_ID_KEY, id);
   },
 
   /**
-   * Upsert the current local user into Supabase public.users.
-   * Called after Supabase auth is established so auth.uid() matches the row id.
-   * The Supabase user id (from auth) replaces the local UUID so RLS works correctly.
+   * Upsert the current local user into the cloud DB.
+   * Called after auth is established so auth uid matches the row id.
    */
-  async syncToSupabase(supabaseUserId: string): Promise<void> {
-    const client = getSupabaseClient();
-    if (!client) return;
-
-    const localUser = await this.getCurrentUser();
-    if (!localUser) return;
-
-    const payload: Record<string, unknown> = {
-      default_currency: localUser.defaultCurrency,
-      email: localUser.email,
-      first_name: localUser.firstName,
-      id: supabaseUserId,
-      last_name: localUser.lastName,
-      middle_name: localUser.middleName,
-      timezone: localUser.timezone,
-    };
-    if (localUser.role) {
-      payload.role = localUser.role;
-    }
-
-    const { error } = await client.from('users').upsert(payload, { onConflict: 'id' });
-
-    if (error) {
-      throw new Error(`Failed to sync user to Supabase: ${error.message}`);
-    }
-
-    // Update local user id to match Supabase auth.uid() so they stay in sync
-    if (localUser.id !== supabaseUserId) {
-      await db.update(users).set({ email: localUser.email }).where(eq(users.id, localUser.id));
-      storage.set(CURRENT_USER_ID_KEY, supabaseUserId);
-    }
+  async syncToSupabase(_supabaseUserId: string): Promise<void> {
+    // TODO: Firebase — implement with Firestore (renamed to syncToFirestore later)
   },
 
   /**
@@ -240,28 +166,14 @@ export const UserService = {
     timezone?: string;
     defaultCurrency?: string;
   }): Promise<User | null> {
-    const userId = this.getCurrentUserId();
-    if (!userId) return null;
+    // TODO: Firebase — implement with Firestore
+    void data;
 
-    await db
-      .update(users)
-      .set({
-        ...(data.defaultCurrency && { defaultCurrency: data.defaultCurrency }),
-        ...(data.email !== undefined && { email: data.email }),
-        ...(data.firstName && { firstName: data.firstName }),
-        ...(data.lastName && { lastName: data.lastName }),
-        ...(data.middleName !== undefined && { middleName: data.middleName }),
-        ...(data.role && { role: data.role }),
-        ...(data.timezone && { timezone: data.timezone }),
-      })
-      .where(eq(users.id, userId));
-
-    return this.getCurrentUser();
+    return null;
   },
 
   /**
    * Upsert a user by ID — safe for both first-time create and retry-after-crash.
-   * Uses onConflictDoUpdate so a duplicate id never throws.
    */
   async upsertUser(data: {
     id: string;
@@ -273,8 +185,11 @@ export const UserService = {
     timezone?: string;
     defaultCurrency?: string;
   }): Promise<User> {
-    const now = new Date();
-    const row: NewUser = {
+    // TODO: Firebase — implement with Firestore
+    storage.set(CURRENT_USER_ID_KEY, data.id);
+
+    return {
+      createdAt: new Date(),
       defaultCurrency: data.defaultCurrency ?? getDeviceCurrency(),
       email: data.email,
       firstName: data.firstName,
@@ -284,27 +199,5 @@ export const UserService = {
       role: data.role,
       timezone: data.timezone ?? getDeviceTimezone(),
     };
-
-    await db
-      .insert(users)
-      .values({ ...row, createdAt: now })
-      .onConflictDoUpdate({
-        set: {
-          defaultCurrency: row.defaultCurrency,
-          email: row.email,
-          firstName: row.firstName,
-          lastName: row.lastName,
-          middleName: row.middleName,
-          role: row.role,
-          timezone: row.timezone,
-        },
-        target: users.id,
-      });
-
-    storage.set(CURRENT_USER_ID_KEY, data.id);
-
-    const [user] = await db.select().from(users).where(eq(users.id, data.id));
-
-    return user;
   },
 };

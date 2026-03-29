@@ -13,18 +13,18 @@ import {
   Toast,
   Typography,
 } from '@/components';
-import {
-  RESOURCE_CATEGORIES,
-  RESOURCE_CATEGORY_DISPLAY,
-  type Child,
-  type ResourceCategory,
-} from '@/database/schema';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { CrossIcon, FileTextIcon, PaperclipIcon } from '@/icons';
 import type { ResourcesStackParamList } from '@/navigation/ResourcesNavigator';
 import { ChildService, ResourceService, SpaceService } from '@/services';
 import { colors } from '@/tailwind';
+import {
+  RESOURCE_CATEGORIES,
+  RESOURCE_CATEGORY_DISPLAY,
+  type Child,
+  type ResourceCategory,
+} from '@/types';
 
 type Props = NativeStackScreenProps<ResourcesStackParamList, 'AddResource'>;
 

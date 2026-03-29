@@ -17,11 +17,11 @@ import {
   Toast,
   Typography,
 } from '@/components';
-import { type Child, type SpaceMember, type User } from '@/database/schema';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { SpaceService, TaskService } from '@/services';
+import { type Child, type SpaceMember, type User } from '@/types';
 
 type Props = NativeStackScreenProps<ActivityStackParamList, 'AddTask'>;
 

@@ -1,182 +1,117 @@
-import { Session, User } from '@supabase/supabase-js';
 import { Linking } from 'react-native';
 
-import { getSupabaseClient, hasSupabaseConfig } from '@/config/supabase';
+// TODO: Firebase Auth — import Firebase Auth when Phase 1 is complete
 
-type AuthResult = { error: string | null; user: User | null };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AuthResult = { error: string | null; user: any | null };
 type SignOutResult = { error: string | null };
 
 const REDIRECT_URL = 'coparent://auth/callback';
-const SUPABASE_NOT_CONFIGURED = 'Supabase is not configured';
+const NOT_IMPLEMENTED = 'Firebase Auth not yet implemented';
 
 export const AuthService = {
   /**
-   * Get the current Supabase session.
+   * Get the current session.
    */
-  async getCurrentSession(): Promise<Session | null> {
-    const client = getSupabaseClient();
-    if (!client) return null;
-
-    const { data } = await client.auth.getSession();
-
-    return data.session;
+  async getCurrentSession(): Promise<null> {
+    // TODO: Firebase Auth — implement with Firebase Auth
+    return null;
   },
 
   /**
-   * Get the current Supabase user.
+   * Get the current authenticated user.
    */
-  async getCurrentSupabaseUser(): Promise<User | null> {
-    const client = getSupabaseClient();
-    if (!client) return null;
-
-    const { data } = await client.auth.getUser();
-
-    return data.user;
+  async getCurrentSupabaseUser(): Promise<null> {
+    // TODO: Firebase Auth — implement with Firebase Auth
+    return null;
   },
 
   /**
    * Exchange the URL fragment from an OAuth callback for a session.
    * Called when the app receives coparent://auth/callback#access_token=...
    */
-  async getSessionFromUrl(url: string): Promise<AuthResult> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
-
-    // Extract fragment params (OAuth uses hash, not query string)
-    const fragment = url.includes('#') ? url.split('#')[1] : (url.split('?')[1] ?? '');
-    const params = new URLSearchParams(fragment);
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-
-    if (!accessToken || !refreshToken) {
-      return { error: 'Invalid callback URL', user: null };
-    }
-
-    const { data, error } = await client.auth.setSession({
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    });
-
-    if (error) return { error: error.message, user: null };
-
-    return { error: null, user: data.user };
+  async getSessionFromUrl(_url: string): Promise<AuthResult> {
+    // TODO: Firebase Auth — implement Google Sign-In with Firebase
+    return { error: NOT_IMPLEMENTED, user: null };
   },
 
   /**
-   * Returns true if the user has an active Supabase session.
+   * Returns true if the user has an active auth session.
    */
   async isAuthenticated(): Promise<boolean> {
-    const session = await AuthService.getCurrentSession();
-
-    return session !== null;
+    // TODO: Firebase Auth — implement with Firebase Auth
+    return false;
   },
 
   /**
-   * Returns true if Supabase credentials are configured.
+   * Returns true if auth credentials are configured.
    */
   isConfigured(): boolean {
-    return hasSupabaseConfig();
+    // TODO: Firebase Auth — check Firebase app initialization
+    return false;
   },
 
   /**
    * Listen to auth state changes (sign in, sign out, token refresh).
    * Returns an unsubscribe function.
+   * TODO: Firebase Auth — replace session type with Firebase User
    */
-  onAuthStateChange(callback: (event: string, session: Session | null) => void): () => void {
-    const client = getSupabaseClient();
-    if (!client) return () => {};
-
-    const { data } = client.auth.onAuthStateChange(callback);
-
-    return () => data.subscription.unsubscribe();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onAuthStateChange(_callback: (event: string, session: any) => void): () => void {
+    // TODO: Firebase Auth — implement with Firebase Auth onAuthStateChanged
+    return () => {};
   },
 
   /**
    * Resend OTP verification code to email.
    */
-  async resendOtp(email: string): Promise<{ error: string | null }> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED };
-
-    const { error } = await client.auth.resend({ email, type: 'signup' });
-
-    return { error: error?.message ?? null };
+  async resendOtp(_email: string): Promise<{ error: string | null }> {
+    // TODO: Firebase Auth — implement email OTP with Firebase
+    return { error: NOT_IMPLEMENTED };
   },
 
   /**
-   * Password-based sign in (kept for flexibility).
+   * Password-based sign in.
    */
-  async signIn(email: string, password: string): Promise<AuthResult> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
-
-    const { data, error } = await client.auth.signInWithPassword({ email, password });
-
-    if (error) return { error: error.message, user: null };
-
-    return { error: null, user: data.user };
+  async signIn(_email: string, _password: string): Promise<AuthResult> {
+    // TODO: Firebase Auth — implement with signInWithEmailAndPassword
+    return { error: NOT_IMPLEMENTED, user: null };
   },
 
   /**
-   * Sign in with Google via Supabase OAuth.
-   * Opens the system browser → Google consent → Supabase → coparent://auth/callback
-   * The deep link handler in RootNavigator picks up the session from the URL fragment.
+   * Sign in with Google via OAuth.
+   * Opens the system browser → Google consent → coparent://auth/callback
    */
   async signInWithGoogle(): Promise<{ error: string | null }> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED };
+    // TODO: Firebase Auth — implement with Google Sign-In provider
+    void Linking;
+    void REDIRECT_URL;
 
-    const { data, error } = await client.auth.signInWithOAuth({
-      options: { redirectTo: REDIRECT_URL, skipBrowserRedirect: true },
-      provider: 'google',
-    });
-
-    if (error) return { error: error.message };
-    if (!data.url) return { error: 'No OAuth URL returned' };
-
-    await Linking.openURL(data.url);
-
-    return { error: null };
+    return { error: NOT_IMPLEMENTED };
   },
 
   /**
    * Sign out the current user.
    */
   async signOut(): Promise<SignOutResult> {
-    const client = getSupabaseClient();
-    if (!client) return { error: null };
-
-    const { error } = await client.auth.signOut();
-
-    return { error: error?.message ?? null };
+    // TODO: Firebase Auth — implement with Firebase Auth signOut
+    return { error: null };
   },
 
   /**
    * Password-based sign up.
-   * With email confirmation enabled, Supabase sends a 6-digit OTP to the email.
-   * The caller should navigate to VerifyOtp screen after this succeeds.
+   * With email confirmation enabled, sends a 6-digit OTP to the email.
    */
-  async signUp(email: string, password: string): Promise<{ error: string | null }> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED };
-
-    const { error } = await client.auth.signUp({ email, password });
-
-    return { error: error?.message ?? null };
+  async signUp(_email: string, _password: string): Promise<{ error: string | null }> {
+    // TODO: Firebase Auth — implement with createUserWithEmailAndPassword
+    return { error: NOT_IMPLEMENTED };
   },
 
   /**
    * Verify a 6-digit OTP sent to email after sign-up.
-   * On success, Supabase issues a session — user is now authenticated.
    */
-  async verifyOtp(email: string, token: string): Promise<AuthResult> {
-    const client = getSupabaseClient();
-    if (!client) return { error: SUPABASE_NOT_CONFIGURED, user: null };
-
-    const { data, error } = await client.auth.verifyOtp({ email, token, type: 'signup' });
-
-    if (error) return { error: error.message, user: null };
-
-    return { error: null, user: data.user };
+  async verifyOtp(_email: string, _token: string): Promise<AuthResult> {
+    // TODO: Firebase Auth — implement email OTP verification
+    return { error: NOT_IMPLEMENTED, user: null };
   },
 };

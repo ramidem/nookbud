@@ -4,16 +4,16 @@ import React, { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, Share, Text, View } from 'react-native';
 
 import { SelectDropdown } from '@/components';
+import { useTw } from '@/hooks/useTw';
+import { CheckCircleIcon, LightbulbIcon } from '@/icons';
+import type { SetupStackParamList } from '@/navigation/SetupNavigator';
+import { SpaceMemberService, type SpaceInvite } from '@/services';
 import {
   SPACE_MEMBER_LABELS,
   SPACE_MEMBER_LABEL_DISPLAY,
   type SpaceMemberLabel,
   type SpaceRole,
-} from '@/database/schema';
-import { useTw } from '@/hooks/useTw';
-import { CheckCircleIcon, LightbulbIcon } from '@/icons';
-import type { SetupStackParamList } from '@/navigation/SetupNavigator';
-import { SpaceMemberService, type SpaceInvite } from '@/services';
+} from '@/types';
 
 type Props = NativeStackScreenProps<SetupStackParamList, 'InviteMembers'>;
 

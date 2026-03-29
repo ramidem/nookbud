@@ -7,11 +7,11 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { z } from 'zod';
 
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
-import { CHILD_ROLES, CHILD_ROLE_DISPLAY, type ChildRole } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { SetupStackParamList } from '@/navigation/SetupNavigator';
 import { ChildService } from '@/services';
 import { colors } from '@/tailwind';
+import { CHILD_ROLES, CHILD_ROLE_DISPLAY, type ChildRole } from '@/types';
 
 type Props = NativeStackScreenProps<SetupStackParamList, 'AddChild'>;
 

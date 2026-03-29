@@ -3,7 +3,6 @@ import { View, Text, Pressable } from 'react-native';
 import { type SvgProps } from 'react-native-svg';
 
 import { EmojiText } from '@/components';
-import type { EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import {
   AlertTriangleIcon,
@@ -14,6 +13,7 @@ import {
   WalletIcon,
 } from '@/icons';
 import type { TimelineEntry } from '@/services';
+import type { EntryType } from '@/types';
 
 export type SpaceInfo = {
   id: string;

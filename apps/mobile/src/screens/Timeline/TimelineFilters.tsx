@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 
 import { Modal } from '@/components';
-import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { ChildService } from '@/services';
+import { ENTRY_TYPES, type Child, type EntryType } from '@/types';
 
 export type FilterState = {
   childIds: string[];

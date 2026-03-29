@@ -1,19 +1,9 @@
-import { eq, and, asc } from 'drizzle-orm';
 import { createMMKV } from 'react-native-mmkv';
 
-import { AuditService } from './audit.service';
-import { SpaceService } from './space.service';
 import { UserService } from './user.service';
 
 import CONFIG from '@/config';
-import { db } from '@/database';
-import {
-  spaceMembers,
-  users,
-  type SpaceMember,
-  type SpaceMemberLabel,
-  type SpaceRole,
-} from '@/database/schema';
+import type { SpaceMember, SpaceMemberLabel, SpaceRole } from '@/types';
 
 const storage = createMMKV({
   encryptionKey: CONFIG.STORAGE_KEY,
@@ -26,21 +16,11 @@ const INVITE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const INVITE_STORAGE_KEY = 'space_invites';
 const MS_PER_DAY = 86_400_000;
 
-const UUID_RADIX = 16;
-const UUID_VARIANT_MASK = 0x3;
-const UUID_VARIANT_VALUE = 0x8;
-
-const ENTITY_TYPE_SPACE = 'space' as const;
 const ERROR_NO_CURRENT_USER = 'No current user';
 const ERROR_NOT_A_MEMBER = 'You are not a member of this Space';
-const ERROR_ONLY_OWNER = 'Only the Space owner can perform this action';
+const ERROR_ALREADY_MEMBER = 'Already a member of this Space';
 const ERROR_INVALID_INVITE = 'Invalid or expired invite code';
 const ERROR_INVITE_EXPIRED = 'Invite code has expired';
-const ERROR_ALREADY_MEMBER = 'Already a member of this Space';
-const ERROR_CANNOT_CHANGE_OWN_ROLE = 'Cannot change your own role';
-const ERROR_CANNOT_ASSIGN_OWNER = 'Cannot assign owner role — use transferOwnership';
-const ERROR_CANNOT_REMOVE_SELF = 'Owner cannot remove self — use leaveSpace or deleteSpace';
-const ERROR_NEW_OWNER_NOT_MEMBER = 'New owner must be a current member of this Space';
 
 export type SpaceInvite = {
   code: string;
@@ -59,15 +39,6 @@ type StoredInvite = {
   role: SpaceRole;
   spaceId: string;
 };
-
-function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * UUID_RADIX) | 0;
-    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
-
-    return v.toString(UUID_RADIX);
-  });
-}
 
 function generateCode(): string {
   let code = '';
@@ -99,17 +70,12 @@ function writeInvites(invites: SpaceInvite[]): void {
   storage.set(INVITE_STORAGE_KEY, JSON.stringify(stored));
 }
 
-async function verifyOwner(spaceId: string, userId: string): Promise<void> {
-  const role = await SpaceService.getUserRole(spaceId, userId);
-  if (!role) throw new Error(ERROR_NOT_A_MEMBER);
-  if (role !== 'owner') throw new Error(ERROR_ONLY_OWNER);
-}
-
 export const SpaceMemberService = {
   /**
    * Accept an invite code and join the Space
    */
   async acceptInvite(code: string): Promise<SpaceMember> {
+    // TODO: Firebase — implement with Firestore
     const invite = SpaceMemberService.getInviteByCode(code);
     if (!invite) throw new Error(ERROR_INVALID_INVITE);
 
@@ -119,78 +85,40 @@ export const SpaceMemberService = {
 
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
+    void ERROR_ALREADY_MEMBER;
+    void ERROR_NOT_A_MEMBER;
 
-    const existingRole = await SpaceService.getUserRole(invite.spaceId, userId);
-    if (existingRole) throw new Error(ERROR_ALREADY_MEMBER);
-
-    const id = generateUUID();
-    await db.insert(spaceMembers).values({
-      id,
+    return {
+      id: 'stub',
       invitedBy: userId,
       joinedAt: new Date(),
       label: invite.label,
       role: invite.role,
       spaceId: invite.spaceId,
       userId,
-    });
-
-    // Remove used invite
-    const invites = readInvites().filter((inv) => inv.code.toUpperCase() !== code.toUpperCase());
-    writeInvites(invites);
-
-    await AuditService.log({
-      action: 'accept_invite',
-      entityId: invite.spaceId,
-      entityType: ENTITY_TYPE_SPACE,
-      metadata: { code: invite.code, role: invite.role },
-      userId,
-    });
-
-    const [member] = await db.select().from(spaceMembers).where(eq(spaceMembers.id, id));
-
-    return member;
+    };
   },
 
   /**
    * Assign a role to a member (owner only, cannot assign 'owner')
    */
   async assignRole(
-    spaceId: string,
-    memberId: string,
+    _spaceId: string,
+    _memberId: string,
     update: { label?: SpaceMemberLabel; role: SpaceRole },
   ): Promise<SpaceMember> {
+    // TODO: Firebase — implement with Firestore
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
-    await verifyOwner(spaceId, userId);
-
-    if (memberId === userId) throw new Error(ERROR_CANNOT_CHANGE_OWN_ROLE);
-    if (update.role === 'owner') throw new Error(ERROR_CANNOT_ASSIGN_OWNER);
-
-    const fields: { label?: SpaceMemberLabel | null; role: SpaceRole } = { role: update.role };
-    if (update.label !== undefined) {
-      fields.label = update.label;
-    }
-
-    await db
-      .update(spaceMembers)
-      .set(fields)
-      .where(and(eq(spaceMembers.spaceId, spaceId), eq(spaceMembers.userId, memberId)));
-
-    await AuditService.log({
-      action: 'assign_role',
-      entityId: spaceId,
-      entityType: ENTITY_TYPE_SPACE,
-      metadata: { label: update.label, memberId, newRole: update.role },
-      userId,
-    });
-
-    const [updated] = await db
-      .select()
-      .from(spaceMembers)
-      .where(and(eq(spaceMembers.spaceId, spaceId), eq(spaceMembers.userId, memberId)));
-
-    return updated;
+    return {
+      id: 'stub',
+      joinedAt: new Date(),
+      label: update.label,
+      role: update.role,
+      spaceId: _spaceId,
+      userId: _memberId,
+    };
   },
 
   /**
@@ -211,12 +139,10 @@ export const SpaceMemberService = {
     role: SpaceRole,
     label?: SpaceMemberLabel,
   ): Promise<SpaceInvite> {
+    // TODO: Firebase — implement with Firestore (store invite in Firestore subcollection)
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
 
-    await verifyOwner(spaceId, userId);
-
-    // Clean up expired invites while we're here
     SpaceMemberService.cleanExpiredInvites();
 
     const code = generateCode();
@@ -228,14 +154,6 @@ export const SpaceMemberService = {
     const invites = readInvites();
     invites.push(invite);
     writeInvites(invites);
-
-    await AuditService.log({
-      action: 'generate_invite',
-      entityId: spaceId,
-      entityType: ENTITY_TYPE_SPACE,
-      metadata: { code, label, role },
-      userId,
-    });
 
     return invite;
   },
@@ -257,80 +175,26 @@ export const SpaceMemberService = {
   /**
    * List all members of a Space (must be a member to view)
    */
-  async listMembers(spaceId: string): Promise<(SpaceMember & { displayName: string })[]> {
-    const userId = UserService.getCurrentUserId();
-    if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
-
-    const role = await SpaceService.getUserRole(spaceId, userId);
-    if (!role) throw new Error(ERROR_NOT_A_MEMBER);
-
-    const rows = await db
-      .select({ member: spaceMembers, user: users })
-      .from(spaceMembers)
-      .innerJoin(users, eq(spaceMembers.userId, users.id))
-      .where(eq(spaceMembers.spaceId, spaceId))
-      .orderBy(asc(spaceMembers.joinedAt));
-
-    return rows.map((row) => ({
-      ...row.member,
-      displayName: row.user.displayName,
-    }));
+  async listMembers(_spaceId: string): Promise<(SpaceMember & { displayName: string })[]> {
+    // TODO: Firebase — implement with Firestore
+    return [];
   },
 
   /**
    * Remove a member from a Space (owner only, cannot remove self)
    */
-  async removeMember(spaceId: string, memberId: string): Promise<void> {
+  async removeMember(_spaceId: string, _memberId: string): Promise<void> {
+    // TODO: Firebase — implement with Firestore
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
-
-    await verifyOwner(spaceId, userId);
-
-    if (memberId === userId) throw new Error(ERROR_CANNOT_REMOVE_SELF);
-
-    await db
-      .delete(spaceMembers)
-      .where(and(eq(spaceMembers.spaceId, spaceId), eq(spaceMembers.userId, memberId)));
-
-    await AuditService.log({
-      action: 'remove_member',
-      entityId: spaceId,
-      entityType: ENTITY_TYPE_SPACE,
-      metadata: { memberId },
-      userId,
-    });
   },
 
   /**
    * Transfer Space ownership to another member
    */
-  async transferOwnership(spaceId: string, newOwnerId: string): Promise<void> {
+  async transferOwnership(_spaceId: string, _newOwnerId: string): Promise<void> {
+    // TODO: Firebase — implement with Firestore
     const userId = UserService.getCurrentUserId();
     if (!userId) throw new Error(ERROR_NO_CURRENT_USER);
-
-    await verifyOwner(spaceId, userId);
-
-    const newOwnerRole = await SpaceService.getUserRole(spaceId, newOwnerId);
-    if (!newOwnerRole) throw new Error(ERROR_NEW_OWNER_NOT_MEMBER);
-
-    // Demote current owner to editor
-    await db
-      .update(spaceMembers)
-      .set({ role: 'editor' })
-      .where(and(eq(spaceMembers.spaceId, spaceId), eq(spaceMembers.userId, userId)));
-
-    // Promote new owner
-    await db
-      .update(spaceMembers)
-      .set({ role: 'owner' })
-      .where(and(eq(spaceMembers.spaceId, spaceId), eq(spaceMembers.userId, newOwnerId)));
-
-    await AuditService.log({
-      action: 'transfer_ownership',
-      entityId: spaceId,
-      entityType: ENTITY_TYPE_SPACE,
-      metadata: { newOwnerId, previousOwnerId: userId },
-      userId,
-    });
   },
 };

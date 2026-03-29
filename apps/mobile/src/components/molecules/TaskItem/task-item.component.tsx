@@ -2,9 +2,9 @@ import React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Typography } from '@/components/atoms';
-import { type Task, type TaskPriority } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { ChevronRightIcon, ClockIcon } from '@/icons';
+import { type Task, type TaskPriority } from '@/types';
 
 type Props = {
   assigneeName?: string;
