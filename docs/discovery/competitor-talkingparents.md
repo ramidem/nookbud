@@ -75,8 +75,13 @@ TalkingParents is one of the top co-parenting apps, focused on tamper-proof comm
 
 ---
 
-## YouTube Video Reference
+## YouTube References — To Transcribe
 
-**Title:** Talking Parents App Review: Does It Really Facilitate Parenting? (2025)
-**URL:** https://www.youtube.com/watch?v=TgBL38atkeA
-**Note:** Could not transcribe — audio not accessible. Summary based on user reviews and web research.
+- [ ] **Talking Parents App Review: Does It Really Facilitate Parenting? (2025)**
+  URL: https://www.youtube.com/watch?v=TgBL38atkeA
+  → Paste transcript here when ready for analysis
+
+- [ ] **Co-Parenting Tools for Centralized & Court-Admissible Communication**
+  URL: https://www.youtube.com/watch?v=3SgCwgSbnU8
+  → Likely a category-level comparison — good for positioning insights
+  → Paste transcript here when ready for analysis
