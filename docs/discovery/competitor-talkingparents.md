@@ -85,3 +85,9 @@ TalkingParents is one of the top co-parenting apps, focused on tamper-proof comm
   URL: https://www.youtube.com/watch?v=3SgCwgSbnU8
   → Likely a category-level comparison — good for positioning insights
   → Paste transcript here when ready for analysis
+
+- [ ] **Unalterable Records - Court-Approved Documentation** ⭐ High priority
+  URL: https://www.youtube.com/watch?v=BiIABLoIrgk&list=PLgDIr_o2OqckCvwAPioRsOLzq7scyDbW0
+  → Directly covers NookBud's core value prop — tamper-proof, court-ready records
+  → Part of a playlist — check other videos in list for more insights
+  → Paste transcript here when ready for analysis
