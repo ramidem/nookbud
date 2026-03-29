@@ -4,7 +4,6 @@ import { View, Text, Pressable, ScrollView, ActivityIndicator, Switch } from 're
 
 import { Button, PageHeader } from '@/components';
 import { Alert } from '@/components/atoms';
-import { ENTRY_TYPES, type Child, type EntryType } from '@/database/schema';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import { ArrowLeftIcon, FileTextIcon, LockIcon, PackageIcon } from '@/icons';
@@ -18,6 +17,7 @@ import {
   type SpaceWithRole,
 } from '@/services';
 import { colors } from '@/tailwind';
+import { ENTRY_TYPES, type Child, type EntryType } from '@/types';
 
 const ACTIVE_BG = 'bg-primary';
 const INACTIVE_BG = 'bg-neutral-200';

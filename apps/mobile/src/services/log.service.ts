@@ -1,7 +1,7 @@
 /**
- * LogService — structured logging with local buffer + Supabase flush.
+ * LogService — structured logging with local buffer + cloud flush.
  *
- * Logs are buffered in MMKV and flushed to Supabase every FLUSH_INTERVAL_MS
+ * Logs are buffered in MMKV and flushed to Firebase every FLUSH_INTERVAL_MS
  * or when explicitly flushed. Works offline — queues until connected.
  *
  * Usage:
@@ -13,7 +13,6 @@ import { Platform } from 'react-native';
 import { createMMKV } from 'react-native-mmkv';
 
 import CONFIG from '@/config';
-import { getSupabaseClient } from '@/config/supabase';
 
 // ------------------------------------------------------------------
 // Types
@@ -160,7 +159,7 @@ function log({ level, message, metadata, tag }: LogOptions): void {
     }
   }
 
-  // Buffer for Supabase flush
+  // Buffer for cloud flush
   const buffer = readBuffer();
   buffer.push(entry);
 
@@ -173,34 +172,16 @@ function log({ level, message, metadata, tag }: LogOptions): void {
 }
 
 // ------------------------------------------------------------------
-// Flush to Supabase
+// Flush to Firebase
 // ------------------------------------------------------------------
 
 async function flush(): Promise<void> {
+  // TODO: Firebase — implement flush to Firebase (Firestore or Analytics)
   const buffer = readBuffer();
   if (buffer.length === 0) return;
 
-  const client = getSupabaseClient();
-  if (!client) return;
-
-  const rows = buffer.map((e) => ({
-    app_version: e.appVersion,
-    created_at: e.createdAt,
-    device_id: e.deviceId,
-    level: e.level,
-    message: e.message,
-    metadata_json: e.metadataJson,
-    tag: e.tag,
-    trace_id: e.traceId,
-    user_id: e.userId,
-  }));
-
-  const { error } = await client.from('app_logs').insert(rows);
-
-  if (!error) {
-    // Clear only on success
-    writeBuffer([]);
-  }
+  // For now, just clear the buffer (no remote flush yet)
+  writeBuffer([]);
 }
 
 // ------------------------------------------------------------------
@@ -243,7 +224,7 @@ export const LogService = {
     log({ level: 'error', message, metadata, tag });
   },
 
-  /** Manually flush buffer to Supabase. */
+  /** Manually flush buffer to Firebase. */
   flush,
 
   info(tag: string, message: string, metadata?: Record<string, unknown>): void {

@@ -4,7 +4,7 @@ import { createMMKV } from 'react-native-mmkv';
 import { UserService } from './user.service';
 
 import CONFIG from '@/config';
-import type { Entry, EntryType, Dispute } from '@/database/schema';
+import type { Entry, EntryType, Dispute } from '@/types';
 
 const storage = createMMKV({
   encryptionKey: CONFIG.STORAGE_KEY,
@@ -91,7 +91,7 @@ export const NotificationService = {
 
     await this.schedule({
       body: `Your ${ENTRY_TYPE_LABELS[entry.type].toLowerCase()} entry was acknowledged`,
-      data: { entryId: entry.id },
+      data: { entryId: entry.id } as Record<string, string>,
       title: 'Entry Acknowledged',
     });
   },
@@ -104,7 +104,7 @@ export const NotificationService = {
 
     await this.schedule({
       body: 'New response to a dispute on your entry',
-      data: { entryId: dispute.entryId },
+      data: { entryId: dispute.entryId } as Record<string, string>,
       title: 'Dispute Response',
     });
   },
@@ -117,7 +117,7 @@ export const NotificationService = {
 
     await this.schedule({
       body: `Your ${ENTRY_TYPE_LABELS[entry.type].toLowerCase()} entry was disputed`,
-      data: { entryId: entry.id },
+      data: { entryId: entry.id } as Record<string, string>,
       title: 'Entry Disputed',
     });
   },
@@ -134,7 +134,7 @@ export const NotificationService = {
 
     await this.schedule({
       body: `Partner added a new ${typeLabel.toLowerCase()} entry`,
-      data: { entryId: entry.id },
+      data: { entryId: entry.id } as Record<string, string>,
       title: `New ${typeLabel} Added`,
     });
   },
@@ -157,7 +157,7 @@ export const NotificationService = {
   async schedule(content: {
     title: string;
     body: string;
-    data?: Record<string, unknown>;
+    data?: Record<string, string | number | object>;
   }): Promise<void> {
     const status = await this.getPermissionStatus();
     if (status !== 'granted') return;

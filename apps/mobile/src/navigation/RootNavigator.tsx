@@ -16,7 +16,6 @@ import { AuthNavigator } from './AuthNavigator';
 import { MainNavigator } from './MainNavigator';
 import { SetupNavigator } from './SetupNavigator';
 
-import { useDbMigrations } from '@/database';
 import { useTw } from '@/hooks/useTw';
 import { AcceptInviteScreen } from '@/screens/Onboarding/AcceptInviteScreen';
 import {
@@ -27,6 +26,11 @@ import {
   UserService,
 } from '@/services';
 import { useLocalStorageStore } from '@/stores';
+
+// TODO: Firebase — remove DB migration hook; Firebase has no local migrations
+function useDbMigrations() {
+  return { error: null as Error | null, success: true };
+}
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 

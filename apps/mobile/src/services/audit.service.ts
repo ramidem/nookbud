@@ -1,69 +1,36 @@
-import { eq, and, gte, lte } from 'drizzle-orm';
-
-import { db } from '@/database';
-import {
-  auditLogs,
-  type AuditLog,
-  type NewAuditLog,
-  type AuditAction,
-  type AuditEntityType,
-} from '@/database/schema';
-
-const UUID_RADIX = 16;
-const UUID_VARIANT_MASK = 0x3;
-const UUID_VARIANT_VALUE = 0x8;
-
-/**
- * Generate a UUID v4
- */
-function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * UUID_RADIX) | 0;
-    const v = c === 'x' ? r : (r & UUID_VARIANT_MASK) | UUID_VARIANT_VALUE;
-
-    return v.toString(UUID_RADIX);
-  });
-}
+import type { AuditAction, AuditEntityType, AuditLog } from '@/types';
 
 export const AuditService = {
   /**
    * Get all audit logs (for export)
    */
   async getAll(): Promise<AuditLog[]> {
-    return db.select().from(auditLogs).orderBy(auditLogs.createdAt);
+    // TODO: Firebase — implement with Firestore
+    return [];
   },
 
   /**
    * Get audit logs within a date range
    */
-  async getByDateRange(from: Date, to: Date): Promise<AuditLog[]> {
-    return db
-      .select()
-      .from(auditLogs)
-      .where(and(gte(auditLogs.createdAt, from), lte(auditLogs.createdAt, to)))
-      .orderBy(auditLogs.createdAt);
+  async getByDateRange(_from: Date, _to: Date): Promise<AuditLog[]> {
+    // TODO: Firebase — implement with Firestore
+    return [];
   },
 
   /**
    * Get audit logs for a specific entity
    */
-  async getByEntity(entityType: AuditEntityType, entityId: string): Promise<AuditLog[]> {
-    return db
-      .select()
-      .from(auditLogs)
-      .where(and(eq(auditLogs.entityType, entityType), eq(auditLogs.entityId, entityId)))
-      .orderBy(auditLogs.createdAt);
+  async getByEntity(_entityType: AuditEntityType, _entityId: string): Promise<AuditLog[]> {
+    // TODO: Firebase — implement with Firestore
+    return [];
   },
 
   /**
    * Get audit logs for a specific user
    */
-  async getByUser(userId: string): Promise<AuditLog[]> {
-    return db
-      .select()
-      .from(auditLogs)
-      .where(eq(auditLogs.userId, userId))
-      .orderBy(auditLogs.createdAt);
+  async getByUser(_userId: string): Promise<AuditLog[]> {
+    // TODO: Firebase — implement with Firestore
+    return [];
   },
 
   /**
@@ -77,22 +44,18 @@ export const AuditService = {
     entityId: string;
     metadata?: Record<string, unknown>;
   }): Promise<AuditLog> {
-    const { action, entityId, entityType, metadata, userId } = params;
-    const id = generateUUID();
-    const newLog: NewAuditLog = {
-      action,
-      entityId,
-      entityType,
-      id,
-      metadataJson: metadata ? JSON.stringify(metadata) : null,
-      userId,
+    // TODO: Firebase — implement with Firestore
+    const stub: AuditLog = {
+      action: params.action,
+      createdAt: new Date(),
+      entityId: params.entityId,
+      entityType: params.entityType,
+      id: 'stub',
+      metadataJson: params.metadata ? JSON.stringify(params.metadata) : null,
+      userId: params.userId,
     };
 
-    await db.insert(auditLogs).values(newLog);
-
-    const [log] = await db.select().from(auditLogs).where(eq(auditLogs.id, id));
-
-    return log;
+    return stub;
   },
 
   /**

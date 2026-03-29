@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-import type { Space } from '@/database/schema';
+import type { Space } from '@/types';
 
 export type SpaceSlice = {
   activeSpace: Space | null;

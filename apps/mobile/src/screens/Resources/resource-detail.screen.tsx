@@ -5,12 +5,6 @@ import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Image, Linking, Pressable, View } from 'react-native';
 
 import { Alert, Button, ScreenContainer, ScreenHeader, Toast, Typography } from '@/components';
-import {
-  RESOURCE_CATEGORY_DISPLAY,
-  type Child,
-  type Resource,
-  type ResourceCategory,
-} from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import {
   BabyIcon,
@@ -29,6 +23,12 @@ import {
 import type { ResourcesStackParamList } from '@/navigation/ResourcesNavigator';
 import { ChildService, FileService, ResourceService, SpaceService } from '@/services';
 import { colors, tw } from '@/tailwind';
+import {
+  RESOURCE_CATEGORY_DISPLAY,
+  type Child,
+  type Resource,
+  type ResourceCategory,
+} from '@/types';
 
 type Props = NativeStackScreenProps<ResourcesStackParamList, 'ResourceDetail'>;
 

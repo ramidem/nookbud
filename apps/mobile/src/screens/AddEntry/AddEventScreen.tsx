@@ -8,12 +8,12 @@ import { z } from 'zod';
 
 import { Alert, EmojiText } from '@/components/atoms';
 import { DatePickerInput } from '@/components/molecules/DatePickerInput';
-import type { Child } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
 import { ChildService, EntryService, SpaceService, UserService } from '@/services';
 import { colors } from '@/tailwind';
+import type { Child } from '@/types';
 
 type Props = NativeStackScreenProps<ActivityStackParamList, 'AddEvent'>;
 

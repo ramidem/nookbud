@@ -1,21 +1,19 @@
 import { LegendList } from '@legendapp/list';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { and, desc, eq, ne } from 'drizzle-orm';
 import React, { useState, useCallback, useRef } from 'react';
 import { View, Text, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackButton, PageHeader, ScreenContainer } from '@/components';
-import { db } from '@/database';
-import { entries, entryVersions, auditLogs, type AuditLog } from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
 import { useTw } from '@/hooks/useTw';
 import { SendHorizontalIcon } from '@/icons';
 import type { CommunicationStackParamList } from '@/navigation/CommunicationNavigator';
 import { EntryService, UserService } from '@/services';
-import type { CommunicationContent } from '@/types/entry-content.types';
+
+// import type { CommunicationContent } from '@/types/entry-content.types'; // TODO: Firebase
 
 type Props = NativeStackScreenProps<CommunicationStackParamList, 'Communication'>;
 
@@ -40,31 +38,6 @@ const SEND_ICON_SIZE = 20;
 const HOURS_PER_DAY = 24;
 const MS_PER_DAY = 1000 * 60 * 60 * HOURS_PER_DAY;
 const COMPOSER_MIN_BOTTOM = 8;
-
-function formatAuditAction(log: AuditLog): string {
-  const action = log.action;
-
-  switch (action) {
-    case 'create':
-      return `Created a ${log.entityType}`;
-    case 'accept_invite':
-      return 'Joined the space';
-    case 'generate_invite':
-      return 'Generated an invite';
-    case 'assign_role':
-      return 'Updated a member role';
-    case 'remove_member':
-      return 'Removed a member';
-    case 'transfer_ownership':
-      return 'Transferred ownership';
-    case 'archive':
-      return `Archived a ${log.entityType}`;
-    case 'unarchive':
-      return `Unarchived a ${log.entityType}`;
-    default:
-      return `${action} on ${log.entityType}`;
-  }
-}
 
 function formatTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
@@ -102,55 +75,9 @@ export function CommunicationScreen({ navigation }: Props) {
     }
 
     try {
-      // Fetch communication entries for the active space
-      const entryRows = await db
-        .select()
-        .from(entries)
-        .where(
-          and(
-            eq(entries.spaceId, activeSpaceId),
-            eq(entries.type, 'communication'),
-            ne(entries.status, 'soft_deleted'),
-          ),
-        )
-        .orderBy(desc(entries.createdAt));
-
+      // TODO: Firebase — replace with Firestore queries
       const messageItems: ChatItem[] = [];
-
-      for (const entry of entryRows) {
-        if (!entry.currentVersionId) continue;
-
-        const [version] = await db
-          .select()
-          .from(entryVersions)
-          .where(eq(entryVersions.id, entry.currentVersionId));
-
-        if (!version) continue;
-
-        const content = JSON.parse(version.contentJson) as CommunicationContent;
-
-        messageItems.push({
-          body: content.body,
-          createdAt: entry.createdAt,
-          createdBy: entry.createdBy,
-          id: entry.id,
-          kind: 'message',
-        });
-      }
-
-      // Fetch audit logs for this space (space entity only for system events)
-      const auditRows = await db
-        .select()
-        .from(auditLogs)
-        .where(and(eq(auditLogs.entityType, 'space'), eq(auditLogs.entityId, activeSpaceId)))
-        .orderBy(desc(auditLogs.createdAt));
-
-      const systemItems: ChatItem[] = auditRows.map((log) => ({
-        createdAt: log.createdAt,
-        id: log.id,
-        kind: 'system' as const,
-        text: formatAuditAction(log),
-      }));
+      const systemItems: ChatItem[] = [];
 
       // Merge and sort descending (newest first) for inverted FlatList
       const merged = [...messageItems, ...systemItems].sort(

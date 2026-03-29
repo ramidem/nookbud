@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 
 import { Alert, Button, PageHeader } from '@/components';
-import type { User, Child } from '@/database/schema';
-import { seedDatabase } from '@/database/seed';
 import { useTw } from '@/hooks/useTw';
 import { BabyIcon, BookOpenIcon, ChevronRightIcon, ShareIcon, UserIcon, UsersIcon } from '@/icons';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
@@ -26,6 +24,11 @@ import {
   type SpaceWithRole,
 } from '@/services';
 import { colors } from '@/tailwind';
+import type { User, Child } from '@/types';
+// TODO: Firebase — remove seed; Firebase uses Firestore
+async function seedDatabase() {
+  return { error: 'Seed not available (Firebase migration pending)', success: false };
+}
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
 

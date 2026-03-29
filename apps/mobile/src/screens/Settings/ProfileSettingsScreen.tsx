@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 
 import { Alert } from '@/components';
-import type { User } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { UserService } from '@/services';
 import { colors } from '@/tailwind';
+import type { User } from '@/types';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'ProfileSettings'>;
 
@@ -34,7 +34,7 @@ export function ProfileSettingsScreen({ navigation }: Props) {
       const u = await UserService.getCurrentUser();
       if (u) {
         setUser(u);
-        setDisplayName(u.displayName);
+        setDisplayName(u.displayName ?? `${u.firstName} ${u.lastName}`.trim());
         setTimezone(u.timezone);
         setDefaultCurrency(u.defaultCurrency);
       }
@@ -59,7 +59,8 @@ export function ProfileSettingsScreen({ navigation }: Props) {
     try {
       await UserService.updateUser({
         defaultCurrency,
-        displayName: displayName.trim(),
+        // TODO: Firebase — map displayName to firstName/lastName
+        firstName: displayName.trim(),
         timezone,
       });
       navigation.goBack();

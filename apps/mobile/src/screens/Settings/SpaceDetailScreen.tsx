@@ -15,12 +15,6 @@ import {
   Typography,
   useBottomSheet,
 } from '@/components';
-import {
-  SPACE_MEMBER_LABELS,
-  SPACE_MEMBER_LABEL_DISPLAY,
-  type SpaceMemberLabel,
-  type SpaceRole,
-} from '@/database/schema';
 import { useActiveSpace } from '@/hooks';
 import {
   ArchiveIcon,
@@ -33,6 +27,12 @@ import type { SettingsStackParamList } from '@/navigation/SettingsNavigator';
 import { SpaceMemberService, SpaceService, type SpaceDetails, type SpaceInvite } from '@/services';
 import { useLocalStorageStore } from '@/stores';
 import { colors, defaultInputContainerStyle, defaultInputTextStyle, tw } from '@/tailwind';
+import {
+  SPACE_MEMBER_LABELS,
+  SPACE_MEMBER_LABEL_DISPLAY,
+  type SpaceMemberLabel,
+  type SpaceRole,
+} from '@/types';
 
 type Props = NativeStackScreenProps<SettingsStackParamList, 'SpaceDetail'>;
 

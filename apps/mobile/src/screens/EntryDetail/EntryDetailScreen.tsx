@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator, TextInput } from 'react-native';
 
 import { Alert, Modal, useModal } from '@/components';
-import type { EntryVersion, Attachment } from '@/database/schema';
 import { useTw } from '@/hooks/useTw';
 import { AlertTriangleIcon, CheckCircleIcon, ClockIcon, PaperclipIcon } from '@/icons';
 import type { ActivityStackParamList } from '@/navigation/ActivityNavigator';
@@ -15,6 +14,7 @@ import {
   type DisputeWithResponses,
 } from '@/services';
 import { colors } from '@/tailwind';
+import type { EntryVersion, Attachment } from '@/types';
 
 type Props = NativeStackScreenProps<ActivityStackParamList, 'EntryDetail'>;
 

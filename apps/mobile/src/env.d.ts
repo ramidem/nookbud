@@ -2,10 +2,12 @@
 declare module '@env' {
   export const IS_LIVE: any;
   export const STORAGE_KEY: any;
-  /** Supabase project URL — https://xxxx.supabase.co */
-  export const API_BASE_URL: any;
-  /** Supabase anon/public key — safe for mobile */
-  export const SUPABASE_API_KEY: any;
+  /** Firebase config */
+  export const FIREBASE_API_KEY: any;
+  export const FIREBASE_APP_ID: any;
+  export const FIREBASE_PROJECT_ID: any;
+  export const FIREBASE_STORAGE_BUCKET: any;
+  export const FIREBASE_MESSAGING_SENDER_ID: any;
 }
 declare module '*.svg' {
   import React from 'react';

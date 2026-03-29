@@ -5,13 +5,6 @@ import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } 
 import { type SvgProps } from 'react-native-svg';
 
 import { Button, PageHeader, ScreenContainer, Typography } from '@/components';
-import {
-  RESOURCE_CATEGORIES,
-  RESOURCE_CATEGORY_DISPLAY,
-  type Child,
-  type Resource,
-  type ResourceCategory,
-} from '@/database/schema';
 import { useActiveSpace } from '@/hooks/useActiveSpace.hook';
 import { useTw } from '@/hooks/useTw';
 import {
@@ -34,6 +27,13 @@ import {
   type SpaceWithRole,
 } from '@/services';
 import { colors } from '@/tailwind';
+import {
+  RESOURCE_CATEGORIES,
+  RESOURCE_CATEGORY_DISPLAY,
+  type Child,
+  type Resource,
+  type ResourceCategory,
+} from '@/types';
 
 type Props = NativeStackScreenProps<ResourcesStackParamList, 'Resources'>;
 
