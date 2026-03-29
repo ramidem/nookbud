@@ -1,8 +1,21 @@
 # Nookbud Pricing Research & Recommendations
 
 > Research date: March 2026  
-> Current pricing: $9.99/mo · $99/yr  
-> **Bottom line up front: Yes, we're underselling. The data is clear.**
+> **Decision (2026-03-29): $17.99/mo · $149.99/yr — Option B adopted**
+> Previous pricing: $9.99/mo · $99/yr (underselling — see analysis below)
+
+---
+
+## ✅ Adopted Pricing
+
+| | Price |
+|---|---|
+| Monthly | **$17.99/mo** |
+| Annual | **$149.99/yr** (save 30%) |
+| Free trial | 14 days, no credit card |
+| Co-parents | Join free — one subscriber covers the Space |
+
+**Storage model:** File uploads gated behind Family Plan. Uses Firebase Storage (Blaze pay-as-you-go). Free tier 5GB covers early stage at near-zero cost.
 
 ---
 
