@@ -2,6 +2,7 @@
 #import "RNBootSplash.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <Firebase.h>
 #import <ReactAppDependencyProvider/RCTAppDependencyProvider.h>
 
 #import <RCTDefaultReactNativeFactoryDelegate.h>
@@ -35,6 +36,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   ReactNativeDelegate *delegate = [ReactNativeDelegate new];
   RCTReactNativeFactory *factory = [[RCTReactNativeFactory alloc] initWithDelegate:delegate];
   delegate.dependencyProvider = [RCTAppDependencyProvider new];

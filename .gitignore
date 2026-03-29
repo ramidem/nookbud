@@ -163,3 +163,6 @@ package-lock.json
 
 .claude/worktrees
 .claude/settings.local.json
+# Firebase config files (contain API keys)
+apps/mobile/ios/GoogleService-Info.plist
+apps/mobile/android/app/google-services.json
