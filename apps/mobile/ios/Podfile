@@ -21,7 +21,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-use_modular_headers!
+# Firebase requires modular headers — apply only to Firebase pods, not globally
+# (global use_modular_headers! conflicts with React Native internal modules)
 
 target 'Mobile' do
   config = use_native_modules!
@@ -31,6 +32,17 @@ target 'Mobile' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
+  # Firebase modular headers — required for Swift Firebase pods
+  pod 'FirebaseAppCheckInterop', :modular_headers => true
+  pod 'FirebaseAuth', :modular_headers => true
+  pod 'FirebaseAuthInterop', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseFirestoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'RecaptchaInterop', :modular_headers => true
 
   target 'MobileTests' do
     inherit! :complete
