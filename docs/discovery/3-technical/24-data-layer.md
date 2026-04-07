@@ -1,102 +1,139 @@
 # Nookbud — Data Layer
 
-> **Status:** Partially defined — extracted from PRD + codebase
-> **Depends on:** Tech stack decisions (21-tech-stack.md)
+> **Date:** 2026-04-07
+> **Status:** ✅ Decided and implemented (Firebase migration complete 2026-03-29)
+> **Full schema:** `docs/firebase-spec.md`
 
 ---
 
 ## Architecture
-Local-first SQLite with Supabase cloud sync. Offline-capable by design.
+
+**Offline-first via Firestore's built-in offline cache.** Firebase Firestore persists data locally and syncs when the connection is restored. No custom sync manager needed.
 
 ```
-User Action → Local SQLite → Sync Manager → Supabase (PostgreSQL)
+User Action → Firestore SDK (local cache) → [auto-sync] → Firebase Firestore (cloud)
+                                                              │
+                                                    Firebase Storage (files)
 ```
+
+All reads serve from local cache first; writes queue locally and sync when online. This makes Nookbud functional in low-connectivity environments (relevant for OFW users in remote areas or roaming internationally).
 
 ---
 
-## Core Entities (Phase 1–3)
+## Migration History
 
-### users
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key (Supabase auth) |
-| email | string | Auth email |
-| display_name | string | |
-| avatar_url | string? | |
-| created_at | timestamp | |
+| Date | Change |
+|------|--------|
+| Phase 1 | op-sqlite + Drizzle ORM + Supabase (Auth + DB + Storage) |
+| 2026-03-29 | Migrated to Firebase (Firestore + Auth + Storage); offline cache replaces SQLite |
 
-### spaces
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | |
-| name | string | |
-| emoji | string? | |
-| color | string? | |
-| created_by | UUID → users | |
-| created_at | timestamp | |
-| deleted_at | timestamp? | Soft delete |
+**Artifact cleanup needed:** `package.json` still has `@supabase/supabase-js`, `@op-engineering/op-sqlite`, `drizzle-orm`, `drizzle-kit` — remove these.
 
-### space_members
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | |
-| space_id | UUID → spaces | |
-| user_id | UUID → users | |
-| role | enum: owner, editor, viewer | |
-| label | enum: co-parent, guardian, grandparent, relative, lawyer, social-worker, assistant, other? | Display only |
-| joined_at | timestamp | |
-| invited_by | UUID → users | |
+---
 
-### children
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | |
-| space_id | UUID → spaces | |
-| name | string | |
-| dob | date | |
-| created_by | UUID → users | |
+## Firestore Collection Structure
 
-### entries
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | |
-| space_id | UUID → spaces | |
-| type | enum: expense, event, agreement, communication, milestone | |
-| created_by | UUID → users | |
-| created_at | timestamp | Server-set |
-| version | int | Incremented on edit |
-| data | jsonb | Type-specific payload |
-| requires_ack | boolean | |
+```
+/users/{userId}
+  - id, firstName, lastName, email, role, timezone, defaultCurrency, createdAt
 
-### acknowledgments
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | |
-| entry_id | UUID → entries | |
-| user_id | UUID → users | |
-| status | enum: pending, acknowledged, disputed | |
-| note | string? | Required if disputed |
-| responded_at | timestamp? | |
+/spaces/{spaceId}
+  - id, name, emoji, color, createdBy, createdAt, updatedAt, archivedAt?
+
+/spaces/{spaceId}/members/{userId}
+  - userId, spaceId, role (owner|editor|viewer), label?, joinedAt, invitedBy
+
+/spaces/{spaceId}/children/{childId}
+  - id, spaceId, name, dateOfBirth, avatarUrl?, createdBy, createdAt
+
+/spaces/{spaceId}/entries/{entryId}
+  - id, spaceId, type, createdBy, createdAt, version, data (type-specific), requiresAck
+
+/spaces/{spaceId}/entry_versions/{versionId}
+  - entryId, version, previousVersionId?, diff, editedBy, editedAt
+
+/spaces/{spaceId}/attachments/{attachmentId}
+  - entryId, fileName, fileType, fileSize, storageUrl, sha256Hash, uploadedBy, uploadedAt
+
+/spaces/{spaceId}/acknowledgments/{ackId}
+  - entryId, userId, status (pending|acknowledged|disputed), note?, respondedAt?
+
+/spaces/{spaceId}/audit_logs/{logId}
+  - action, userId, targetType, targetId, timestamp, details
+
+/spaces/{spaceId}/resources/{resourceId}       ← Phase 4
+  - id, title, category, fileAttachmentId, childId?, uploadedBy, uploadedAt
+
+/spaces/{spaceId}/tasks/{taskId}               ← Phase 3.5
+  - id, title, description, assignedTo?, dueDate?, status, createdBy, createdAt
+```
+
+Full document schemas: `docs/firebase-spec.md`
+
+---
+
+## Firebase Security Rules
+
+All access gated by Space membership. Key rules:
+- `/spaces/{spaceId}` — readable/writable only by members of that Space
+- `/spaces/{spaceId}/members` — readable by all members; writable only by owner
+- `/spaces/{spaceId}/entries` — readable by all members; writable by owner + editor
+- `/spaces/{spaceId}/acknowledgments` — writable by editor (not the entry creator)
+- `/users/{userId}` — readable/writable only by the authenticated user
+
+Full rules: defined in Firebase Console (not in codebase yet — TODO).
 
 ---
 
 ## File Storage
-- Firebase Storage (Blaze, pay-as-you-go)
-- SHA-256 hash computed server-side on upload
-- Hash stored in `file_attachments` table alongside Firebase URL
-- Access gated behind Family Plan subscription
+
+### Firebase Storage structure
+```
+spaces/{spaceId}/entries/{entryId}/{fileName}
+spaces/{spaceId}/resources/{resourceId}/{fileName}   ← Phase 4
+users/{userId}/avatar/{fileName}
+```
+
+### Integrity
+- SHA-256 hash computed server-side via Firebase Cloud Function on upload
+- Hash stored in `/spaces/{spaceId}/attachments/{attachmentId}.sha256Hash`
+- Hash included in every export manifest
+
+### Gating
+- File uploads require active Family Plan subscription
+- Free/trial users: text entries only; no file uploads
 
 ---
 
-## Sync Strategy
-- Local SQLite as source of truth while offline
-- Sync on connection restore
-- Conflict resolution: server wins for timestamps; TODO for concurrent edits
+## Offline Behavior
+
+| Scenario | Behavior |
+|----------|----------|
+| Write while offline | Queued locally; synced on reconnection |
+| Read while offline | Served from local Firestore cache |
+| File upload while offline | Not supported (requires network); user notified |
+| Conflict (same doc edited on two devices) | Firestore last-write-wins; entry versioning prevents data loss |
+
+---
+
+## Data Retention Policy
+
+| Data Type | Retention |
+|-----------|-----------|
+| Active account data | Indefinitely |
+| Deleted account | 30 days then hard delete (GDPR requirement) |
+| Audit logs | 7 years (legal evidence standard) |
+| File attachments (deleted Space) | 90 days after Space archive |
 
 ---
 
 ## TODO
-- [ ] Finalize sync conflict resolution strategy
-- [ ] Define retention/archival policy
-- [ ] Document migration strategy (relationship → spaces was Phase 3)
-- [ ] Define export JSON schema
+
+- [ ] Remove `@supabase/supabase-js`, `op-sqlite`, `drizzle-*` from package.json
+- [ ] Write Firebase Security Rules (currently placeholder)
+- [ ] Implement Cloud Function for server-side SHA-256 hash on upload
+- [ ] Define data export format (JSON schema for `data.json` in evidence bundle)
+- [ ] Implement account deletion (GDPR — delete all user data within 30 days)
+- [ ] Set up Firebase Backup (daily export to GCS)
+
+**Sources:** `docs/firebase-spec.md`, prd.md §12 Technical Constraints, `apps/mobile/package.json`
