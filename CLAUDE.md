@@ -4,7 +4,6 @@ Nx monorepo for a React Native mobile app (iOS, Android, Web).
 
 > **Source of truth** for all React Native mobile app conventions.
 
-@~/.claude/skills/ralph-loop.md
 @~/.claude/skills/react-native.md
 @.claude/docs/components.md
 @.claude/docs/styling.md

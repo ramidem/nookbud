@@ -8,6 +8,7 @@
     }
   },
   "enabledPlugins": {
-    "nx@nx-claude-plugins": true
+    "nx@nx-claude-plugins": true,
+    "ralph-loop@claude-plugins-official": true
   }
 }
