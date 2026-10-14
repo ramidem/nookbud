@@ -20,7 +20,7 @@ AI features are:
 
 ---
 
-## Planned AI Features (Phase 5)
+## Planned AI Features (roadmap P4)
 
 ### Feature 1: ToneMeter — Communication Tone Advisor
 - **What:** Flags inflammatory or adversarial language in a Communication entry before saving
@@ -76,8 +76,5 @@ AI features are:
 ---
 
 ## TODO
-- [ ] Ship Phases 1–4 completely
-- [ ] Survey users at 500+ paid users mark
-- [ ] Prototype ToneMeter (API-based) in 1 sprint
-- [ ] Define privacy consent model for AI features
-- [ ] Decide on on-device vs cloud model per feature
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.

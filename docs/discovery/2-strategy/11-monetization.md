@@ -151,12 +151,7 @@ Phase 6+:
 ---
 
 ## TODO
-- [ ] Design paywall screen (annual-first layout)
-- [ ] Set up RevenueCat (already installed in Falcly — reuse pattern)
-- [ ] Implement trial countdown banner
-- [ ] Build hardship waiver flow (in-app form)
-- [ ] Define invoice/receipt flow for annual subscribers
-- [ ] Set up dunning (failed payment recovery) in RevenueCat
-- [ ] Build "your records summary" email at renewal time
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 **Sources:** RevenueCat State of Subscription Apps 2025, Marketing LTB Subscription Statistics 2025, pricing.md research

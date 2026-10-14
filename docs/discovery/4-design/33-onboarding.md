@@ -1,6 +1,6 @@
 # Nookbud — Onboarding
 
-> **Status:** 📝 TODO — Design before implementation
+> **Status:** Open items tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md)
 > **Depends on:** UX patterns, core features
 
 ---
@@ -61,8 +61,5 @@ Welcome → Family Structure → Create Space → Add Child → First Entry → 
 ---
 
 ## TODO
-- [ ] Finalize inclusive family structure options
-- [ ] Design screens
-- [ ] Define skip behavior for each step
-- [ ] Add analytics events (funnel tracking)
-- [ ] A/B test invite prompt timing
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.

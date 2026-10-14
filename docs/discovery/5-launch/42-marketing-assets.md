@@ -1,6 +1,6 @@
 # Nookbud — Marketing Assets
 
-> **Status:** 📝 TODO — Create before launch
+> **Status:** Open items tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md)
 > **Depends on:** Branding (31-branding.md), app screenshots
 
 ---
@@ -39,8 +39,5 @@ Content: TODO
 ---
 
 ## TODO
-- [ ] Pick logo direction from SVGs in assets/brand/logo/
-- [ ] Design app icon
-- [ ] Take final screenshots once Phase 1–3 is stable
-- [ ] Create feature graphic
-- [ ] Create OG image
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.

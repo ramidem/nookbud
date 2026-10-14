@@ -510,3 +510,136 @@ Some steps can run in parallel, but the authorization model must be designed bef
 | **P4** | AI, integrations, insights | Less administrative work, better coordination |
 
 **Recommendation:** Build around the shared Family Space. Don't build legal workflows or AI-driven conflict resolution into the initial release. First validate that parents consistently use the basic coordination features.
+
+---
+
+# Migrated Backlog (Nookbud)
+
+> **This file is the single source of truth for Nookbud's roadmap and open items.** Do not add TODO lists, phase plans, or checklists to other docs — add them here and link back.
+>
+> Consolidated 2026-10-14 from: `prd.json`, `progress.txt`, `docs/discovery/prd.md`, `docs/discovery/5-launch/43-user-stories.md` (all deleted), and the TODO / action-item sections of the discovery and research docs (replaced with links to this file). Items already covered by P0–P4 above were not duplicated. Each item notes its source.
+
+## Current codebase state (as of 2026-10-14)
+
+- The mobile UI is built (onboarding, timeline, entry forms, entry detail, calendar, Spaces, Resources, export, settings), but the **data layer is stubbed**: a Firebase migration removed SQLite/Drizzle and was never completed. ~100 `// TODO: Firebase` stubs remain in `apps/mobile/src/services/`, and `auth.service.ts` is not implemented.
+- No automated tests, no CI, no backend security rules.
+- Old PRD stories 1–63 were marked as passing against the pre-migration local SQLite layer; stories 58 (OCR) and 64–69 (Tasks) were never done. All are mapped below.
+- **Stack note:** this roadmap selects Supabase (Postgres + Auth + RLS). That supersedes the Firebase decision recorded in `docs/discovery/3-technical/21-tech-stack.md` and `24-data-layer.md`. `docs/supabase/schema.sql` is a starting point for migrations. Firebase-only TODOs (Firestore security rules, Firebase backup, Cloud Function hashing) are replaced by the P0/P1 equivalents and were not carried over.
+
+## P0 additions
+
+**Codebase & infrastructure**
+- [ ] Remove migration leftovers: `@supabase/supabase-js` (re-add properly), `@op-engineering/op-sqlite`, `drizzle-orm`, `drizzle-kit`, unused `@react-native-firebase/*` *(21-tech-stack, 24-data-layer)*
+- [ ] Replace every stubbed service in `apps/mobile/src/services/` with a real Supabase-backed implementation, starting with auth *(code audit)*
+- [ ] Fix the Cloud Run landing deploy (container fails to start) and reconnect/verify the 4 Cloud Build triggers (nookbud-web, -admin, -backend, -landing) *(21-tech-stack)*
+- [ ] Decide whether `apps/backend` (NestJS) is still needed alongside Supabase server-side functions *(roadmap comparison)*
+
+**Legal & compliance** *(extends P0 launch gates and A5)*
+- [ ] Philippines NPC registration and DPO designation *(05-regulatory, research/07)*
+- [ ] Terms of Service with 18+ age gate / adult-only usage *(05-regulatory, research/07)*
+- [ ] COPPA position review with counsel: data *about* minors vs. data *from* minors; privacy policy explicitly covers children's data and the PH DPA, GDPR and Australian Privacy Principles positions *(05-regulatory, research/07)*
+- [ ] Breach response plan includes the 72-hour notification window *(05-regulatory, research/07)*
+- [ ] Apple age-rating questionnaire; evaluate the Google Play Age Signals API *(research/07)*
+- [ ] Confirm every third-party SDK is acceptable for an app handling children's data *(research/07)*
+- [ ] Data-subject rights: correct/update personal data (deletion is already in P0; export is in P1) *(05-regulatory)*
+- [ ] Consent mechanisms compliant with the DPA; counsel to confirm whether age verification or parental-consent flows are needed for data about children under 13 *(research/07)*
+- [ ] Annual Security Incident Report (ASIR) process for the NPC; evaluate Philippine data-residency requirements *(research/07)*
+- [ ] Document compliance processes *(research/07)*
+- [ ] Privacy notice in English and Filipino; privacy policy also covers US state privacy rights (CCPA/CPRA etc.) and the Australian Privacy Principles (72-hour OAIC breach notice) *(05-regulatory)*
+- [ ] No selling of user data and no behavioral targeting based on child-related data — state it in the policy *(05-regulatory)*
+- [ ] Retention policy includes an auto-deletion schedule *(05-regulatory; extends Step 0.1 retention decision)*
+
+**Accessibility baseline** *(specifics for A9)*
+- [ ] Accessibility labels on all interactive elements; alt text on images; logical focus order *(32-accessibility)*
+- [ ] WCAG AA contrast (4.5:1); no color-only indicators *(32-accessibility)*
+- [ ] 44×44pt minimum touch targets with adequate spacing *(32-accessibility)*
+- [ ] Respect reduce-motion; no information conveyed only through animation *(32-accessibility)*
+- [ ] Automated a11y audit, plus manual VoiceOver (iOS) and TalkBack (Android) passes *(32-accessibility)*
+
+**Onboarding** *(supports B1/B2)*
+- [ ] Finalize inclusive family-structure options, design the screens, define skip behavior per step *(33-onboarding)*
+
+**Pre-launch essentials**
+- [ ] Buy `nookbud.com` (Porkbun, ~$11/yr) — verify it hasn't been bought already *(31-branding)*
+
+## P1 additions
+
+- [ ] **Tasks** — old PRD stories 64–69: tasks table, TaskService (CRUD, assign, complete), list screen with filters, create/assign form, task detail (edit, complete, reassign, delete), QA pass. `task.service.ts` exists as a stub. *(prd.json; maps to P1 Tasks & Reminders)*
+- [ ] **Smart reminders** for pending acknowledgments, overdue expenses, upcoming events *(prd.md Phase 5; fold into P1 Tasks & Reminders)*
+- [ ] **Resources** — reference documents per Space (medical, school, legal) with SHA-256 integrity check; UI exists from old Phase 4, needs private storage *(prd.md Phase 4; maps to P1 Shared Documents)*
+- [ ] **Data export format** — PDF timeline report and ZIP evidence bundle (data JSON + attachments + hash manifest); define the `data.json` schema; compute the SHA-256 hash server-side on upload. Export screens exist from old Phase 1. *(24-data-layer, prd.md; maps to P1 Data Export)*
+- [ ] **Analytics** — PostHog with onboarding funnel events, analytics opt-out, UTM channel attribution; A/B test invite-prompt timing *(33-onboarding, 05-regulatory, 12-go-to-market)*
+- [ ] **Dark mode** support *(32-accessibility)*
+- [ ] **Monetization** (pricing already decided: $17.99/mo · $149.99/yr — see `docs/discovery/2-strategy/10-pricing.md`): RevenueCat setup, annual-first paywall, trial countdown banner, hardship waiver form, invoice/receipt flow for annual plans, dunning, "your records summary" email at renewal. *Placed in P1 per the roadmap's "validate basic usage first" recommendation; pull forward if launching paid.* *(11-monetization)*
+
+## P2 additions
+
+- [ ] **Acknowledgment + dispute on records** — the old Phase 1 core (entry versioning, acknowledge/dispute, threaded responses). Maps to P2 Agreement Acknowledgment / Decision Tracking / Communication Records and P3 Structured Disagreements. Screens and content schemas exist. *(prd.md Phase 1)*
+- [ ] **Archive Space** — hide inactive Spaces from the switcher, keep data *(prd.md Phase 4; extends P2 Advanced Spaces)*
+- [ ] **Member labels** (co-parent, guardian, grandparent, lawyer, social worker…) — display-only, separate from permissions *(prd.json story 59)*
+- [ ] **Scheduled reports** — weekly/monthly export sent to chosen members *(prd.md Phase 5)*
+- [ ] **Tagalog localization** for the PH / OFW market *(32-accessibility)*
+
+## P3 additions
+
+- [ ] **Shared export links** — time-limited (7/30/90 days), password-protected links to verified reports *(prd.md Phase 6)*
+- [ ] **Read-only invite links** with viewer role for mediators and coordinators *(prd.md Phase 6)*
+- [ ] **Professional dashboard** — one view across all invited Spaces; lawyer can export from a client Space without client action; professional tier (multi-Space subscription) *(prd.md Phase 6, 11-monetization)*
+- [ ] **Compliance tracking** against care agreements and court orders (referenced, not enforced) *(prd.md Phase 5)*
+- [ ] **Digital signatures (PKI)** on exports *(01-brief)*
+
+## P4 additions
+
+- [ ] **OCR document scanning** — on-device (Google ML Kit); extract dates, amounts, names; pre-fill entries or save as Resources *(prd.json story 58)*
+- [ ] **ToneMeter** — prototype API-based tone advisor in one sprint; define AI privacy consent model; decide on-device vs. cloud per feature; survey users at 500+ paid *(22-ai-layer)*
+- [ ] **Care pattern insights** — custody time, event participation, acknowledgment rates *(prd.md Phase 5; extends P4 Insights)*
+
+## Later — market expansion
+
+- [ ] GDPR program if EU users grow: lawful basis per processing activity, DPIA, EU DPO, EU data residency, privacy-by-default for children's data *(05-regulatory, research/07)*
+- [ ] Monitor NPC guidance on pending DPA amendments; annual privacy review *(05-regulatory)*
+
+---
+
+## Non-product workstreams
+
+### Brand & store assets *(31-branding, 42-marketing-assets)*
+- [ ] Pick a logo direction from `assets/brand/logo/`
+- [ ] Finalize light + dark palette and typography — `BRAND.md` (sage `#4A7C59`, Plus Jakarta Sans) disagrees with `.claude/docs/styling.md` and the app (sage `#6F8F7B`, Inter + EB Garamond); pick one and update the other; write brand guidelines *(31-branding)*
+- [ ] App icon from the chosen logo
+- [ ] OG image (1200×630) and Play Store feature graphic
+- [ ] App Store / Play screenshots once the P0 UI is stable
+
+### Landing page *(41-landing-page, 12-go-to-market)*
+- [ ] Waitlist page on nookbud.com (needed ~6 weeks before launch)
+- [ ] Final copy, design and build, OG image, analytics
+- [ ] Add App Store / Play links when live
+
+### ASO & SEO *(40-keywords-seo-aso)*
+- [ ] Keyword research (Ahrefs / App Annie / Sensor Tower) and competitor ASO keywords
+- [ ] App Store listing copy (name + primary keyword, subtitle)
+- [ ] SEO content plan
+
+### Go-to-market *(12-go-to-market)*
+- **Pre-launch (6 weeks before)**
+  - [ ] Start helpful (non-marketing) participation in r/Divorce and r/coparenting
+  - [ ] Reach out to 10 family law attorneys for beta feedback; draft the outreach email template
+  - [ ] Find 3 OFW beta users for authentic testimonials
+- **Launch week**
+  - [ ] Product Hunt launch (pick the date)
+  - [ ] Post an authentic OFW story in 3 Facebook groups
+  - [ ] Pitch 2–3 family law blogs for a review
+- **Ongoing**
+  - [ ] Weekly Reddit participation; bi-weekly OFW community stories; 2 SEO blog posts per month
+  - [ ] Monthly attorney outreach (5 new per month); define attorney referral program mechanics
+
+### Finance *(13-financial-projections)*
+- [ ] Track real conversion in RevenueCat from day 1; update projections monthly with actuals
+- [ ] Track CAC per channel (Reddit, ASO, attorney referral, OFW groups)
+- [ ] Milestone-based spending rules (e.g., no paid ads until $5K MRR is proven organically)
+- [ ] Model a web-billing option to avoid the 15–30% store fee on annual plans
+
+### Research backlog *(03-competitors, competitor-talkingparents)*
+- [ ] Transcribe and analyze: [TalkingParents App Review (2025)](https://www.youtube.com/watch?v=TgBL38atkeA)
+- [ ] Transcribe and analyze: [Co-Parenting Tools for Centralized & Court-Admissible Communication](https://www.youtube.com/watch?v=3SgCwgSbnU8)
+- [ ] ⭐ Transcribe and analyze: [Unalterable Records — Court-Approved Documentation](https://www.youtube.com/watch?v=BiIABLoIrgk&list=PLgDIr_o2OqckCvwAPioRsOLzq7scyDbW0) (check the rest of the playlist)

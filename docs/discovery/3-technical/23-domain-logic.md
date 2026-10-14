@@ -127,4 +127,4 @@ nookbud-bundle-{spaceSlug}-{YYYY-MM-DD}.zip
 
 ---
 
-**Sources:** prd.md (Phases 1–3), `docs/firebase-spec.md`, BRIEF.md
+**Sources:** prd.md (deleted 2026-10-14 — superseded by ROADMAP-2026.md) (Phases 1–3), `docs/firebase-spec.md`, BRIEF.md

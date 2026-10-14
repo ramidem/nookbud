@@ -66,12 +66,7 @@ Civil penalties up to **$51,744 per violation** (2026 rate). Each affected child
 
 ### Nookbud Action Items
 
-- [ ] Implement age verification or age-gating mechanism
-- [ ] Build parental consent flow for data about children under 13
-- [ ] Ensure privacy policy specifically addresses children's data
-- [ ] Implement data minimization for children's records
-- [ ] Build parental data access/deletion tools
-- [ ] Document compliance processes
+> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -145,14 +140,7 @@ Up to **€20 million or 4% of annual global turnover**, whichever is higher.
 
 ### Nookbud Action Items
 
-- [ ] Implement lawful basis for all data processing
-- [ ] Build privacy-by-default settings for children's data
-- [ ] Create GDPR-compliant privacy policy (clear, plain language)
-- [ ] Implement data subject rights (access, erasure, portability, rectification)
-- [ ] Conduct Data Protection Impact Assessment
-- [ ] Designate DPO
-- [ ] Implement 72-hour breach notification process
-- [ ] Consider EU data residency (hosting within EU)
+> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -185,12 +173,7 @@ Administrative fines, damages awards, enforcement/compliance orders, cease and d
 
 ### Nookbud Action Items (for PH Market Entry)
 
-- [ ] Register data processing systems with NPC
-- [ ] Designate and register DPO
-- [ ] Implement consent mechanisms compliant with DPA
-- [ ] Build breach notification process (72-hour window)
-- [ ] Establish annual ASIR reporting process
-- [ ] Consider Philippine data residency requirements
+> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -321,11 +304,7 @@ Nookbud is a **mixed audience app** — used by adults but handling children's d
 
 ### Action Items
 
-- [ ] Complete Apple age rating questionnaire with 5-category system
-- [ ] Implement Google Play Age Signals API integration
-- [ ] Ensure all third-party SDKs are certified for family apps
-- [ ] Build age-appropriate design for any child-facing features
-- [ ] Implement parental consent for child data collection
+> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
