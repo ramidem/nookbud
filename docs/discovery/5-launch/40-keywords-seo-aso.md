@@ -1,6 +1,6 @@
 # Nookbud — Keywords / SEO / ASO
 
-> **Status:** 📝 TODO — Research required before launch
+> **Status:** Open items tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md)
 > **Depends on:** Competitor research (03-competitors.md)
 
 ---
@@ -56,7 +56,5 @@ TODO
 ---
 
 ## TODO
-- [ ] Run keyword research (Ahrefs / App Annie / Sensor Tower)
-- [ ] Research competitor ASO keywords
-- [ ] Write App Store listing copy
-- [ ] Create SEO content plan
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.

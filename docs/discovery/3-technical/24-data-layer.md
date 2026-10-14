@@ -2,6 +2,7 @@
 
 > **Date:** 2026-04-07
 > **Status:** ✅ Decided and implemented (Firebase migration complete 2026-03-29)
+> ⚠️ **Superseded (2026-10-14):** [ROADMAP-2026.md](../../../ROADMAP-2026.md) selects Supabase (Postgres + Auth + RLS). The Firebase migration described here was never completed — services are still stubs.
 > **Full schema:** `docs/firebase-spec.md`
 
 ---
@@ -129,11 +130,6 @@ users/{userId}/avatar/{fileName}
 
 ## TODO
 
-- [ ] Remove `@supabase/supabase-js`, `op-sqlite`, `drizzle-*` from package.json
-- [ ] Write Firebase Security Rules (currently placeholder)
-- [ ] Implement Cloud Function for server-side SHA-256 hash on upload
-- [ ] Define data export format (JSON schema for `data.json` in evidence bundle)
-- [ ] Implement account deletion (GDPR — delete all user data within 30 days)
-- [ ] Set up Firebase Backup (daily export to GCS)
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
-**Sources:** `docs/firebase-spec.md`, prd.md §12 Technical Constraints, `apps/mobile/package.json`
+**Sources:** `docs/firebase-spec.md`, prd.md (deleted 2026-10-14 — superseded by ROADMAP-2026.md) §12 Technical Constraints, `apps/mobile/package.json`

@@ -486,17 +486,4 @@ TalkingParents is one of the top co-parenting apps, focused on tamper-proof comm
 
 ## YouTube References — To Transcribe
 
-- [ ] **Talking Parents App Review: Does It Really Facilitate Parenting? (2025)**
-  URL: https://www.youtube.com/watch?v=TgBL38atkeA
-  → Paste transcript here when ready for analysis
-
-- [ ] **Co-Parenting Tools for Centralized & Court-Admissible Communication**
-  URL: https://www.youtube.com/watch?v=3SgCwgSbnU8
-  → Likely a category-level comparison — good for positioning insights
-  → Paste transcript here when ready for analysis
-
-- [ ] **Unalterable Records - Court-Approved Documentation** ⭐ High priority
-  URL: https://www.youtube.com/watch?v=BiIABLoIrgk&list=PLgDIr_o2OqckCvwAPioRsOLzq7scyDbW0
-  → Directly covers NookBud's core value prop — tamper-proof, court-ready records
-  → Part of a playlist — check other videos in list for more insights
-  → Paste transcript here when ready for analysis
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.

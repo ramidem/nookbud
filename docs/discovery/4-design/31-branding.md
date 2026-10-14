@@ -42,9 +42,5 @@
 ---
 
 ## TODO
-- [ ] Review logo SVGs and pick one direction
-- [ ] Finalize color palette (light + dark)
-- [ ] Choose typography
-- [ ] Create brand guidelines doc
-- [ ] Design app icon from chosen logo
-- [ ] Create OG image for social share (1200×630)
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.

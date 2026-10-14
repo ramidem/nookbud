@@ -278,20 +278,9 @@ audit_logs
 - [x] Archive Space — hide inactive Spaces from switcher, preserve data
 - [x] Export includes Resources
 
-### Phase 5 (Planned)
-- [ ] Expense summaries and care pattern insights
-- [ ] Smart reminders
-- [ ] OCR document scanning (on-device, Google ML Kit)
+### Planned
 
-### Phase 6 (Planned — after web app)
-- [ ] Viewer access portal
-- [ ] Shared export links
-- [ ] Web portal / PWA
-
-### Later
-- [ ] Digital signatures (PKI)
-- [ ] Calendar sync (Google/Apple)
-- [ ] Supabase auth + real-time sync (multi-device, two co-parents live)
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -400,10 +389,7 @@ The market is not "divorced parents." The market is **everyone who shares respon
 
 ## Next Steps
 
-1. **Market Research** — Validate broader market beyond divorce, size the opportunity across family structures
-2. **Competitor Analysis** — Assess gaps in existing tools through the Spaces/inclusive lens
-3. **ICP Development** — Build 5 personas across family structures
-4. **PRD** — Full product requirements with Spaces as a core primitive
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 

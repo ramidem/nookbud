@@ -1,6 +1,6 @@
 # Nookbud — Landing Page
 
-> **Status:** 📝 TODO — Create before launch
+> **Status:** Open items tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md)
 > **Depends on:** Branding (31-branding.md), positioning
 
 ---
@@ -45,8 +45,5 @@ Co-parents join free — one subscriber covers the whole Space
 ---
 
 ## TODO
-- [ ] Write final copy
-- [ ] Design and build page
-- [ ] Add OG image (1200×630)
-- [ ] Set up analytics
-- [ ] Add App Store / Play Store links when live
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.

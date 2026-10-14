@@ -27,12 +27,9 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
   - Provide users: right to access, right to correct, right to erasure, right to data portability
 - **Sensitive data in Nookbud:** Care records, custody arrangements, health data logged as care entries, legal proceedings — all qualify as sensitive under RA 10173
 - **Penalties:** Imprisonment 1–6 years + PHP 500K–5M fines; proposed amendments (pending) would increase penalties significantly
-- **Action required:**
-  - [ ] Register with NPC before Philippine market launch
-  - [ ] Appoint DPO
-  - [ ] Write Privacy Notice in English + Filipino
-  - [ ] Build: account deletion, data export, correction flows in-app
-  - [ ] Data breach response plan
+- **Action required:** see ROADMAP-2026.md
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md).
 
 ---
 
@@ -48,11 +45,9 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
   - Data Processing Agreement if using EU-based processors
 - **Relevance:** TalkingParents was flagged for GDPR violations (refusing account deletion). This is a competitive differentiator — build deletion properly from day 1.
 - **Penalties:** Up to €20M or 4% of global annual turnover, whichever is higher
-- **Action required:**
-  - [ ] In-app account deletion flow (delete all user data, not just deactivate)
-  - [ ] Structured data export (JSON or CSV) of all user records
-  - [ ] Privacy policy covering GDPR user rights
-  - [ ] Assess need for EU data residency / DPA if EU user base grows
+- **Action required:** see ROADMAP-2026.md
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md).
 
 ---
 
@@ -68,11 +63,9 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
   - Limit data collection to what's necessary
   - Retention limits — delete when no longer needed
   - No behavioral advertising targeting children
-- **Action required:**
-  - [ ] Add 18+ age gate at account creation
-  - [ ] Legal review: does storing data *about* minors (not from them) trigger COPPA?
-  - [ ] No behavioral targeting of any user based on child-related data
-  - [ ] Define data retention policy and auto-deletion schedule
+- **Action required:** see ROADMAP-2026.md
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md).
 
 ---
 
@@ -80,7 +73,7 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
 
 - California (CCPA/CPRA), Virginia, Colorado, Texas, and others have state-level privacy laws
 - Most mirror GDPR user rights (access, deletion, portability, opt-out of sale)
-- **Action required:** Privacy policy covering US state user rights; no selling user data
+- **Action required:** see ROADMAP-2026.md
 
 ---
 
@@ -89,7 +82,7 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
 - **Applies if:** Annual turnover >$3M AUD OR handling sensitive information (Nookbud handles both)
 - Key: APP 3 (collection), APP 11 (security), APP 12 (access), APP 13 (correction)
 - Australian Privacy Act review (2025): government proposing strengthened individual rights
-- **Action required:** Privacy policy covering APPs; data breach notification (72 hours to OAIC)
+- **Action required:** see ROADMAP-2026.md
 
 ---
 
@@ -151,29 +144,14 @@ Digital evidence is admissible across US, AU, UK, PH family courts if it meets b
 - Legal hold exception: if notified of ongoing legal proceedings
 
 ### User rights to implement
-- [ ] View all data (export)
-- [ ] Delete account + all data
-- [ ] Correct/update personal data
-- [ ] Opt out of analytics (PostHog opt-out)
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
 ## Compliance Checklist
 
-### Pre-launch (critical)
-- [ ] Philippines NPC registration + DPO appointment
-- [ ] In-app account deletion flow (Apple requirement + GDPR)
-- [ ] In-app data export (GDPR portability + PH DPA)
-- [ ] Privacy policy covering: PH DPA, GDPR, COPPA position, APPs
-- [ ] Terms of Service: 18+ age gate, adult-only usage
-- [ ] COPPA legal review: data *about* minors vs data *from* minors
-- [ ] App Store privacy labels (Apple) + Data Safety section (Google)
-- [ ] Data breach response plan (72-hour notification requirement)
-
-### Post-launch
-- [ ] Monitor NPC guidance on pending DPA amendments
-- [ ] Assess GDPR applicability if EU user base grows
-- [ ] Annual privacy review
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 

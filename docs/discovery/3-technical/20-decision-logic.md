@@ -180,4 +180,4 @@ This makes Nookbud's exports user-verifiable — no need to "trust the platform.
 
 ---
 
-**Sources:** prd.md (Phases 1–3 implementation specs)
+**Sources:** prd.md (deleted 2026-10-14 — superseded by ROADMAP-2026.md) (Phases 1–3 implementation specs)

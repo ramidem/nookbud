@@ -130,10 +130,7 @@ Fixed costs: ~$80/mo
 ---
 
 ## TODO
-- [ ] Set up RevenueCat dashboard and track real conversion data from day 1
-- [ ] Update projections monthly with actual data
-- [ ] Track CAC per channel (Reddit, ASO, attorney referral, OFW groups) from launch
-- [ ] Define milestone-based spending rules (e.g., no paid ads until $5K MRR proven organic)
-- [ ] Model web billing option (avoid 15–30% store fee for annual plans, legal category)
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 **Sources:** RevenueCat State of Subscription Apps 2025, Marketing LTB Subscription Statistics 2025, Adapty State of In-App Subscriptions 2026, BusinessDojo ARPU Estimation Oct 2025

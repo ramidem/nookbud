@@ -2,6 +2,7 @@
 
 > **Date:** 2026-04-07
 > **Status:** ✅ Decided and implemented (Phases 1–3 complete)
+> ⚠️ **Superseded (2026-10-14):** [ROADMAP-2026.md](../../../ROADMAP-2026.md) selects Supabase (Postgres + Auth + RLS). The Firebase migration described here was never completed — services are still stubs.
 
 ---
 
@@ -120,11 +121,7 @@ Full schema: see `docs/firebase-spec.md`
 
 ## Cleanup TODO
 
-- [ ] Remove `@supabase/supabase-js` from package.json (migration artifact)
-- [ ] Remove `@op-engineering/op-sqlite` (replaced by Firestore offline cache)
-- [ ] Remove `drizzle-orm` and `drizzle-kit` (replaced by Firestore)
-- [ ] Fix Cloud Run landing deploy (container start issue)
-- [ ] Reconnect GCP repo triggers + verify all 4 Cloud Build triggers
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -135,4 +132,4 @@ Full schema: see `docs/firebase-spec.md`
 - **PostHog:** Not yet integrated (Falcly has this — reuse pattern)
 - **Push notifications:** Firebase Cloud Messaging (FCM) — planned for Phase 3.5+
 
-**Sources:** `docs/firebase-spec.md`, `apps/mobile/package.json`, prd.md §12 Technical Constraints
+**Sources:** `docs/firebase-spec.md`, `apps/mobile/package.json`, prd.md (deleted 2026-10-14 — superseded by ROADMAP-2026.md) §12 Technical Constraints

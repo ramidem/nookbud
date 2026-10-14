@@ -143,31 +143,12 @@ The OFW market is Nookbud's clearest differentiation and biggest untapped opport
 
 ## Launch Content Plan
 
-### Pre-launch (6 weeks before)
-- [ ] Create waitlist landing page (nookbud.com)
-- [ ] Start Reddit participation in r/Divorce, r/coparenting (no marketing yet — just helpful)
-- [ ] Reach out to 10 family law attorneys for beta feedback
-
-### Launch week
-- [ ] Product Hunt launch
-- [ ] Post authentic OFW story in 3 Facebook groups
-- [ ] Pitch to 2–3 family law blogs for review
-- [ ] App Store launch with strong ASO
-
-### Post-launch (ongoing)
-- [ ] Weekly Reddit participation
-- [ ] Monthly attorney outreach (5 new attorneys per month)
-- [ ] OFW community stories (bi-weekly)
-- [ ] Blog: 2 posts/month targeting SEO keywords
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 ---
 
 ## TODO
-- [ ] Build nookbud.com waitlist page before launch
-- [ ] Find 3 OFW beta users for authentic testimonials
-- [ ] Draft attorney outreach email template
-- [ ] Plan Product Hunt launch date
-- [ ] Set up analytics for channel attribution (PostHog UTM tracking)
-- [ ] Define referral program mechanics for attorneys
+
+> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
 
 **Sources:** Reddit (r/FamilyLaw Dec 2025, r/Divorce Jan 2026, r/coparenting Jul 2024), Lake Munro Law (Aug 2025), IMARC Philippines Remittance Market 2025, POEA data
