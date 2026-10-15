@@ -1,9 +1,0 @@
-# Add files here to ignore them from prettier formatting
-tmp
-node_modules
-/dist
-/coverage
-/test
-/build
-/.nx/cache
-/.nx/workspace-data

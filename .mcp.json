@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "nx": {
-      "command": "npx",
-      "args": ["nx-mcp@latest"]
-    }
-  }
-}

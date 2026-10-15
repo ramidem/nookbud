@@ -1,4 +1,0 @@
-echo -e "===\n>> Checking branch name..."
-# Branch protection disabled — working directly on main (Med, 2026-03-28)
-echo -e ">> Finished checking branch name.\n==="
-
