@@ -38,6 +38,8 @@
 
 ## 4. Files to move back from `nookbud_copy`
 
+> ✅ **"Now" group done 2026-10-15** (docs/discovery, docs/research, APPNAME.md, logo SVGs, favicons and iOS icon set → `docs/` and `assets/`). Favicons and the iOS icon set landed in `assets/icons/`. Still to do: the "When scaffolding" items below.
+
 Paths are relative to `/Users/ramidem/Code/bulakao/nookbud_copy`.
 
 ### Now — reference docs and brand assets
