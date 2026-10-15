@@ -8,15 +8,15 @@
 
 ## 1. Repo basics (now)
 
-- [ ] Add `.gitignore`: copy `nookbud_copy/.gitignore` and remove the Nx/React Native/Firebase-specific entries. Make sure `.DS_Store`, `node_modules`, `.next`, `.env*` and `.vercel` are ignored.
-- [ ] Copy back the editor/format config: `.editorconfig`, `.prettierrc`, `.prettierignore`, `.nvmrc` (Node 22)
-- [ ] Rewrite `CLAUDE.md`: it still describes the deleted Nx + React Native 0.83 codebase and imports `.claude/docs/*`, which no longer exist. Rewrite it once the stack is decided (step 2).
-- [ ] Re-enable the `ralph-loop@claude-plugins-official` plugin in a new `.claude/settings.json` (the old one was deleted)
+- [x] Add `.gitignore`: copy `nookbud_copy/.gitignore` and remove the Nx/React Native/Firebase-specific entries. Make sure `.DS_Store`, `node_modules`, `.next`, `.env*` and `.vercel` are ignored.
+- [x] Copy back the editor/format config: `.editorconfig`, `.prettierrc`, `.prettierignore`, `.nvmrc` (Node 22)
+- [x] Rewrite `CLAUDE.md`: it still describes the deleted Nx + React Native 0.83 codebase and imports `.claude/docs/*`, which no longer exist. Rewrite it once the stack is decided (step 2).
+- [x] Re-enable the `ralph-loop@claude-plugins-official` plugin in a new `.claude/settings.json` (the old one was deleted)
 - [ ] Remove the stray `~/package-lock.json` from your home folder. It makes Next.js pick `/Users/ramidem` as the workspace root.
 
 ## 2. Decisions before scaffolding (ROADMAP step 0.1)
 
-- [ ] **Stack.** The roadmap recommends Turborepo + pnpm, Next.js (web), Expo (mobile), Supabase (Postgres + Auth + RLS). **Web hosting: Vercel** (decided 2026-10-15). Confirm or adjust the rest.
+- [ ] **Stack.** Decided 2026-10-15: **Nx + pnpm** monorepo (instead of the roadmap's Turborepo), **Next.js** web on **Vercel**, **NestJS** API, **Expo** mobile. Still to confirm: Supabase (Postgres + Auth + RLS) as the backend.
 - [ ] Child-access policy: which linked adults can read/write which child fields
 - [ ] Message edit/delete policy (recommended: none in P0)
 - [ ] Retention and deletion rules
@@ -26,12 +26,13 @@
 
 ## 3. Scaffold (after step 2)
 
-- [ ] Monorepo with **one package manager and one committed lockfile** (the old repo had both `yarn.lock` and a stray `package-lock.json`)
-- [ ] `apps/web`: Next.js, deployable on its own with a plain `next build` (no `withNx`-style wrapper; that wrapper broke the old builds)
+- [x] Monorepo with **one package manager and one committed lockfile**: Nx 23 workspace with pnpm, `pnpm-lock.yaml` only (2026-10-15)
+- [ ] `apps/web`: Next.js (`pnpm nx add @nx/next`), deployable on its own with a plain `next build` (no `withNx`-style wrapper; that wrapper broke the old builds)
 - [ ] Vercel project per web app: Root Directory = the app folder, preview deploys on every push
-- [ ] `apps/mobile`: Expo
+- [ ] `apps/mobile`: Expo (`pnpm nx add @nx/expo`). Check pnpm compatibility when adding it; React Native tooling may need `nodeLinker: hoisted` in `pnpm-workspace.yaml`.
+- [ ] `apps/api`: NestJS (`pnpm nx add @nx/nest`). Decide whether it's needed alongside Supabase server-side functions.
 - [ ] `supabase/`: migrations, seed, functions, tests (RLS isolation tests before any feature tables)
-- [ ] CI: types, lint, tests, build
+- [x] CI: `.github/workflows/ci.yml` runs format check, then lint/test/build/typecheck on every push and PR (no projects yet, so it passes trivially)
 - [ ] Then follow ROADMAP-2026 P0 order (steps 0.3 onward)
 
 ---
