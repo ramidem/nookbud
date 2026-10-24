@@ -1,0 +1,3 @@
+-- Synthetic development data only. Never put real families or children here (DB-9).
+-- Applied by `pnpm nx run supabase:db-reset` after the migrations.
+-- Add rows next to the migration that creates the table they fill.

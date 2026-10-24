@@ -1,0 +1,35 @@
+{
+  "name": "supabase",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "supabase",
+  "tags": [],
+  "targets": {
+    "db-start": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm exec supabase start" }
+    },
+    "db-stop": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm exec supabase stop" }
+    },
+    "db-reset": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm exec supabase db reset" }
+    },
+    "db-new": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm exec supabase migration new {args.name}" }
+    },
+    "db-lint": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm exec supabase db lint --fail-on error" }
+    },
+    "db-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec supabase db start && pnpm exec supabase db reset && pnpm exec supabase db lint --fail-on error; code=$?; pnpm exec supabase stop --no-backup; exit $code"
+      }
+    }
+  }
+}
