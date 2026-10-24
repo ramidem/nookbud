@@ -23,7 +23,7 @@ Shared care records for families raising a child across homes. Nx monorepo — w
 apps/       # deployable apps: web (Next.js), api (NestJS); mobile (Expo) planned
 packages/   # shared libraries (types, validation, design tokens, api client)
 docs/       # discovery and research (reference only)
-assets/     # brand logos and icons
+assets/     # brand logos, icons and illustrations
 ```
 
 ## Common Commands
