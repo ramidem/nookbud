@@ -12,7 +12,7 @@ Shared care records for families raising a child across homes. Nx monorepo — w
 - **Runtime:** Node 24 LTS (see `.nvmrc`)
 - **Package manager:** pnpm (version pinned in `package.json` → `packageManager`; use `corepack pnpm` if pnpm isn't installed)
 - **Build system:** Nx 24 with TypeScript project references and pnpm workspaces
-- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Vercel; plain `next.config.js` (no `withNx`). `/` is the landing page (`src/landing/`), `/design` the design-system page, `/documentation` the public documentation site (`src/app/documentation/`). Styling: Tailwind 4 (utilities only, no global reset) mapped to the tokens in `src/app/design/_data/tokens.json`
+- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Google Cloud Run (Singapore); plain `next.config.js` (no `withNx`). `/` is the landing page (`src/landing/`), `/design` the design-system page, `/documentation` the public documentation site (`src/app/documentation/`). Styling: Tailwind 4 (utilities only, no global reset) mapped to the tokens in `src/app/design/_data/tokens.json`
 - **API:** NestJS 11 in `apps/api` (webpack build)
 - **Tooling:** TypeScript 6, ESLint 9 (flat config), Vitest 5 (web), Jest 30 (api), Prettier
 - **Planned:** Expo (mobile), Supabase (Postgres + Auth + RLS)
@@ -38,6 +38,9 @@ pnpm nx run-many -t lint test build typecheck
 pnpm nx serve web                # Next.js dev server (http://localhost:3000)
 pnpm nx serve api                # NestJS dev server (http://localhost:3001)
 pnpm nx run supabase:db-reset    # rebuild the local database from migrations (needs Docker)
+pnpm nx run supabase:db-test     # run the database tests (reset first)
+pnpm nx run web:container-smoke   # build the web container and check it answers (needs Docker)
+pnpm nx run api:container-smoke   # the same for the API
 pnpm nx format:check             # prettier check (CI runs this)
 pnpm nx add @nx/next             # add a framework plugin before generating an app
 ```
@@ -67,13 +70,22 @@ Pages are Markdown with frontmatter (`title`, `section`, `order`, `description`)
 
 Secrets stay on the server and out of git. Public values are `NEXT_PUBLIC_*`; everything else is a secret. Read secrets only through `getServerEnv()` in `apps/web/src/env/server.ts` (it is `server-only`), never `process.env` directly, and never give a secret a `NEXT_PUBLIC_` name. Never put a value in a committed file: `.env*` is ignored except `.env.example`. `apps/api` reads no secrets yet; if it needs one, give it its own validated env module. [docs/secrets.md](docs/secrets.md) has the full rules and how to add one. CI fails on a leak.
 
+## Auth
+
+All auth goes through `getAuth()` from `@/auth` (server-only). Never import `@supabase/*` outside `apps/web/src/auth/providers/`; lint and a test enforce it. See [docs/auth.md](docs/auth.md).
+
 ## Reference docs
 
 `docs/discovery`, `docs/research` and `docs/strategy` are the old discovery, research and strategy material. They are stale and being retired, one area at a time. When you write or extend a spec area, pull what you need out of them into `docs/spec.md`, delete the lines you moved, and delete a file once nothing useful is left. Do not copy whole documents.
 
 ## Git Workflow
 
-- Push **directly to main** — no branching, no PRs needed
+Gitflow, with no staging. `main` is production and `develop` collects reviewed work. Only a tag deploys.
+
+- Work on a `feature/<name>` branch cut from `develop`. Push it and open a pull request into `develop`, and merge when GitHub Actions is green.
+- When `develop` is ready, merge it into `main`. Hotfixes branch from `main` and merge into both.
+- Release by tagging `main`, one app at a time: `web-v1.2.3` deploys the web app and `api-v1.2.3` deploys the API. See [docs/deploy.md](docs/deploy.md).
+- **Work locally unless asked.** Do not push, open a pull request, create a tag or touch Google Cloud unless explicitly asked. Create a tag only when told which app and which version.
 - Conventional commits (`feat:`, `fix:`, `chore:`, `docs:` …), one concern per commit
 - Run format check, lint, typecheck and tests before committing
 

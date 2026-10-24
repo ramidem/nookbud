@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
 
 permissions:
@@ -11,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  main:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -46,3 +47,13 @@ jobs:
           echo "${GITLEAKS_SHA256}  ${archive}" | sha256sum -c -
           tar -xzf "$archive" -C "$RUNNER_TEMP" gitleaks
           "$RUNNER_TEMP/gitleaks" git . --redact --no-banner --log-opts="${SINCE}..HEAD"
+
+  container:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [web, api]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build the ${{ matrix.app }} container and check it answers
+        run: bash infra/container-smoke.sh ${{ matrix.app }}

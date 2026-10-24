@@ -1,0 +1,59 @@
+# Builds the API container and deploys it to Cloud Run. Cloud Build runs this when a tag like
+# api-v0.1.0 is pushed. See docs/deploy.md and infra/gcp/setup.sh.
+#
+# The API service is private (only callers with permission can reach it), so there is no public
+# first-response check. The deploy step waits until the new revision is healthy.
+substitutions:
+  _REGION: asia-southeast1
+  _REGISTRY: nookbud
+  _SERVICE: api
+  _MIN_INSTANCES: '0'
+  _MAX_INSTANCES: '2'
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - apps/api/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_SERVICE}:${TAG_NAME}
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_SERVICE}:${TAG_NAME}
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_SERVICE}:${TAG_NAME}
+      - --project
+      - ${PROJECT_ID}
+      - --region
+      - ${_REGION}
+      - --port
+      - '8080'
+      - --cpu
+      - '1'
+      - --memory
+      - 512Mi
+      - --cpu-boost
+      - --concurrency
+      - '80'
+      - --min-instances
+      - ${_MIN_INSTANCES}
+      - --max-instances
+      - ${_MAX_INSTANCES}
+      - --quiet
+
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -17,3 +17,7 @@ Before changing something, read the engineering notes in `docs/` (start at `docs
 ## Secrets
 
 Read secrets only through `src/env/server.ts` (it is `server-only`; importing it from a client component fails the build). Never give a secret a `NEXT_PUBLIC_` name, and never commit a value. `pnpm nx run web:check-secrets` builds with decoy secrets and fails if one reaches a file a browser can receive. See `docs/secrets.md` at the repo root.
+
+## Auth
+
+Do auth only through `getAuth()` from `@/auth`, on the server. Never import `@supabase/*` outside `src/auth/providers/`: ESLint and a test fail on it. See `docs/auth.md` at the repo root.

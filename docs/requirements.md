@@ -36,31 +36,42 @@ The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/0
 
 Nothing a user sees yet. These come first because everything else leans on them.
 
-- [ ] **R3 · NF · P0** A test can prove one user cannot read another user's data.
-  - A helper in `supabase/tests` runs the same query as user A, user B and a signed-out visitor.
-  - A sample table proves A cannot read B's rows.
-  - CI fails when a table has no Row-Level Security.
-  - Spec: AZ-2, SEC-10, TEST-1
+**Prerequisites for R5 (your side)**
 
-- [ ] **R4 · NF · P0** The app talks to auth through one small module.
-  - Sign up, sign in, sign out, session and password reset go through it.
-  - No feature code imports the auth provider's SDK directly, so the provider can change later.
-  - Spec: D3
+- [ ] Create a new Google Cloud project and note its project ID. IDs are unique across all of Google Cloud, so `nookbud` may be taken.
+- [ ] Link the **Personal** billing account to that project. The setup script can do it.
+- [ ] In the Cloud Build console, connect the GitHub repository once (2nd-generation repositories, with the app installed on the `bulakao` organization), and note the repository's resource name.
+- [ ] Run `infra/gcp/setup.sh` with the project ID, the billing account and the repository. `DRY_RUN=1` shows the commands first.
+- [ ] Releases are tags (`web-v0.1.0`, `api-v0.1.0`). A tag is only pushed when you ask for it.
 
-- [ ] **R5 · NF · P0** Every push gets its own deploy, and auth links point at the right one.
-  - A Vercel project deploys `apps/web` with the app folder as its Root Directory.
-  - Each push gets a preview deploy.
-  - Verification and reset links use the base URL of the environment that sent them: local, preview, staging or production.
-  - Values are set as described in [secrets.md](secrets.md): public values as `NEXT_PUBLIC_` project variables, secrets as server-only variables.
-  - Spec: roadmap A3 (environment separation), AUTH-1, AUTH-3
+- [ ] **R5 · NF · P0** The first real deploys work, on Google Cloud.
+  - A tag `web-v0.1.0` on `main` builds and deploys the web app, and its first response is under 3 seconds.
+  - A tag `api-v0.1.0` builds and deploys the API, which stays private.
+  - Other tags (such as a release candidate), branch pushes and pull requests deploy nothing.
+  - Secrets live in Secret Manager under their own names and reach the service as server-only variables ([secrets.md](secrets.md)). Do this when the first secret exists.
+  - Verification and reset links use the site's own base URL, which differs between local and production.
+  - The containers, the Cloud Build configs and the setup script are built and described in [deploy.md](deploy.md).
+  - Spec: D4, D5, roadmap A3 (environment separation), AUTH-1, AUTH-3
+  - Blocked by: the prerequisites above.
 
-- [ ] **R42 · NF · P0** Staging and production exist, and migrations reach them through CI.
-  - Staging and production are separate Supabase projects, each linked with `supabase link`.
-  - CI applies migrations to staging on merge and to production after approval. Nobody pushes by hand.
-  - Neither environment shares keys, users or data with local.
+- [ ] **R45 · NF · P0** A visitor does not wait on a cold start.
+  - At launch, keep the web app warm (the command is in [deploy.md](deploy.md)), about $10–14 a month ([costs.md](costs.md)). Before launch it scales to zero.
+  - The first-response check only warns above 3 seconds. Make it fail once a real deploy shows the number is reliable.
+  - The images are about 420 MB (web) and 375 MB (api). If the measured cold start misses the target, slim the base image first.
+  - Spec: D4
+
+- [ ] **R46 · NF · P1** Static pages and assets are served from a CDN, not from the container.
+  - Decide between Cloudflare in front (free tier) and Cloud CDN behind a global load balancer, which has its own monthly charge (about $18 or more, unverified: [costs.md](costs.md)). Check the price first.
+  - Static assets get long-lived cache headers, and prerendered pages (the home page, the documentation) can be cached.
+  - Spec: D4
+
+- [ ] **R42 · NF · P0** A production Supabase project exists, and migrations reach it.
+  - A separate Supabase project for production, linked with `supabase link`. It shares no keys, users or data with local.
+  - There is no staging project for now. How migrations reach production is decided when the first table exists: by hand with `supabase db push`, or as a Cloud Build step.
+  - Supabase stays on the Free plan until launch. At launch, production moves to Pro for daily backups and no pausing ([costs.md](costs.md)).
   - Update [the database page](database.md) when it is done.
   - Spec: DB-5, roadmap A3 (environment separation)
-  - Blocked by: creating the two Supabase projects (an account action).
+  - Blocked by: creating the Supabase project (an account action).
 
 - [ ] **R6 · NF · P0** Verification and reset emails arrive.
   - They send from a Nookbud address with SPF and DKIM set up.
@@ -268,6 +279,7 @@ Nothing a user sees yet. These come first because everything else leans on them.
 - [ ] **R39 · F · P1** As a user, I can control privacy settings for sensitive family information. Spec: USR-11
 - [ ] **R40 · NF · P1** There is a written policy for lost or compromised devices and for supported app versions. Spec: AUTH-15
 - [ ] **R41 · NF · P1** Automated mobile end-to-end tests run in CI. Spec: TEST-7
+- [ ] **R48 · NF · P2** Google Cloud is managed with Terraform. Parked: the setup script covers the MVP. Revisit when the setup has to be repeated (a staging environment, a second region) or changes often. Spec: D4
 
 ## Waiting on spaces
 

@@ -29,7 +29,7 @@ Paths below are relative to `nookbud_copy`.
 
 - `firestore/` (`google-services.json`, `GoogleService-Info.plist`) and `.gcloudrc`: Firebase and GCP project config
 - `node_modules/`, `dist/`, `.nx/`, any `.next/`
-- Dockerfiles and `cloudbuild.yaml` files (Cloud Run, replaced by Vercel)
+- Dockerfiles and `cloudbuild.yaml` files (the old Cloud Run setup; write a new one, see R5)
 - `apps/web`, `apps/admin`, `apps/design-system`: Next.js starter scaffolds with no real content
 - `apps/mobile/src/services/`: about 100 placeholder (`TODO: Firebase`) stubs, nothing real
 - `patches/`, `yarn.lock`, `package-lock.json`, `nx.json`, `.yarn/`, `.husky/`: old toolchain
