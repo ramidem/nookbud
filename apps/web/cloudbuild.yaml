@@ -1,5 +1,5 @@
 # Builds the web container and deploys it to Cloud Run. Cloud Build runs this when a tag like
-# web-v0.1.0 is pushed. See docs/deploy.md and infra/gcp/setup.sh.
+# web-v0.1.0 is pushed. See docs/deploy.md and docs/gcp-setup.md.
 #
 # NEXT_PUBLIC_* values are baked into the build, so they are set on the trigger as substitutions.
 substitutions:

@@ -29,7 +29,7 @@ Versions follow semver, per app. Until launch, stay on `0.1.x` and bump the patc
 
 1. Create a new Google Cloud project and link the Personal billing account.
 2. In the Cloud Build console, connect the GitHub repository once (2nd-generation repositories, with the app installed on the `bulakao` organization). Note the repository's resource name.
-3. Run `PROJECT_ID=... BILLING_ACCOUNT_ID=... REPOSITORY=... bash infra/gcp/setup.sh`. Add `DRY_RUN=1` first to see every command. It is safe to run again, and without `REPOSITORY` it builds everything except the triggers.
+3. Follow [gcp-setup.md](gcp-setup.md) for the rest: registry, service accounts, the two services, permissions, triggers and a budget alert.
 
 ## Release, keep warm, roll back
 

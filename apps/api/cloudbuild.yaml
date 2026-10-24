@@ -1,5 +1,5 @@
 # Builds the API container and deploys it to Cloud Run. Cloud Build runs this when a tag like
-# api-v0.1.0 is pushed. See docs/deploy.md and infra/gcp/setup.sh.
+# api-v0.1.0 is pushed. See docs/deploy.md and docs/gcp-setup.md.
 #
 # The API service is private (only callers with permission can reach it), so there is no public
 # first-response check. The deploy step waits until the new revision is healthy.
