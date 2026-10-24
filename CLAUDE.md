@@ -32,8 +32,8 @@ assets/     # brand logos, icons and illustrations
 pnpm install                     # install dependencies
 pnpm nx show projects            # list projects
 pnpm nx run-many -t lint test build typecheck
-pnpm nx dev web                  # Next.js dev server
-pnpm nx serve api                # NestJS dev server
+pnpm nx serve web                # Next.js dev server (http://localhost:3000)
+pnpm nx serve api                # NestJS dev server (http://localhost:3001)
 pnpm nx format:check             # prettier check (CI runs this)
 pnpm nx add @nx/next             # add a framework plugin before generating an app
 ```
