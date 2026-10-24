@@ -36,12 +36,6 @@ The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/0
 
 Nothing a user sees yet. These come first because everything else leans on them.
 
-- [ ] **R2 · NF · P0** Secrets stay on the server.
-  - The service-role key and database password exist only in server environment variables and CI secrets.
-  - A CI check fails if either appears in the repo or in a web or mobile bundle.
-  - `.env*` files are ignored by git.
-  - Spec: AUTH-11, SEC-2
-
 - [ ] **R3 · NF · P0** A test can prove one user cannot read another user's data.
   - A helper in `supabase/tests` runs the same query as user A, user B and a signed-out visitor.
   - A sample table proves A cannot read B's rows.
@@ -57,6 +51,7 @@ Nothing a user sees yet. These come first because everything else leans on them.
   - A Vercel project deploys `apps/web` with the app folder as its Root Directory.
   - Each push gets a preview deploy.
   - Verification and reset links use the base URL of the environment that sent them: local, preview, staging or production.
+  - Values are set as described in [secrets.md](secrets.md): public values as `NEXT_PUBLIC_` project variables, secrets as server-only variables.
   - Spec: roadmap A3 (environment separation), AUTH-1, AUTH-3
 
 - [ ] **R42 · NF · P0** Staging and production exist, and migrations reach them through CI.
@@ -245,6 +240,7 @@ Nothing a user sees yet. These come first because everything else leans on them.
 - [ ] **R32 · NF · P0** `apps/mobile` exists and signs in against the same backend.
   - An Expo app runs on iOS and Android.
   - It uses the same auth module and the same Supabase project as the web app.
+  - It joins the client-bundle secrets check: add `EXPO_PUBLIC_` to the decoy prefixes and scan its bundle ([secrets.md](secrets.md)).
   - Check pnpm compatibility when adding it. React Native tooling may need `nodeLinker: hoisted` in `pnpm-workspace.yaml`.
   - Spec: AUTH-8
 

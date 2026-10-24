@@ -13,3 +13,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 `documentation/` in this folder is the **public** documentation site (`/documentation`). It is written for the people who will use Nookbud. Never put internal material in it: specs, requirements, roadmap, engineering notes, legal notes. Those live in the repo's `docs/` folder.
 
 Before changing something, read the engineering notes in `docs/` (start at `docs/README.md`). When you implement a requirement from `docs/requirements.md`, follow the workflow in the root `CLAUDE.md`.
+
+## Secrets
+
+Read secrets only through `src/env/server.ts` (it is `server-only`; importing it from a client component fails the build). Never give a secret a `NEXT_PUBLIC_` name, and never commit a value. `pnpm nx run web:check-secrets` builds with decoy secrets and fails if one reaches a file a browser can receive. See `docs/secrets.md` at the repo root.
