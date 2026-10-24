@@ -170,34 +170,14 @@ During export:
 
 ⸻
 
-3️⃣ Identity & Access
-	•	email + password (hashed with bcrypt/argon2)
-	•	optional 2FA (later)
-	•	device/session tracking
-
-⸻
-
-4️⃣ Role-Based Access
-
-Roles:
-	•	Parent A
-	•	Parent B
-	•	Viewer (lawyer / court export)
-
-Permissions:
-	•	no deletion
-	•	limited edits (with audit)
-
-⸻
-
-5️⃣ Tamper Resistance
+3️⃣ Tamper Resistance
 	•	no hard delete
 	•	soft delete only (visible in logs)
 	•	all actions logged in audit_log table
 
 ⸻
 
-6️⃣ Audit Log (separate system)
+4️⃣ Audit Log (separate system)
 
 Every action logs:
 	•	user_id

@@ -54,11 +54,8 @@
 
 ## Decisions to Settle Before Building (Step 0.1)
 
-1. **Child access policy** — Which linked adults can read/write which child fields? (Don't assume a parent has unrestricted access to everything.)
-2. **Message edit/delete policy** — Recommended: no edit or delete in P0, to keep the record trustworthy and avoid retention complexity.
-3. **Retention & deletion rules** — What is permanently deleted vs. recoverable, and when.
-4. **Single-parent departure** — What happens to a space, its messages, and its children's data when one parent deletes their account?
-5. **Notification content policy** — Recommended: push and email say "New message," never the message text.
+1. **Message edit/delete policy** — Recommended: no edit or delete in P0, to keep the record trustworthy and avoid retention complexity.
+2. **Notification content policy** — Recommended: push and email say "New message," never the message text.
 
 ---
 
@@ -73,88 +70,10 @@
 - [ ] **Environment separation** — Local, staging, production
 - [ ] **Architecture doc** — One short page: system boundaries, dependencies, key decisions
 
-### A2. Database
-Core tables for P0: `users` (profile), `spaces`, `space_members`, `children`, `parent_child_relationships`, `invitations`, `audit_logs`, plus feature tables for calendar and messaging. (`documents` is deferred with file storage.)
-
-- [ ] UUID identifiers for client-visible records
-- [ ] Foreign keys and constraints (e.g., no duplicate active memberships)
-- [ ] Versioned migrations only; no manual schema changes
-- [ ] Created/updated timestamps everywhere
-- [ ] Indexes on foreign keys and access-control lookups
-- [ ] Soft-delete vs. permanent-delete policy defined (see decisions above)
-- [ ] Synthetic seed data only; never real children's data
-
-**Modeling rule:** A user is not a parent, a child, or a space. A user can belong to multiple spaces; a space can have multiple adults and children. Model these explicitly instead of embedding a single `parent_id` or `family_id` in every table. Children do **not** get accounts.
-
-### A3. Authentication & Account Security
-- [ ] Email verification at registration
-- [ ] Email + password sign-in (no social login — also avoids Apple's Sign in with Apple requirement)
-- [ ] Secure password reset
-- [ ] Session management: duration, renewal, expiry, **revoke / sign out of all devices**
-- [ ] **MFA (TOTP), optional enrollment** — in a custody context the adversary is often someone who knows your passwords or has access to your devices
-- [ ] Brute-force protection and rate limits on auth endpoints
-- [ ] Secure token handling
-  - Web: secure, correctly configured cookies; no privileged credentials in browser JS
-  - Mobile: `expo-secure-store` for tokens
-  - Both: never embed service-role keys or DB passwords in clients
-- [ ] **Account deletion** — documented process and in-app flow, including what happens to shared data
-- [ ] Account-enumeration protection on sign-up, sign-in, and reset
-
-> Authentication establishes who the user is. It does not establish what they may access. That's A4.
-
-### A4. Authorization & Multi-Tenant Isolation *(most important security area)*
-- [ ] **Roles (P0):** `owner` and `parent` only
-- [ ] **Membership-based access** — No membership, no access to any space resource
-- [ ] **PostgreSQL RLS** on every table, enforcing isolation at the database level
-- [ ] **Cross-space isolation** — Users can't access another space's records, even by guessing IDs
-- [ ] **Invitation authorization** — Single-use, expiring token, bound to the invited email; only the authenticated matching user can accept; only authorized members can create/revoke
-- [ ] **Membership revocation** — Access ends immediately when membership ends
-- [ ] **Server-side authorization recheck** for privileged operations
-- [ ] **Child-access rules** per the policy decided in Step 0.1 (schema supports tightening later)
-- [ ] Audit log entries for security-sensitive actions: invite sent/accepted, member added/removed, child added, account deletion
-
-> Hiding a button is not authorization. The backend and database must reject unauthorized requests even if the UI is bypassed.
-
-### A5. Data Privacy & Protection
-- [ ] Data classification (public / internal / confidential / highly sensitive) — a one-page doc
-- [ ] **Data minimization** — Collect only what a defined feature needs (e.g., child nickname and birth date, not more)
-- [ ] HTTPS/TLS everywhere; encryption at rest for database and backups
-- [ ] Secrets kept out of source control
-- [ ] Privacy policy and terms; consent recorded where legally required
-- [ ] Data deletion behavior defined across related records and backups
-- [ ] **No third-party data sharing** in P0 (no professional access, no external integrations)
-- [ ] **Philippines Data Privacy Act (RA 10173)** — Get legal advice before launch on lawful processing, parental authority, children's data, data-subject rights, retention, and sensitive personal information obligations. One parent's consent does not automatically resolve every legal question about a child's information.
-- [ ] App Store privacy labels / Google Play Data safety form completed accurately
-
-### A6. Application Security
-- [ ] Server-side input validation (not UI-only), using shared Zod schemas
-- [ ] Output encoding / XSS protection (especially for message content)
-- [ ] CSRF protection for cookie-authenticated web operations
-- [ ] CORS limited to intended origins
-- [ ] Rate limiting on auth, invitations, and messaging
-- [ ] Security headers on web
-- [ ] Safe error handling — no internal details, DB errors, or sensitive data in responses
-- [ ] **Logging hygiene** — Never log passwords, tokens, or message content
-- [ ] Dependency vulnerability scanning
-- [ ] Invitation abuse and spam prevention
-- [ ] Mobile: secure deep-link handling (invites, password reset)
-
-### A7. Testing (minimum for launch)
-- [ ] **Authorization tests (exit requirement):**
-  - One family can't access another family's records
-  - Revoked members lose access
-  - Changing an object ID doesn't bypass authorization
-  - Unauthenticated and unverified users are denied
-  - Invitation can't be accepted by the wrong user, reused, or used after expiry
+### A2. Testing (minimum for launch)
 - [ ] Unit tests: validation schemas, scheduling/date/time zone logic
-- [ ] Integration tests: DB constraints, auth flows, API behavior
-- [ ] Web E2E (Playwright): register, sign in, create space, invite, accept
-- [ ] Mobile: manual smoke checklist for the same flows on iOS and Android
-- [ ] CI checks: type checking, lint/format, tests, migration validation, build verification
 
-> A successful build alone is not sufficient. Authorization tests must demonstrate that unauthorized access is denied. **Rule:** every new table ships with RLS and a forbidden-access test in the same PR.
-
-### A8. Infrastructure, CI/CD & Operations
+### A3. Infrastructure, CI/CD & Operations
 - [ ] Staging and production environments, isolated from each other and from local development
 - [ ] Version-controlled migrations applied through the pipeline
 - [ ] CI on every pull request
@@ -165,7 +84,7 @@ Core tables for P0: `users` (profile), `spaces`, `space_members`, `children`, `p
 - [ ] Error monitoring (Sentry or equivalent) configured to avoid capturing sensitive content
 - [ ] **Incident response doc** — Short runbook for security incidents and data breaches, including breach-notification obligations under the Data Privacy Act (confirm timelines with counsel)
 
-### A9. Shared Foundations & Developer Experience (web + mobile)
+### A4. Shared Foundations & Developer Experience (web + mobile)
 - [ ] Shared **types**, **Zod validation**, and **API client** packages
 - [ ] **Design tokens** shared across platforms (colors, type, spacing, radii)
 - [ ] Platform-specific UI components (no forced identical implementations); keep them inside each app until duplication actually hurts
@@ -180,37 +99,25 @@ Core tables for P0: `users` (profile), `spaces`, `space_members`, `children`, `p
 
 ## P0-B — Product Features (minimum usable product)
 
-### B1. Family Space & Membership
-- [ ] **Create Family Space** — Shared environment for co-parenting
-- [ ] **Invite the other parent** — Via the controlled invitation flow (A4)
-- [ ] **Basic permissions** — Owner and parent roles, enforced by RLS
-- [ ] **Leave / remove member** — Immediate access revocation
-
-### B2. Child Profiles (basic)
+### B1. Child Profiles (basic)
 - [ ] Add and edit a child: nickname/name and birth date only
 - [ ] Link child to parents through `parent_child_relationships`
 - [ ] *(Medical, school, and emergency-contact information is P1.)*
 
-### B3. Calendar & Scheduling
+### B2. Calendar & Scheduling
 - [ ] **Shared calendar** — Create, view, edit events (handovers, appointments, school events); time-zone correct
 - [ ] **Parenting schedule** — One recurring custody pattern (e.g., weekly rotation)
 - [ ] **Schedule change requests** — Request, approve, or decline
 - [ ] **Pickup & drop-off details** — Time, location, and transportation notes on handover events
 
-### B4. Messaging & Notifications
+### B3. Messaging & Notifications
 - [ ] **Messaging** — Text-only, child-related conversation within the space; sanitized output
 - [ ] **Notifications** — Push (mobile) and email (web/fallback) for new messages, change requests, and upcoming events; content-free per the decision above
 - [ ] *(Search, handover notes, and photo/file sharing are P1.)*
 
-### B5. Home / Dashboard (minimal)
+### B4. Home / Dashboard (minimal)
 - [ ] Upcoming events
 - [ ] Pending requests (schedule changes)
-
-### B6. Account & Settings (minimum)
-- [ ] Profile and password management
-- [ ] MFA enrollment
-- [ ] Active sessions / sign out of all devices
-- [ ] Delete account
 
 ---
 
@@ -277,19 +184,6 @@ coparenting-app/
 
 `ui-web` and `ui-native` packages, `documents` storage, and extra integration test folders are added when the features that need them arrive. Keep secrets, environment-specific config, and production data out of source control.
 
-### P0 Access Matrix (illustrative starting policy)
-
-| Resource | Owner (Parent A) | Parent B (invited) |
-|---|---|---|
-| Shared calendar | Read/write | Read/write |
-| Schedule change requests | Create / respond | Create / respond |
-| Messages | Read/write | Read/write |
-| Child profile (basic) | Per child-access policy | Per child-access policy |
-| Audit records | Limited visibility | Limited visibility |
-| Anyone outside the space | No access | No access |
-
-Private notes, legal documents, and professional access are not in P0. This is a starting policy, not a universal rule: access to child or legal records may need to reflect court orders, applicable law, and safety requirements.
-
 ### P0 Implementation Order
 
 | Step | Workstream | Deliverable |
@@ -334,15 +228,7 @@ Some steps can run in parallel, but the authorization model must be designed bef
 ## P1-A — Security & Privacy Hardening
 
 - **Private file storage** *(gate for every upload feature below)* — Private buckets, access-controlled downloads, short-lived signed URLs, file type/size validation, upload restrictions, malware scanning, metadata in PostgreSQL, deletion handling, audit events for upload/download/delete. Never make a bucket public just for convenient previews.
-- **Enforced MFA** — Require it for sensitive operations and privileged accounts
-- **Account Deactivation** — Define behavior for deactivated accounts
-- **Security Notifications** — Notify users of important account security events
-- **Data Export** — Let users retrieve their data (pull into P0 if counsel requires)
-- **Lost/Compromised Device Policy** and **supported app versions** policy for mobile
-- **Sensitive Data Handling** — Additional restrictions for medical and child-related information
 - **Performance & Security Monitoring** — API latency, DB performance, suspicious auth/authorization activity
-- **Scheduled Restore Drills**
-- **Mobile E2E automation** (Maestro)
 
 ## P1-B — Product Features
 
@@ -376,12 +262,6 @@ Some steps can run in parallel, but the authorization model must be designed bef
 
 ### 6. Spaces
 - Shared Documents — Essential family and child-related files *(requires private storage)*
-- Basic Permissions UI — Control access to shared information
-- Activity History — Important changes to shared records
-
-### 7. Account & Settings
-- Privacy Controls — Protect sensitive family information
-- Data Export — Export essential records
 
 ---
 
@@ -409,20 +289,13 @@ Some steps can run in parallel, but the authorization model must be designed bef
 - Obligations & Deadlines — Agreed responsibilities and important dates
 - Agreement Acknowledgment — Record each parent's acknowledgment
 
-### 4. Advanced Spaces
-- Multiple Spaces — Separate spaces for different purposes
-- Child-Specific Spaces — Organize information by child
-- Private Space — Personal notes and reminders that are not shared
-- Granular Permissions — Control access to individual documents and records
-- Space Activity Log — Review changes within each space
-
-### 5. Advanced Financial Management
+### 4. Advanced Financial Management
 - Recurring Expenses — Regular tuition, healthcare, and other costs
 - Expense Approval — Workflow for reviewing shared expenses
 - Payment Status — Outstanding and completed reimbursements
 - Expense Reports — Summaries by child, category, or period
 
-### 6. Records & Documents
+### 5. Records & Documents
 - Document Categories — Medical, school, and parenting documents
 - Version History — Track document revisions
 - Record Export — Compile schedules, expenses, and messages into reports
@@ -442,8 +315,6 @@ Some steps can run in parallel, but the authorization model must be designed bef
 - Legal Record Packages — Compile selected records for legal review
 
 ### 2. Intermediaries & Professionals
-- Professional Invitations — Mediators, lawyers, counselors, parenting coordinators
-- Role-Based Access — Appropriate permissions per professional
 - Issue-Specific Access — Share only information relevant to a matter
 - Professional Communication — Dedicated channel for authorized participants
 - Mediation Workflow — Discussions, proposals, and outcomes
@@ -459,11 +330,8 @@ Some steps can run in parallel, but the authorization model must be designed bef
 ### 4. Security & Auditability
 - Detailed Access Logs — Track access to sensitive records
 - Change Audit Trail — Significant changes and their authors
-- Permission Revocation — Remove access when appropriate
 - Retention Controls — Manage records per applicable legal and privacy requirements
 - Sensitive Record Protection — Additional safeguards for legal and medical information
-
-*Extended access matrix applies here:* invited professionals get **explicit-permission-only** access to calendar, child profile, expenses, and legal documents; **no default access** to private notes or audit records; authorization tests must prove professional access is limited to explicitly permitted resources.
 
 ---
 
@@ -483,7 +351,6 @@ Some steps can run in parallel, but the authorization model must be designed bef
 - Trusted Caregiver Access — Limited access for approved relatives or caregivers
 - School & Activity Coordination — School and extracurricular information
 - Caregiver Scheduling — Coordinate childcare and transportation
-- Participant Permissions — Restrict access by role
 
 ### 3. Integrations
 - Calendar Integrations — External calendar services
@@ -534,29 +401,24 @@ Some steps can run in parallel, but the authorization model must be designed bef
 - [ ] Fix the Cloud Run landing deploy (container fails to start) and reconnect/verify the 4 Cloud Build triggers (nookbud-web, -admin, -backend, -landing) *(21-tech-stack)*
 - [ ] Decide whether `apps/backend` (NestJS) is still needed alongside Supabase server-side functions *(roadmap comparison)*
 
-**Legal & compliance** *(extends P0 launch gates and A5)*
+**Legal & compliance** *(extends P0 launch gates)*
 - [ ] Philippines NPC registration and DPO designation *(05-regulatory, research/07)*
-- [ ] Terms of Service with 18+ age gate / adult-only usage *(05-regulatory, research/07)*
 - [ ] COPPA position review with counsel: data *about* minors vs. data *from* minors; privacy policy explicitly covers children's data and the PH DPA, GDPR and Australian Privacy Principles positions *(05-regulatory, research/07)*
 - [ ] Breach response plan includes the 72-hour notification window *(05-regulatory, research/07)*
 - [ ] Apple age-rating questionnaire; evaluate the Google Play Age Signals API *(research/07)*
 - [ ] Confirm every third-party SDK is acceptable for an app handling children's data *(research/07)*
-- [ ] Data-subject rights: correct/update personal data (deletion is already in P0; export is in P1) *(05-regulatory)*
-- [ ] Consent mechanisms compliant with the DPA; counsel to confirm whether age verification or parental-consent flows are needed for data about children under 13 *(research/07)*
 - [ ] Annual Security Incident Report (ASIR) process for the NPC; evaluate Philippine data-residency requirements *(research/07)*
 - [ ] Document compliance processes *(research/07)*
 - [ ] Privacy notice in English and Filipino; privacy policy also covers US state privacy rights (CCPA/CPRA etc.) and the Australian Privacy Principles (72-hour OAIC breach notice) *(05-regulatory)*
-- [ ] No selling of user data and no behavioral targeting based on child-related data — state it in the policy *(05-regulatory)*
-- [ ] Retention policy includes an auto-deletion schedule *(05-regulatory; extends Step 0.1 retention decision)*
 
-**Accessibility baseline** *(specifics for A9)*
+**Accessibility baseline** *(specifics for A4)*
 - [ ] Accessibility labels on all interactive elements; alt text on images; logical focus order *(32-accessibility)*
 - [ ] WCAG AA contrast (4.5:1); no color-only indicators *(32-accessibility)*
 - [ ] 44×44pt minimum touch targets with adequate spacing *(32-accessibility)*
 - [ ] Respect reduce-motion; no information conveyed only through animation *(32-accessibility)*
 - [ ] Automated a11y audit, plus manual VoiceOver (iOS) and TalkBack (Android) passes *(32-accessibility)*
 
-**Onboarding** *(supports B1/B2)*
+**Onboarding**
 - [ ] Finalize inclusive family-structure options, design the screens, define skip behavior per step *(33-onboarding)*
 
 **Pre-launch essentials**
@@ -575,15 +437,12 @@ Some steps can run in parallel, but the authorization model must be designed bef
 ## P2 additions
 
 - [ ] **Acknowledgment + dispute on records** — the old Phase 1 core (entry versioning, acknowledge/dispute, threaded responses). Maps to P2 Agreement Acknowledgment / Decision Tracking / Communication Records and P3 Structured Disagreements. Screens and content schemas exist. *(prd.md Phase 1)*
-- [ ] **Archive Space** — hide inactive Spaces from the switcher, keep data *(prd.md Phase 4; extends P2 Advanced Spaces)*
-- [ ] **Member labels** (co-parent, guardian, grandparent, lawyer, social worker…) — display-only, separate from permissions *(prd.json story 59)*
 - [ ] **Scheduled reports** — weekly/monthly export sent to chosen members *(prd.md Phase 5)*
 - [ ] **Tagalog localization** for the PH / OFW market *(32-accessibility)*
 
 ## P3 additions
 
 - [ ] **Shared export links** — time-limited (7/30/90 days), password-protected links to verified reports *(prd.md Phase 6)*
-- [ ] **Read-only invite links** with viewer role for mediators and coordinators *(prd.md Phase 6)*
 - [ ] **Professional dashboard** — one view across all invited Spaces; lawyer can export from a client Space without client action; professional tier (multi-Space subscription) *(prd.md Phase 6, 11-monetization)*
 - [ ] **Compliance tracking** against care agreements and court orders (referenced, not enforced) *(prd.md Phase 5)*
 - [ ] **Digital signatures (PKI)** on exports *(01-brief)*

@@ -7,7 +7,7 @@
 
 ## Overview
 
-Nookbud's decision logic governs five domains: record integrity, entry versioning, acknowledgment state machine, role-based authorization, and export generation. Most of this logic is already implemented in Phases 1–3.
+Nookbud's decision logic governs four domains: record integrity, entry versioning, acknowledgment state machine, and export generation. Most of this logic is already implemented in Phases 1–3.
 
 ---
 
@@ -87,46 +87,7 @@ Every entry can be marked `requires_ack = true` by the creator. This initiates t
 
 ---
 
-## 4. Role-Based Authorization
-
-Three roles per Space. Roles are set per-member per-Space (a user can have different roles in different Spaces).
-
-### Role Capabilities
-
-| Action | Owner | Editor | Viewer |
-|--------|-------|--------|--------|
-| View entries and timeline | ✅ | ✅ | ✅ |
-| Create new entries | ✅ | ✅ | ❌ |
-| Edit own entries | ✅ | ✅ | ❌ |
-| Acknowledge / dispute entries | ✅ | ✅ | ❌ |
-| Export verified report | ✅ | ✅ | ✅ |
-| Invite members | ✅ | ❌ | ❌ |
-| Assign / change member roles | ✅ | ❌ | ❌ |
-| Remove members | ✅ | ❌ | ❌ |
-| Rename Space | ✅ | ❌ | ❌ |
-| Change Space emoji / color | ✅ | ❌ | ❌ |
-| Delete Space (soft) | ✅ | ❌ | ❌ |
-| Transfer ownership | ✅ | ❌ | ❌ |
-
-### Authorization Enforcement (Multi-layer)
-1. **Route level** — unauthenticated requests rejected
-2. **Space membership check** — user must be a member of the Space they're accessing
-3. **Role check** — user's role must permit the action
-4. **Resource ownership** — some actions (e.g., editing an entry) also require the user to be the creator
-
----
-
-## 5. Invite Code Logic
-
-- Owner generates a 6-character alphanumeric code
-- Code is single-use and expires after 7 days
-- Code carries a pre-assigned role (owner selects at generation)
-- `acceptInvite(code, userId)` validates: not expired, not already used, user not already a member
-- After acceptance: code marked consumed, `space_members` row created
-
----
-
-## 6. Export Generation
+## 4. Export Generation
 
 ### Export Types
 
@@ -153,7 +114,7 @@ This makes Nookbud's exports user-verifiable — no need to "trust the platform.
 
 ---
 
-## 7. Subscription Gating Logic
+## 5. Subscription Gating Logic
 
 | Feature | Free (Trial / 1 Space solo) | Family Plan |
 |---------|---------------------------|-------------|
@@ -171,12 +132,9 @@ This makes Nookbud's exports user-verifiable — no need to "trust the platform.
 
 | Scenario | Handling |
 |----------|----------|
-| Space owner leaves | Owner must transfer ownership first; cannot leave without a new owner |
-| User tries to join a Space they're already in | `acceptInvite` rejects — "already a member" |
 | Entry edited after acknowledgment | New version created; acknowledgment state resets to PENDING for the new version |
 | Export with no entries | Returns empty PDF with date range and Space info |
 | File upload fails | Entry created without attachment; user notified to retry upload |
-| User deletes account | Soft delete user; entries attributed to "Deleted Member" in Spaces they were part of |
 
 ---
 
