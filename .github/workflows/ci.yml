@@ -1,11 +1,17 @@
 name: CI
 
+# Pull requests run the fast checks. A pull request into main, and every push to main,
+# also run the slow ones (database, bundle secret check, containers): main is what gets
+# tagged and deployed. develop has no push trigger because its pull request already ran.
 on:
   push:
     branches:
       - main
-      - develop
   pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   actions: read
@@ -16,9 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          filter: tree:0
-          fetch-depth: 0
 
       - uses: pnpm/action-setup@v6
 
@@ -31,9 +34,14 @@ jobs:
 
       - run: pnpm nx format:check
       - run: pnpm nx run-many -t lint test build typecheck
-      - run: pnpm nx run supabase:db-check
-      - name: Check the client bundle for secrets
-        run: pnpm nx run web:check-secrets
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          filter: tree:0
+          fetch-depth: 0
       - name: Scan the git history for secrets
         env:
           # The first commit of this codebase. Gitleaks scans every commit after it.
@@ -48,7 +56,27 @@ jobs:
           tar -xzf "$archive" -C "$RUNNER_TEMP" gitleaks
           "$RUNNER_TEMP/gitleaks" git . --redact --no-banner --log-opts="${SINCE}..HEAD"
 
+  full:
+    if: github.event_name == 'push' || github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm nx run supabase:db-check
+      - name: Check the client bundle for secrets
+        run: pnpm nx run web:check-secrets
+
   container:
+    if: github.event_name == 'push' || github.base_ref == 'main'
     runs-on: ubuntu-latest
     strategy:
       matrix:
