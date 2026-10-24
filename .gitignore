@@ -71,3 +71,4 @@ web-build
 *.mobileprovision
 vitest.config.*.timestamp*
 test-output
+.vitest
