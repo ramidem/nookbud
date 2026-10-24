@@ -1,0 +1,82 @@
+# Builds the web container and deploys it to Cloud Run. Cloud Build runs this when a tag like
+# web-v0.1.0 is pushed. See docs/deploy.md and infra/gcp/setup.sh.
+#
+# NEXT_PUBLIC_* values are baked into the build, so they are set on the trigger as substitutions.
+substitutions:
+  _REGION: asia-southeast1
+  _REGISTRY: nookbud
+  _SERVICE: web
+  _MIN_INSTANCES: '0'
+  _MAX_INSTANCES: '3'
+  _SUPABASE_URL: ''
+  _SUPABASE_ANON_KEY: ''
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - apps/web/Dockerfile
+      - --build-arg
+      - NEXT_PUBLIC_SUPABASE_URL=${_SUPABASE_URL}
+      - --build-arg
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY}
+      - -t
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_SERVICE}:${TAG_NAME}
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_SERVICE}:${TAG_NAME}
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_SERVICE}:${TAG_NAME}
+      - --project
+      - ${PROJECT_ID}
+      - --region
+      - ${_REGION}
+      - --port
+      - '8080'
+      - --cpu
+      - '1'
+      - --memory
+      - 512Mi
+      - --cpu-boost
+      - --concurrency
+      - '80'
+      - --min-instances
+      - ${_MIN_INSTANCES}
+      - --max-instances
+      - ${_MAX_INSTANCES}
+      - --quiet
+
+  # Time the first request. With no warm instance this is a cold start. The target is under 3 seconds.
+  - id: check
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        url=$(gcloud run services describe ${_SERVICE} --project ${PROJECT_ID} --region ${_REGION} --format='value(status.url)')
+        out=$(curl -s -o /dev/null -w '%{http_code} %{time_total}' "$$url/")
+        code=$${out%% *}
+        secs=$${out##* }
+        echo "First response: HTTP $$code in $${secs}s ($$url)"
+        if [ "$$code" != "200" ]; then echo "The new revision answered HTTP $$code."; exit 1; fi
+        if awk -v s="$$secs" 'BEGIN { exit !(s > 3) }'; then
+          echo "WARNING: slow first response ($${secs}s). The target is under 3 seconds."
+        fi
+
+options:
+  logging: CLOUD_LOGGING_ONLY

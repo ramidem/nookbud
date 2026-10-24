@@ -21,6 +21,14 @@
           "command": "node scripts/check-client-bundle.mjs",
           "cwd": "apps/web"
         }
+      },
+      "container-smoke": {
+        "executor": "nx:run-commands",
+        "cache": false,
+        "options": {
+          "command": "bash ../../infra/container-smoke.sh web",
+          "cwd": "apps/web"
+        }
       }
     }
   },

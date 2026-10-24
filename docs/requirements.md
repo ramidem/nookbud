@@ -36,23 +36,28 @@ The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/0
 
 Nothing a user sees yet. These come first because everything else leans on them.
 
-- [ ] **R5 · NF · P0** The web app deploys to Google Cloud Run: staging from `develop`, production from `main`.
-  - One Google Cloud project in Singapore (`asia-southeast1`), with an Artifact Registry repository and two Cloud Run services, staging and production.
-  - The app builds as a container from `apps/web` (Next.js standalone output).
-  - A push to `develop` deploys staging. A push to `main` deploys production, after an approval in GitHub.
-  - A pull request gets a preview URL: a zero-traffic, tagged revision of the staging service.
-  - GitHub logs in to Google with Workload Identity Federation, with no stored keys. `develop` can deploy only staging, and `main` only production.
-  - A billing budget with email alerts at $25, $40 and $50, and a maximum instance count on each service ([costs.md](costs.md)).
-  - Each service has its own service account. Secrets live in Secret Manager under per-environment names and reach the service as server-only variables ([secrets.md](secrets.md)). Public values are set per environment.
-  - Verification and reset links use the base URL of the environment that sent them: local, preview, staging or production.
+**Prerequisites for R5 (your side)**
+
+- [ ] Create a new Google Cloud project and note its project ID. IDs are unique across all of Google Cloud, so `nookbud` may be taken.
+- [ ] Link the **Personal** billing account to that project. The setup script can do it.
+- [ ] In the Cloud Build console, connect the GitHub repository once (2nd-generation repositories, with the app installed on the `bulakao` organization), and note the repository's resource name.
+- [ ] Run `infra/gcp/setup.sh` with the project ID, the billing account and the repository. `DRY_RUN=1` shows the commands first.
+- [ ] Releases are tags (`web-v0.1.0`, `api-v0.1.0`). A tag is only pushed when you ask for it.
+
+- [ ] **R5 · NF · P0** The first real deploys work, on Google Cloud.
+  - A tag `web-v0.1.0` on `main` builds and deploys the web app, and its first response is under 3 seconds.
+  - A tag `api-v0.1.0` builds and deploys the API, which stays private.
+  - Other tags (such as a release candidate), branch pushes and pull requests deploy nothing.
+  - Secrets live in Secret Manager under their own names and reach the service as server-only variables ([secrets.md](secrets.md)). Do this when the first secret exists.
+  - Verification and reset links use the site's own base URL, which differs between local and production.
+  - The containers, the Cloud Build configs and the setup script are built and described in [deploy.md](deploy.md).
   - Spec: D4, D5, roadmap A3 (environment separation), AUTH-1, AUTH-3
-  - Blocked by: creating the Google Cloud project and turning on billing (an account action). The setup commands get written down.
+  - Blocked by: the prerequisites above.
 
 - [ ] **R45 · NF · P0** A visitor does not wait on a cold start.
-  - At launch, production keeps at least one instance warm (`min-instances=1`) on request-based billing, about $10–14 a month. Before launch it can scale to zero. Always-allocated CPU costs several times more ([costs.md](costs.md)).
-  - Startup CPU boost is on. Staging scales to zero.
-  - The container is small and does no heavy work at startup.
-  - Startup latency is checked after each deploy against a target: a dynamic page cold-starts in under 3 seconds. _Proposed target._
+  - At launch, keep the web app warm (the command is in [deploy.md](deploy.md)), about $10–14 a month ([costs.md](costs.md)). Before launch it scales to zero.
+  - The first-response check only warns above 3 seconds. Make it fail once a real deploy shows the number is reliable.
+  - The images are about 420 MB (web) and 375 MB (api). If the measured cold start misses the target, slim the base image first.
   - Spec: D4
 
 - [ ] **R46 · NF · P1** Static pages and assets are served from a CDN, not from the container.
@@ -60,19 +65,13 @@ Nothing a user sees yet. These come first because everything else leans on them.
   - Static assets get long-lived cache headers, and prerendered pages (the home page, the documentation) can be cached.
   - Spec: D4
 
-- [ ] **R47 · NF · P0** `main` and `develop` are protected on GitHub.
-  - No direct pushes to either. CI must pass before a merge, and `main` takes changes only from `develop` or a hotfix branch.
-  - Spec: D5
-  - Blocked by: GitHub repository settings (an account action).
-
-- [ ] **R42 · NF · P0** Staging and production exist, and migrations reach them through CI.
-  - Staging and production are separate Supabase projects, each linked with `supabase link`.
-  - CI applies migrations to staging when `develop` changes, and to production after approval when `main` changes. Nobody pushes by hand.
-  - Neither environment shares keys, users or data with local.
+- [ ] **R42 · NF · P0** A production Supabase project exists, and migrations reach it.
+  - A separate Supabase project for production, linked with `supabase link`. It shares no keys, users or data with local.
+  - There is no staging project for now. How migrations reach production is decided when the first table exists: by hand with `supabase db push`, or as a Cloud Build step.
   - Supabase stays on the Free plan until launch. At launch, production moves to Pro for daily backups and no pausing ([costs.md](costs.md)).
   - Update [the database page](database.md) when it is done.
   - Spec: DB-5, roadmap A3 (environment separation)
-  - Blocked by: creating the two Supabase projects (an account action).
+  - Blocked by: creating the Supabase project (an account action).
 
 - [ ] **R6 · NF · P0** Verification and reset emails arrive.
   - They send from a Nookbud address with SPF and DKIM set up.
@@ -280,6 +279,7 @@ Nothing a user sees yet. These come first because everything else leans on them.
 - [ ] **R39 · F · P1** As a user, I can control privacy settings for sensitive family information. Spec: USR-11
 - [ ] **R40 · NF · P1** There is a written policy for lost or compromised devices and for supported app versions. Spec: AUTH-15
 - [ ] **R41 · NF · P1** Automated mobile end-to-end tests run in CI. Spec: TEST-7
+- [ ] **R48 · NF · P2** Google Cloud is managed with Terraform. Parked: the setup script covers the MVP. Revisit when the setup has to be repeated (a staging environment, a second region) or changes often. Spec: D4
 
 ## Waiting on spaces
 
