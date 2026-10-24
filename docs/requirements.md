@@ -36,23 +36,17 @@ The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/0
 
 Nothing a user sees yet. These come first because everything else leans on them.
 
-**Prerequisites for R5 (your side)**
-
-- [ ] Create a new Google Cloud project and note its project ID. IDs are unique across all of Google Cloud, so `nookbud` may be taken.
-- [ ] Link the **Personal** billing account to that project. [gcp-setup.md](gcp-setup.md) has the command.
-- [ ] In the Cloud Build console, connect the GitHub repository once (2nd-generation repositories, with the app installed on the `bulakao` organization), and note the repository's resource name.
-- [ ] Follow [gcp-setup.md](gcp-setup.md) to create the registry, services, permissions, triggers and budget alert.
-- [ ] Releases are tags (`web-v0.1.0`, `api-v0.1.0`). A tag is only pushed when you ask for it.
-
-- [ ] **R5 · NF · P0** The first real deploys work, on Google Cloud.
-  - A tag `web-v0.1.0` on `main` builds and deploys the web app, and its first response is under 3 seconds.
-  - A tag `api-v0.1.0` builds and deploys the API, which stays private.
-  - Other tags (such as a release candidate), branch pushes and pull requests deploy nothing.
+- [ ] **R5 · NF · P0** The first deploys are finished off. Both parts wait: the first secret and the first email (R6) are what need them.
   - Secrets live in Secret Manager under their own names and reach the service as server-only variables ([secrets.md](secrets.md)). Do this when the first secret exists.
   - Verification and reset links use the site's own base URL, which differs between local and production.
-  - The containers, the Cloud Build configs and the setup guide are written and described in [deploy.md](deploy.md).
+  - Both tag deploys work today ([deploy.md](deploy.md)).
   - Spec: D4, D5, roadmap A3 (environment separation), AUTH-1, AUTH-3
-  - Blocked by: the prerequisites above.
+
+- [ ] **R50 · NF · P0** Each service runs as its own account, and builds run as the Cloud Build account.
+  - Both `cloudbuild.yaml` files pass `--service-account` (`web-runtime`, `api-runtime`) to the deploy step, through a substitution.
+  - Both triggers use the `cloud-build` service account, and the narrow permissions in [gcp-setup.md](gcp-setup.md) are enough for a build to pass.
+  - Do this before real data sits behind the services.
+  - Spec: D4
 
 - [ ] **R45 · NF · P0** A visitor does not wait on a cold start.
   - Both services scale to zero, so both have cold starts. Before launch that is accepted.
