@@ -19,7 +19,7 @@ Only a final version (`1.2.3`) deploys. There is no staging and no preview (spec
 
 ## What runs
 
-- **GitHub Actions** checks every pull request and every push to `develop` and `main`: format, lint, tests, build, the database, secrets, and a smoke test that builds both containers and checks they answer.
+- **GitHub Actions** has two tiers. Every pull request runs the fast checks (format, lint, tests, build, typecheck) and the secret scan of the git history. A pull request into `main`, and every push to `main`, also run the slow ones: the database tests, the client bundle secret check, and a smoke test that builds both containers and checks they answer. `develop` has no push run because its pull request already ran. A new push to a pull request cancels its older run.
 - **Cloud Build** runs `apps/web/cloudbuild.yaml` or `apps/api/cloudbuild.yaml`: build the image, push it to Artifact Registry (`nookbud`, tagged with the git tag), deploy it to Cloud Run, and for the web app time the first response (a warning above 3 seconds). Images older than 30 days are deleted, keeping the 10 newest.
 - **Cloud Run** has two services. `web` is public and `api` is private. Each gets 1 vCPU, 512 MiB, startup CPU boost and concurrency 80. `web` scales from 0 to 3 instances and `api` from 0 to 2.
 
