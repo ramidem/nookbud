@@ -1,0 +1,168 @@
+-- Test helpers for Row-Level Security tests. See docs/database.md.
+--
+-- Installed by `db reset` as a seed (see [db.seed] in config.toml), never as a migration, so it
+-- never reaches staging or production. Do not use `db push --include-seed` against a real project.
+--
+-- As a second guard, this file refuses to install into a database that already has users.
+
+do $$
+begin
+  if (select count(*) from auth.users) > 0 then
+    raise exception 'Refusing to install test helpers: this database already has users.';
+  end if;
+end
+$$;
+
+create extension if not exists pgtap with schema extensions;
+
+create schema if not exists tests;
+
+-- Nobody but the superuser running the tests needs these.
+revoke all on schema tests from public, anon, authenticated;
+alter default privileges in schema tests revoke all on functions from public, anon, authenticated;
+
+-- A confirmed user, as Supabase Auth would create one. Returns the new user's id.
+create or replace function tests.create_user(user_email text default null)
+returns uuid
+language plpgsql
+as $$
+declare
+  new_id uuid := gen_random_uuid();
+begin
+  insert into auth.users (
+    instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+    raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+    confirmation_token, email_change, email_change_token_new, recovery_token
+  ) values (
+    '00000000-0000-0000-0000-000000000000', new_id, 'authenticated', 'authenticated',
+    coalesce(user_email, new_id || '@example.test'), '', now(),
+    '{"provider":"email","providers":["email"]}', '{}', now(), now(),
+    '', '', '', ''
+  );
+  return new_id;
+end;
+$$;
+
+-- From here until the transaction ends (or clear_authentication), queries run as this signed-in user.
+create or replace function tests.authenticate_as(user_id uuid)
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('request.jwt.claims', json_build_object('sub', user_id, 'role', 'authenticated')::text, true);
+  perform set_config('request.jwt.claim.sub', user_id::text, true);
+  execute 'set local role authenticated';
+end;
+$$;
+
+-- ...or as a signed-out visitor.
+create or replace function tests.authenticate_as_anon()
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('request.jwt.claims', json_build_object('role', 'anon')::text, true);
+  perform set_config('request.jwt.claim.sub', '', true);
+  execute 'set local role anon';
+end;
+$$;
+
+create or replace function tests.clear_authentication()
+returns void
+language plpgsql
+as $$
+begin
+  execute 'reset role';
+  perform set_config('request.jwt.claims', '', true);
+  perform set_config('request.jwt.claim.sub', '', true);
+end;
+$$;
+
+-- How many rows `query` returns for one identity. Pass a user id, or null for a signed-out visitor.
+create or replace function tests.count_as(query text, user_id uuid default null)
+returns bigint
+language plpgsql
+as $$
+declare
+  result bigint;
+begin
+  if user_id is null then
+    perform tests.authenticate_as_anon();
+  else
+    perform tests.authenticate_as(user_id);
+  end if;
+
+  -- After the role switch this role may not call other functions in `tests`, so it resets inline.
+  begin
+    execute format('select count(*) from (%s) as q', query) into result;
+  exception when others then
+    execute 'reset role';
+    perform set_config('request.jwt.claims', '', true);
+    perform set_config('request.jwt.claim.sub', '', true);
+    raise;
+  end;
+
+  execute 'reset role';
+  perform set_config('request.jwt.claims', '', true);
+  perform set_config('request.jwt.claim.sub', '', true);
+  return result;
+end;
+$$;
+
+-- Run a statement (insert, update, delete...) as one identity. Pass a user id, or null for a signed-out
+-- visitor. Returns 'ok' if it ran, or the error code if it failed: '42501' means Row-Level Security
+-- or a privilege refused it. Note that RLS often refuses by quietly affecting zero rows, so check the
+-- data afterwards as well.
+create or replace function tests.try_as(statement text, user_id uuid default null)
+returns text
+language plpgsql
+as $$
+declare
+  outcome text := 'ok';
+begin
+  if user_id is null then
+    perform tests.authenticate_as_anon();
+  else
+    perform tests.authenticate_as(user_id);
+  end if;
+
+  -- After the role switch this role may not call other functions in `tests`, so it resets inline.
+  begin
+    execute statement;
+  exception when others then
+    outcome := sqlstate;
+  end;
+
+  execute 'reset role';
+  perform set_config('request.jwt.claims', '', true);
+  perform set_config('request.jwt.claim.sub', '', true);
+  return outcome;
+end;
+$$;
+
+-- The same query, run as user A, as user B and as a signed-out visitor.
+create or replace function tests.who_sees(query text, user_a uuid, user_b uuid)
+returns table (identity text, row_count bigint)
+language sql
+as $$
+  select 'user a'::text, tests.count_as(query, user_a)
+  union all
+  select 'user b'::text, tests.count_as(query, user_b)
+  union all
+  select 'visitor'::text, tests.count_as(query, null);
+$$;
+
+-- Tables in `public` that do not have Row-Level Security turned on.
+create or replace function tests.tables_without_rls()
+returns setof text
+language sql
+as $$
+  select c.relname::text
+  from pg_class c
+  join pg_namespace n on n.oid = c.relnamespace
+  where n.nspname = 'public'
+    and c.relkind in ('r', 'p')
+    and not c.relrowsecurity
+    and not c.relispartition
+  order by c.relname;
+$$;

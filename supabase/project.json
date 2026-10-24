@@ -7,28 +7,44 @@
   "targets": {
     "db-start": {
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm exec supabase start" }
+      "options": {
+        "command": "pnpm exec supabase start"
+      }
     },
     "db-stop": {
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm exec supabase stop" }
+      "options": {
+        "command": "pnpm exec supabase stop"
+      }
     },
     "db-reset": {
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm exec supabase db reset" }
+      "options": {
+        "command": "pnpm exec supabase db reset"
+      }
     },
     "db-new": {
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm exec supabase migration new {args.name}" }
+      "options": {
+        "command": "pnpm exec supabase migration new {args.name}"
+      }
     },
     "db-lint": {
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm exec supabase db lint --fail-on error" }
+      "options": {
+        "command": "pnpm exec supabase db lint --schema public --fail-on error"
+      }
+    },
+    "db-test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec supabase test db"
+      }
     },
     "db-check": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm exec supabase db start && pnpm exec supabase db reset && pnpm exec supabase db lint --fail-on error; code=$?; pnpm exec supabase stop --no-backup; exit $code"
+        "command": "pnpm exec supabase db start && pnpm exec supabase db reset && pnpm exec supabase db lint --schema public --fail-on error && pnpm exec supabase test db; code=$?; pnpm exec supabase stop --no-backup; exit $code"
       }
     }
   }
