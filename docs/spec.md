@@ -58,21 +58,13 @@ The main requirements document. It grows one area at a time. It covers **authent
 | --- | -------------------------------------------------------------------------------- | ---------------------------- |
 | D1  | Say **space** everywhere, never workspace, family or care circle.                | Decided 2026-10-24           |
 | D2  | The database is **Supabase** (PostgreSQL), with Row-Level Security.              | Decided 2026-10-24           |
-| D3  | Users and sign-in use **Supabase Auth**, not WorkOS. Reasons and triggers below. | **Proposed**, confirm in OQ1 |
+| D3  | Users and sign-in use **Supabase Auth**.                                         | Decided 2026-10-24           |
 
-### D3: Supabase Auth or WorkOS
+### D3: Why Supabase Auth
 
-Both can do sign-in. WorkOS AuthKit works with Supabase as a third-party auth provider ([WorkOS guide](https://workos.com/docs/integrations/supabase-authkit), [Supabase guide](https://supabase.com/docs/guides/auth/third-party/workos)) and is free up to 1 million monthly active users ([pricing](https://workos.com/pricing)). So cost does not decide it. Isolation does.
-
-Recommendation: **Supabase Auth**, because:
-
-1. **Membership has to live in Postgres.** Row-Level Security decides access by joining `space_members`. WorkOS organizations and memberships would be a second copy that must stay in sync, and a gap between them is exactly the cross-family leak we cannot afford (see AZ-3).
-2. **RLS works with less glue.** With WorkOS, the access token's `role` claim must be rewritten to `authenticated` through a JWT template. One third-party write-up also reports that WorkOS user IDs are strings like `user_01H…`, not UUIDs, so `auth.uid()` would not work and every policy would compare `auth.jwt() ->> 'sub'` against text columns. We have not verified that ourselves. It is still an extra moving part in the most important security area.
-3. **WorkOS's strengths are for businesses.** Single sign-on, directory sync and an admin portal serve companies. A space is a family, not a company.
-4. **Supabase Auth covers P0:** email verification, password reset, TOTP MFA, session revoke and rate limits. Confirm each during roadmap step 0.4.
-5. **It is reversible.** Keep auth behind one thin module so the provider can change later, since Supabase accepts third-party auth.
-
-Revisit if we need enterprise SSO (for example law firms or mediators in P3), or if Supabase Auth's mobile flows or email deliverability fall short.
+1. **Identity and access sit in one place.** Row-Level Security decides access by joining `space_members` to the signed-in user (`auth.uid()`), so the users and the membership that protects their data live in the same database.
+2. **It covers P0:** email verification, password reset, TOTP MFA, session revoke and rate limits. Confirm each as the auth requirements are built.
+3. **Keep it behind one thin module** (R4), so the rest of the app never depends on Supabase's auth library directly.
 
 ---
 
@@ -377,7 +369,6 @@ A successful build is not enough. The tests must show that unauthorized access i
 
 | #   | Question                                                                                                                                                                                                                              | Recommendation                                                                                                           |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| OQ1 | Confirm Supabase Auth over WorkOS (D3).                                                                                                                                                                                               | Supabase Auth.                                                                                                           |
 | OQ2 | Which roles ship in P0? The roadmap says `owner` and `parent`; the older domain docs say `owner`, `editor` and `viewer`; the concept doc says Parent A, Parent B and Viewer.                                                           | `owner` and `member`. Keep "parent" out of role names, since grandparents and guardians join too. Add `viewer` in P3.    |
 | OQ3 | Who may invite and remove members: owners only, or any member?                                                                                                                                                                        | Owners only.                                                                                                             |
 | OQ4 | One owner per space or several? What does the ownership-transfer flow look like?                                                                                                                                                      | At least one owner, several allowed, so a space survives one parent leaving.                                             |
