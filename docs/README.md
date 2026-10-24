@@ -10,6 +10,7 @@ For the team. Nothing here is served on the website: the public documentation is
 | [Database](database.md) | The Supabase project: migrations, seed data, the local database and environments |
 | [Auth](auth.md) | How the app does auth: the one module, its rules, and how to change provider |
 | [Deploy](deploy.md) | How the web app and the API reach Cloud Run: the git flow, tags, setup, release and rollback |
+| [Google Cloud setup](gcp-setup.md) | The one-time commands that create the project's registry, services, permissions, triggers and budget alert |
 | [Costs](costs.md) | What running Nookbud costs, what is verified, and when to revisit |
 | [Secrets](secrets.md) | Which values are public and which are secret, how that is enforced, and what to do if one leaks |
 | [The documentation site](documentation-site.md) | How the public documentation works, and what must never go in it |
