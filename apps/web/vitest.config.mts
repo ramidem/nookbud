@@ -9,6 +9,8 @@ export default defineConfig(() => ({
   resolve: {
     alias: {
       '@': join(import.meta.dirname, './src'),
+      // `server-only` throws outside Next.js's server build, so tests use an empty stand-in.
+      'server-only': join(import.meta.dirname, './specs/stubs/server-only.ts'),
     },
   },
   test: {

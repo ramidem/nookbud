@@ -49,9 +49,9 @@ Thumbs.db
 .nx/self-healing
 .nx/migrate-runs
 
-# env
-.env
-.env*.local
+# env: never commit values. .env.example lists the names only.
+.env*
+!.env.example
 
 # next.js
 .next
