@@ -41,7 +41,7 @@
 
 ## 4. Files to move back from `nookbud_copy`
 
-> ✅ **"Now" group done 2026-10-15** (docs/discovery, docs/research, APPNAME.md, logo SVGs, favicons and iOS icon set → `docs/` and `assets/`). Favicons and the iOS icon set landed in `assets/icons/`. Still to do: the "When scaffolding" items below.
+> ✅ **"Now" group done 2026-10-15** (docs/discovery, docs/research, logo SVGs, favicons and iOS icon set → `docs/` and `assets/`). Favicons and the iOS icon set landed in `assets/icons/`. `APPNAME.md` was later dropped (2026-10-24). Still to do: the "When scaffolding" items below.
 
 Paths are relative to `/Users/ramidem/Code/bulakao/nookbud_copy`.
 
@@ -51,7 +51,6 @@ Paths are relative to `/Users/ramidem/Code/bulakao/nookbud_copy`.
 |---|---|---|
 | `docs/discovery/` | `docs/discovery/` | Research, strategy, ICP, pricing, design docs. **Includes your uncommitted edits to `4-design/30-ux-patterns.md` and `31-branding.md`**, which survive only in the copy. |
 | `docs/research/` | `docs/research/` | Competitor, market, regulatory research |
-| `APPNAME.md` | `docs/` | Optional: the naming research behind "Nookbud" |
 | `assets/brand/logo/` | `assets/brand/logo/` | 4 logo SVG concepts + `LOGO-PROMPT.md`; a logo direction still needs picking |
 | `icons/favicon_io/`, `icons/NookBud-icons/` | `assets/icons/` | Favicons and iOS icon set |
 
