@@ -1,13 +1,13 @@
 # Nookbud specification
 
-The main requirements document. It grows one area at a time. Today it covers **authentication, users and spaces**. Other areas (calendar, messaging, expenses, documents, export) are still described in [ROADMAP-2026.md](../ROADMAP-2026.md) and will move here as we specify them. The lines for this area were removed from the older docs when they were moved here. The order we build things in, as user stories, is in [requirements.md](requirements.md).
+The main requirements document. It grows one area at a time. It covers **authentication, users and spaces** in detail, and **records, the audit trail, acknowledgments, files and export** at the requirement level (their priorities are mostly TBD until the roadmap schedules them). Calendar, messaging and expenses are still described in the [roadmap](roadmap-2026.md) and will move here as we specify them. The order we build things in, as user stories, is in [requirements.md](requirements.md).
 
 **How to read it**
 
 - Every requirement has an ID (`AUTH-3`) so other docs, tests and commits can point at it.
-- **P0 to P3** is the priority, using the scale in [ROADMAP-2026.md](../ROADMAP-2026.md). P0 blocks launch. The roadmap keeps the launch gates, the P0 build order and the rest of the backlog.
-- **Proposed** means it came from an older doc or from us and is not agreed yet. See [Open questions](#11-open-questions).
-- Where an older doc disagreed with a newer decision, the newer decision wins and the old one is noted in the [source map](#12-source-map).
+- **P0 to P3** is the priority, using the scale in the [roadmap](roadmap-2026.md). `TBD` means not scheduled yet. P0 blocks launch. The roadmap keeps the launch gates, the P0 build order and the rest of the backlog.
+- **Proposed** means it came from an older doc or from us and is not agreed yet. See [Open questions](#17-open-questions).
+- Where an older doc disagreed with a newer decision, the newer decision wins and the old one is noted in the [source map](#18-source-map).
 
 ## Contents
 
@@ -19,10 +19,16 @@ The main requirements document. It grows one area at a time. Today it covers **a
 6. [Membership and invitations](#6-membership-and-invitations)
 7. [Authorization](#7-authorization)
 8. [Data model](#8-data-model)
-9. [Non-functional requirements](#9-non-functional-requirements)
-10. [Verification](#10-verification)
-11. [Open questions](#11-open-questions)
-12. [Source map](#12-source-map)
+9. [Records and the timeline](#9-records-and-the-timeline)
+10. [Audit trail](#10-audit-trail)
+11. [Acknowledgments and disputes](#11-acknowledgments-and-disputes)
+12. [Calendar](#12-calendar)
+13. [Files](#13-files)
+14. [Export](#14-export)
+15. [Non-functional requirements](#15-non-functional-requirements)
+16. [Verification](#16-verification)
+17. [Open questions](#17-open-questions)
+18. [Source map](#18-source-map)
 
 ---
 
@@ -36,6 +42,11 @@ The main requirements document. It grows one area at a time. Today it covers **a
 | **Owner**      | A member who manages the space: its details, its members and its invitations.                                                                                                            |
 | **Child**      | A child whose care a space records. Children do not have accounts.                                                                                                                       |
 | **Invitation** | A single-use, expiring way for an owner to add a user to a space.                                                                                                                        |
+| **Entry**      | One record of something that happened: an expense, an event, an agreement, a structured communication or an upload. The unit of the timeline.                                            |
+| **Attachment** | A file (receipt, photo, school or medical document) linked to an entry.                                                                                                                  |
+| **Acknowledgment** | A member's response to an entry: seen and agreed, or disputed, with the time and an optional comment.                                                                                |
+| **Dispute**    | A member's challenge to an entry, with a reason, optional counter-evidence and threaded replies.                                                                                         |
+| **Audit log**  | The separate, append-only record of who did what and when, kept apart from the entries themselves.                                                                                       |
 | **Role**       | What a member may do in one space. It comes from membership, not from the account.                                                                                                       |
 | **Label**      | An optional display word on a member (co-parent, grandparent). It never changes permissions.                                                                                             |
 
@@ -213,16 +224,94 @@ Supabase (PostgreSQL) is the single authoritative backend. Identity comes from S
 | DB-7 | Indexes on foreign keys and on access-control lookups.                                                                                                                       | P0       |
 | DB-8 | A soft-delete versus permanent-delete policy, once OQ6 is settled.                                                                                                           | P0       |
 | DB-9 | Synthetic seed data only. Never real children's data.                                                                                                                        | P0       |
+| DB-10 | Later tables, each built with its own requirement, RLS and test: `children`, `entries`, `entry_versions`, `attachments`, `acknowledgments`, `disputes`. | TBD      |
 
 ---
 
-## 9. Non-functional requirements
+## 9. Records and the timeline
+
+Nookbud is a record that holds up when someone needs it, including in court. It must answer five questions, with proof: **what happened, when, who did it, was it acknowledged, and has it been altered.**
+
+Five principles follow from that: **immutability** (no silent edits), **traceability** (full history), **authenticity** (who did what), **integrity** (data that cannot be tampered with unseen) and **exportability** (usable by someone outside the app).
+
+The roadmap has not scheduled this area yet, so its priorities are TBD.
+
+| ID    | Requirement                                                                                                                                                                       | Priority |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| REC-1 | Everything that is recorded is an **entry**. An entry has an ID, a server-set timestamp, its creator, the child it concerns, a type, its content and any attachments, and a status. | TBD      |
+| REC-2 | Entry types: expense, event, agreement, communication (structured) and upload.                                                                                                    | TBD      |
+| REC-3 | An entry's status is active, amended or disputed.                                                                                                                                 | TBD      |
+| REC-4 | Timestamps are set by the server, never by the client.                                                                                                                            | TBD      |
+| REC-5 | The timeline shows a space's entries as one feed in time order, as evidence rather than as chat.                                                                                  | TBD      |
+
+---
+
+## 10. Audit trail
+
+| ID    | Requirement                                                                                                                                                                  | Priority |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| AUD-1 | **An entry is never overwritten.** Every change creates a new version (the original, then the edit, then the correction). Each version keeps its time, who made it and a diff.   | TBD      |
+| AUD-2 | There is no hard delete. Deleting is a soft delete that stays visible in the history.                                                                                        | TBD      |
+| AUD-3 | A separate audit log records every action: user, action type, the entity, the time and, optionally, the IP address or device. Security-sensitive actions are already P0 (AZ-8). | TBD      |
+| AUD-4 | An audit report can be exported: the full edit history, the acknowledgment log and the dispute log.                                                                          | TBD      |
+
+---
+
+## 11. Acknowledgments and disputes
+
+| ID    | Requirement                                                                                                                                              | Priority |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| ACK-1 | An entry can be pending, acknowledged or disputed. Each response records who, when and an optional comment.                                              | P2       |
+| ACK-2 | Any entry can be disputed with a reason, optional counter-evidence and threaded replies, so both sides of the story are recorded.                        | P2       |
+
+---
+
+## 12. Calendar
+
+The shared calendar itself (events, the parenting schedule, schedule change requests) is still described in the roadmap. These two requirements turn it into a record of who was responsible.
+
+| ID    | Requirement                                                                                          | Priority |
+| ----- | ---------------------------------------------------------------------------------------------------- | -------- |
+| CAL-1 | Each event has an assigned member, a status (completed or missed) and notes.                         | TBD      |
+| CAL-2 | Changes to the schedule are logged: who changed it and when.                                         | TBD      |
+
+---
+
+## 13. Files
+
+| ID    | Requirement                                                                                                                           | Priority |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| FIL-1 | An entry can carry images (receipts, photos), PDFs (school and medical documents) and, optionally, video.                             | P1       |
+| FIL-2 | Every file is hashed with SHA-256 on the server at upload. The hash is stored with the record, which also holds the upload time and the entry it belongs to. | P1       |
+| FIL-3 | The hash is checked again when the file is exported, which proves it was not altered.                                                 | P1       |
+
+Files need private storage first: private buckets, access-controlled downloads, short-lived signed URLs, type and size limits and malware scanning. The roadmap lists that as the gate for every upload feature.
+
+---
+
+## 14. Export
+
+| ID    | Requirement                                                                                                                                  | Priority |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| EXP-1 | **Timeline report (PDF):** every entry with its time, author and status (acknowledged or disputed), and its attachments inline.              | P1       |
+| EXP-2 | **Evidence bundle (ZIP):** machine-readable JSON, a PDF summary, every attachment and a hash manifest.                                       | P1       |
+| EXP-3 | **Audit report:** see AUD-4.                                                                                                                 | TBD      |
+| EXP-4 | An export can be filtered by date range, child and entry type.                                                                               | P1       |
+| EXP-5 | Every export carries its verification: the file hashes and the time it was made.                                                             | P1       |
+| EXP-6 | An export reads clearly to a lawyer, a judge or someone who is not technical: clean, in time order and labelled.                             | P1       |
+| EXP-7 | Exports carry a digital signature from the system.                                                                                           | P3       |
+
+Not planned: blockchain anchoring. It is not needed early.
+
+---
+
+## 15. Non-functional requirements
 
 ### Security
 
 | ID     | Requirement                                                                                                                                                | Priority |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| SEC-1  | HTTPS and TLS everywhere.                                                                                                                                  | P0       |
+| SEC-1  | HTTPS everywhere, on TLS 1.3 where the platform supports it.                                                                                                                                  | P0       |
 | SEC-2  | Secrets stay out of source control. Production secrets are managed securely.                                                                               | P0       |
 | SEC-3  | Input is validated on the server, not only in the UI, with shared Zod schemas.                                                                             | P0       |
 | SEC-4  | Output is encoded to prevent cross-site scripting, especially message content.                                                                             | P0       |
@@ -239,7 +328,7 @@ Supabase (PostgreSQL) is the single authoritative backend. Identity comes from S
 | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | PRIV-1 | Data classification (public, internal, confidential, highly sensitive), in a one-page doc.                                                                                                               | P0       |
 | PRIV-2 | **Data minimization.** Collect only what a defined feature needs (a child's nickname and birth date, not more).                                                                                          | P0       |
-| PRIV-3 | Encryption at rest for the database and its backups.                                                                                                                                                     | P0       |
+| PRIV-3 | AES-256 encryption at rest for the database, its backups and file storage.                                                                                                                                                     | P0       |
 | PRIV-4 | Privacy policy and terms published. Consent recorded where legally required.                                                                                                                             | P0       |
 | PRIV-5 | **No third-party data sharing** in P0: no professional access, no external integrations. We never sell user data and never target by child-related behaviour; the policy says so.                        | P0       |
 | PRIV-6 | Deletion behaviour is defined across related records and backups. The retention policy includes an automatic deletion schedule.                                                                                                                                        | P0       |
@@ -254,6 +343,9 @@ Supabase (PostgreSQL) is the single authoritative backend. Identity comes from S
 | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
 | UX-1 | Auth and account screens meet the accessibility baseline: a label on every control, alt text, logical focus order, 4.5:1 contrast, no color-only indicators, 44×44 pt touch targets, reduced motion respected. | P0       |
 | UX-2 | Auth and account messages follow the Nookbud voice: short sentences, addressing the user as "you", titles that describe what happened (never "Error"), red only for genuine alerts.                         | P0       |
+| UX-3 | Language is neutral. Never "you owe" or "debt"; say "recorded", "submitted", "acknowledged". | P0       |
+| UX-4 | The interface is conflict-aware: no aggressive notifications and no public blame. | P0       |
+| UX-5 | The interface feels simple even though the system behind it is not. | P0       |
 
 ### Reliability and performance
 
@@ -265,7 +357,7 @@ Supabase (PostgreSQL) is the single authoritative backend. Identity comes from S
 
 ---
 
-## 10. Verification
+## 16. Verification
 
 | ID     | Requirement                                                                                                                                                               | Priority |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
@@ -281,7 +373,7 @@ A successful build is not enough. The tests must show that unauthorized access i
 
 ---
 
-## 11. Open questions
+## 17. Open questions
 
 | #   | Question                                                                                                                                                                                                                              | Recommendation                                                                                                           |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -293,23 +385,23 @@ A successful build is not enough. The tests must show that unauthorized access i
 | OQ6 | Retention and deletion rules: what is permanently deleted, what is recoverable, and when. The older data-layer doc proposed 30 days then hard delete for deleted accounts and 7 years for audit logs, written for GDPR on Firebase.   | Open. Settle with legal counsel (PRIV-7).                                                                                |
 | OQ7 | When one member deletes their account, what happens to the space, its messages and the children's data? The older docs soft-delete the user and show "Deleted Member" on their entries.                                              | Keep their records in the space, shown as "Former member". Delete personal profile data.                                 |
 | OQ8 | Invitation format: the roadmap says an email-bound token; the older docs say a 6-character code with a 7-day expiry.                                                                                                                  | Email-bound token (INV-1). The code is retired.                                                                          |
-| OQ9 | Multiple spaces: P0 (per this spec), P2 (per the roadmap) or paid-only (per the older subscription gating)? [BRAND.md](../BRAND.md) says one parent pays and invited members join free.                                              | P0 and free to invite. Decide what the plan limits when pricing is set.                                                  |
-| OQ10 | Do privileged operations (accept an invitation, delete an account, transfer ownership) need `apps/api` (NestJS), or are Supabase functions enough? Also in [TODO.md](../TODO.md).                                                    | Start with Supabase functions and add `apps/api` only if a requirement needs it.                                          |
+| OQ9 | Multiple spaces: P0 (per this spec), P2 (per the roadmap) or paid-only (per the older subscription gating)? [The pricing doc](discovery/2-strategy/10-pricing.md) says one subscriber covers the space and co-parents join free.                                              | P0 and free to invite. Decide what the plan limits when pricing is set.                                                  |
+| OQ10 | Do privileged operations (accept an invitation, delete an account, transfer ownership) need `apps/api` (NestJS), or are Supabase functions enough?                                                    | Start with Supabase functions and add `apps/api` only if a requirement needs it.                                          |
 
 ---
 
-## 12. Source map
+## 18. Source map
 
 Where the requirements in this file came from. Those lines were then removed from the source, so this file is the only place they live.
 
 | From | What moved | What stays there |
 | --- | --- | --- |
-| [ROADMAP-2026.md](../ROADMAP-2026.md) P0 | Database, authentication, authorization, privacy and application security sections; space and account features; the access matrix; auth, invitation and end-to-end tests; the child-access, retention and single-parent-departure decisions; the legal items on the age gate, data selling, retention schedule, data-subject rights and consent | Launch gates, implementation order, architecture, stack table, child profiles, calendar, messaging, the rest of testing and operations |
+| [ROADMAP-2026.md](roadmap-2026.md) P0 | Database, authentication, authorization, privacy and application security sections; space and account features; the access matrix; auth, invitation and end-to-end tests; the child-access, retention and single-parent-departure decisions; the legal items on the age gate, data selling, retention schedule, data-subject rights and consent | Launch gates, implementation order, architecture, stack table, child profiles, calendar, messaging, the rest of testing and operations |
 | ROADMAP-2026.md P1 to P4 | Enforced MFA, deactivation, security notifications, data export, device policy, sensitive-data handling, restore drills, mobile end-to-end tests, permissions UI, activity history, privacy controls, advanced spaces, archive space, member labels, professional access, viewer invitation links, participant permissions | The other backlog items |
-| [TODO.md](../TODO.md) | The child-access, retention and account-deletion decisions | Everything else |
-| [CO-PARENT.md](../CO-PARENT.md) | Identity & Access and Role-Based Access (password hashing and device tracking are now Supabase Auth's job) | The rest of the product concept |
+| `TODO.md` (deleted 2026-10-24) | The child-access, retention and account-deletion decisions | Everything else |
+| `CO-PARENT.md` (deleted 2026-10-24) | Everything: identity and roles (earlier), then the product definition and principles, entries, audit trail, acknowledgments, disputes, calendar ledger, files, encryption, export and the UX considerations | Dropped: the CoParent positioning and taglines, the old MVP scope list (superseded by the roadmap), the competitive-advantage notes |
 | `docs/discovery/3-technical/23-domain-logic.md`, `20-decision-logic.md` | Space, member and invitation concepts; space, role and invitation rules; role capabilities; enforcement layers; the owner, duplicate-join and account-deletion edge cases; the space and role terminology rows | Entries, versions, acknowledgment, export and subscription logic |
 | `docs/discovery/3-technical/24-data-layer.md`, `21-tech-stack.md` | Only the retention figures, quoted in OQ6 | Everything. Both are marked superseded and describe Firebase |
 | `docs/discovery/1-research/05-regulatory.md`, `4-design/33-onboarding.md` | The age gate (USR-8) and the optional invitation (USR-4), quoted | Everything. They are research and design reference |
-| [TODO.md](../TODO.md) scaffold items | Supabase folder, Vercel project and Expo app, now items in [requirements.md](requirements.md) | Nothing; they were removed |
+| `TODO.md` scaffold items | Supabase folder, Vercel project and Expo app, now items in [requirements.md](requirements.md) | Nothing; they were removed |
 | `docs/discovery/1-research/04-icp.md`, `4-design/32-accessibility.md`, `4-design/33-onboarding.md`, `4-design/31-branding.md` | Personas (voices in requirements.md), accessibility baseline (UX-1), voice (UX-2) and the first-run question (USR-13) | Everything. They are research and design reference |

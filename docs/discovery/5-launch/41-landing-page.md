@@ -1,6 +1,6 @@
 # Nookbud — Landing Page
 
-> **Status:** Open items tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md)
+> **Status:** Open items tracked in [ROADMAP-2026.md](../../roadmap-2026.md)
 > **Depends on:** Branding (31-branding.md), positioning
 
 ---
@@ -46,4 +46,4 @@ Co-parents join free — one subscriber covers the whole Space
 
 ## TODO
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.

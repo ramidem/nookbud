@@ -1,7 +1,7 @@
 # Discovery Docs — Nookbud
 
 > Generated: 2026-04-07
-> Reference material only. **Roadmap, priorities and all open items live in [ROADMAP-2026.md](../../ROADMAP-2026.md).**
+> Reference material only. **Roadmap, priorities and all open items live in [ROADMAP-2026.md](../roadmap-2026.md).**
 
 ## Structure
 

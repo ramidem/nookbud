@@ -131,6 +131,6 @@ Fixed costs: ~$80/mo
 
 ## TODO
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.
 
 **Sources:** RevenueCat State of Subscription Apps 2025, Marketing LTB Subscription Statistics 2025, Adapty State of In-App Subscriptions 2026, BusinessDojo ARPU Estimation Oct 2025

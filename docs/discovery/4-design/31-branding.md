@@ -1,8 +1,8 @@
 # Nookbud — Branding
 
 > **Date:** 2026-04-07
-> **Status:** ✅ Brand locked (2026-03-28) — Full spec in `BRAND.md`
-> **Source:** `BRAND.md` in repo root
+> **Status:** ✅ Brand locked (2026-03-28) — Full spec on the `/design` page of the web app
+> **Source:** the `/design` page of the web app (`apps/web/src/app/design`); `BRAND.md` was deleted 2026-10-24
 
 ---
 
@@ -102,6 +102,6 @@
 
 ## TODO
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.
 
-**Sources:** `BRAND.md` (repo root), prd.md (deleted 2026-10-14 — superseded by ROADMAP-2026.md)
+**Sources:** `BRAND.md` (deleted 2026-10-24; in git history), prd.md (deleted 2026-10-14 — superseded by ROADMAP-2026.md)

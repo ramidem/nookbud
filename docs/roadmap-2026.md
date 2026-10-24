@@ -1,4 +1,4 @@
-# Co-Parenting App — Prioritized Roadmap (P0 → P4)
+# Roadmap 2026: P0 to P4
 
 **Intent:** Launch the smallest app that parents can actually use day to day, on **web and mobile**, without cutting corners on **authentication, authorization, or privacy**.
 
@@ -461,7 +461,6 @@ Some steps can run in parallel, but the authorization model must be designed bef
 
 ### Brand & store assets *(31-branding, 42-marketing-assets)*
 - [ ] Pick a logo direction from `assets/brand/logo/`
-- [ ] Finalize light + dark palette and typography — `BRAND.md` (sage `#4A7C59`, Plus Jakarta Sans) disagrees with `.claude/docs/styling.md` and the app (sage `#6F8F7B`, Inter + EB Garamond); pick one and update the other; write brand guidelines *(31-branding)*
 - [ ] App icon from the chosen logo
 - [ ] OG image (1200×630) and Play Store feature graphic
 - [ ] App Store / Play screenshots once the P0 UI is stable

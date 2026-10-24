@@ -1,6 +1,6 @@
 # Nookbud — Onboarding
 
-> **Status:** Open items tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md)
+> **Status:** Open items tracked in [ROADMAP-2026.md](../../roadmap-2026.md)
 > **Depends on:** UX patterns, core features
 
 ---
@@ -62,4 +62,4 @@ Welcome → Family Structure → Create Space → Add Child → First Entry → 
 
 ## TODO
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.

@@ -2,7 +2,7 @@
 
 > **Date:** 2026-04-07
 > **Status:** ✅ Decided and implemented (Phases 1–3 complete)
-> ⚠️ **Superseded (2026-10-14):** [ROADMAP-2026.md](../../../ROADMAP-2026.md) selects Supabase (Postgres + Auth + RLS). The Firebase migration described here was never completed — services are still stubs.
+> ⚠️ **Superseded (2026-10-14):** [ROADMAP-2026.md](../../roadmap-2026.md) selects Supabase (Postgres + Auth + RLS). The Firebase migration described here was never completed — services are still stubs.
 
 ---
 
@@ -121,7 +121,7 @@ Full schema: see `docs/firebase-spec.md`
 
 ## Cleanup TODO
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 

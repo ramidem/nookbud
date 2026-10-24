@@ -13,7 +13,7 @@ This file covers **authentication and users**. Spaces and membership come next. 
 | a parent | Any adult caring for a child: a separated parent like Marcus, a parent working overseas like Jun, a grandparent raising a grandchild like Lola Cora, adoptive parents like Sarah and David, a blended-family parent like Camille |
 | an owner, a member | Roles inside a space. They arrive with the spaces stage |
 
-The personas are in [docs/discovery/1-research/04-icp.md](../docs/discovery/1-research/04-icp.md).
+The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/04-icp.md).
 
 **How to use it**
 
@@ -35,14 +35,6 @@ The personas are in [docs/discovery/1-research/04-icp.md](../docs/discovery/1-re
 ## Stage 1. Foundations
 
 Nothing a user sees yet. These come first because everything else leans on them.
-
-- [ ] **R1 · NF · P0** Database changes only go through versioned migrations.
-  - A `supabase/` folder holds migrations, seed data, functions and tests.
-  - A fresh local database builds from migrations alone, and the seed holds synthetic data only.
-  - Local, staging and production are separate Supabase projects.
-  - CI checks migrations on every push.
-  - Start from the old schema (`nookbud_copy/docs/supabase/schema.sql`, 13 tables with RLS), replacing `relationships` with the `space_members` model.
-  - Spec: DB-5, DB-9, TEST-6
 
 - [ ] **R2 · NF · P0** Secrets stay on the server.
   - The service-role key and database password exist only in server environment variables and CI secrets.
@@ -66,6 +58,14 @@ Nothing a user sees yet. These come first because everything else leans on them.
   - Each push gets a preview deploy.
   - Verification and reset links use the base URL of the environment that sent them: local, preview, staging or production.
   - Spec: roadmap A3 (environment separation), AUTH-1, AUTH-3
+
+- [ ] **R42 · NF · P0** Staging and production exist, and migrations reach them through CI.
+  - Staging and production are separate Supabase projects, each linked with `supabase link`.
+  - CI applies migrations to staging on merge and to production after approval. Nobody pushes by hand.
+  - Neither environment shares keys, users or data with local.
+  - Update [the database page](database.md) when it is done.
+  - Spec: DB-5, roadmap A3 (environment separation)
+  - Blocked by: creating the two Supabase projects (an account action).
 
 - [ ] **R6 · NF · P0** Verification and reset emails arrive.
   - They send from a Nookbud address with SPF and DKIM set up.
@@ -280,3 +280,14 @@ These need a space to exist, so they come with the spaces stage.
 - As a parent, I can start using Nookbud on my own without inviting anyone. Spec: USR-4
 - As a parent in a blended family, I use one account for all my arrangements, with no extra emails. Spec: USR-3, SPC-2
 - As someone invited to a space, such as a birth mother invited by adoptive parents, I can create my own account from the invitation and land in that space. Spec: INV-2, INV-7
+
+## Next areas
+
+Not ordered or written as stories yet. Their requirements are in [spec.md](spec.md); we write the stories when we reach them.
+
+- Records and the timeline ([§9](spec.md#9-records-and-the-timeline))
+- Audit trail ([§10](spec.md#10-audit-trail))
+- Acknowledgments and disputes ([§11](spec.md#11-acknowledgments-and-disputes))
+- Calendar ([§12](spec.md#12-calendar))
+- Files ([§13](spec.md#13-files))
+- Export ([§14](spec.md#14-export))

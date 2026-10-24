@@ -143,12 +143,12 @@ The OFW market is Nookbud's clearest differentiation and biggest untapped opport
 
 ## Launch Content Plan
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
 ## TODO
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.
 
 **Sources:** Reddit (r/FamilyLaw Dec 2025, r/Divorce Jan 2026, r/coparenting Jul 2024), Lake Munro Law (Aug 2025), IMARC Philippines Remittance Market 2025, POEA data

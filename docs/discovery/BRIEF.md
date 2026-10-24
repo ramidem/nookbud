@@ -280,7 +280,7 @@ audit_logs
 
 ### Planned
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -389,9 +389,9 @@ The market is not "divorced parents." The market is **everyone who shares respon
 
 ## Next Steps
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
 *This brief is the input for discovery. All discovery docs should reflect the inclusive, care-first framing and Spaces model defined here.*
-*Brand locked: 2026-03-28. See BRAND.md for full visual identity and copy guidelines.*
+*Brand locked: 2026-03-28. See the `/design` page of the web app for the visual identity.*

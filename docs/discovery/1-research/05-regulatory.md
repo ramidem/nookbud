@@ -29,7 +29,7 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
 - **Penalties:** Imprisonment 1–6 years + PHP 500K–5M fines; proposed amendments (pending) would increase penalties significantly
 - **Action required:** see ROADMAP-2026.md
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md).
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md).
 
 ---
 
@@ -47,7 +47,7 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
 - **Penalties:** Up to €20M or 4% of global annual turnover, whichever is higher
 - **Action required:** see ROADMAP-2026.md
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md).
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md).
 
 ---
 
@@ -65,7 +65,7 @@ Nookbud operates at the intersection of four regulatory domains: personal data p
   - No behavioral advertising targeting children
 - **Action required:** see ROADMAP-2026.md
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md).
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md).
 
 ---
 
@@ -145,13 +145,13 @@ Digital evidence is admissible across US, AU, UK, PH family courts if it meets b
 
 ### User rights to implement
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
 ## Compliance Checklist
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 

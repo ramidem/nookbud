@@ -66,7 +66,7 @@ Civil penalties up to **$51,744 per violation** (2026 rate). Each affected child
 
 ### Nookbud Action Items
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -140,7 +140,7 @@ Up to **€20 million or 4% of annual global turnover**, whichever is higher.
 
 ### Nookbud Action Items
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -173,7 +173,7 @@ Administrative fines, damages awards, enforcement/compliance orders, cease and d
 
 ### Nookbud Action Items (for PH Market Entry)
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
@@ -304,7 +304,7 @@ Nookbud is a **mixed audience app** — used by adults but handling children's d
 
 ### Action Items
 
-> Open items for this area are tracked in [ROADMAP-2026.md](../../ROADMAP-2026.md) — the single source of truth for the roadmap.
+> Open items for this area are tracked in [ROADMAP-2026.md](../roadmap-2026.md) — the single source of truth for the roadmap.
 
 ---
 
