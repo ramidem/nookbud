@@ -1,6 +1,6 @@
 # Nookbud specification
 
-The main requirements document. It grows one area at a time. Today it covers **authentication, users and spaces**. Other areas (calendar, messaging, expenses, documents, export) are still described in [ROADMAP-2026.md](../ROADMAP-2026.md) and will move here as we specify them. The lines for this area were removed from the older docs when they were moved here.
+The main requirements document. It grows one area at a time. Today it covers **authentication, users and spaces**. Other areas (calendar, messaging, expenses, documents, export) are still described in [ROADMAP-2026.md](../ROADMAP-2026.md) and will move here as we specify them. The lines for this area were removed from the older docs when they were moved here. The order we build things in, as user stories, is in [requirements.md](requirements.md).
 
 **How to read it**
 
@@ -78,9 +78,10 @@ Revisit if we need enterprise SSO (for example law firms or mediators in P3), or
 | USR-7 | A user can **delete their account in the app**. The flow explains what happens to shared data (see OQ7). Apple and Google both require this for apps with account creation.      | P0       |
 | USR-8 | Users must be adults. Onboarding has an age gate (18+) and the terms say the app is for adults only. _Proposed_                                                                   | P0       |
 | USR-9 | A user can deactivate their account. Define what deactivation does to their memberships and records first.                                                                        | P1       |
-| USR-10 | A user can export their own data. Pull into P0 if legal counsel requires it for launch.                                                                                          | P1       |
+| USR-10 | A user can export everything held about them, in a structured, machine-readable format. This covers the right of access and portability. Pull into P0 if legal counsel requires it for launch. | P1       |
 | USR-11 | A settings area for privacy controls over sensitive family information.                                                                                                           | P1       |
 | USR-12 | A user can correct and update their personal data. Deletion is USR-7 and export is USR-10. | P0 |
+| USR-13 | On first sign-in a new user is asked who shares responsibility for a child with them (never "who is your co-parent"), with options that fit any family: partner, ex-partner, grandparent, guardian, other family member, or "I'm the sole caregiver right now". Every onboarding step can be skipped. | P0 |
 
 ---
 
@@ -105,6 +106,7 @@ Authentication says who the user is. It does not say what they may access; that 
 | AUTH-13 | **Enforced MFA** for sensitive operations and privileged accounts.                                                                                                           | P1       |
 | AUTH-14 | Notify users of important security events on their account.                                                                                                                  | P1       |
 | AUTH-15 | A policy for lost or compromised devices, and a policy for supported app versions on mobile.                                                                                 | P1       |
+| AUTH-16 | Verification and password-reset emails send from a Nookbud address and reach the inbox. | P0 |
 
 ---
 
@@ -246,6 +248,13 @@ Supabase (PostgreSQL) is the single authoritative backend. Identity comes from S
 | PRIV-9 | Additional restrictions for medical and child-related information.                                                                                                                                       | P1       |
 | PRIV-10 | Counsel confirms whether age verification or parental-consent flows are needed for data about children under 13, and that consent mechanisms meet the privacy law. | P0 |
 
+### Usability and accessibility
+
+| ID   | Requirement                                                                                                                                                                                                  | Priority |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| UX-1 | Auth and account screens meet the accessibility baseline: a label on every control, alt text, logical focus order, 4.5:1 contrast, no color-only indicators, 44×44 pt touch targets, reduced motion respected. | P0       |
+| UX-2 | Auth and account messages follow the Nookbud voice: short sentences, addressing the user as "you", titles that describe what happened (never "Error"), red only for genuine alerts.                         | P0       |
+
 ### Reliability and performance
 
 | ID    | Requirement                                                                                          | Priority |
@@ -302,3 +311,5 @@ Where the requirements in this file came from. Those lines were then removed fro
 | `docs/discovery/3-technical/23-domain-logic.md`, `20-decision-logic.md` | Space, member and invitation concepts; space, role and invitation rules; role capabilities; enforcement layers; the owner, duplicate-join and account-deletion edge cases; the space and role terminology rows | Entries, versions, acknowledgment, export and subscription logic |
 | `docs/discovery/3-technical/24-data-layer.md`, `21-tech-stack.md` | Only the retention figures, quoted in OQ6 | Everything. Both are marked superseded and describe Firebase |
 | `docs/discovery/1-research/05-regulatory.md`, `4-design/33-onboarding.md` | The age gate (USR-8) and the optional invitation (USR-4), quoted | Everything. They are research and design reference |
+| [TODO.md](../TODO.md) scaffold items | Supabase folder, Vercel project and Expo app, now items in [requirements.md](requirements.md) | Nothing; they were removed |
+| `docs/discovery/1-research/04-icp.md`, `4-design/32-accessibility.md`, `4-design/33-onboarding.md`, `4-design/31-branding.md` | Personas (voices in requirements.md), accessibility baseline (UX-1), voice (UX-2) and the first-run question (USR-13) | Everything. They are research and design reference |
