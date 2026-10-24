@@ -65,7 +65,7 @@
 ## P0-A — Foundation & Security
 
 ### A1. Architecture & Stack
-- [ ] **Monorepo** — Web, mobile, shared packages, and backend in one repo (Turborepo + pnpm)
+- [ ] **Monorepo** — Web, mobile, shared packages, and backend in one repo (Nx + pnpm)
 - [ ] **Web app** — Next.js + TypeScript
 - [ ] **Mobile app** — Expo + React Native + TypeScript (iOS and Android)
 - [ ] **Single authoritative backend** — Supabase (PostgreSQL, Auth, RLS); server-side functions for privileged operations
@@ -220,7 +220,7 @@ Core tables for P0: `users` (profile), `spaces`, `space_members`, `children`, `p
 
 | Layer | Recommendation |
 |---|---|
-| Monorepo | Turborepo + pnpm |
+| Monorepo | Nx + pnpm |
 | Web | Next.js + TypeScript |
 | Mobile | Expo + React Native + TypeScript |
 | Backend | Supabase |

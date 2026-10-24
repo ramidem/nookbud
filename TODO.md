@@ -27,11 +27,13 @@
 ## 3. Scaffold (after step 2)
 
 - [x] Monorepo with **one package manager and one committed lockfile**: Nx 23 workspace with pnpm, `pnpm-lock.yaml` only (2026-10-15)
-- [ ] `apps/web`: Next.js (`pnpm nx add @nx/next`), deployable on its own with a plain `next build` (no `withNx`-style wrapper; that wrapper broke the old builds)
+- [x] `apps/web`: Next.js 16 (App Router, `src/`), plain `next.config.js` with no `withNx` wrapper (2026-10-24)
 - [ ] Vercel project per web app: Root Directory = the app folder, preview deploys on every push
 - [ ] `apps/mobile`: Expo (`pnpm nx add @nx/expo`). Check pnpm compatibility when adding it; React Native tooling may need `nodeLinker: hoisted` in `pnpm-workspace.yaml`.
-- [ ] `apps/api`: NestJS (`pnpm nx add @nx/nest`). Decide whether it's needed alongside Supabase server-side functions.
+- [x] `apps/api`: NestJS 11 scaffolded (2026-10-24)
+- [ ] Decide whether `apps/api` is needed alongside Supabase server-side functions
 - [ ] `supabase/`: migrations, seed, functions, tests (RLS isolation tests before any feature tables)
+- [x] Upgrade to Node 24 LTS and Nx 24, all deps to latest (2026-10-24). Held back: NestJS 12 (`@nx/nest` peer `<12`), TypeScript 7 (typescript-eslint `<6.1`), ESLint 10 (eslint-plugin-react/jsx-a11y/import), webpack-dev-server 6 (`@nx/webpack`). Move Node to 26 once it becomes LTS.
 - [x] CI: `.github/workflows/ci.yml` runs format check, then lint/test/build/typecheck on every push and PR (no projects yet, so it passes trivially)
 - [ ] Then follow ROADMAP-2026 P0 order (steps 0.3 onward)
 

@@ -1,6 +1,6 @@
 # Nookbud
 
-Shared care records for families raising a child across homes. Nx monorepo — web (Next.js), API (NestJS) and mobile (Expo) will be added as Nx projects.
+Shared care records for families raising a child across homes. Nx monorepo — web (Next.js) and API (NestJS) are scaffolded; mobile (Expo) comes next.
 
 - **Roadmap & backlog:** [ROADMAP-2026.md](ROADMAP-2026.md) — single source of truth for priorities
 - **Restart steps:** [TODO.md](TODO.md) — immediate next steps, including what to restore from `../nookbud_copy` (the old codebase)
@@ -8,15 +8,19 @@ Shared care records for families raising a child across homes. Nx monorepo — w
 
 ## Tech Stack
 
-- **Runtime:** Node 22 (see `.nvmrc`)
+- **Runtime:** Node 24 LTS (see `.nvmrc`)
 - **Package manager:** pnpm (version pinned in `package.json` → `packageManager`; use `corepack pnpm` if pnpm isn't installed)
-- **Build system:** Nx 23 with TypeScript project references and pnpm workspaces
-- **Planned:** Next.js (web, hosted on Vercel), NestJS (API), Expo (mobile), Supabase (Postgres + Auth + RLS)
+- **Build system:** Nx 24 with TypeScript project references and pnpm workspaces
+- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Vercel; plain `next.config.js` (no `withNx`)
+- **API:** NestJS 11 in `apps/api` (webpack build)
+- **Tooling:** TypeScript 6, ESLint 9 (flat config), Vitest 5 (web), Jest 30 (api), Prettier
+- **Planned:** Expo (mobile), Supabase (Postgres + Auth + RLS)
+- **Version holds:** NestJS 12, TypeScript 7, ESLint 10 and webpack-dev-server 6 wait on Nx / typescript-eslint / eslint-plugin-react support
 
 ## Layout
 
 ```
-apps/       # deployable apps (web, api, mobile) — empty for now
+apps/       # deployable apps: web (Next.js), api (NestJS); mobile (Expo) planned
 packages/   # shared libraries (types, validation, design tokens, api client)
 docs/       # discovery and research (reference only)
 assets/     # brand logos and icons
@@ -28,6 +32,8 @@ assets/     # brand logos and icons
 pnpm install                     # install dependencies
 pnpm nx show projects            # list projects
 pnpm nx run-many -t lint test build typecheck
+pnpm nx dev web                  # Next.js dev server
+pnpm nx serve api                # NestJS dev server
 pnpm nx format:check             # prettier check (CI runs this)
 pnpm nx add @nx/next             # add a framework plugin before generating an app
 ```
