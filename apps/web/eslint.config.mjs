@@ -9,4 +9,23 @@ export default [
   {
     ignores: ['.next/**/*', '**/out-tsc'],
   },
+  {
+    // Auth goes through `@/auth`, so the provider can change without touching the app.
+    files: ['**/*.{ts,tsx,js,jsx,mjs}'],
+    ignores: ['src/auth/providers/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@supabase/*'],
+              message:
+                "Use the auth module: import { getAuth } from '@/auth'. Only src/auth/providers may import @supabase/*.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
