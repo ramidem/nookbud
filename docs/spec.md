@@ -59,6 +59,9 @@ The main requirements document. It grows one area at a time. It covers **authent
 | D1  | Say **space** everywhere, never workspace, family or care circle.                | Decided 2026-10-24           |
 | D2  | The database is **Supabase** (PostgreSQL), with Row-Level Security.              | Decided 2026-10-24           |
 | D3  | Users and sign-in use **Supabase Auth**.                                         | Decided 2026-10-24           |
+| D4  | The web app runs on **Google Cloud Run**, in Singapore, in one Google Cloud project with separate staging and production services. | Decided 2026-10-24 |
+| D5  | Branches follow **gitflow**: `main` is production and `develop` is staging. Only `main` reaches production. | Decided 2026-10-24 |
+| D6  | The MVP launches with a **free tier**. Charging comes later, when the paid features are ready. | Decided 2026-10-24 |
 
 ### D3: Why Supabase Auth
 
@@ -378,6 +381,7 @@ A successful build is not enough. The tests must show that unauthorized access i
 | OQ8 | Invitation format: the roadmap says an email-bound token; the older docs say a 6-character code with a 7-day expiry.                                                                                                                  | Email-bound token (INV-1). The code is retired.                                                                          |
 | OQ9 | Multiple spaces: P0 (per this spec), P2 (per the roadmap) or paid-only (per the older subscription gating)? [The pricing doc](discovery/2-strategy/10-pricing.md) says one subscriber covers the space and co-parents join free.                                              | P0 and free to invite. Decide what the plan limits when pricing is set.                                                  |
 | OQ10 | Do privileged operations (accept an invitation, delete an account, transfer ownership) need `apps/api` (NestJS), or are Supabase functions enough?                                                    | Start with Supabase functions and add `apps/api` only if a requirement needs it.                                          |
+| OQ11 | How do we charge users, and where do payouts land? Both app stores require their own billing for digital subscriptions inside the mobile apps. For the web there are two routes: a merchant-of-record service (Paddle or Lemon Squeezy, about 5% plus $0.50 a transaction according to comparison sites) or a card processor directly. Lemon Squeezy pays out to a bank or PayPal account in 200+ countries. Still to confirm for each: that it onboards a seller in the Philippines, the payout route and the fees. | Open. Plan on store billing for mobile and a merchant of record for the web, which also takes care of sales tax. Confirm each provider's current supported-seller list before choosing, and ask counsel about Philippine tax. |
 
 ---
 
@@ -394,5 +398,5 @@ Where the requirements in this file came from. Those lines were then removed fro
 | `docs/discovery/3-technical/23-domain-logic.md`, `20-decision-logic.md` | Space, member and invitation concepts; space, role and invitation rules; role capabilities; enforcement layers; the owner, duplicate-join and account-deletion edge cases; the space and role terminology rows | Entries, versions, acknowledgment, export and subscription logic |
 | `docs/discovery/3-technical/24-data-layer.md`, `21-tech-stack.md` | Only the retention figures, quoted in OQ6 | Everything. Both are marked superseded and describe Firebase |
 | `docs/discovery/1-research/05-regulatory.md`, `4-design/33-onboarding.md` | The age gate (USR-8) and the optional invitation (USR-4), quoted | Everything. They are research and design reference |
-| `TODO.md` scaffold items | Supabase folder, Vercel project and Expo app, now items in [requirements.md](requirements.md) | Nothing; they were removed |
+| `TODO.md` scaffold items | Supabase folder, hosting project and Expo app, now items in [requirements.md](requirements.md) | Nothing; they were removed |
 | `docs/discovery/1-research/04-icp.md`, `4-design/32-accessibility.md`, `4-design/33-onboarding.md`, `4-design/31-branding.md` | Personas (voices in requirements.md), accessibility baseline (UX-1), voice (UX-2) and the first-run question (USR-13) | Everything. They are research and design reference |

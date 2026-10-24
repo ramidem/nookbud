@@ -36,17 +36,40 @@ The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/0
 
 Nothing a user sees yet. These come first because everything else leans on them.
 
-- [ ] **R5 · NF · P0** Every push gets its own deploy, and auth links point at the right one.
-  - A Vercel project deploys `apps/web` with the app folder as its Root Directory.
-  - Each push gets a preview deploy.
+- [ ] **R5 · NF · P0** The web app deploys to Google Cloud Run: staging from `develop`, production from `main`.
+  - One Google Cloud project in Singapore (`asia-southeast1`), with an Artifact Registry repository and two Cloud Run services, staging and production.
+  - The app builds as a container from `apps/web` (Next.js standalone output).
+  - A push to `develop` deploys staging. A push to `main` deploys production, after an approval in GitHub.
+  - A pull request gets a preview URL: a zero-traffic, tagged revision of the staging service.
+  - GitHub logs in to Google with Workload Identity Federation, with no stored keys. `develop` can deploy only staging, and `main` only production.
+  - A billing budget with email alerts at $25, $40 and $50, and a maximum instance count on each service ([costs.md](costs.md)).
+  - Each service has its own service account. Secrets live in Secret Manager under per-environment names and reach the service as server-only variables ([secrets.md](secrets.md)). Public values are set per environment.
   - Verification and reset links use the base URL of the environment that sent them: local, preview, staging or production.
-  - Values are set as described in [secrets.md](secrets.md): public values as `NEXT_PUBLIC_` project variables, secrets as server-only variables.
-  - Spec: roadmap A3 (environment separation), AUTH-1, AUTH-3
+  - Spec: D4, D5, roadmap A3 (environment separation), AUTH-1, AUTH-3
+  - Blocked by: creating the Google Cloud project and turning on billing (an account action). The setup commands get written down.
+
+- [ ] **R45 · NF · P0** A visitor does not wait on a cold start.
+  - At launch, production keeps at least one instance warm (`min-instances=1`) on request-based billing, about $10–14 a month. Before launch it can scale to zero. Always-allocated CPU costs several times more ([costs.md](costs.md)).
+  - Startup CPU boost is on. Staging scales to zero.
+  - The container is small and does no heavy work at startup.
+  - Startup latency is checked after each deploy against a target: a dynamic page cold-starts in under 3 seconds. _Proposed target._
+  - Spec: D4
+
+- [ ] **R46 · NF · P1** Static pages and assets are served from a CDN, not from the container.
+  - Decide between Cloudflare in front (free tier) and Cloud CDN behind a global load balancer, which has its own monthly charge (about $18 or more, unverified: [costs.md](costs.md)). Check the price first.
+  - Static assets get long-lived cache headers, and prerendered pages (the home page, the documentation) can be cached.
+  - Spec: D4
+
+- [ ] **R47 · NF · P0** `main` and `develop` are protected on GitHub.
+  - No direct pushes to either. CI must pass before a merge, and `main` takes changes only from `develop` or a hotfix branch.
+  - Spec: D5
+  - Blocked by: GitHub repository settings (an account action).
 
 - [ ] **R42 · NF · P0** Staging and production exist, and migrations reach them through CI.
   - Staging and production are separate Supabase projects, each linked with `supabase link`.
-  - CI applies migrations to staging on merge and to production after approval. Nobody pushes by hand.
+  - CI applies migrations to staging when `develop` changes, and to production after approval when `main` changes. Nobody pushes by hand.
   - Neither environment shares keys, users or data with local.
+  - Supabase stays on the Free plan until launch. At launch, production moves to Pro for daily backups and no pausing ([costs.md](costs.md)).
   - Update [the database page](database.md) when it is done.
   - Spec: DB-5, roadmap A3 (environment separation)
   - Blocked by: creating the two Supabase projects (an account action).

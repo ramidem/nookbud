@@ -10,8 +10,8 @@ Secrets stay on the server and out of git. The Supabase service-role key bypasse
 
 | Name | Side | Lives in |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | public | `apps/web/.env.local`, Vercel |
-| `SUPABASE_SERVICE_ROLE_KEY` | secret | `apps/web/.env.local`, Vercel (server only) |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | public | `apps/web/.env.local`, Cloud Run settings per environment |
+| `SUPABASE_SERVICE_ROLE_KEY` | secret | `apps/web/.env.local`, Secret Manager (server only) |
 | `SUPABASE_DB_PASSWORD` | secret | your shell and GitHub Actions secrets, for `supabase link` and `db push` |
 
 To run locally, copy `apps/web/.env.example` to `apps/web/.env.local` and fill it in.
@@ -28,7 +28,7 @@ To run locally, copy `apps/web/.env.example` to `apps/web/.env.local` and fill i
 1. Name it without `NEXT_PUBLIC_`.
 2. Add it to `serverEnvSchema` in `src/env/server.ts` and, name only, to `.env.example`.
 3. Add its name to `CANARY_BASE_NAMES` in `scripts/secret-patterns.mjs`.
-4. Set it in Vercel as a server-only variable, and in GitHub secrets if CI needs it.
+4. Store it in Secret Manager under a per-environment name and attach it to the Cloud Run service as a server-only variable. Add it to GitHub secrets only if CI needs it.
 
 ## If one leaks
 
@@ -41,4 +41,4 @@ Rotate it first: create a new one and revoke the old one where it was issued. Re
 ## Not covered yet
 
 - The mobile app: when it exists, add `EXPO_PUBLIC_` to `CANARY_PREFIXES` and scan its bundle (R32).
-- Real keys and the Vercel, GitHub and Supabase settings (R5, R42).
+- Real keys and the Cloud Run, GitHub and Supabase settings (R5, R42).

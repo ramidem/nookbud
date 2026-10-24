@@ -12,7 +12,7 @@ Shared care records for families raising a child across homes. Nx monorepo — w
 - **Runtime:** Node 24 LTS (see `.nvmrc`)
 - **Package manager:** pnpm (version pinned in `package.json` → `packageManager`; use `corepack pnpm` if pnpm isn't installed)
 - **Build system:** Nx 24 with TypeScript project references and pnpm workspaces
-- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Vercel; plain `next.config.js` (no `withNx`). `/` is the landing page (`src/landing/`), `/design` the design-system page, `/documentation` the public documentation site (`src/app/documentation/`). Styling: Tailwind 4 (utilities only, no global reset) mapped to the tokens in `src/app/design/_data/tokens.json`
+- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Google Cloud Run (Singapore); plain `next.config.js` (no `withNx`). `/` is the landing page (`src/landing/`), `/design` the design-system page, `/documentation` the public documentation site (`src/app/documentation/`). Styling: Tailwind 4 (utilities only, no global reset) mapped to the tokens in `src/app/design/_data/tokens.json`
 - **API:** NestJS 11 in `apps/api` (webpack build)
 - **Tooling:** TypeScript 6, ESLint 9 (flat config), Vitest 5 (web), Jest 30 (api), Prettier
 - **Planned:** Expo (mobile), Supabase (Postgres + Auth + RLS)
@@ -78,7 +78,10 @@ All auth goes through `getAuth()` from `@/auth` (server-only). Never import `@su
 
 ## Git Workflow
 
-- Push **directly to main** — no branching, no PRs needed
+Gitflow. `main` is production and `develop` is staging. Only `main` reaches production.
+
+- Work on `feature/<name>` branches cut from `develop`, and merge them back into `develop`.
+- Release by merging `develop` into `main`. Hotfixes branch from `main` and merge into both.
 - Conventional commits (`feat:`, `fix:`, `chore:`, `docs:` …), one concern per commit
 - Run format check, lint, typecheck and tests before committing
 
