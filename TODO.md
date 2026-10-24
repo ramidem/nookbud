@@ -60,7 +60,7 @@ Paths are relative to `/Users/ramidem/Code/bulakao/nookbud_copy`.
 |---|---|---|
 | `docs/supabase/schema.sql` | starting point for `supabase/migrations/` | 13 tables with RLS. Replace `relationships` with the `space_members` model and add the P0 tables (invitations, calendar, messages). |
 | `libs/design-tokens/src/` | `packages/design-tokens/` | Colors, fonts, sizes, Tailwind presets (native + web). Update after the palette decision. |
-| `apps/landing/src/`, `apps/landing/public/`, `apps/landing/tailwind.config.js`, `apps/landing/postcss.config.js` | landing app or `apps/web` marketing pages | The only real web content (hero, features, pricing, FAQ, personas). Skip `.next/` and `node_modules/` (most of its 235 MB). Drop `Dockerfile`, `cloudbuild.yaml`, `start.sh` (Cloud Run; replaced by Vercel). |
+| ~~`apps/landing/*`~~ | `apps/web/src/landing/` | ✅ Brought in 2026-10-24 and redesigned from scratch as the home page of `apps/web` (Tailwind 4, design tokens, no stock art). The old testimonials, persona stories, pricing and trial were dropped: they were invented customers and prices for a product that doesn't exist. "Join the waitlist" is a `mailto:` (`src/landing/config.ts`); swap in a real signup when there is one. Add pricing back once it's decided. |
 | `apps/mobile/assets/fonts/` | mobile and web font assets | Inter + EB Garamond `.ttf` files. Only if the palette decision keeps them. |
 | `apps/mobile/src/icons/` | mobile icons | 47 Lucide SVGs using `currentColor` |
 | `apps/mobile/src/assets/images/logo.png` | mobile assets | |

@@ -11,7 +11,7 @@ Shared care records for families raising a child across homes. Nx monorepo — w
 - **Runtime:** Node 24 LTS (see `.nvmrc`)
 - **Package manager:** pnpm (version pinned in `package.json` → `packageManager`; use `corepack pnpm` if pnpm isn't installed)
 - **Build system:** Nx 24 with TypeScript project references and pnpm workspaces
-- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Vercel; plain `next.config.js` (no `withNx`)
+- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Vercel; plain `next.config.js` (no `withNx`). `/` is the landing page (`src/landing/`), `/design` the design-system page. Styling: Tailwind 4 (utilities only, no global reset) mapped to the tokens in `src/app/design/_data/tokens.json`
 - **API:** NestJS 11 in `apps/api` (webpack build)
 - **Tooling:** TypeScript 6, ESLint 9 (flat config), Vitest 5 (web), Jest 30 (api), Prettier
 - **Planned:** Expo (mobile), Supabase (Postgres + Auth + RLS)
