@@ -2,17 +2,17 @@
 
 Shared care records for families raising a child across homes. Nx monorepo — web (Next.js) and API (NestJS) are scaffolded; mobile (Expo) comes next.
 
-- **Specification:** [specs/spec.md](specs/spec.md) — the main docs folder. Functional and non-functional requirements, starting with auth, users and spaces. Say **space**, never workspace
-- **Roadmap & backlog:** [ROADMAP-2026.md](ROADMAP-2026.md) — launch gates, build order and the rest of the backlog; the auth, user and space requirements live in the spec
-- **Restart steps:** [TODO.md](TODO.md) — immediate next steps, including what to restore from `../nookbud_copy` (the old codebase)
-- **Brand:** [BRAND.md](BRAND.md) · **Product concept:** [CO-PARENT.md](CO-PARENT.md) · **Research:** `docs/`
+- **Internal docs:** [docs/](docs/README.md), never served. The [spec](docs/spec.md) (what the product must do), the [requirements](docs/requirements.md) (the build queue, in order), the [roadmap](docs/roadmap-2026.md) and engineering notes such as [the database](docs/database.md). Say **space**, never workspace
+- **Public documentation:** `apps/web/documentation`, served at `/documentation`. Written for the people who will use Nookbud. Nothing internal goes in it
+- **Brand and design system:** the `/design` page in `apps/web`
+- **Stale reference:** `docs/discovery`, `docs/research`, `docs/strategy` and [docs/old-codebase.md](docs/old-codebase.md). Mine it, do not maintain it. See Reference docs below
 
 ## Tech Stack
 
 - **Runtime:** Node 24 LTS (see `.nvmrc`)
 - **Package manager:** pnpm (version pinned in `package.json` → `packageManager`; use `corepack pnpm` if pnpm isn't installed)
 - **Build system:** Nx 24 with TypeScript project references and pnpm workspaces
-- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Vercel; plain `next.config.js` (no `withNx`). `/` is the landing page (`src/landing/`), `/design` the design-system page. Styling: Tailwind 4 (utilities only, no global reset) mapped to the tokens in `src/app/design/_data/tokens.json`
+- **Web:** Next.js 16 (App Router) + React 19 in `apps/web`, hosted on Vercel; plain `next.config.js` (no `withNx`). `/` is the landing page (`src/landing/`), `/design` the design-system page, `/documentation` the public documentation site (`src/app/documentation/`). Styling: Tailwind 4 (utilities only, no global reset) mapped to the tokens in `src/app/design/_data/tokens.json`
 - **API:** NestJS 11 in `apps/api` (webpack build)
 - **Tooling:** TypeScript 6, ESLint 9 (flat config), Vitest 5 (web), Jest 30 (api), Prettier
 - **Planned:** Expo (mobile), Supabase (Postgres + Auth + RLS)
@@ -22,8 +22,10 @@ Shared care records for families raising a child across homes. Nx monorepo — w
 
 ```
 apps/       # deployable apps: web (Next.js), api (NestJS); mobile (Expo) planned
+apps/web/documentation/  # public documentation for users, served at /documentation
 packages/   # shared libraries (types, validation, design tokens, api client)
-docs/       # discovery and research (reference only)
+supabase/   # Supabase project: migrations, seed, functions, database tests
+docs/       # internal docs (spec, requirements, roadmap, engineering notes), never served; plus stale discovery, research and strategy reference
 assets/     # brand logos, icons and illustrations
 ```
 
@@ -35,9 +37,35 @@ pnpm nx show projects            # list projects
 pnpm nx run-many -t lint test build typecheck
 pnpm nx serve web                # Next.js dev server (http://localhost:3000)
 pnpm nx serve api                # NestJS dev server (http://localhost:3001)
+pnpm nx run supabase:db-reset    # rebuild the local database from migrations (needs Docker)
 pnpm nx format:check             # prettier check (CI runs this)
 pnpm nx add @nx/next             # add a framework plugin before generating an app
 ```
+
+## Working through requirements
+
+[docs/requirements.md](docs/requirements.md) is the build queue, in order. For each item:
+
+1. Take the first unchecked item whose blockers are clear. Read the spec IDs on its `Spec:` line in [docs/spec.md](docs/spec.md).
+2. Implement it to its acceptance criteria, with tests.
+3. **Delete the item's lines from `docs/requirements.md`.** Do not renumber the others.
+4. **Write it up for engineers in `docs/`**: add or update a page (for example `docs/database.md`) and list it in `docs/README.md`. Say what exists, how to use it, the rules that must hold, and what is not done yet.
+5. If it changes what a user can do, or what we promise them, **update the public documentation** in `apps/web/documentation/`.
+6. If part of it could not be finished, add that part to `docs/requirements.md` as a new item (the next free `R` number, placed where it belongs in the order). Do not leave it in the docs as if it works.
+
+Read `docs/` before changing anything it covers.
+
+## Public documentation
+
+`apps/web/documentation/` is a real documentation site for the people who will use Nookbud. It is public. Write for a parent, a grandparent or a guardian: plain words, what Nookbud does and how to use it. Say plainly what is not available yet, and never describe a feature as live that is not.
+
+**Never put internal material there**: the spec, requirements, roadmap, engineering notes, legal notes, pricing research or anything about how it is built. Those belong in `docs/`. A test fails if an internal page is added or linked from the public pages.
+
+Pages are Markdown with frontmatter (`title`, `section`, `order`, `description`) and appear on their own. [docs/documentation-site.md](docs/documentation-site.md) explains how the site works.
+
+## Reference docs
+
+`docs/discovery`, `docs/research` and `docs/strategy` are the old discovery, research and strategy material. They are stale and being retired, one area at a time. When you write or extend a spec area, pull what you need out of them into `docs/spec.md`, delete the lines you moved, and delete a file once nothing useful is left. Do not copy whole documents.
 
 ## Git Workflow
 

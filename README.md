@@ -20,8 +20,6 @@ Before committing: `pnpm nx format:check` and `pnpm nx run-many -t lint test bui
 
 ## Docs
 
-- [specs/spec.md](specs/spec.md): requirements
-- [specs/requirements.md](specs/requirements.md): what to build, in order
-- [ROADMAP-2026.md](ROADMAP-2026.md): backlog and launch gates
-- [TODO.md](TODO.md): next steps
-- [BRAND.md](BRAND.md): brand
+- [docs/](docs/README.md): internal docs for the team (spec, requirements, roadmap, engineering notes). Never served.
+- [apps/web/documentation](apps/web/documentation/index.md): the public documentation, served at `/documentation` when the web app runs.
+- `/design` in the web app: colors, type, spacing and voice.
