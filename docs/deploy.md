@@ -17,6 +17,8 @@ The web app and the API run on Google Cloud Run in Singapore (spec D4). Cloud Bu
 
 Only a final version (`1.2.3`) deploys. There is no staging and no preview (spec D5).
 
+Versions follow semver, per app. Until launch, stay on `0.1.x` and bump the patch for each release. The launch release is `web-v1.0.0` and `api-v1.0.0`.
+
 ## What runs
 
 - **GitHub Actions** has two tiers. Every pull request runs the fast checks (format, lint, tests, build, typecheck) and the secret scan of the git history. A pull request into `main`, and every push to `main`, also run the slow ones: the database tests, the client bundle secret check, and a smoke test that builds both containers and checks they answer. `develop` has no push run because its pull request already ran. A new push to a pull request cancels its older run.
