@@ -69,3 +69,5 @@ web-build
 *.p12
 *.key
 *.mobileprovision
+vitest.config.*.timestamp*
+test-output
