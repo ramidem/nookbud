@@ -68,6 +68,10 @@ Pages are Markdown with frontmatter (`title`, `section`, `order`, `description`)
 
 Secrets stay on the server and out of git. Public values are `NEXT_PUBLIC_*`; everything else is a secret. Read secrets only through `getServerEnv()` in `apps/web/src/env/server.ts` (it is `server-only`), never `process.env` directly, and never give a secret a `NEXT_PUBLIC_` name. Never put a value in a committed file: `.env*` is ignored except `.env.example`. `apps/api` reads no secrets yet; if it needs one, give it its own validated env module. [docs/secrets.md](docs/secrets.md) has the full rules and how to add one. CI fails on a leak.
 
+## Auth
+
+All auth goes through `getAuth()` from `@/auth` (server-only). Never import `@supabase/*` outside `apps/web/src/auth/providers/`; lint and a test enforce it. See [docs/auth.md](docs/auth.md).
+
 ## Reference docs
 
 `docs/discovery`, `docs/research` and `docs/strategy` are the old discovery, research and strategy material. They are stale and being retired, one area at a time. When you write or extend a spec area, pull what you need out of them into `docs/spec.md`, delete the lines you moved, and delete a file once nothing useful is left. Do not copy whole documents.

@@ -36,11 +36,6 @@ The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/0
 
 Nothing a user sees yet. These come first because everything else leans on them.
 
-- [ ] **R4 · NF · P0** The app talks to auth through one small module.
-  - Sign up, sign in, sign out, session and password reset go through it.
-  - No feature code imports the auth provider's SDK directly, so the provider can change later.
-  - Spec: D3
-
 - [ ] **R5 · NF · P0** Every push gets its own deploy, and auth links point at the right one.
   - A Vercel project deploys `apps/web` with the app folder as its Root Directory.
   - Each push gets a preview deploy.
