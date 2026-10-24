@@ -36,12 +36,6 @@ The personas are in [docs/discovery/1-research/04-icp.md](discovery/1-research/0
 
 Nothing a user sees yet. These come first because everything else leans on them.
 
-- [ ] **R3 · NF · P0** A test can prove one user cannot read another user's data.
-  - A helper in `supabase/tests` runs the same query as user A, user B and a signed-out visitor.
-  - A sample table proves A cannot read B's rows.
-  - CI fails when a table has no Row-Level Security.
-  - Spec: AZ-2, SEC-10, TEST-1
-
 - [ ] **R4 · NF · P0** The app talks to auth through one small module.
   - Sign up, sign in, sign out, session and password reset go through it.
   - No feature code imports the auth provider's SDK directly, so the provider can change later.

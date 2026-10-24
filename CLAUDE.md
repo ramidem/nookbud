@@ -38,6 +38,7 @@ pnpm nx run-many -t lint test build typecheck
 pnpm nx serve web                # Next.js dev server (http://localhost:3000)
 pnpm nx serve api                # NestJS dev server (http://localhost:3001)
 pnpm nx run supabase:db-reset    # rebuild the local database from migrations (needs Docker)
+pnpm nx run supabase:db-test     # run the database tests (reset first)
 pnpm nx format:check             # prettier check (CI runs this)
 pnpm nx add @nx/next             # add a framework plugin before generating an app
 ```
