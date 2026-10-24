@@ -39,6 +39,8 @@ pnpm nx serve web                # Next.js dev server (http://localhost:3000)
 pnpm nx serve api                # NestJS dev server (http://localhost:3001)
 pnpm nx run supabase:db-reset    # rebuild the local database from migrations (needs Docker)
 pnpm nx run supabase:db-test     # run the database tests (reset first)
+pnpm nx run web:container-smoke   # build the web container and check it answers (needs Docker)
+pnpm nx run api:container-smoke   # the same for the API
 pnpm nx format:check             # prettier check (CI runs this)
 pnpm nx add @nx/next             # add a framework plugin before generating an app
 ```
@@ -78,10 +80,12 @@ All auth goes through `getAuth()` from `@/auth` (server-only). Never import `@su
 
 ## Git Workflow
 
-Gitflow. `main` is production and `develop` is staging. Only `main` reaches production.
+Gitflow, with no staging. `main` is production and `develop` collects reviewed work. Only a tag deploys.
 
-- Work on `feature/<name>` branches cut from `develop`, and merge them back into `develop`.
-- Release by merging `develop` into `main`. Hotfixes branch from `main` and merge into both.
+- Work on a `feature/<name>` branch cut from `develop`. Push it and open a pull request into `develop`, and merge when GitHub Actions is green.
+- When `develop` is ready, merge it into `main`. Hotfixes branch from `main` and merge into both.
+- Release by tagging `main`, one app at a time: `web-v1.2.3` deploys the web app and `api-v1.2.3` deploys the API. See [docs/deploy.md](docs/deploy.md).
+- **Work locally unless asked.** Do not push, open a pull request, create a tag or touch Google Cloud unless explicitly asked. Create a tag only when told which app and which version.
 - Conventional commits (`feat:`, `fix:`, `chore:`, `docs:` …), one concern per commit
 - Run format check, lint, typecheck and tests before committing
 

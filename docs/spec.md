@@ -59,8 +59,8 @@ The main requirements document. It grows one area at a time. It covers **authent
 | D1  | Say **space** everywhere, never workspace, family or care circle.                | Decided 2026-10-24           |
 | D2  | The database is **Supabase** (PostgreSQL), with Row-Level Security.              | Decided 2026-10-24           |
 | D3  | Users and sign-in use **Supabase Auth**.                                         | Decided 2026-10-24           |
-| D4  | The web app runs on **Google Cloud Run**, in Singapore, in one Google Cloud project with separate staging and production services. | Decided 2026-10-24 |
-| D5  | Branches follow **gitflow**: `main` is production and `develop` is staging. Only `main` reaches production. | Decided 2026-10-24 |
+| D4  | The web app and the API run on **Google Cloud Run**, in Singapore, in one Google Cloud project. Cloud Build builds and deploys them. | Decided 2026-10-24 |
+| D5  | Branches follow **gitflow** with no staging: `main` is production and `develop` collects reviewed work. Only a tag deploys, one app at a time: `web-v1.2.3` or `api-v1.2.3`. | Decided 2026-10-24 |
 | D6  | The MVP launches with a **free tier**. Charging comes later, when the paid features are ready. | Decided 2026-10-24 |
 
 ### D3: Why Supabase Auth

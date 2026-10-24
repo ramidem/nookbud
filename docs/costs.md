@@ -10,11 +10,11 @@ Estimates for running Nookbud, from 2026-10-24. Revisit before launch. Prices ch
 | …with 100,000 requests a month | $10.80 to $14.70 | Same, assuming 300 ms a request |
 | …with 1 million requests a month | $19 to $23 | Same |
 | …with 5 million requests a month | $58 to $60 | CPU time per request becomes the cost |
-| Cloud Run staging (scales to zero) | about $0–1 | Follows from the same rates |
+| Cloud Run API service (private, scales to zero) | about $0–2 | Follows from the same rates |
+| Cloud Build (runs only when a tag is pushed) | about $0 | 2,500 free build-minutes a month on its default machine |
 | Artifact Registry, Secret Manager, logs, outgoing traffic | about $1–5 | From memory, unverified |
 | Supabase: Free plan (2 projects, pauses after a week idle, no backups) | $0 | Verified |
 | Supabase: Pro (daily backups, no pausing, one Micro database included) | $25 | Verified |
-| Supabase: a second always-on project, for staging | about $10 more | Verified |
 | CDN: Cloudflare free tier | $0 | Certain |
 | CDN: Cloud CDN behind a global load balancer | about $18 or more | From memory, unverified |
 | Domain | about $11 a year | From the brand notes |
@@ -22,8 +22,7 @@ Estimates for running Nookbud, from 2026-10-24. Revisit before launch. Prices ch
 ## Totals
 
 - **Before launch** (no warm instance, Supabase Free): about $0–5.
-- **At launch, lean** (warm production instance, Supabase Pro for production, staging on Free): about **$37–45**.
-- **Staging on Pro too:** about $47–55.
+- **At launch, lean** (warm web instance, Supabase Pro for production): about **$37–45**.
 - **With Cloud CDN and its load balancer:** about $65–73.
 - **No revenue at first:** the MVP launches on a free tier (spec D6), so these costs are carried until paid features exist.
 - **Vercel instead:** about $45–55 plus usage ($20 a seat plus the same Supabase bill). Google Cloud is not cheaper; the difference is learning, and the time to set it up.

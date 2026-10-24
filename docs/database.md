@@ -33,5 +33,5 @@ The helpers (`create_user`, `who_sees`, `count_as`, `try_as`, `tables_without_rl
 ## Status
 
 - Only the baseline migration and the test helpers exist. There are no tables yet; each arrives with its requirement.
-- Only the local database exists. Staging and production are R42 in [requirements.md](requirements.md).
+- Only the local database exists. Production is R42 in [requirements.md](requirements.md).
 - `config.toml` still has Supabase's local auth defaults (email confirmation off). The auth requirements change them.
