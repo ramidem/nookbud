@@ -418,9 +418,6 @@ Some steps can run in parallel, but the authorization model must be designed bef
 - [ ] Respect reduce-motion; no information conveyed only through animation *(32-accessibility)*
 - [ ] Automated a11y audit, plus manual VoiceOver (iOS) and TalkBack (Android) passes *(32-accessibility)*
 
-**Onboarding**
-- [ ] Finalize inclusive family-structure options, design the screens, define skip behavior per step *(33-onboarding)*
-
 **Pre-launch essentials**
 - [ ] Buy `nookbud.com` (Porkbun, ~$11/yr) — verify it hasn't been bought already *(31-branding)*
 

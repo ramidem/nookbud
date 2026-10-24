@@ -16,17 +16,9 @@
 - [ ] Notification content policy (recommended: "New message" only, never the text)
 - [ ] Update `BRAND.md` to the palette and type on the design page: sage `#6f8f7b`, Inter + EB Garamond, spelled "Nookbud".
 
-## 3. Scaffold (after step 2)
-
-- [ ] Vercel project per web app: Root Directory = the app folder, preview deploys on every push
-- [ ] `apps/mobile`: Expo (`pnpm nx add @nx/expo`). Check pnpm compatibility when adding it; React Native tooling may need `nodeLinker: hoisted` in `pnpm-workspace.yaml`.
-- [ ] Decide whether `apps/api` is needed alongside Supabase server-side functions
-- [ ] `supabase/`: migrations, seed, functions, tests (RLS isolation tests before any feature tables)
-- [ ] Then follow ROADMAP-2026 P0 order (steps 0.3 onward)
-
 ---
 
-## 4. Files to move back from `nookbud_copy`
+## 3. Files to move back from `nookbud_copy`
 
 Paths are relative to `/Users/ramidem/Code/bulakao/nookbud_copy`.
 
