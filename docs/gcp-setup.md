@@ -1,6 +1,6 @@
 # Google Cloud setup
 
-A one-time guide to set up the project that [deploy.md](deploy.md) describes. Run the commands in order. Each one is safe to look up first with `--help`. If a command says the thing already exists, skip it.
+A one-time guide to set up the project that [deploy.md](deploy.md) describes. Run the commands in order, and finish all of them before the first tag. A deploy that runs before step 2 fails, and one that runs before step 4 creates a private `web` service that answers 403 to everyone. Each one is safe to look up first with `--help`. If a command says the thing already exists, skip it.
 
 ## Before you start
 
