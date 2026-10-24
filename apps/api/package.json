@@ -75,6 +75,14 @@
         "options": {
           "passWithNoTests": true
         }
+      },
+      "container-smoke": {
+        "executor": "nx:run-commands",
+        "cache": false,
+        "options": {
+          "command": "bash ../../infra/container-smoke.sh api",
+          "cwd": "apps/api"
+        }
       }
     }
   },
