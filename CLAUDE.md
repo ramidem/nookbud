@@ -2,7 +2,8 @@
 
 Shared care records for families raising a child across homes. Nx monorepo — web (Next.js) and API (NestJS) are scaffolded; mobile (Expo) comes next.
 
-- **Roadmap & backlog:** [ROADMAP-2026.md](ROADMAP-2026.md) — single source of truth for priorities
+- **Specification:** [specs/spec.md](specs/spec.md) — the main docs folder. Functional and non-functional requirements, starting with auth, users and spaces. Say **space**, never workspace
+- **Roadmap & backlog:** [ROADMAP-2026.md](ROADMAP-2026.md) — launch gates, build order and the rest of the backlog; the auth, user and space requirements live in the spec
 - **Restart steps:** [TODO.md](TODO.md) — immediate next steps, including what to restore from `../nookbud_copy` (the old codebase)
 - **Brand:** [BRAND.md](BRAND.md) · **Product concept:** [CO-PARENT.md](CO-PARENT.md) · **Research:** `docs/`
 
