@@ -43,5 +43,5 @@ Versions follow semver, per app. Until launch, stay on `0.1.x` and bump the patc
 
 ## Not done yet
 
-- No real deploy has run, so the Cloud Build configs and triggers are untested against Google Cloud.
+- Both deploys have run, but the services still run as Google's default accounts (R50), and the first-response time on a cold web instance has not been measured (R45).
 - Secrets in Secret Manager (no secret exists yet), the CDN and domain (R46), the warm instance at launch (R45), and Terraform for all of this (R48, parked).
