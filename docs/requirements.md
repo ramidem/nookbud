@@ -167,38 +167,11 @@ Spaces, members, children and invitations are built ([spaces.md](spaces.md)). Le
 
 ## Records and the calendar
 
-Records (spec §9–10) and the calendar (§12, roadmap B2). A calendar event is one kind of record, so it gets the same history. Acknowledgments and disputes (§11) are P2 and wait.
+Records, their history, the calendar, the parenting schedule and change requests are built ([records.md](records.md)). Acknowledgments and disputes (§11) are P2 and wait. Left:
 
-- [ ] **R54 · F · P0** As a member, I add a record to a space and see every record in one timeline.
-  - Types: note, agreement, expense (amount and currency) and event. Each can name a child.
-  - Who added it and when come from the server, never from the browser (REC-1, REC-4).
-  - The timeline lists a space's records newest first, and can be filtered by type (REC-5).
-  - Spec: REC-1, REC-2, REC-4, REC-5
-
-- [ ] **R55 · F · P0** As a member, I can correct a record I added, and everyone can see what changed.
-  - An edit never overwrites: it adds a version with who, when and an optional reason. The record shows "Edited" and its history lists every version with what changed (AUD-1).
-  - Removing a record is a soft delete: it leaves the timeline but stays in the history, marked removed (AUD-2).
-  - Only the person who added a record can change or remove it. Owners cannot rewrite other people's records.
-  - Spec: REC-3, AUD-1, AUD-2
-
-- [ ] **R56 · F · P0** As a member, I see the space's events on a shared calendar, in my own time zone.
-  - Events have a title, a start and end (or all day), an optional place, and the member responsible (CAL-1).
-  - After an event, its outcome can be set: done or missed, with a note (CAL-1).
-  - A month view shows events per day; times show in each viewer's time zone.
-  - Changes are versions, so the history shows who changed the schedule and when (CAL-2).
-  - Spec: CAL-1, CAL-2, USR-5
-
-- [ ] **R57 · F · P0** As an owner, I set up the parenting schedule: one repeating pattern of which home a child is in.
-  - A pattern is a list of days, each assigned to a member, repeating from a start date (for example a week each, or 2-2-3).
-  - The calendar shows whose day it is.
-  - Changing the pattern is recorded in the space's history.
-  - Spec: roadmap B2 (parenting schedule)
-
-- [ ] **R58 · F · P0** As a member, I can ask to change the schedule for some days, and another member approves or declines.
-  - A request names the days, who would have them, and a reason. Anyone in the space except the person asking can respond.
-  - An approved request changes those days on the calendar. A declined or withdrawn one changes nothing.
-  - Every request and response stays in the record, with who and when.
-  - Spec: roadmap B2 (schedule change requests), CAL-2
+- [ ] **R59 · F · P1** On a phone, the calendar reads as a list of days.
+  - Today the month grid scrolls sideways inside its card. Show an agenda list below 640px: each day, whose it is, and its events.
+  - Spec: UX-1
 
 ## Next areas
 

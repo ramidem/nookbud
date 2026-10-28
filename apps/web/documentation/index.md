@@ -18,6 +18,7 @@ Nookbud keeps shared care records for families raising a child across homes. The
 
 - [Spaces and members](concepts/spaces-and-members.md): the private place you share, and who is in it.
 - [Records](concepts/records.md): how Nookbud keeps a record you can trust.
+- [The calendar](concepts/calendar.md): events, the parenting schedule and changing some days.
 
 ## Trust
 

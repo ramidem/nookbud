@@ -8,6 +8,7 @@ For the team. Nothing here is served on the website: the public documentation is
 | [Requirements](requirements.md) | The build queue: user stories and system rules, in the order we implement them |
 | [Roadmap 2026](roadmap-2026.md) | Launch gates and the backlog from P0 to P4 |
 | [Database](database.md) | The Supabase project: migrations, seed data, the local database and environments |
+| [Records and the calendar](records.md) | Records with their history, the shared calendar, the parenting schedule and change requests |
 | [Spaces](spaces.md) | Spaces, members, children and invitations: the screens, the roles and the rules |
 | [Auth](auth.md) | How the app does auth: the one module, its rules, and how to change provider |
 | [Deploy](deploy.md) | How the web app and the API reach Cloud Run: the git flow, tags, setup, release and rollback |

@@ -2,42 +2,48 @@
 title: Records
 section: Concepts
 order: 11
-description: "How Nookbud keeps a record you can trust: entries, history, acknowledgments, files and export."
+description: "How Nookbud keeps a record you can trust: what you can record, how changes are kept, and what is still to come."
 ---
 
 # Records
 
-> Records are designed but not built yet. This page describes the plan.
+Nookbud is meant to be a record you can trust when someone needs it, including someone outside your family. It answers: what happened, when, who did it, and has it been changed.
 
-Nookbud is meant to be a record you can trust when someone needs it, including someone outside your family. It is built to answer five questions: what happened, when, who did it, was it acknowledged, and has it been changed.
+## What you can record
 
-## Entries
+In a [space](spaces-and-members.md), open **Records** and choose **Add a record**. There are four kinds:
 
-Everything that is recorded is an **entry**: an expense, an event, an agreement, a structured communication or an upload. Each entry keeps:
+- **Note:** something worth writing down.
+- **Agreement:** something you decided together, with the date you agreed it.
+- **Expense:** what was spent, in which currency, when, and who paid.
+- **Event:** something on the [calendar](calendar.md), such as a handoff or an appointment.
 
-- when it was recorded, set by Nookbud and never by a device
-- who recorded it
-- which child it is about
-- what it says, and any files
+Each one can be about a child in the space. Everyone in the space can see it.
+
+## Who and when
+
+Nookbud sets when a record was added and who added it. A device cannot change either. Times are shown in your own time zone, which you set in **Settings**.
 
 ## Nothing is changed silently
 
-An entry is never overwritten. If someone edits one, Nookbud keeps the original and adds a new version with the time, who made the change and what changed. Deleting an entry hides it, but its history stays.
+Only the person who added a record can correct it, and a correction never overwrites it. Nookbud keeps every version, with who made the change, when, what changed and, if they gave one, why. A record that was changed shows **Edited**, and its page lists the whole history.
 
-## Acknowledging and disputing
+Removing a record takes it out of the timeline, but it is still listed under **Removed**, with its history. Nobody can delete a record's history, not even an owner.
 
-A member can acknowledge an entry to show they have seen it. A member can also dispute one, with a reason and, if they have it, evidence. Both sides of the story are recorded, and neither can be rewritten.
+If someone leaves the space or deletes their account, what they recorded stays, shown as from a "Former member".
 
-## Files
+## The timeline
 
-You can attach photos, receipts and documents to an entry. Nookbud takes a fingerprint of each file when it is uploaded, so anyone can later check that it has not been altered.
+**Records** lists everything in the space, newest first. You can show one kind at a time.
 
-## Exporting
+## Not available yet
 
-You will be able to export a report of the timeline as a PDF, or a bundle with the data, the files and their fingerprints. You can narrow an export by date, child or type of entry. Exports are written to be read by someone who is not technical.
+- Acknowledging a record to show you have seen it, or disputing one with your side of the story.
+- Attaching photos, receipts and documents.
+- Exporting a report of the timeline.
 
 ## Related
 
+- [The calendar](calendar.md)
 - [Spaces and members](spaces-and-members.md)
 - [Security and privacy](../security-and-privacy.md)
-- [Glossary](../glossary.md)

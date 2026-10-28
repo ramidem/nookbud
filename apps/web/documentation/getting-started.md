@@ -7,7 +7,7 @@ description: "What the first few minutes with Nookbud look like, from creating a
 
 # Getting started
 
-Nookbud is not open yet. Creating an account, spaces and invitations are built. The shared calendar, records and messages are not available yet. To hear when Nookbud opens, [join the waitlist](/) on the home page.
+Nookbud is not open yet. Creating an account, spaces, invitations, records and the shared calendar are built. Messages, attachments and exports are not available yet. To hear when Nookbud opens, [join the waitlist](/) on the home page.
 
 ## 1. Create your account
 
@@ -52,6 +52,10 @@ In the space, under **Invite someone**, enter the email of another parent, a gra
 
 You can also start on your own. Using Nookbud alone is a normal way to begin, and you can invite people whenever you are ready.
 
+## 5. Keep the record
+
+In a space, the **Calendar** shows events and, once an owner sets up the [parenting schedule](concepts/calendar.md#the-parenting-schedule), whose day each day is. **Records** holds notes, agreements and expenses. See [records](concepts/records.md) for how changes are kept.
+
 ## More than one household
 
 You use one account for everything. If you share a child's care across more than one household, make a space for each arrangement and switch between them.
@@ -60,4 +64,5 @@ You use one account for everything. If you share a child's care across more than
 
 - [Spaces and members](concepts/spaces-and-members.md)
 - [Records](concepts/records.md)
+- [The calendar](concepts/calendar.md)
 - [Security and privacy](security-and-privacy.md)
