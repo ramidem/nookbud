@@ -64,6 +64,17 @@ Counted attempts for the rate limits (R16): `kind` and `subject`, a SHA-256 hash
 - `handle_new_user()`: the `users` trigger.
 - `prepare_account_deletion()`: writes the `account_deleted` entry for the signed-in person and returns their id; the server then deletes the identity ([auth.md](auth.md#deleting-an-account-r28)).
 
+## Local test accounts
+
+Synthetic accounts for the local stack only (DB-9). They exist in the current local database; after `db-reset` they are gone, so create them again with the admin API (`POST /auth/v1/admin/users` with the service role key, `email_confirm: true`, and the consent fields in `user_metadata`).
+
+| Email | Password | Notes |
+| --- | --- | --- |
+| `priya@example.test` | `orchard lantern pebble` | Owner of the space "Our family", with a schedule, an event and children |
+| `tom@example.test` | `orchard lantern pebble` | Member of the same space |
+
+Sign in at http://localhost:3000/sign-in. Emails land in Mailpit at http://127.0.0.1:55624.
+
 ## Rules
 
 - The schema changes only through migrations in `supabase/migrations/`. Never edit the database by hand, and never change a migration that has been applied elsewhere.
