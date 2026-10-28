@@ -7,6 +7,13 @@ const nextConfig = {
   // so the workspace's packages are included in the output.
   output: 'standalone',
   outputFileTracingRoot: path.join(__dirname, '../../'),
+  // Short addresses for the policies, which live in the public documentation.
+  async redirects() {
+    return [
+      { destination: '/documentation/legal/terms', permanent: false, source: '/terms' },
+      { destination: '/documentation/legal/privacy', permanent: false, source: '/privacy' },
+    ];
+  },
 };
 
 module.exports = nextConfig;

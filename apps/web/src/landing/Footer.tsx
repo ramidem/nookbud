@@ -1,3 +1,4 @@
+import { PRIVACY_HREF, TERMS_HREF } from '../legal/policies';
 import { container } from './config';
 
 export function Footer() {
@@ -13,6 +14,12 @@ export function Footer() {
         <p className="flex flex-wrap gap-x-5 gap-y-1">
           <a className="hover:text-foreground" href="/documentation">
             Documentation
+          </a>
+          <a className="hover:text-foreground" href={TERMS_HREF}>
+            Terms
+          </a>
+          <a className="hover:text-foreground" href={PRIVACY_HREF}>
+            Privacy
           </a>
           <a className="hover:text-foreground" href="mailto:hello@nookbud.com">
             hello@nookbud.com

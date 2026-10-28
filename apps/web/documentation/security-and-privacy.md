@@ -7,7 +7,7 @@ description: "Who can see your information in Nookbud, how your account is prote
 
 # Security and privacy
 
-> Nookbud is not open yet. This page describes what it is being built to do. A full privacy policy and terms will be published before it opens.
+> Nookbud is not open yet. This page describes what it is being built to do. Drafts of the [privacy policy](legal/privacy.md) and [terms of service](legal/terms.md) are published, and will be reviewed by a lawyer before it opens.
 
 ## Who can see your information
 
@@ -38,4 +38,5 @@ Only the people you invite to a [space](concepts/spaces-and-members.md) can see 
 ## Related
 
 - [Getting started](getting-started.md)
+- [Privacy policy](legal/privacy.md)
 - [Glossary](glossary.md)
