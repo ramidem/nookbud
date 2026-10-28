@@ -1,14 +1,22 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { refreshSession } from './auth/proxy';
-import { HOME, SIGN_IN, SIGNED_OUT_ONLY, isProtected } from './auth/routes';
+import { HOME, SIGN_IN, SIGN_IN_CODE, SIGNED_OUT_ONLY, isProtected } from './auth/routes';
 
 /**
  * Keeps sessions fresh and sends signed-out visitors to sign in (R12). This is an optimistic check
  * for navigation only: every page and action checks the user again on the server.
  */
 export async function proxy(request: NextRequest) {
-  const { response, user } = await refreshSession(request);
+  const { response, user, codeNeeded } = await refreshSession(request);
   const { pathname, search } = request.nextUrl;
+
+  // Signed in with the password but the two-step code is still owed: nowhere else until it is given.
+  if (user && codeNeeded && isProtected(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = SIGN_IN_CODE;
+    url.search = `?next=${encodeURIComponent(pathname + search)}`;
+    return withCookies(NextResponse.redirect(url), response);
+  }
 
   if (isProtected(pathname) && !user?.emailVerified) {
     const url = request.nextUrl.clone();
@@ -17,7 +25,7 @@ export async function proxy(request: NextRequest) {
     return withCookies(NextResponse.redirect(url), response);
   }
 
-  if (user?.emailVerified && SIGNED_OUT_ONLY.includes(pathname)) {
+  if (user?.emailVerified && !codeNeeded && SIGNED_OUT_ONLY.includes(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = HOME;
     url.search = '';

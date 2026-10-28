@@ -29,6 +29,13 @@ Nookbud asks your name and who shares responsibility for a child with you. You c
 - You stay signed in while you use Nookbud. If you do not use it for 30 days, you are signed out and sign in again.
 - **Sign out** is in the top bar. It ends your session on Nookbud's side, not only on your device.
 
+## Your settings
+
+Choose **Settings** in the top bar.
+
+- **Profile:** your name, your time zone and your default currency. Your time zone starts from your device; dates and times are shown in it. You can also change your answer about who you care for a child with.
+- **Security:** change your password, turn on [two-step sign-in](security-and-privacy.md#two-step-sign-in), and see [where you're signed in](security-and-privacy.md#where-youre-signed-in).
+
 ## Forgot your password
 
 Choose **Forgot your password?** on the sign-in page and enter your email. If it has an account, Nookbud sends a link to choose a new password. The link works once and expires after an hour. When you save the new password, you are signed out on every device, and you sign in again with it.

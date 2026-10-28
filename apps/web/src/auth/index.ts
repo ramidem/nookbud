@@ -12,4 +12,6 @@ export type {
   AuthUser,
   EmailLinkType,
   SignUpConsent,
+  TwoStepSetup,
+  TwoStepStatus,
 } from './types';

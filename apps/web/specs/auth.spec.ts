@@ -1,6 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createSupabaseAuth, type SupabaseAuthClient } from '../src/auth/providers/supabase';
+import {
+  createSupabaseAuth,
+  type SupabaseAuthClient,
+  type SupabaseAuthDeps,
+} from '../src/auth/providers/supabase';
+import { hashRecoveryCode } from '../src/auth/recovery-codes';
 
 const webRoot = path.join(__dirname, '..');
 
@@ -34,7 +39,11 @@ describe('the auth module is the only way in', () => {
 
 // ---- the Supabase adapter, driven by a stand-in client -------------------------------------------
 
-type Overrides = Partial<Record<keyof SupabaseAuthClient['auth'], ReturnType<typeof vi.fn>>>;
+type Overrides = Partial<
+  Record<Exclude<keyof SupabaseAuthClient['auth'], 'mfa'>, ReturnType<typeof vi.fn>>
+> & {
+  mfa?: Partial<Record<keyof SupabaseAuthClient['auth']['mfa'], ReturnType<typeof vi.fn>>>;
+};
 
 function clientWith(overrides: Overrides = {}) {
   const auth = {
@@ -46,7 +55,24 @@ function clientWith(overrides: Overrides = {}) {
     resend: vi.fn().mockResolvedValue({ data: {}, error: null }),
     verifyOtp: vi.fn().mockResolvedValue({ data: {}, error: null }),
     updateUser: vi.fn().mockResolvedValue({ data: { user: user() }, error: null }),
+    refreshSession: vi.fn().mockResolvedValue({ data: {}, error: null }),
     ...overrides,
+    mfa: {
+      listFactors: vi.fn().mockResolvedValue({ data: { all: [], totp: [] }, error: null }),
+      enroll: vi.fn().mockResolvedValue({
+        data: {
+          id: 'factor-1',
+          totp: { qr_code: 'data:image/svg+xml;utf-8,<svg/>', secret: 'SECRET', uri: 'otpauth://' },
+        },
+        error: null,
+      }),
+      challengeAndVerify: vi.fn().mockResolvedValue({ data: {}, error: null }),
+      unenroll: vi.fn().mockResolvedValue({ data: {}, error: null }),
+      getAuthenticatorAssuranceLevel: vi
+        .fn()
+        .mockResolvedValue({ data: { currentLevel: 'aal1', nextLevel: 'aal1' }, error: null }),
+      ...(overrides as { mfa?: object }).mfa,
+    },
   };
   return { client: { auth } as unknown as SupabaseAuthClient, auth };
 }
@@ -352,5 +378,163 @@ describe('session cookies and requests (R15, R17)', () => {
       ),
     );
     expect(writers.map((f) => path.relative(webRoot, f))).toEqual([]);
+  });
+});
+
+// ---- two-step sign-in, password checks and the audit trail (R20–R23) ---------------------------
+
+function depsWith(over: Partial<SupabaseAuthDeps> = {}) {
+  const deps = {
+    checkPassword: vi.fn().mockResolvedValue(true),
+    recoveryCodes: {
+      replace: vi.fn().mockResolvedValue(true),
+      consume: vi.fn().mockResolvedValue(true),
+      removeFactors: vi.fn().mockResolvedValue(true),
+    },
+    record: vi.fn().mockResolvedValue(undefined),
+    ...over,
+  };
+  return deps;
+}
+
+const signedIn = { getUser: vi.fn().mockResolvedValue({ data: { user: user() }, error: null }) };
+const verifiedFactor = { id: 'factor-1', status: 'verified', factor_type: 'totp' };
+
+describe('two-step sign-in', () => {
+  it('says a code is owed after the password when two-step sign-in is on', async () => {
+    const { client } = clientWith({
+      mfa: {
+        listFactors: vi
+          .fn()
+          .mockResolvedValue({
+            data: { all: [verifiedFactor], totp: [verifiedFactor] },
+            error: null,
+          }),
+        getAuthenticatorAssuranceLevel: vi
+          .fn()
+          .mockResolvedValue({ data: { currentLevel: 'aal1', nextLevel: 'aal2' }, error: null }),
+      },
+    });
+    expect(await createSupabaseAuth(client).twoStepStatus()).toEqual({
+      enabled: true,
+      codeNeeded: true,
+      factorId: 'factor-1',
+    });
+  });
+
+  it('starts setup with a QR code, clearing an abandoned attempt first', async () => {
+    const abandoned = { id: 'old', status: 'unverified', factor_type: 'totp' };
+    const { client, auth } = clientWith({
+      mfa: {
+        listFactors: vi
+          .fn()
+          .mockResolvedValue({ data: { all: [abandoned], totp: [] }, error: null }),
+      },
+    });
+    const result = await createSupabaseAuth(client).startTwoStep();
+    expect(auth.mfa.unenroll).toHaveBeenCalledWith({ factorId: 'old' });
+    expect(result).toEqual({
+      ok: true,
+      data: { factorId: 'factor-1', qrCode: 'data:image/svg+xml;utf-8,<svg/>', secret: 'SECRET' },
+    });
+  });
+
+  it('confirms setup, stores only hashes of ten recovery codes and records the event', async () => {
+    const { client } = clientWith(signedIn);
+    const deps = depsWith();
+    const result = await createSupabaseAuth(client, deps).confirmTwoStep({
+      factorId: 'factor-1',
+      code: '123456',
+    });
+    expect(result.ok).toBe(true);
+    const codes = (result as { data: string[] }).data;
+    expect(codes).toHaveLength(10);
+    for (const code of codes) expect(code).toMatch(/^[A-Z2-9]{4}-[A-Z2-9]{4}$/);
+    const [userId, hashes] = deps.recoveryCodes.replace.mock.calls[0];
+    expect(userId).toBe('user-1');
+    expect(hashes).toEqual(codes.map(hashRecoveryCode));
+    expect(hashes.join()).not.toContain(codes[0]);
+    expect(deps.record).toHaveBeenCalledWith('two_step_enabled');
+  });
+
+  it('refuses a wrong code without the provider wording', async () => {
+    const { client } = clientWith({
+      ...signedIn,
+      mfa: {
+        challengeAndVerify: vi
+          .fn()
+          .mockResolvedValue({ data: null, error: providerError('mfa_verification_failed') }),
+      },
+    });
+    const deps = depsWith();
+    const result = await createSupabaseAuth(client, deps).confirmTwoStep({
+      factorId: 'factor-1',
+      code: '000000',
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: 'code_invalid' } });
+    expect(deps.recoveryCodes.replace).not.toHaveBeenCalled();
+  });
+
+  it('lets a recovery code in once, turning two-step sign-in off', async () => {
+    const { client, auth } = clientWith(signedIn);
+    const deps = depsWith();
+    const result = await createSupabaseAuth(client, deps).useRecoveryCode('k4m9 x7qp');
+    expect(result.ok).toBe(true);
+    expect(deps.recoveryCodes.consume).toHaveBeenCalledWith(
+      'user-1',
+      hashRecoveryCode('K4M9-X7QP'),
+    );
+    expect(deps.recoveryCodes.removeFactors).toHaveBeenCalledWith('user-1');
+    expect(deps.record).toHaveBeenCalledWith('recovery_code_used');
+    expect(auth.refreshSession).toHaveBeenCalled();
+  });
+
+  it('refuses a recovery code that does not match or was used', async () => {
+    const { client } = clientWith(signedIn);
+    const deps = depsWith({
+      recoveryCodes: {
+        replace: vi.fn(),
+        consume: vi.fn().mockResolvedValue(false),
+        removeFactors: vi.fn(),
+      },
+    });
+    const result = await createSupabaseAuth(client, deps).useRecoveryCode('AAAA-BBBB');
+    expect(result).toMatchObject({ ok: false, error: { code: 'code_invalid' } });
+    expect(deps.recoveryCodes.removeFactors).not.toHaveBeenCalled();
+  });
+});
+
+describe('passwords and the audit trail', () => {
+  it('checks the current password against the signed-in email', async () => {
+    const { client } = clientWith(signedIn);
+    const deps = depsWith({ checkPassword: vi.fn().mockResolvedValue(false) });
+    const result = await createSupabaseAuth(client, deps).checkPassword('guess');
+    expect(deps.checkPassword).toHaveBeenCalledWith('a@example.test', 'guess');
+    expect(result).toMatchObject({ ok: false, error: { code: 'wrong_password' } });
+  });
+
+  it.each([
+    ['changed', 'password_changed'],
+    ['reset', 'password_reset'],
+  ] as const)('records a %s password', async (reason, event) => {
+    const { client } = clientWith();
+    const deps = depsWith();
+    await createSupabaseAuth(client, deps).updatePassword('a-long-enough-password', reason);
+    expect(deps.record).toHaveBeenCalledWith(event);
+  });
+
+  it('records signing out everywhere before the sessions end', async () => {
+    const order: string[] = [];
+    const { client } = clientWith({
+      signOut: vi.fn().mockImplementation(async () => {
+        order.push('signOut');
+        return { error: null };
+      }),
+    });
+    const deps = depsWith({
+      record: vi.fn().mockImplementation(async () => void order.push('record')),
+    });
+    await createSupabaseAuth(client, deps).signOut({ everywhere: true });
+    expect(order).toEqual(['record', 'signOut']);
   });
 });

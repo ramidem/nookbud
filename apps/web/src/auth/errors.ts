@@ -8,6 +8,8 @@ const MESSAGES: Record<AuthErrorCode, string> = {
   rate_limited: 'Too many attempts. Wait a few minutes, then try again.',
   session_missing: 'Sign in to continue.',
   consent_required: 'Confirm you are 18 or older and accept the terms to create an account.',
+  code_invalid: 'That code did not work. Check it and try again.',
+  wrong_password: 'That is not your current password.',
   link_invalid: 'That link has expired or was already used. Ask for a new one.',
   unknown: 'Something went wrong. Try again.',
 };

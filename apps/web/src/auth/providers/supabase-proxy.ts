@@ -11,7 +11,7 @@ import type { AuthUser } from '../types';
  */
 export async function refreshSupabaseSession(
   request: NextRequest,
-): Promise<{ response: NextResponse; user: AuthUser | null }> {
+): Promise<{ response: NextResponse; user: AuthUser | null; codeNeeded: boolean }> {
   const env = getPublicEnv();
   let response = NextResponse.next({ request });
 
@@ -40,5 +40,10 @@ export async function refreshSupabaseSession(
         emailVerified: Boolean(data.user.email_confirmed_at),
       }
     : null;
-  return { response, user };
+  // Read from the token itself, so it costs no request: is a two-step code still owed (R21)?
+  const { data: level } = user
+    ? await client.auth.mfa.getAuthenticatorAssuranceLevel()
+    : { data: null };
+  const codeNeeded = level?.nextLevel === 'aal2' && level.currentLevel !== 'aal2';
+  return { response, user, codeNeeded };
 }

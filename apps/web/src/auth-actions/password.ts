@@ -50,7 +50,7 @@ export async function setNewPassword(
   if (!parsed.success) return { errors: fieldErrors(parsed.error) };
 
   const auth = await getAuth();
-  const result = await auth.updatePassword(parsed.data.password);
+  const result = await auth.updatePassword(parsed.data.password, 'reset');
   if (!result.ok) {
     if (result.error.code === 'weak_password')
       return { errors: { password: result.error.message } };

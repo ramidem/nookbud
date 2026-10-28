@@ -11,7 +11,7 @@ const result = await auth.signIn({ email, password });
 if (!result.ok) return result.error.message; // safe to show
 ```
 
-`AuthService` has `signUp`, `resendConfirmation`, `verifyEmailLink`, `signIn`, `signOut({ everywhere, others })`, `getUser`, `requestPasswordReset` and `updatePassword`. Each returns `{ ok: true, data }` or `{ ok: false, error: { code, message } }`.
+`AuthService` has `signUp`, `resendConfirmation`, `verifyEmailLink`, `signIn`, `signOut({ everywhere, others })`, `getUser`, `requestPasswordReset`, `updatePassword`, `checkPassword` and the two-step methods (`twoStepStatus`, `startTwoStep`, `confirmTwoStep`, `verifyTwoStepCode`, `useRecoveryCode`, `turnOffTwoStep`). Each returns `{ ok: true, data }` or `{ ok: false, error: { code, message } }`.
 
 ## The screens
 
@@ -23,7 +23,10 @@ if (!result.ok) return result.error.message; // safe to show
 | `/welcome` | Onboarding: name and "Who shares responsibility for a child with you?". Every step can be skipped | `app/(app)/welcome` |
 | `/sign-in` | Sign in. An unconfirmed email gets a resend button. `?next=` returns the person where they were | `app/(account)/sign-in` |
 | `/forgot-password`, `/reset-password/new` | Ask for a reset link, then choose a new password | `app/(account)/…` |
+| `/sign-in/code` | The second step when two-step sign-in is on: a code from the app, or a recovery code | `app/(account)/sign-in/code` |
 | `/home` | The signed-in home. Sends people who have not onboarded to `/welcome` | `app/(app)/home` |
+| `/settings` | Profile (name, time zone, currency, who they care with), the accepted policy version, delete account (not built yet, R28) | `app/(app)/settings` |
+| `/settings/security` | Change password, two-step sign-in, where you're signed in, sign out everywhere | `app/(app)/settings/security`, `auth-actions/security.ts` |
 
 Signed-in pages live in the `(app)` route group; its layout calls `requireUser()`. Server actions are in `src/auth-actions/` and validate their input with zod (`validation.ts`).
 
@@ -47,6 +50,14 @@ Signed-in pages live in the `(app)` route group; its layout calls `requireUser()
 - A new password from a reset link signs the person out on every device; they sign in again with it.
 - `secure_password_change = true`: changing a password needs a recent sign-in.
 
+## Account security (stage 4)
+
+- **Two-step sign-in (R21)** uses Supabase's TOTP factors (`[auth.mfa.totp]` is on). Setup shows the provider's QR code and the secret, and only turns on once a code from the app checks out. Signing in with the password then leaves the session at `aal1`: the proxy, `requireUser()` and the sign-in action all send the person to `/sign-in/code` until they give a code (`aal2`).
+- **Recovery codes** are ours, because Supabase's are experimental. Ten codes like `K4M9-X7QP` are made when two-step sign-in is turned on and shown once. Only SHA-256 hashes are stored, in `mfa_recovery_codes`, which only the service role can read. Using one marks it used, deletes the person's factors through the admin API and refreshes the session, so they are back to password-only sign-in and can set it up again. `src/auth/providers/supabase-deps.ts` holds the privileged calls.
+- **Devices (R20).** `my_sessions()` lists the person's own rows from `auth.sessions`. Calls to Supabase come from the web server, so `supabase-server.ts` forwards the browser's `User-Agent` and `X-Forwarded-For`; the list shows "Chrome on Mac" and not the server.
+- **Changing the password (R22)** asks for the current one. `checkPassword` signs in on a throwaway client that never touches the cookies, then the password changes and every other session ends. `secure_password_change` is off because Nookbud asks for the current password itself.
+- **The audit log (R23).** `record_audit_event()` writes the signed-in person's id and an action: `password_changed`, `password_reset`, `signed_out_everywhere`, `two_step_enabled`, `two_step_disabled`, `recovery_code_used`. `account_deleted` is allowed for R28. The adapter records these, so no screen can forget.
+
 ## Consent at sign-up (R8)
 
 The form sends both confirmations and `POLICY_VERSION` (`src/legal/policies.ts`) as user metadata. The adapter refuses to sign up without them, and the database trigger refuses again, so an account never exists without consent. The `users` row stores the version and the time ([database.md](database.md)). When the terms or the privacy policy change in a way people must accept again, bump `POLICY_VERSION` and the version line on both pages; a test checks they match.
@@ -69,5 +80,5 @@ The form sends both confirmations and `POLICY_VERSION` (`src/legal/policies.ts`)
 ## Not done yet
 
 - Per-account rate limits (R16).
-- The settings screens: profile, password, two-step sign-in, devices (stages 4 and 5).
+- Deleting an account (R28).
 - Mobile (R32, R33).

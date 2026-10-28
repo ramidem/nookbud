@@ -1,6 +1,7 @@
 /** Where the auth screens live, and which pages need a signed-in, verified person. */
 export const SIGN_IN = '/sign-in';
 export const SIGN_UP = '/sign-up';
+export const SIGN_IN_CODE = '/sign-in/code';
 export const CHECK_EMAIL = '/check-email';
 export const FORGOT_PASSWORD = '/forgot-password';
 export const NEW_PASSWORD = '/reset-password/new';
@@ -8,6 +9,7 @@ export const CONFIRM = '/auth/confirm';
 export const HOME = '/home';
 export const WELCOME = '/welcome';
 export const SETTINGS = '/settings';
+export const SECURITY = '/settings/security';
 
 /** Pages behind sign-in. Everything else (the landing page, the documentation, auth) is public. */
 export const PROTECTED_PREFIXES = [HOME, WELCOME, SETTINGS, NEW_PASSWORD];

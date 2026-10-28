@@ -17,6 +17,8 @@ export type AuthErrorCode =
   | 'session_missing' // acting without being signed in
   | 'consent_required' // sign-up without the age confirmation or the accepted terms
   | 'link_invalid' // an email link that was used already, has expired or was changed
+  | 'code_invalid' // a wrong or expired two-step code, or a recovery code that was used
+  | 'wrong_password' // the current password did not match, when changing it
   | 'unknown';
 
 export type AuthError = {
@@ -34,6 +36,17 @@ export type SignUpConsent = {
 
 /** The kinds of link Nookbud emails: confirm a new account, reset a password, confirm a new email. */
 export type EmailLinkType = 'email' | 'recovery' | 'email_change';
+
+/** Where a person stands with two-step sign-in (R21). */
+export type TwoStepStatus = {
+  enabled: boolean;
+  /** Signed in with the password, but the code is still owed before anything else. */
+  codeNeeded: boolean;
+  factorId: string | null;
+};
+
+/** What the setup screen shows: a QR code to scan, and the same secret to type in by hand. */
+export type TwoStepSetup = { factorId: string; qrCode: string; secret: string };
 
 export type AuthResult<T = void> = { ok: true; data: T } | { ok: false; error: AuthError };
 
@@ -67,5 +80,18 @@ export interface AuthService {
   getUser(): Promise<AuthUser | null>;
   requestPasswordReset(input: { email: string; redirectTo: string }): Promise<AuthResult>;
   /** Sets a new password for the signed-in user, including someone who arrived from a reset link. */
-  updatePassword(newPassword: string): Promise<AuthResult>;
+  updatePassword(newPassword: string, reason?: 'changed' | 'reset'): Promise<AuthResult>;
+  /** Checks the signed-in person's current password without touching their session (R22). */
+  checkPassword(password: string): Promise<AuthResult>;
+
+  twoStepStatus(): Promise<TwoStepStatus>;
+  /** Starts turning on two-step sign-in. Nothing changes until `confirmTwoStep` gets a good code. */
+  startTwoStep(): Promise<AuthResult<TwoStepSetup>>;
+  /** Finishes setup with a code from the app, and returns recovery codes to show once. */
+  confirmTwoStep(input: { factorId: string; code: string }): Promise<AuthResult<string[]>>;
+  /** The second step of signing in. */
+  verifyTwoStepCode(code: string): Promise<AuthResult>;
+  /** Uses a recovery code instead: it turns two-step sign-in off, so the person can set it up again. */
+  useRecoveryCode(code: string): Promise<AuthResult>;
+  turnOffTwoStep(): Promise<AuthResult>;
 }

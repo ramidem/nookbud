@@ -14,7 +14,7 @@ description: "What information Nookbud keeps, why, and what you can do about it.
 - **Your account:** your email address, your password (stored scrambled, so nobody can read it), and when you accepted these policies and confirmed you are 18 or older.
 - **Your profile:** your name, time zone and currency, if you add them.
 - **What you add to a space:** for a child, a name or nickname and a birth date. We ask only for what a feature needs.
-- **Security records:** when you sign in and from which device, so you can see your sessions and we can stop break-ins.
+- **Security records:** when and from which device you sign in, and a record of security changes to your account (such as a changed password), so you can see your sessions and we can stop break-ins. These records hold no names or messages.
 
 ## Why we keep it
 
@@ -33,7 +33,7 @@ Your information travels over an encrypted connection and is encrypted where it 
 ## What you can do
 
 - See and correct your profile at any time.
-- Delete your account from inside Nookbud.
+- Ask for your account to be deleted, by writing to [hello@nookbud.com](mailto:hello@nookbud.com). Deleting it from inside Nookbud is coming.
 - Ask us what we hold about you, or ask a question, at [hello@nookbud.com](mailto:hello@nookbud.com).
 
 How long information is kept after an account is deleted is still being decided. It will be written here before Nookbud opens.

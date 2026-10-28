@@ -35,3 +35,17 @@ export interface ProfileStore {
   get(): Promise<Profile | null>;
   update(changes: ProfileChanges): Promise<DataResult>;
 }
+
+/** A signed-in device (R20). */
+export type Session = {
+  id: string;
+  userAgent: string | null;
+  createdAt: string;
+  lastUsedAt: string;
+  current: boolean;
+};
+
+export interface SessionStore {
+  /** The signed-in person's own sessions, most recently used first. */
+  list(): Promise<Session[]>;
+}

@@ -15,16 +15,29 @@ Only the people you invite to a [space](concepts/spaces-and-members.md) can see 
 
 ## Your account
 
-- You sign in with your email address and a password. Nookbud confirms your email address first.
-- You can turn on two-step sign-in with an authenticator app.
-- You can see where you are signed in and sign out of every device at once. This is useful if someone else may have access to one of your devices.
+- You sign in with your email address and a password of at least 12 characters. Nookbud confirms your email address first.
+- You can turn on [two-step sign-in](#two-step-sign-in) with an authenticator app.
+- You can see [where you are signed in](#where-youre-signed-in) and sign out of every device at once. This is useful if someone else may have access to one of your devices.
+- Changing your password asks for your current one, and signs you out on every other device.
 - Nookbud limits repeated sign-in attempts, so a password cannot be guessed by trying again and again.
+
+## Two-step sign-in
+
+With two-step sign-in on, your password alone is not enough to get into your account. Nookbud also asks for a 6-digit code from an authenticator app on your phone, such as Google Authenticator, Microsoft Authenticator or 1Password.
+
+To turn it on, go to **Settings**, then **Security**, and choose **Set up two-step sign-in**. Scan the QR code with your app, then enter the code it shows.
+
+Nookbud then gives you ten **recovery codes**. Write them down or save them somewhere safe: they are shown only once. If you lose your phone, choose **Lost your phone? Use a recovery code** when you sign in. Each code works once. Using one turns two-step sign-in off, so you can set it up again on your new phone.
+
+## Where you're signed in
+
+**Settings**, then **Security**, lists every device where your account is signed in, and when each was last used. If you see one you don't recognise, choose **Sign out everywhere**, then change your password.
 
 ## Your data
 
 - Nookbud asks only for what a feature needs. For a child, that is a name or nickname and a birth date.
 - Nookbud does not sell your data. At launch it does not share your data with anyone outside your space.
-- You can delete your account from inside the app.
+- Deleting your account from inside Nookbud is not available yet. Until it is, write to [hello@nookbud.com](mailto:hello@nookbud.com) from your account's email address to ask for it.
 - Later, you will be able to export everything Nookbud holds about you.
 - Nookbud is for adults. Children do not have accounts.
 

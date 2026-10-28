@@ -31,10 +31,25 @@ One profile per account, created by the `on_auth_user_created` trigger when Supa
 | `display_name`, `time_zone`, `currency` | Optional. The person may change these. `time_zone` is an IANA name, `currency` an ISO 4217 code |
 | `terms_version`, `terms_accepted_at`, `adult_confirmed_at` | Consent recorded at sign-up (R8). Nobody can change them through the API |
 | `onboarded_at` | Set when the person finishes or skips onboarding |
+| `shares_with` | The onboarding answer (`partner`, `ex_partner`, `grandparent`, `guardian`, `other_family`, `sole_caregiver`), or null when skipped |
 
 - A person reads and updates only their own row. Inserts and deletes are not granted: the trigger creates rows and account deletion removes them.
-- Only `display_name`, `time_zone`, `currency` and `onboarded_at` are writable (column grants).
+- Only `display_name`, `time_zone`, `currency`, `shares_with` and `onboarded_at` are writable (column grants).
 - Sign-up must send `adult_confirmed: true`, `terms_accepted: true` and `terms_version` as user metadata. Without them the trigger raises `P0001` with the hint `consent_required` and no account is created. It may also send `time_zone`; an unknown zone is dropped.
+
+### `audit_logs`
+
+Security-sensitive account events (R23): `user_id`, `action` and the time. Never names, emails, addresses or anything a person wrote. A person reads only their own entries. Nobody inserts, changes or deletes rows directly; `record_audit_event(event)` adds one for the signed-in person, and the check constraint lists the allowed actions. `user_id` has no foreign key, so entries outlive a deleted account.
+
+### `mfa_recovery_codes`
+
+SHA-256 hashes of two-step recovery codes, with `used_at`. Row-Level Security is on with no policies and no grants, so only the service role (the web server) can touch it. See [auth.md](auth.md#account-security-stage-4).
+
+### Functions
+
+- `my_sessions()`: the signed-in person's sessions from `auth.sessions` (device, first and last use, which one is current).
+- `record_audit_event(event)`: see `audit_logs`.
+- `handle_new_user()`: the `users` trigger.
 
 ## Rules
 
@@ -49,12 +64,12 @@ One profile per account, created by the `on_auth_user_created` trigger when Supa
 Tests are [pgTAP](https://pgtap.org) files in `supabase/tests/database/`, each rolled back when it ends.
 
 - `001_every_table_has_rls.sql` fails if any table in `public` has no Row-Level Security.
-- `003_users.sql` covers the profile table and the consent trigger.
+- `003_users.sql` covers the profile table and the consent trigger, `004_account_security.sql` the audit log, sessions and recovery codes.
 - `002_users_cannot_see_each_others_rows.sql` is the pattern to copy for a new table: a throwaway table, two users with one row each, then the same query as user A, user B and a signed-out visitor.
 
 The helpers (`create_user`, `who_sees`, `count_as`, `try_as`, `tables_without_rls`) are in `supabase/tests/support/helpers.psql`, in a `tests` schema. `db-reset` installs them as a seed, never as a migration, and the file refuses to install into a database that has users. Row-Level Security usually refuses a write by quietly changing zero rows, so after `try_as`, check the data too.
 
 ## Status
 
-- The only table is `users`. Each new table arrives with its requirement.
+- The tables are `users`, `audit_logs` and `mfa_recovery_codes`. Each new table arrives with its requirement.
 - Only the local database exists. Production is R42 in [requirements.md](requirements.md).

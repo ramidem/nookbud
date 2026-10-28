@@ -1,5 +1,13 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { DataResult, Profile, ProfileChanges, ProfileStore, SharesWith } from '../types';
+import type {
+  DataResult,
+  Profile,
+  ProfileChanges,
+  ProfileStore,
+  Session,
+  SessionStore,
+  SharesWith,
+} from '../types';
 
 type Row = {
   id: string;
@@ -55,6 +63,30 @@ export function createSupabaseProfiles(
       if (changes.onboarded) row.onboarded_at = new Date().toISOString();
       const { error } = await client.from('users').update(row).eq('id', auth.user.id);
       return error ? failed : { ok: true, data: undefined };
+    },
+  };
+}
+
+type SessionRow = {
+  id: string;
+  user_agent: string | null;
+  created_at: string;
+  last_used_at: string;
+  current: boolean;
+};
+
+export function createSupabaseSessions(client: Pick<SupabaseClient, 'rpc'>): SessionStore {
+  return {
+    async list(): Promise<Session[]> {
+      const { data, error } = await client.rpc('my_sessions');
+      if (error || !data) return [];
+      return (data as SessionRow[]).map((row) => ({
+        id: row.id,
+        userAgent: row.user_agent,
+        createdAt: row.created_at,
+        lastUsedAt: row.last_used_at,
+        current: row.current,
+      }));
     },
   };
 }
