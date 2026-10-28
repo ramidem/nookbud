@@ -17,6 +17,16 @@ vi.mock('../src/auth-actions/security', () => ({
   deleteAccount: vi.fn(),
   twoStep: vi.fn(),
 }));
+vi.mock('../src/auth-actions/spaces', () => ({
+  acceptInvitation: vi.fn(),
+  addChild: vi.fn(),
+  createSpace: vi.fn(),
+  deleteSpace: vi.fn(),
+  invite: vi.fn(),
+  leaveSpace: vi.fn(),
+  renameSpace: vi.fn(),
+  updateChild: vi.fn(),
+}));
 vi.mock('../src/auth-actions/profile', () => ({ saveProfile: vi.fn(), finishWelcome: vi.fn() }));
 
 const { SignUpForm } = await import('../src/app/(account)/sign-up/SignUpForm');
@@ -29,6 +39,9 @@ const { PasswordForm } = await import('../src/app/(app)/settings/security/Passwo
 const { TwoStep } = await import('../src/app/(app)/settings/security/TwoStep');
 const { ProfileForm } = await import('../src/app/(app)/settings/ProfileForm');
 const { DeleteAccount } = await import('../src/app/(app)/settings/DeleteAccount');
+const { CreateSpaceForm } = await import('../src/app/(app)/home/CreateSpaceForm');
+const { AcceptForm } = await import('../src/app/(account)/invite/[token]/AcceptForm');
+const spaceForms = await import('../src/app/(app)/spaces/[id]/SpaceForms');
 
 const profile = {
   currency: 'PHP',
@@ -52,6 +65,13 @@ const screens: [string, ReactElement][] = [
   ['two-step off', <TwoStep enabled={false} key="h" />],
   ['two-step on', <TwoStep enabled key="i" />],
   ['delete account', <DeleteAccount key="k" />],
+  ['create a space', <CreateSpaceForm first key="l" />],
+  ['accept an invitation', <AcceptForm key="m" spaceName="Ava's week" token="t" />],
+  ['add a child', <spaceForms.AddChildForm key="n" space="s" />],
+  ['invite someone', <spaceForms.InviteForm key="o" space="s" />],
+  ['rename a space', <spaceForms.RenameForm key="p" name="Ava's week" space="s" />],
+  ['delete a space', <spaceForms.DeleteSpaceForm key="q" name="Ava's week" space="s" />],
+  ['leave a space', <spaceForms.LeaveForm key="r" space="s" />],
   [
     'profile',
     <ProfileForm

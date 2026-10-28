@@ -63,6 +63,7 @@ The main requirements document. It grows one area at a time. It covers **authent
 | D5  | Branches follow **gitflow** with no staging: `main` is production and `develop` collects reviewed work. Only a tag deploys, one app at a time: `web-v1.2.3` or `api-v1.2.3`. | Decided 2026-10-24 |
 | D6  | The MVP launches with a **free tier**. Charging comes later, when the paid features are ready. | Decided 2026-10-24 |
 | D7  | When a member deletes their account (OQ7), their records stay in the space, shown as **"Former member"**, and their personal profile is deleted at once. Retention after that is still OQ6. | Decided 2026-10-28 |
+| D8  | Spaces were built on the recommendations for OQ2 (roles `owner` and `member`), OQ3 (owners invite and remove), OQ4 (several owners, at least one), OQ8 (email-bound token) and INV-8 (7 days). | Built 2026-10-28; confirm |
 
 ### D3: Why Supabase Auth
 

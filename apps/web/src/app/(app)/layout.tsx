@@ -35,7 +35,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </Link>
           <nav aria-label="Main" className="flex items-center gap-1">
             <Link className={navLink} href={HOME}>
-              Home
+              Spaces
             </Link>
             <Link className={navLink} href={SETTINGS}>
               Settings

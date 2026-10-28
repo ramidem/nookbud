@@ -10,9 +10,13 @@ export const HOME = '/home';
 export const WELCOME = '/welcome';
 export const SETTINGS = '/settings';
 export const SECURITY = '/settings/security';
+export const SPACES = '/spaces';
+export const INVITE = '/invite';
+
+export const spacePath = (id: string) => `${SPACES}/${id}`;
 
 /** Pages behind sign-in. Everything else (the landing page, the documentation, auth) is public. */
-export const PROTECTED_PREFIXES = [HOME, WELCOME, SETTINGS, NEW_PASSWORD];
+export const PROTECTED_PREFIXES = [HOME, WELCOME, SETTINGS, NEW_PASSWORD, SPACES];
 
 /** Pages a signed-in person has no reason to see, so they go home instead. */
 export const SIGNED_OUT_ONLY = [SIGN_IN, SIGN_UP, FORGOT_PASSWORD, CHECK_EMAIL];

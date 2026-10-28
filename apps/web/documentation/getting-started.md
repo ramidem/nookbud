@@ -7,7 +7,7 @@ description: "What the first few minutes with Nookbud look like, from creating a
 
 # Getting started
 
-Nookbud is not open yet. Creating an account and signing in are built. Spaces and invitations, steps 3 and 4 below, are not available yet. To hear when Nookbud opens, [join the waitlist](/) on the home page.
+Nookbud is not open yet. Creating an account, spaces and invitations are built. The shared calendar, records and messages are not available yet. To hear when Nookbud opens, [join the waitlist](/) on the home page.
 
 ## 1. Create your account
 
@@ -42,17 +42,13 @@ Choose **Forgot your password?** on the sign-in page and enter your email. If it
 
 ## 3. Create a space
 
-Not available yet.
+A [space](concepts/spaces-and-members.md) is the private place where you and the people you care with keep your records. On your home page, give it a name and choose **Create space**. Then add a child.
 
-A [space](concepts/spaces-and-members.md) is the private place where you and the people you care with keep your records. You give it a name, then add a child.
-
-For a child, Nookbud asks for a name or nickname and a birth date. That is all.
+For a child, Nookbud asks for a name or nickname and, if you like, a birth date. That is all.
 
 ## 4. Invite someone, or don't
 
-Not available yet.
-
-You can invite another parent, a grandparent or a guardian by email. They get a link that only they can use, and it expires.
+In the space, under **Invite someone**, enter the email of another parent, a grandparent or a guardian. Nookbud makes a link for them. Copy it and send it however you like. Only that email can use the link, once, within 7 days.
 
 You can also start on your own. Using Nookbud alone is a normal way to begin, and you can invite people whenever you are ready.
 

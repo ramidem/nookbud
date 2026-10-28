@@ -152,13 +152,18 @@ Sign-up, email verification, sign-in, sign-out, password reset and sessions are 
 - [ ] **R41 · NF · P1** Automated mobile end-to-end tests run in CI. Spec: TEST-7
 - [ ] **R48 · NF · P2** Google Cloud is managed with Terraform. Parked: the commands in [gcp-setup.md](gcp-setup.md) cover the MVP. Revisit when the setup has to be repeated (a staging environment, a second region) or changes often. Spec: D4
 
-## Waiting on spaces
+## Spaces
 
-These need a space to exist, so they come with the spaces stage.
+Spaces, members, children and invitations are built ([spaces.md](spaces.md)). Left:
 
-- As a parent, I can start using Nookbud on my own without inviting anyone. Spec: USR-4
-- As a parent in a blended family, I use one account for all my arrangements, with no extra emails. Spec: USR-3, SPC-2
-- As someone invited to a space, such as a birth mother invited by adoptive parents, I can create my own account from the invitation and land in that space. Spec: INV-2, INV-7
+- [ ] **R51 · F · P0** As an owner, I invite someone by email, and the invitation arrives in their inbox.
+  - Today the owner copies a link and sends it themselves. Send it from the Nookbud address too, with the link and the space's name only.
+  - Spec: MEM-1, INV-1
+  - Blocked by: R6.
+
+- [ ] **R53 · NF · P0** The child-access policy is decided (OQ5), and the `children` policies follow it.
+  - Today every member reads and owners write. Do not assume a parent has unrestricted access.
+  - Spec: AZ-7
 
 ## Next areas
 
