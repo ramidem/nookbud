@@ -6,12 +6,18 @@ Postgres on Supabase, in `supabase/` at the repo root, run through Nx. The Supab
 
 | Command | What it does |
 | --- | --- |
-| `pnpm nx run supabase:db-start` / `db-stop` | Start or stop the local stack (Studio is at http://127.0.0.1:54323) |
+| `pnpm nx run supabase:db-start` / `db-stop` | Start or stop the local stack (Studio is at http://127.0.0.1:55623) |
 | `pnpm nx run supabase:db-reset` | Rebuild from the migrations, then run `seed.sql` and the test helpers |
 | `pnpm nx run supabase:db-new --name=add_spaces` | Create an empty, timestamped migration |
 | `pnpm nx run supabase:db-test` | Run the pgTAP tests (reset first) |
 | `pnpm nx run supabase:db-lint` | Lint our functions in `public` |
 | `pnpm nx run supabase:db-check` | What CI runs: Postgres only, reset, lint, test |
+
+## Local ports
+
+The local stack uses the 556xx range, not Supabase's default 543xx, so it can run next to other local Supabase projects: API 55621, database 55622, Studio 55623, Mailpit (the local inbox that catches every email) 55624.
+
+`apps/web/.env.local` points the web app at it. It is ignored by git; fill it from `pnpm exec supabase status -o env` (`API_URL`, `ANON_KEY`, `SERVICE_ROLE_KEY`).
 
 ## Rules
 
@@ -34,4 +40,3 @@ The helpers (`create_user`, `who_sees`, `count_as`, `try_as`, `tables_without_rl
 
 - Only the baseline migration and the test helpers exist. There are no tables yet; each arrives with its requirement.
 - Only the local database exists. Production is R42 in [requirements.md](requirements.md).
-- `config.toml` still has Supabase's local auth defaults (email confirmation off). The auth requirements change them.
