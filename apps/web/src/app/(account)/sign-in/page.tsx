@@ -18,6 +18,10 @@ const notes: Record<string, { title: string; text: string }> = {
     title: 'Signed out everywhere',
     text: 'Every session on every device has ended.',
   },
+  deleted: {
+    title: 'Account deleted',
+    text: 'Your account and profile are gone, and every session has ended.',
+  },
   'password-changed': {
     title: 'Password changed',
     text: 'Sign in with your new password. Your other sessions have ended.',

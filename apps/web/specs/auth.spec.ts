@@ -392,6 +392,8 @@ function depsWith(over: Partial<SupabaseAuthDeps> = {}) {
       removeFactors: vi.fn().mockResolvedValue(true),
     },
     record: vi.fn().mockResolvedValue(undefined),
+    prepareDeletion: vi.fn().mockResolvedValue('user-1'),
+    deleteUser: vi.fn().mockResolvedValue(true),
     ...over,
   };
   return deps;
@@ -558,5 +560,35 @@ describe('the Nookbud voice (R19)', () => {
     expect(message.split(/(?<=\.)\s/).length).toBeLessThanOrEqual(2);
     for (const sentence of message.split(/(?<=\.)\s/))
       expect(sentence.split(' ').length).toBeLessThanOrEqual(14);
+  });
+});
+
+describe('deleting an account (R28)', () => {
+  it('checks the password, writes the audit entry, deletes the identity and clears this device', async () => {
+    const { client, auth } = clientWith(signedIn);
+    const deps = depsWith();
+    const result = await createSupabaseAuth(client, deps).deleteAccount('the password');
+    expect(result.ok).toBe(true);
+    expect(deps.checkPassword).toHaveBeenCalledWith('a@example.test', 'the password');
+    expect(deps.prepareDeletion).toHaveBeenCalled();
+    expect(deps.deleteUser).toHaveBeenCalledWith('user-1');
+    expect(auth.signOut).toHaveBeenCalledWith({ scope: 'local' });
+  });
+
+  it('deletes nothing with the wrong password', async () => {
+    const { client } = clientWith(signedIn);
+    const deps = depsWith({ checkPassword: vi.fn().mockResolvedValue(false) });
+    const result = await createSupabaseAuth(client, deps).deleteAccount('guess');
+    expect(result).toMatchObject({ ok: false, error: { code: 'wrong_password' } });
+    expect(deps.prepareDeletion).not.toHaveBeenCalled();
+    expect(deps.deleteUser).not.toHaveBeenCalled();
+  });
+
+  it('never deletes an id other than the signed-in person', async () => {
+    const { client } = clientWith(signedIn);
+    const deps = depsWith({ prepareDeletion: vi.fn().mockResolvedValue('someone-else') });
+    const result = await createSupabaseAuth(client, deps).deleteAccount('the password');
+    expect(result.ok).toBe(false);
+    expect(deps.deleteUser).not.toHaveBeenCalled();
   });
 });

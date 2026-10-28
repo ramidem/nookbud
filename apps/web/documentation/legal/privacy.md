@@ -33,7 +33,7 @@ Your information travels over an encrypted connection and is encrypted where it 
 ## What you can do
 
 - See and correct your profile at any time.
-- Ask for your account to be deleted, by writing to [hello@nookbud.com](mailto:hello@nookbud.com). Deleting it from inside Nookbud is coming.
+- Delete your account in **Settings**. Your profile is deleted straight away. What you shared in a space stays there for the others, shown as from a "Former member".
 - Ask us what we hold about you, or ask a question, at [hello@nookbud.com](mailto:hello@nookbud.com).
 
 How long information is kept after an account is deleted is still being decided. It will be written here before Nookbud opens.

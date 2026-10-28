@@ -54,11 +54,13 @@ Counted attempts for the rate limits (R16): `kind` and `subject`, a SHA-256 hash
 - `my_sessions()`: the signed-in person's sessions from `auth.sessions` (device, first and last use, which one is current).
 - `record_audit_event(event)`: see `audit_logs`.
 - `handle_new_user()`: the `users` trigger.
+- `prepare_account_deletion()`: writes the `account_deleted` entry for the signed-in person and returns their id; the server then deletes the identity ([auth.md](auth.md#deleting-an-account-r28)).
 
 ## Rules
 
 - The schema changes only through migrations in `supabase/migrations/`. Never edit the database by hand, and never change a migration that has been applied elsewhere.
 - Every table ships with Row-Level Security and an isolation test in the same change (spec SEC-10). A table without RLS fails CI.
+- Tables that hold what a person shared in a space must not cascade from `auth.users`: the content stays as "Former member" when they delete their account (spec D7).
 - Every table has a UUID primary key and `created_at` and `updated_at`, kept correct by the `set_updated_at()` trigger from the baseline migration.
 - `seed.sql` is synthetic data only (spec DB-9). Never run `db push --include-seed` against a real project, because the seed installs the test helpers.
 - Keep keys out of anything a client can reach: see [secrets.md](secrets.md).
@@ -68,7 +70,7 @@ Counted attempts for the rate limits (R16): `kind` and `subject`, a SHA-256 hash
 Tests are [pgTAP](https://pgtap.org) files in `supabase/tests/database/`, each rolled back when it ends.
 
 - `001_every_table_has_rls.sql` fails if any table in `public` has no Row-Level Security.
-- `003_users.sql` covers the profile table and the consent trigger, `004_account_security.sql` the audit log, sessions and recovery codes, `005_auth_attempts.sql` the attempt counter, and `006_visitors_are_denied_everywhere.sql` checks every table and function against a signed-out visitor.
+- `003_users.sql` covers the profile table and the consent trigger, `004_account_security.sql` the audit log, sessions and recovery codes, `005_auth_attempts.sql` the attempt counter, `007_account_deletion.sql` the deletion path, and `006_visitors_are_denied_everywhere.sql` checks every table and function against a signed-out visitor.
 - `002_users_cannot_see_each_others_rows.sql` is the pattern to copy for a new table: a throwaway table, two users with one row each, then the same query as user A, user B and a signed-out visitor.
 
 The helpers (`create_user`, `who_sees`, `count_as`, `try_as`, `tables_without_rls`) are in `supabase/tests/support/helpers.psql`, in a `tests` schema. `db-reset` installs them as a seed, never as a migration, and the file refuses to install into a database that has users. Row-Level Security usually refuses a write by quietly changing zero rows, so after `try_as`, check the data too.

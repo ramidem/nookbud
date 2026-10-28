@@ -12,7 +12,11 @@ vi.mock('../src/auth-actions/password', () => ({
   requestPasswordReset: vi.fn(),
   setNewPassword: vi.fn(),
 }));
-vi.mock('../src/auth-actions/security', () => ({ changePassword: vi.fn(), twoStep: vi.fn() }));
+vi.mock('../src/auth-actions/security', () => ({
+  changePassword: vi.fn(),
+  deleteAccount: vi.fn(),
+  twoStep: vi.fn(),
+}));
 vi.mock('../src/auth-actions/profile', () => ({ saveProfile: vi.fn(), finishWelcome: vi.fn() }));
 
 const { SignUpForm } = await import('../src/app/(account)/sign-up/SignUpForm');
@@ -24,6 +28,7 @@ const { NewPasswordForm } = await import('../src/app/(account)/reset-password/ne
 const { PasswordForm } = await import('../src/app/(app)/settings/security/PasswordForm');
 const { TwoStep } = await import('../src/app/(app)/settings/security/TwoStep');
 const { ProfileForm } = await import('../src/app/(app)/settings/ProfileForm');
+const { DeleteAccount } = await import('../src/app/(app)/settings/DeleteAccount');
 
 const profile = {
   currency: 'PHP',
@@ -46,6 +51,7 @@ const screens: [string, ReactElement][] = [
   ['change password', <PasswordForm key="g" />],
   ['two-step off', <TwoStep enabled={false} key="h" />],
   ['two-step on', <TwoStep enabled key="i" />],
+  ['delete account', <DeleteAccount key="k" />],
   [
     'profile',
     <ProfileForm

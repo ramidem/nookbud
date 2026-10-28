@@ -7,6 +7,7 @@ import { PRIVACY_HREF, TERMS_HREF } from '../../../legal/policies';
 import { formatWhen } from '../../../profile/device';
 import { CURRENCIES, timeZones } from '../../../profile/options';
 import { body, card, link } from '../../../ui/styles';
+import { DeleteAccount } from './DeleteAccount';
 import { ProfileForm } from './ProfileForm';
 
 export const metadata: Metadata = { title: 'Settings · Nookbud' };
@@ -51,13 +52,9 @@ export default async function SettingsPage() {
         <h2 className={sectionTitle} id="delete">
           Delete account
         </h2>
-        <p className={`${body} mt-2`}>
-          Deleting your account from here is not available yet. Until it is, write to{' '}
-          <a className={link} href="mailto:hello@nookbud.com">
-            hello@nookbud.com
-          </a>{' '}
-          from this email address to ask for it to be deleted.
-        </p>
+        <div className="mt-4">
+          <DeleteAccount />
+        </div>
       </section>
     </>
   );

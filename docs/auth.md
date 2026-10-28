@@ -25,7 +25,7 @@ if (!result.ok) return result.error.message; // safe to show
 | `/forgot-password`, `/reset-password/new` | Ask for a reset link, then choose a new password | `app/(account)/…` |
 | `/sign-in/code` | The second step when two-step sign-in is on: a code from the app, or a recovery code | `app/(account)/sign-in/code` |
 | `/home` | The signed-in home. Sends people who have not onboarded to `/welcome` | `app/(app)/home` |
-| `/settings` | Profile (name, time zone, currency, who they care with), the accepted policy version, delete account (not built yet, R28) | `app/(app)/settings` |
+| `/settings` | Profile (name, time zone, currency, who they care with), the accepted policy version, delete account | `app/(app)/settings` |
 | `/settings/security` | Change password, two-step sign-in, where you're signed in, sign out everywhere | `app/(app)/settings/security`, `auth-actions/security.ts` |
 
 Signed-in pages live in the `(app)` route group; its layout calls `requireUser()`. Server actions are in `src/auth-actions/` and validate their input with zod (`validation.ts`).
@@ -57,6 +57,17 @@ Signed-in pages live in the `(app)` route group; its layout calls `requireUser()
 - **Devices (R20).** `my_sessions()` lists the person's own rows from `auth.sessions`. Calls to Supabase come from the web server, so `supabase-server.ts` forwards the browser's `User-Agent` and `X-Forwarded-For`; the list shows "Chrome on Mac" and not the server.
 - **Changing the password (R22)** asks for the current one. `checkPassword` signs in on a throwaway client that never touches the cookies, then the password changes and every other session ends. `secure_password_change` is off because Nookbud asks for the current password itself.
 - **The audit log (R23).** `record_audit_event()` writes the signed-in person's id and an action: `password_changed`, `password_reset`, `signed_out_everywhere`, `two_step_enabled`, `two_step_disabled`, `recovery_code_used`. `account_deleted` is allowed for R28. The adapter records these, so no screen can forget.
+
+## Deleting an account (R28)
+
+Settings → Delete account says what happens, then asks for the password and for `DELETE` typed out. `deleteAccount(password)`:
+
+1. checks the password on a throwaway client (`checkPassword`);
+2. calls `prepare_account_deletion()` as the person, which writes the `account_deleted` audit entry and returns their id;
+3. deletes that identity with the service role (`auth.admin.deleteUser`), only if the id matches the signed-in person. The `users` row and recovery codes cascade, and every session ends with the identity;
+4. clears the cookies on this device and lands on `/sign-in?note=deleted`.
+
+What a person shared in a space stays, shown as "Former member" (spec D7): tables for space content must not cascade from `auth.users`. How long anything is kept after that is OQ6, still open. OQ10 suggested Supabase functions for privileged work; the web server already holds the service role for recovery codes, so deletion runs there too, server-side only.
 
 ## Consent at sign-up (R8)
 
@@ -103,5 +114,4 @@ Supabase limits sign-ins and emails per address on its side (`[auth.rate_limit]`
 
 ## Not done yet
 
-- Deleting an account (R28).
 - Mobile (R32, R33).

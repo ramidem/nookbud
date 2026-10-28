@@ -34,7 +34,7 @@ Do not use Nookbud to harass, threaten or watch someone, to break the law, or to
 
 ## Ending your account
 
-You can ask for your account to be deleted at any time by writing to [hello@nookbud.com](mailto:hello@nookbud.com). Deleting it from inside Nookbud is coming. The [privacy policy](privacy.md) says what happens to your information.
+You can delete your account at any time in **Settings**. Anything you shared in a space stays there for the others, shown as from a "Former member". The [privacy policy](privacy.md) says what happens to your information.
 
 ## Changes and availability
 

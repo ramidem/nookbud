@@ -1,9 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { type TwoStepSetup, getAuth, requireUser } from '@/auth';
-import { SECURITY } from '../auth/routes';
+import { SECURITY, SETTINGS, SIGN_IN } from '../auth/routes';
 import { type FieldErrors, fieldErrors, newPassword } from './validation';
 
 export type ChangePasswordState = {
@@ -82,4 +83,30 @@ export async function twoStep(previous: TwoStepState, form: FormData): Promise<T
   }
 
   return {};
+}
+
+export type DeleteAccountState = { message?: string; errors?: FieldErrors<'password' | 'confirm'> };
+
+/** Settings → Delete account (R28): the password and a typed confirmation, then it is gone. */
+export async function deleteAccount(
+  _previous: DeleteAccountState,
+  form: FormData,
+): Promise<DeleteAccountState> {
+  await requireUser(SETTINGS);
+  const parsed = z
+    .object({
+      password: z.string().min(1, { error: 'Enter your password.' }).max(128),
+      confirm: z.literal('DELETE', { error: 'Type DELETE in capital letters to confirm.' }),
+    })
+    .safeParse(Object.fromEntries(form));
+  if (!parsed.success) return { errors: fieldErrors(parsed.error) };
+
+  const auth = await getAuth();
+  const result = await auth.deleteAccount(parsed.data.password);
+  if (!result.ok) {
+    return result.error.code === 'wrong_password'
+      ? { errors: { password: 'That is not your password.' } }
+      : { message: 'Your account was not deleted. Try again.' };
+  }
+  redirect(`${SIGN_IN}?note=deleted`);
 }

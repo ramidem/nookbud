@@ -1,11 +1,9 @@
 import 'server-only';
-import { createClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { getServerEnv } from '../../env/server';
 import type { AuditEvent, SupabaseAuthDeps } from './supabase';
 
-type RpcClient = {
-  rpc(fn: 'record_audit_event', args: { event: AuditEvent }): PromiseLike<unknown>;
-};
+type RpcClient = Pick<SupabaseClient, 'rpc'>;
 
 /**
  * The privileged half of auth. The service role key never leaves the server, and these calls
@@ -66,8 +64,18 @@ export function createSupabaseAuthDeps(userClient: RpcClient): SupabaseAuthDeps 
       },
     },
 
-    async record(event) {
+    async record(event: AuditEvent) {
       await userClient.rpc('record_audit_event', { event });
+    },
+
+    async prepareDeletion() {
+      const { data, error } = await userClient.rpc('prepare_account_deletion');
+      return error || typeof data !== 'string' ? null : data;
+    },
+
+    async deleteUser(userId) {
+      const { error } = await admin().auth.admin.deleteUser(userId);
+      return !error;
     },
   };
 }

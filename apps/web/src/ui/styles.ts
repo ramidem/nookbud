@@ -8,7 +8,8 @@ const buttonBase = `inline-flex min-h-11 items-center justify-center gap-2 round
 export const button = {
   primary: `${buttonBase} bg-foreground text-background hover:bg-neutral-700`,
   secondary: `${buttonBase} border border-border-strong bg-surface text-foreground hover:bg-neutral-200`,
-  danger: `${buttonBase} bg-error text-white hover:opacity-90`,
+  // White on `error` is 3.8:1, too low for a label, so the danger button is outlined instead.
+  danger: `${buttonBase} border-2 border-error bg-surface text-foreground hover:bg-neutral-200`,
   ghost: `${buttonBase} px-3 text-foreground hover:bg-neutral-200`,
 };
 

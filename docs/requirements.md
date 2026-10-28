@@ -99,20 +99,6 @@ Sign-up, email verification, sign-in, sign-out, password reset and sessions are 
 
 ---
 
-## Stage 6. Delete my account
-
-- [ ] **R28 · F · P0** As a user, I can delete my account inside the app.
-  - I confirm with my password.
-  - It tells me what happens to anything I shared before I confirm.
-  - My profile is removed and all my sessions end.
-  - An audit entry is written.
-  - Deletion works properly from day one. Competitors have been flagged for refusing it.
-  - Needs a server-side path, since a client cannot delete its own identity: a Supabase function, or `apps/api` if OQ10 says so.
-  - Spec: USR-7, PRIV-6
-  - Blocked by: decisions OQ6 and OQ7 in `spec.md`.
-
----
-
 ## Stage 7. Prove it works
 
 - [ ] **R29 · NF · P0** Error reports hold no secrets.

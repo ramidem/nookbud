@@ -94,4 +94,9 @@ export interface AuthService {
   /** Uses a recovery code instead: it turns two-step sign-in off, so the person can set it up again. */
   useRecoveryCode(code: string): Promise<AuthResult>;
   turnOffTwoStep(): Promise<AuthResult>;
+  /**
+   * Deletes the signed-in person's account after checking their password (R28): an audit entry,
+   * then the identity and profile, and with them every session.
+   */
+  deleteAccount(password: string): Promise<AuthResult>;
 }

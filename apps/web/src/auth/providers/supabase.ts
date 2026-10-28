@@ -42,6 +42,10 @@ export type SupabaseAuthDeps = {
     removeFactors(userId: string): Promise<boolean>;
   };
   record(event: AuditEvent): Promise<void>;
+  /** Writes the `account_deleted` entry as the person, and returns their id. */
+  prepareDeletion(): Promise<string | null>;
+  /** Deletes the identity with the service role. The profile goes with it. */
+  deleteUser(userId: string): Promise<boolean>;
 };
 
 export type AuditEvent =
@@ -102,6 +106,8 @@ const noDeps: SupabaseAuthDeps = {
     removeFactors: async () => false,
   },
   record: async () => undefined,
+  prepareDeletion: async () => null,
+  deleteUser: async () => false,
 };
 
 export function createSupabaseAuth(
@@ -264,6 +270,21 @@ export function createSupabaseAuth(
       await deps.record('recovery_code_used');
       // The old token still says a code is owed; a fresh one does not, now the factor is gone.
       await client.auth.refreshSession();
+      return ok();
+    },
+
+    async deleteAccount(password) {
+      const user = await currentUser();
+      if (!user?.email) return { ok: false, error: authError('session_missing') };
+      if (!(await deps.checkPassword(user.email, password))) {
+        return { ok: false, error: authError('wrong_password') };
+      }
+      const id = await deps.prepareDeletion();
+      if (id !== user.id || !(await deps.deleteUser(id))) {
+        return { ok: false, error: authError('unknown') };
+      }
+      // The sessions died with the identity; this clears the cookies on this device too.
+      await client.auth.signOut({ scope: 'local' });
       return ok();
     },
 

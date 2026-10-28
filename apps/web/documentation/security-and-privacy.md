@@ -33,11 +33,19 @@ Nookbud then gives you ten **recovery codes**. Write them down or save them some
 
 **Settings**, then **Security**, lists every device where your account is signed in, and when each was last used. If you see one you don't recognise, choose **Sign out everywhere**, then change your password.
 
+## Deleting your account
+
+Go to **Settings**, then **Delete account**. Nookbud tells you what happens, then asks for your password and for the word DELETE.
+
+- Your profile, settings and two-step sign-in are deleted straight away, and you are signed out on every device. You cannot undo it.
+- Anything you shared in a space stays there for the other people in it, shown as from a "Former member", so their record stays complete.
+- A security note that the account was deleted is kept. It holds no name or email.
+
 ## Your data
 
 - Nookbud asks only for what a feature needs. For a child, that is a name or nickname and a birth date.
 - Nookbud does not sell your data. At launch it does not share your data with anyone outside your space.
-- Deleting your account from inside Nookbud is not available yet. Until it is, write to [hello@nookbud.com](mailto:hello@nookbud.com) from your account's email address to ask for it.
+- You can [delete your account](#deleting-your-account) from inside Nookbud.
 - Later, you will be able to export everything Nookbud holds about you.
 - Nookbud is for adults. Children do not have accounts.
 
