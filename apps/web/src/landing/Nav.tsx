@@ -1,40 +1,37 @@
 import Image from 'next/image';
 import { Button } from './Button';
-import { WAITLIST_HREF, container } from './config';
+import { WAITLIST_HREF, container, focusRing } from './config';
+
+const link = `hidden rounded-md px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-200 sm:inline ${focusRing}`;
 
 export function Nav() {
   return (
-    <header className={`${container} flex items-center justify-between py-5 md:py-6`}>
-      <a
-        className="flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-        href="/"
-      >
-        <Image
-          alt=""
-          className="rounded-lg"
-          height={32}
-          src="/design/logos/nookbud-app-icon.png"
-          width={32}
-        />
-        <span className="font-serif text-xl font-semibold text-foreground">Nookbud</span>
-      </a>
-      <nav aria-label="Main" className="flex items-center gap-6 md:gap-8">
-        <a
-          className="hidden text-[0.9375rem] text-neutral-700 hover:text-foreground sm:inline"
-          href="#record"
-        >
-          How it works
+    <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
+      <div className={`${container} flex h-16 items-center justify-between`}>
+        <a className={`flex items-center gap-2.5 rounded-md ${focusRing}`} href="/">
+          <Image
+            alt=""
+            className="rounded-md"
+            height={28}
+            src="/design/logos/nookbud-app-icon.png"
+            width={28}
+          />
+          <span className="text-[1.0625rem] font-semibold tracking-[-0.2px] text-foreground">
+            Nookbud
+          </span>
         </a>
-        <a
-          className="hidden text-[0.9375rem] text-neutral-700 hover:text-foreground sm:inline"
-          href="#faq"
-        >
-          Questions
-        </a>
-        <Button className="min-h-11 px-5 text-[0.9375rem]" href={WAITLIST_HREF}>
-          Join the waitlist
-        </Button>
-      </nav>
+        <nav aria-label="Main" className="flex items-center gap-1 md:gap-2">
+          <a className={link} href="#record">
+            How it works
+          </a>
+          <a className={link} href="#faq">
+            Questions
+          </a>
+          <Button className="ml-2 min-h-9" href={WAITLIST_HREF}>
+            Join the waitlist
+          </Button>
+        </nav>
+      </div>
     </header>
   );
 }

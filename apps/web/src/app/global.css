@@ -13,7 +13,20 @@
   --color-foreground: var(--foreground);
   --color-subtitle: var(--subtitle);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-divider: var(--divider);
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-primary-pressed: var(--primary-pressed);
+  --color-tint-sage: var(--tint-sage);
+  --color-tint-terracotta: var(--tint-terracotta);
+  --color-tint-rose: var(--tint-rose);
+  --color-tint-taupe: var(--tint-taupe);
+  --color-tint-sage-bold: var(--tint-sage-bold);
+  --color-home-a: var(--home-a);
+  --color-home-b: var(--home-b);
+  --shadow-mockup: var(--shadow-mockup);
+  --shadow-card: var(--shadow-card);
   --color-neutral-50: var(--neutral-50);
   --color-neutral-100: var(--neutral-100);
   --color-neutral-200: var(--neutral-200);
@@ -26,7 +39,6 @@
   --color-neutral-900: var(--neutral-900);
   --color-neutral-950: var(--neutral-950);
   --font-sans: var(--nb-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--nb-serif), ui-serif, Georgia, serif;
 }
 
 html {

@@ -1,19 +1,23 @@
-import { body, container, h2 } from './config';
+import { body, container, h2, h3 } from './config';
 
 const items = [
   {
+    tint: 'bg-tint-sage',
     title: 'Schedule',
     text: 'A shared calendar for school runs, handoffs and appointments. Both homes see the same week.',
   },
   {
+    tint: 'bg-tint-terracotta',
     title: 'Expenses',
     text: 'Log what was spent, attach the receipt and note who paid. Split it the way you agreed.',
   },
   {
+    tint: 'bg-tint-rose',
     title: 'Agreements',
     text: 'Write down what you decided, with the date. Everyone can see what changed and when.',
   },
   {
+    tint: 'bg-tint-taupe',
     title: 'Documents',
     text: 'Keep medical notes, school forms and letters together, so nobody hunts through message threads.',
   },
@@ -21,23 +25,18 @@ const items = [
 
 export function Records() {
   return (
-    <section
-      className={`${container} grid scroll-mt-4 gap-10 py-20 md:py-28 lg:grid-cols-[1fr_1.15fr] lg:gap-20`}
-      id="record"
-    >
-      <div className="lg:sticky lg:top-10 lg:self-start">
+    <section className={`${container} scroll-mt-16 pb-16 pt-16 md:pb-24 md:pt-24`} id="record">
+      <div className="mx-auto max-w-[40rem] text-center">
         <h2 className={h2}>One record for both homes.</h2>
-        <p className={`${body} mt-5 max-w-[28rem]`}>
+        <p className={`${body} mt-4 text-lg leading-[1.5]`}>
           Entries aren&rsquo;t edited silently. If something changes, the history shows it.
         </p>
       </div>
-      <ul className="m-0 list-none p-0">
+      <ul className="m-0 mt-12 grid list-none gap-4 p-0 sm:grid-cols-2 md:gap-6">
         {items.map((item) => (
-          <li className="border-t border-neutral-300 py-7 first:pt-7 md:py-8" key={item.title}>
-            <h3 className="font-serif text-[1.625rem] leading-tight text-foreground">
-              {item.title}
-            </h3>
-            <p className={`${body} mt-2 max-w-[32rem]`}>{item.text}</p>
+          <li className={`rounded-xl p-6 text-foreground md:p-8 ${item.tint}`} key={item.title}>
+            <h3 className={`${h3}`}>{item.title}</h3>
+            <p className="mt-2 max-w-[32rem] text-base leading-[1.55]">{item.text}</p>
           </li>
         ))}
       </ul>

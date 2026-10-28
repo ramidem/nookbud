@@ -10,8 +10,8 @@ const days = [
   { label: 'Sun', home: 'b' },
 ] as const;
 
-const homeA = 'color-mix(in srgb, var(--primary) 62%, transparent)';
-const homeB = 'color-mix(in srgb, var(--accent-soft) 75%, transparent)';
+const homeA = 'var(--home-a)';
+const homeB = 'var(--home-b)';
 
 const fills = {
   a: homeA,
@@ -45,13 +45,15 @@ function Check({ seen }: { seen: boolean }) {
 
 export function WeekCard() {
   return (
-    <figure className="m-0 rounded-3xl border border-neutral-200 bg-surface p-5 shadow-sm md:p-7">
+    <figure className="m-0 rounded-xl border border-border bg-surface p-5 text-left text-foreground shadow-mockup md:p-7">
       <figcaption className="flex items-baseline justify-between gap-4">
-        <span className="font-serif text-[1.375rem] text-foreground">Ava&rsquo;s week</span>
-        <span className="text-sm text-subtitle">Example</span>
+        <span className="text-[1.375rem] font-semibold leading-[1.3]">Ava&rsquo;s week</span>
+        <span className="rounded-sm bg-neutral-200 px-2 py-0.5 text-[0.8125rem] font-semibold text-neutral-700">
+          Example
+        </span>
       </figcaption>
 
-      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-neutral-700">
+      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-subtitle">
         <span className="flex items-center gap-2">
           <span className="size-2.5 rounded-full" style={{ background: homeA }} />
           At Priya&rsquo;s
@@ -71,7 +73,7 @@ export function WeekCard() {
           <div className="min-w-0" key={day.label}>
             <p className="mb-1.5 text-center text-xs text-subtitle">{day.label}</p>
             <div
-              className="nb-day h-16 rounded-xl"
+              className="nb-day h-16 rounded-lg"
               style={{ '--i': i, background: fills[day.home] } as CSSProperties}
             />
           </div>
@@ -81,7 +83,7 @@ export function WeekCard() {
       <ul className="mt-6 m-0 list-none p-0">
         {entries.map((entry) => (
           <li
-            className="flex items-start justify-between gap-4 border-t border-neutral-200 py-3 text-[0.9375rem]"
+            className="flex items-start justify-between gap-4 border-t border-divider py-3 text-[0.9375rem]"
             key={entry.day}
           >
             <p className="min-w-0 text-foreground">
@@ -90,7 +92,7 @@ export function WeekCard() {
             </p>
             <p
               className={`flex shrink-0 items-center gap-1.5 text-sm ${
-                entry.seen ? 'text-primary' : 'text-subtitle'
+                entry.seen ? 'font-medium text-primary' : 'text-subtitle'
               }`}
             >
               <Check seen={entry.seen} />

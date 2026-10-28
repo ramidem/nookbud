@@ -54,10 +54,10 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-serif), Georgia, serif;
   font-size: 40px;
-  font-weight: 700;
-  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 
 .tagline {
@@ -139,18 +139,17 @@
 
 .sectionTitle {
   margin: 0 0 var(--space-6);
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 36px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 .subTitle {
   margin: var(--space-6) 0 var(--space-3);
   color: var(--subtitle);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 

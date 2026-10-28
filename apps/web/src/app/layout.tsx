@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { EB_Garamond, Inter } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './global.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--nb-sans' });
-const garamond = EB_Garamond({ subsets: ['latin'], variable: '--nb-serif' });
 
 const description =
   'Shared care records for families raising a child across homes. Organize schedules, track expenses and keep a clear record, whether you’re co-parenting after separation, working overseas or managing a blended family.';
@@ -36,7 +35,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${garamond.variable}`}>{children}</body>
+      <body className={inter.variable}>{children}</body>
     </html>
   );
 }

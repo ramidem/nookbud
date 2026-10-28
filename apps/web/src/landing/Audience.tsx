@@ -1,4 +1,4 @@
-import { body, container, h2 } from './config';
+import { body, container, h2, h3 } from './config';
 
 const groups = [
   {
@@ -25,17 +25,13 @@ const groups = [
 
 export function Audience() {
   return (
-    <section className={`${container} py-20 md:py-28`}>
-      <ul className="m-0 grid list-none gap-x-14 gap-y-12 p-0 sm:grid-cols-2 lg:grid-cols-3">
-        <li className="sm:col-span-2 lg:col-span-1">
-          <h2 className={h2}>For any home a child lives in.</h2>
-        </li>
+    <section className={`${container} py-16 md:py-24`}>
+      <h2 className={`${h2} max-w-[20ch]`}>For any home a child lives in.</h2>
+      <ul className="m-0 mt-10 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map((group) => (
-          <li className="lg:pt-3" key={group.title}>
-            <h3 className="font-serif text-[1.625rem] leading-tight text-foreground">
-              {group.title}
-            </h3>
-            <p className={`${body} mt-2 max-w-[22rem]`}>{group.text}</p>
+          <li className="rounded-xl border border-border bg-surface p-6" key={group.title}>
+            <h3 className={h3}>{group.title}</h3>
+            <p className={`${body} mt-2`}>{group.text}</p>
           </li>
         ))}
       </ul>

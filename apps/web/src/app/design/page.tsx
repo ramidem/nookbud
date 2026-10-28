@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { EB_Garamond, Inter } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import type { CSSProperties } from 'react';
 
@@ -22,7 +22,6 @@ import styles from './design.module.css';
 import { ThemeToggle } from './theme-toggle';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const garamond = EB_Garamond({ subsets: ['latin'], variable: '--font-serif' });
 
 export const metadata: Metadata = {
   description: 'Colors, type, spacing and assets for building Nookbud.',
@@ -32,7 +31,7 @@ export const metadata: Metadata = {
 const ROOT_ID = 'nookbud-design';
 
 const COLOR_GROUPS: { names: string[]; title: string }[] = [
-  { names: ['primary', 'accent', 'accent-soft', 'secondary'], title: 'Brand' },
+  { names: ['primary', 'primary-pressed', 'accent', 'accent-soft', 'secondary'], title: 'Brand' },
   {
     names: [
       'background',
@@ -45,11 +44,24 @@ const COLOR_GROUPS: { names: string[]; title: string }[] = [
       'muted',
       'divider',
       'border',
+      'border-strong',
       'disabled',
       'overlay',
       'underlay',
     ],
     title: 'Surfaces & text',
+  },
+  {
+    names: [
+      'tint-sage',
+      'tint-terracotta',
+      'tint-rose',
+      'tint-taupe',
+      'tint-sage-bold',
+      'home-a',
+      'home-b',
+    ],
+    title: 'Card tints',
   },
   { names: ['error', 'warning', 'success'], title: 'Feedback' },
   { names: ['kbd-button', 'kbd-surface', 'white', 'black'], title: 'Utility' },
@@ -95,7 +107,7 @@ function renderInlineCode(text: string) {
 
 export default function DesignPage() {
   return (
-    <div className={`${styles.root} ${inter.variable} ${garamond.variable}`} id={ROOT_ID}>
+    <div className={`${styles.root} ${inter.variable}`} id={ROOT_ID}>
       <style>{buildTokenCss(`#${ROOT_ID}`)}</style>
 
       <header className={styles.header}>
@@ -170,15 +182,14 @@ export default function DesignPage() {
         <Section title="Type">
           {typeGroups.map((group) => (
             <div className={styles.group} key={group.name}>
-              <h3 className={styles.subTitle}>
-                {group.name} · {group.family === 'serif' ? 'EB Garamond' : 'Inter'}
-              </h3>
+              <h3 className={styles.subTitle}>{group.name} · Inter</h3>
               <ul className={styles.typeList}>
                 {group.styles.map((s) => {
                   const style: CSSProperties = {
                     fontFamily: `var(--font-${s.family ?? group.family})`,
                     fontSize: s.fontSize,
                     fontWeight: s.fontWeight,
+                    letterSpacing: s.letterSpacing,
                     lineHeight: s.lineHeight,
                   };
                   return (
@@ -186,6 +197,7 @@ export default function DesignPage() {
                       <span style={style}>Here&apos;s today. Here&apos;s what&apos;s next.</span>
                       <span className={styles.typeMeta}>
                         <strong>{s.name}</strong> {s.fontSize}/{s.lineHeight} · {s.fontWeight}
+                        {s.letterSpacing ? ` · ${s.letterSpacing}` : null}
                         {s.usage ? <em>{s.usage}</em> : null}
                       </span>
                     </li>

@@ -34,18 +34,18 @@ const faqs = [
 export function Faq() {
   return (
     <section
-      className={`${container} grid scroll-mt-4 gap-10 pb-20 pt-6 md:pb-28 lg:grid-cols-[1fr_1.4fr] lg:gap-20`}
+      className={`${container} grid scroll-mt-16 gap-8 pb-16 md:pb-24 lg:grid-cols-[1fr_1.6fr] lg:gap-16`}
       id="faq"
     >
       <h2 className={h2}>Questions you might have.</h2>
-      <div>
+      <div className="border-t border-border">
         {faqs.map((faq) => (
-          <details className="group border-t border-neutral-300 last:border-b" key={faq.question}>
-            <summary className="flex cursor-pointer items-center justify-between gap-6 py-5 text-[1.0625rem] font-medium text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+          <details className="group border-b border-border" key={faq.question}>
+            <summary className="flex cursor-pointer items-center justify-between gap-6 rounded-md py-6 text-lg font-semibold leading-[1.4] text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
               {faq.question}
               <span
                 aria-hidden="true"
-                className="shrink-0 text-2xl leading-none text-subtitle transition-transform group-open:rotate-45"
+                className="shrink-0 text-2xl font-normal leading-none text-subtitle transition-transform duration-200 group-open:rotate-45"
               >
                 +
               </span>

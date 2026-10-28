@@ -9,6 +9,7 @@ export type TypeStyle = {
   fontSize: string;
   lineHeight: string;
   fontWeight: number;
+  letterSpacing?: string;
   family?: string;
   usage?: string;
 };
