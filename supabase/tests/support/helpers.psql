@@ -21,7 +21,8 @@ create schema if not exists tests;
 revoke all on schema tests from public, anon, authenticated;
 alter default privileges in schema tests revoke all on functions from public, anon, authenticated;
 
--- A confirmed user, as Supabase Auth would create one. Returns the new user's id.
+-- A confirmed user, as Supabase Auth would create one, with the consent sign-up records.
+-- Returns the new user's id.
 create or replace function tests.create_user(user_email text default null)
 returns uuid
 language plpgsql
@@ -36,7 +37,8 @@ begin
   ) values (
     '00000000-0000-0000-0000-000000000000', new_id, 'authenticated', 'authenticated',
     coalesce(user_email, new_id || '@example.test'), '', now(),
-    '{"provider":"email","providers":["email"]}', '{}', now(), now(),
+    '{"provider":"email","providers":["email"]}',
+    '{"adult_confirmed":true,"terms_accepted":true,"terms_version":"test"}', now(), now(),
     '', '', '', ''
   );
   return new_id;

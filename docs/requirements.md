@@ -104,11 +104,6 @@ Nothing a user sees yet. These come first because everything else leans on them.
   - Until I verify, I cannot reach any space data.
   - Spec: AUTH-1
 
-- [ ] **R10 · F · P0** As a new user, my profile is created for me.
-  - A `users` profile row appears when I register, keyed to my sign-in identity.
-  - It has Row-Level Security: I can read and change only my own row.
-  - Spec: USR-1, DB-1, DB-3, DB-6
-
 ---
 
 ## Stage 3. Sign in and out
