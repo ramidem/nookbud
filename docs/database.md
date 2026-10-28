@@ -68,7 +68,7 @@ Counted attempts for the rate limits (R16): `kind` and `subject`, a SHA-256 hash
 Tests are [pgTAP](https://pgtap.org) files in `supabase/tests/database/`, each rolled back when it ends.
 
 - `001_every_table_has_rls.sql` fails if any table in `public` has no Row-Level Security.
-- `003_users.sql` covers the profile table and the consent trigger, `004_account_security.sql` the audit log, sessions and recovery codes, `005_auth_attempts.sql` the attempt counter.
+- `003_users.sql` covers the profile table and the consent trigger, `004_account_security.sql` the audit log, sessions and recovery codes, `005_auth_attempts.sql` the attempt counter, and `006_visitors_are_denied_everywhere.sql` checks every table and function against a signed-out visitor.
 - `002_users_cannot_see_each_others_rows.sql` is the pattern to copy for a new table: a throwaway table, two users with one row each, then the same query as user A, user B and a signed-out visitor.
 
 The helpers (`create_user`, `who_sees`, `count_as`, `try_as`, `tables_without_rls`) are in `supabase/tests/support/helpers.psql`, in a `tests` schema. `db-reset` installs them as a seed, never as a migration, and the file refuses to install into a database that has users. Row-Level Security usually refuses a write by quietly changing zero rows, so after `try_as`, check the data too.

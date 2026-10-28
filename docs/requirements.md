@@ -115,18 +115,14 @@ Sign-up, email verification, sign-in, sign-out, password reset and sessions are 
 
 ## Stage 7. Prove it works
 
-- [ ] **R29 · NF · P0** Logs and error reports hold no secrets.
-  - Passwords and tokens are never logged.
-  - Error monitoring is set up so it cannot capture message content or child data.
+- [ ] **R29 · NF · P0** Error reports hold no secrets.
+  - Error monitoring is set up so it cannot capture passwords, tokens, message content or child data.
+  - Logging is covered: the web app and the API cannot `console.log` (lint), and nothing logs a request body ([auth.md](auth.md#rules)).
   - Spec: SEC-8
 
-- [ ] **R30 · NF · P0** Signed-out and unverified visitors are denied everywhere.
-  - A test calls every endpoint and table without a session, and again with an unverified one.
-  - Changing an id in a request never returns or changes another user's profile.
-  - Spec: TEST-1
-
-- [ ] **R31 · NF · P0** The privacy policy and terms are published.
-  - Both are linked from sign-up and from settings.
+- [ ] **R31 · NF · P0** The privacy policy and terms pass legal review.
+  - Minimal drafts are published at `/terms` and `/privacy` (`apps/web/documentation/legal/`), linked from sign-up, settings and every footer, with the version people accept in `src/legal/policies.ts`.
+  - What is left: the review under the Data Privacy Act (PRIV-7), the retention rules (OQ6), and removing "draft" once they are final.
   - Spec: PRIV-4, PRIV-7
   - Blocked by: legal review.
 

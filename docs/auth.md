@@ -96,6 +96,8 @@ Supabase limits sign-ins and emails per address on its side (`[auth.rate_limit]`
 - **Import auth only from `@/auth`, and data only from `@/data`.** Nothing outside `src/auth/providers/` and `src/data/providers/` may import `@supabase/*`. An ESLint rule and a test enforce it; the test also catches a lint-disable comment and dynamic imports.
 - **Server only.** A client component that imports `getAuth` fails the build, so tokens stay in cookies and out of browser JavaScript.
 - **No method reveals whether an email has an account.** A wrong password and an unknown email give the same error, signing up an existing email looks like a new sign-up, and resend and reset requests always look the same. Only a rate limit is ever named.
+- **No logging of secrets (R29).** `no-console` is an error in `apps/web/src` and `apps/api/src`. Add a redacting logger before anything needs to log.
+- **Visitors are denied everywhere (R30).** `supabase/tests/database/006_visitors_are_denied_everywhere.sql` walks every table and function in `public`: a signed-out visitor sees no rows, removes none, and can call no function. It covers tables added later without changes. An unverified person never gets a session (`enable_confirmations`), so they are a visitor too. `003_users.sql` checks that changing an id never reads or changes someone else's profile. The API has no data endpoints yet; R49 adds token checks with the first one.
 - **Errors are neutral.** They carry a code and a message in the Nookbud voice, never the provider's wording.
 - **To change provider,** write an adapter in `src/auth/providers/` that implements `AuthService` and switch it in `server.ts`.
 
