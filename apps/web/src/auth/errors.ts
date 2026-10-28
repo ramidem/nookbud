@@ -4,9 +4,11 @@ import type { AuthError, AuthErrorCode } from './types';
 const MESSAGES: Record<AuthErrorCode, string> = {
   invalid_credentials: 'Check your email and password, then try again.',
   email_not_verified: 'Confirm your email address first. We can send the link again.',
-  weak_password: 'That password is too weak. Choose a longer one.',
+  weak_password: 'That password is too short. Use at least 12 characters.',
   rate_limited: 'Too many attempts. Wait a few minutes, then try again.',
   session_missing: 'Sign in to continue.',
+  consent_required: 'Confirm you are 18 or older and accept the terms to create an account.',
+  link_invalid: 'That link has expired or was already used. Ask for a new one.',
   unknown: 'Something went wrong. Try again.',
 };
 

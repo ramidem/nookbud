@@ -12,7 +12,7 @@ export default [
   {
     // Auth goes through `@/auth`, so the provider can change without touching the app.
     files: ['**/*.{ts,tsx,js,jsx,mjs}'],
-    ignores: ['src/auth/providers/**'],
+    ignores: ['src/auth/providers/**', 'src/data/providers/**'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -21,7 +21,7 @@ export default [
             {
               group: ['@supabase/*'],
               message:
-                "Use the auth module: import { getAuth } from '@/auth'. Only src/auth/providers may import @supabase/*.",
+                "Use the auth module: import { getAuth } from '@/auth'. Only src/auth/providers and src/data/providers may import @supabase/*.",
             },
           ],
         },

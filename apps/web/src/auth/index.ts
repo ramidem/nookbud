@@ -3,4 +3,13 @@
  * Import from here, never from `@supabase/*`. Lint and a test enforce it.
  */
 export { getAuth } from './server';
-export type { AuthError, AuthErrorCode, AuthResult, AuthService, AuthUser } from './types';
+export { requireUser } from './session';
+export type {
+  AuthError,
+  AuthErrorCode,
+  AuthResult,
+  AuthService,
+  AuthUser,
+  EmailLinkType,
+  SignUpConsent,
+} from './types';

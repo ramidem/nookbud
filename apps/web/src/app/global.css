@@ -52,7 +52,7 @@ body {
 }
 
 @layer base {
-  #landing-root {
+  .nb-root {
     overflow-x: hidden;
     background: var(--background);
     color: var(--foreground);
@@ -60,39 +60,39 @@ body {
     -webkit-font-smoothing: antialiased;
   }
 
-  #landing-root *,
-  #landing-root *::before,
-  #landing-root *::after {
+  .nb-root *,
+  .nb-root *::before,
+  .nb-root *::after {
     box-sizing: border-box;
     border: 0 solid var(--border);
   }
 
-  #landing-root img,
-  #landing-root svg {
+  .nb-root img,
+  .nb-root svg {
     display: block;
     max-width: 100%;
   }
 
-  #landing-root :is(h1, h2, h3, h4, p, figure, blockquote, ul, ol) {
+  .nb-root :is(h1, h2, h3, h4, p, figure, blockquote, ul, ol) {
     margin: 0;
   }
 
-  #landing-root :is(h1, h2, h3, h4) {
+  .nb-root :is(h1, h2, h3, h4) {
     font-size: inherit;
     font-weight: inherit;
   }
 
-  #landing-root :is(ul, ol) {
+  .nb-root :is(ul, ol) {
     padding: 0;
     list-style: none;
   }
 
-  #landing-root a {
+  .nb-root a {
     color: inherit;
     text-decoration: inherit;
   }
 
-  #landing-root button {
+  .nb-root button {
     font: inherit;
     color: inherit;
     background: none;
@@ -101,7 +101,13 @@ body {
     cursor: pointer;
   }
 
-  #landing-root summary::-webkit-details-marker {
+  .nb-root :is(input, select, textarea) {
+    font: inherit;
+    color: inherit;
+    margin: 0;
+  }
+
+  .nb-root summary::-webkit-details-marker {
     display: none;
   }
 }

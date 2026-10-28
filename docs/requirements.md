@@ -38,7 +38,7 @@ Nothing a user sees yet. These come first because everything else leans on them.
 
 - [ ] **R5 · NF · P0** The first deploys are finished off. Both parts wait: the first secret and the first email (R6) are what need them.
   - Secrets live in Secret Manager under their own names and reach the service as server-only variables ([secrets.md](secrets.md)). Do this when the first secret exists.
-  - Verification and reset links use the site's own base URL, which differs between local and production.
+  - Set the production project's Site URL to the real domain: the email links are built from it ([auth.md](auth.md#email-links)).
   - Both tag deploys work today ([deploy.md](deploy.md)).
   - Spec: D4, D5, roadmap A3 (environment separation), AUTH-1, AUTH-3
 
@@ -84,49 +84,9 @@ Nothing a user sees yet. These come first because everything else leans on them.
 
 ---
 
-## Stage 2. Create an account
+## Stage 3. Sign-in hardening
 
-- [ ] **R7 · F · P0** As a visitor, I can create an account with my email and a password.
-  - There is no social sign-in.
-  - The password rules are shown before I submit. _Proposed: at least 12 characters, no composition rules._
-  - Spec: AUTH-2
-
-- [ ] **R8 · F · P0** As a visitor, I confirm I am 18 or older and accept the terms and privacy policy when I create an account.
-  - I cannot finish sign-up without both.
-  - My acceptance is stored with the date and the version of the policy.
-  - The terms and policy are linked from the form.
-  - The terms state that Nookbud is for adults only.
-  - Spec: USR-8, PRIV-4
-
-- [ ] **R9 · F · P0** As a new user, I get an email to verify my address, and I can verify it.
-  - The link works once and expires.
-  - I can ask for a new email, and requests are rate limited.
-  - Until I verify, I cannot reach any space data.
-  - Spec: AUTH-1
-
----
-
-## Stage 3. Sign in and out
-
-- [ ] **R11 · F · P0** As a user, I can sign in with my email and password.
-  - A wrong password and an unknown email show the same message.
-  - If my email is not verified, I am asked to verify it.
-  - Spec: AUTH-2, AUTH-7
-
-- [ ] **R12 · F · P0** As a user, I stay signed in until my session expires.
-  - Session length and renewal are decided, written down and tested.
-  - An expired session sends me back to sign in, then back to where I was.
-  - Spec: AUTH-4
-
-- [ ] **R13 · F · P0** As a user, I can sign out.
-  - The session ends on the server, not only on my device.
-  - Spec: AUTH-4
-
-- [ ] **R14 · F · P0** As a user who forgot my password, I can reset it by email.
-  - The link works once and expires.
-  - The response never says whether the email has an account.
-  - Resetting signs out every other session. _Proposed._
-  - Spec: AUTH-3, AUTH-7
+Sign-up, email verification, sign-in, sign-out, password reset and sessions are built ([auth.md](auth.md)). What is left here hardens them.
 
 - [ ] **R15 · NF · P0** Sign-in tokens are stored safely.
   - Web: secure, correctly configured cookies. No privileged credential is reachable from browser JavaScript.
@@ -204,12 +164,6 @@ Nothing a user sees yet. These come first because everything else leans on them.
   - Currency and notifications sit here too once they exist, and privacy controls and data export arrive in P1.
   - Spec: USR-6
 
-- [ ] **R27 · F · P0** As a new user, I am asked who shares responsibility for a child with me, with options that fit my family.
-  - The question is "Who shares responsibility for a child with you?", never "Who is your co-parent?"
-  - Options: partner, ex-partner, grandparent, guardian, other family member, and "I'm the sole caregiver right now".
-  - Every onboarding step can be skipped. Using Nookbud alone is a valid choice.
-  - The welcome screen carries the tagline "Two homes. One childhood."
-  - Spec: USR-4, USR-13
 
 ---
 

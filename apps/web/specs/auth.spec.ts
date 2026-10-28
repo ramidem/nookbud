@@ -15,14 +15,17 @@ function filesUnder(dir: string): string[] {
 
 describe('the auth module is the only way in', () => {
   // The lint rule says the same, but a lint comment can switch it off. This cannot be switched off.
-  it('keeps every @supabase import inside src/auth/providers', () => {
-    const allowed = path.join(webRoot, 'src', 'auth', 'providers') + path.sep;
+  it('keeps every @supabase import inside the providers folders', () => {
+    const allowed = [
+      path.join(webRoot, 'src', 'auth', 'providers') + path.sep,
+      path.join(webRoot, 'src', 'data', 'providers') + path.sep,
+    ];
     const anyImport = /(from\s+|import\s*\(\s*|require\s*\(\s*|import\s+)['"]@supabase\//;
     const offenders = [
       ...filesUnder(path.join(webRoot, 'src')),
       ...filesUnder(path.join(webRoot, 'scripts')),
     ]
-      .filter((file) => !file.startsWith(allowed))
+      .filter((file) => !allowed.some((dir) => file.startsWith(dir)))
       .filter((file) => anyImport.test(fs.readFileSync(file, 'utf8')))
       .map((file) => path.relative(webRoot, file));
     expect(offenders).toEqual([]);
@@ -40,6 +43,8 @@ function clientWith(overrides: Overrides = {}) {
     signOut: vi.fn().mockResolvedValue({ error: null }),
     getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
     resetPasswordForEmail: vi.fn().mockResolvedValue({ data: {}, error: null }),
+    resend: vi.fn().mockResolvedValue({ data: {}, error: null }),
+    verifyOtp: vi.fn().mockResolvedValue({ data: {}, error: null }),
     updateUser: vi.fn().mockResolvedValue({ data: { user: user() }, error: null }),
     ...overrides,
   };
@@ -53,6 +58,8 @@ const user = (over: Record<string, unknown> = {}) => ({
   email_confirmed_at: '2026-10-24T00:00:00Z',
   ...over,
 });
+
+const consent = { adultConfirmed: true, termsAccepted: true, termsVersion: '2026-10-28' };
 
 const providerError = (
   code: string,
@@ -72,12 +79,22 @@ describe('Supabase auth adapter', () => {
       email: 'a@example.test',
       password: 'a-long-enough-password',
       redirectTo: 'https://nookbud.test/confirm',
+      consent,
+      timeZone: 'Asia/Manila',
     });
     expect(result).toEqual({ ok: true, data: undefined });
     expect(auth.signUp).toHaveBeenCalledWith({
       email: 'a@example.test',
       password: 'a-long-enough-password',
-      options: { emailRedirectTo: 'https://nookbud.test/confirm' },
+      options: {
+        emailRedirectTo: 'https://nookbud.test/confirm',
+        data: {
+          adult_confirmed: true,
+          terms_accepted: true,
+          terms_version: '2026-10-28',
+          time_zone: 'Asia/Manila',
+        },
+      },
     });
   });
 
@@ -89,6 +106,7 @@ describe('Supabase auth adapter', () => {
       email: 'a@example.test',
       password: 'x',
       redirectTo: '/',
+      consent,
     });
     expect(result.ok).toBe(true);
   });
@@ -101,8 +119,91 @@ describe('Supabase auth adapter', () => {
       email: 'a@example.test',
       password: 'x',
       redirectTo: '/',
+      consent,
     });
     expect(result).toMatchObject({ ok: false, error: { code: 'weak_password' } });
+  });
+
+  it.each([
+    [{ ...consent, adultConfirmed: false }],
+    [{ ...consent, termsAccepted: false }],
+    [{ ...consent, termsVersion: '' }],
+  ])('refuses to sign up without both confirmations (%o)', async (given) => {
+    const { client, auth } = clientWith();
+    const result = await createSupabaseAuth(client).signUp({
+      email: 'a@example.test',
+      password: 'a-long-enough-password',
+      redirectTo: '/',
+      consent: given,
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: 'consent_required' } });
+    expect(auth.signUp).not.toHaveBeenCalled();
+  });
+
+  it('reports the database refusing an account without consent', async () => {
+    const { client } = clientWith({
+      signUp: vi.fn().mockResolvedValue({ data: {}, error: providerError('P0001', 500) }),
+    });
+    const result = await createSupabaseAuth(client).signUp({
+      email: 'a@example.test',
+      password: 'a-long-enough-password',
+      redirectTo: '/',
+      consent,
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: 'consent_required' } });
+  });
+
+  it('resends the confirmation email, looking the same whatever happened', async () => {
+    const { client, auth } = clientWith({
+      resend: vi.fn().mockResolvedValue({ data: {}, error: providerError('user_not_found') }),
+    });
+    const result = await createSupabaseAuth(client).resendConfirmation({
+      email: 'a@example.test',
+      redirectTo: 'https://nookbud.test/confirm',
+    });
+    expect(result.ok).toBe(true);
+    expect(auth.resend).toHaveBeenCalledWith({
+      type: 'signup',
+      email: 'a@example.test',
+      options: { emailRedirectTo: 'https://nookbud.test/confirm' },
+    });
+  });
+
+  it('says when resending is rate limited', async () => {
+    const { client } = clientWith({
+      resend: vi
+        .fn()
+        .mockResolvedValue({ data: {}, error: providerError('over_email_send_rate_limit', 429) }),
+    });
+    const result = await createSupabaseAuth(client).resendConfirmation({
+      email: 'a@example.test',
+      redirectTo: '/',
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: 'rate_limited' } });
+  });
+
+  it('verifies an email link once', async () => {
+    const { client, auth } = clientWith();
+    const result = await createSupabaseAuth(client).verifyEmailLink({
+      tokenHash: 'hash',
+      type: 'email',
+    });
+    expect(result.ok).toBe(true);
+    expect(auth.verifyOtp).toHaveBeenCalledWith({ token_hash: 'hash', type: 'email' });
+  });
+
+  it('calls a used or expired link invalid, without the provider wording', async () => {
+    const { client } = clientWith({
+      verifyOtp: vi.fn().mockResolvedValue({ data: {}, error: providerError('otp_expired', 403) }),
+    });
+    const result = await createSupabaseAuth(client).verifyEmailLink({
+      tokenHash: 'old',
+      type: 'recovery',
+    });
+    expect(result).toEqual({
+      ok: false,
+      error: { code: 'link_invalid', message: expect.not.stringContaining('provider') },
+    });
   });
 
   it('returns the signed-in user', async () => {
