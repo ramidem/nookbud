@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireUser } from '@/auth';
 import { getProfiles, getSpaces } from '@/data';
 import { changeMember, removeChild, revokeInvitation } from '../../../../auth-actions/spaces';
-import { HOME, spacePath } from '../../../../auth/routes';
+import { spacePath } from '../../../../auth/routes';
 import { formatWhen } from '../../../../profile/device';
 import { ActionForm } from '../../../../ui/ActionForm';
-import { body, button, card, heading, link } from '../../../../ui/styles';
+import { body, button, card } from '../../../../ui/styles';
 import {
   AddChildForm,
   DeleteSpaceForm,
@@ -17,7 +16,7 @@ import {
   RenameForm,
 } from './SpaceForms';
 
-export const metadata: Metadata = { title: 'Space · Nookbud' };
+export const metadata: Metadata = { title: 'People and children · Nookbud' };
 
 const sectionTitle = 'text-[1.375rem] font-semibold leading-[1.3] text-foreground';
 const badge = 'rounded-sm px-2 py-0.5 text-[0.8125rem] font-semibold';
@@ -52,11 +51,7 @@ export default async function SpacePage({ params }: { params: Promise<{ id: stri
   return (
     <div className="grid max-w-[48rem] gap-6">
       <div>
-        <Link className={`${link} text-sm`} href={HOME}>
-          All spaces
-        </Link>
-        <h1 className={`${heading} mt-3`}>{space.name}</h1>
-        <p className={`${body} mt-1`}>
+        <p className={body}>
           You are {owner ? 'an owner' : 'a member'} of this space. {people.length}{' '}
           {people.length === 1 ? 'person' : 'people'} can see it.
         </p>

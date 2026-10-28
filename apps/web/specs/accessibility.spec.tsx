@@ -27,6 +27,17 @@ vi.mock('../src/auth-actions/spaces', () => ({
   renameSpace: vi.fn(),
   updateChild: vi.fn(),
 }));
+vi.mock('../src/auth-actions/records', () => ({
+  addRecord: vi.fn(),
+  editRecord: vi.fn(),
+  removeRecord: vi.fn(),
+  setOutcome: vi.fn(),
+}));
+vi.mock('../src/auth-actions/schedule', () => ({
+  answerChange: vi.fn(),
+  requestChange: vi.fn(),
+  saveSchedule: vi.fn(),
+}));
 vi.mock('../src/auth-actions/profile', () => ({ saveProfile: vi.fn(), finishWelcome: vi.fn() }));
 
 const { SignUpForm } = await import('../src/app/(account)/sign-up/SignUpForm');
@@ -42,6 +53,22 @@ const { DeleteAccount } = await import('../src/app/(app)/settings/DeleteAccount'
 const { CreateSpaceForm } = await import('../src/app/(app)/home/CreateSpaceForm');
 const { AcceptForm } = await import('../src/app/(account)/invite/[token]/AcceptForm');
 const spaceForms = await import('../src/app/(app)/spaces/[id]/SpaceForms');
+const { EntryForm } = await import('../src/records/EntryForm');
+const scheduleForms = await import('../src/app/(app)/spaces/[id]/calendar/ScheduleForms');
+const entryActions = await import('../src/app/(app)/spaces/[id]/records/[entry]/EntryActions');
+
+const people = [
+  { id: 'p1', name: 'Priya' },
+  { id: 'p2', name: 'Tom' },
+];
+const entryProps = {
+  childOptions: [{ id: 'c1', name: 'Ava' }],
+  currencies: ['PHP'],
+  defaultCurrency: 'PHP',
+  people,
+  space: 's',
+  zone: 'Asia/Manila',
+};
 
 const profile = {
   currency: 'PHP',
@@ -72,6 +99,38 @@ const screens: [string, ReactElement][] = [
   ['rename a space', <spaceForms.RenameForm key="p" name="Ava's week" space="s" />],
   ['delete a space', <spaceForms.DeleteSpaceForm key="q" name="Ava's week" space="s" />],
   ['leave a space', <spaceForms.LeaveForm key="r" space="s" />],
+  ['add a record', <EntryForm key="s" {...entryProps} />],
+  ['add an expense', <EntryForm key="t" {...entryProps} startType="expense" />],
+  ['add an event', <EntryForm key="u" {...entryProps} onlyType="event" startDate="2026-11-04" />],
+  [
+    'correct an event',
+    <EntryForm
+      entry={{
+        content: { starts_at: '2026-11-04T07:30:00Z', title: 'Handoff' },
+        id: 'e',
+        type: 'event',
+      }}
+      key="v"
+      {...entryProps}
+    />,
+  ],
+  ['record what happened', <entryActions.OutcomeForm entry="e" key="w" outcome={null} space="s" />],
+  ['remove a record', <entryActions.RemoveForm entry="e" key="x" space="s" />],
+  [
+    'set the schedule',
+    <scheduleForms.ScheduleForm current={null} key="y" people={people} space="s" />,
+  ],
+  [
+    'set the schedule day by day',
+    <scheduleForms.ScheduleForm
+      current={{ pattern: ['p1', 'p2', null], startsOn: '2026-11-02' }}
+      key="z"
+      people={people}
+      space="s"
+    />,
+  ],
+  ['ask to change days', <scheduleForms.RequestForm key="aa" people={people} space="s" />],
+  ['answer a request', <scheduleForms.AnswerForm key="ab" mine={false} request="r" space="s" />],
   [
     'profile',
     <ProfileForm

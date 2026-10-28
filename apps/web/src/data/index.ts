@@ -1,7 +1,9 @@
 import 'server-only';
 import { createSupabaseServerClient } from '../auth/providers/supabase-server';
 import { createSupabaseProfiles, createSupabaseSessions } from './providers/supabase';
+import { createSupabaseRecords, createSupabaseSchedules } from './providers/records';
 import { createSupabaseSpaces } from './providers/spaces';
+import type { RecordStore, ScheduleStore } from './records-types';
 import type { ProfileStore, SessionStore, SpaceStore } from './types';
 
 /**
@@ -23,6 +25,27 @@ export async function getSpaces(): Promise<SpaceStore> {
   return createSupabaseSpaces(await createSupabaseServerClient());
 }
 
+/** Records and their history (R54–R56). */
+export async function getRecords(): Promise<RecordStore> {
+  return createSupabaseRecords(await createSupabaseServerClient());
+}
+
+/** The parenting schedule and change requests (R57, R58). */
+export async function getSchedules(): Promise<ScheduleStore> {
+  return createSupabaseSchedules(await createSupabaseServerClient());
+}
+
+export type {
+  ChangeRequest,
+  Entry,
+  EntryContent,
+  EntryType,
+  EntryVersion,
+  RecordStore,
+  Schedule,
+  ScheduleStore,
+  ScheduleVersion,
+} from './records-types';
 export type {
   Child,
   Invitation,

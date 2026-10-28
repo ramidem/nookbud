@@ -6,7 +6,7 @@ import { HOME, SETTINGS } from '../../auth/routes';
 import { AppRoot } from '../../ui/AppRoot';
 import { button, focusRing } from '../../ui/styles';
 
-const navLink = `rounded-md px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-200 ${focusRing}`;
+const navLink = `rounded-md px-2 py-2 sm:px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-200 ${focusRing}`;
 
 /** The signed-in app: a top bar with the main places and sign out. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -41,7 +41,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               Settings
             </Link>
             <form action={signOut}>
-              <button className={button.ghost} type="submit">
+              <button className={`${button.ghost} whitespace-nowrap px-2 sm:px-3`} type="submit">
                 Sign out
               </button>
             </form>

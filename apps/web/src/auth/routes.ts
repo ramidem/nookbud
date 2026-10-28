@@ -14,6 +14,9 @@ export const SPACES = '/spaces';
 export const INVITE = '/invite';
 
 export const spacePath = (id: string) => `${SPACES}/${id}`;
+export const recordsPath = (id: string) => `${SPACES}/${id}/records`;
+export const recordPath = (id: string, entry: string) => `${SPACES}/${id}/records/${entry}`;
+export const calendarPath = (id: string) => `${SPACES}/${id}/calendar`;
 
 /** Pages behind sign-in. Everything else (the landing page, the documentation, auth) is public. */
 export const PROTECTED_PREFIXES = [HOME, WELCOME, SETTINGS, NEW_PASSWORD, SPACES];

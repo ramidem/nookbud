@@ -24,9 +24,11 @@ const KNOWN_HINTS = new Set([
   'wrong_email',
   'self',
   'last_owner',
+  'not_author',
+  'removed',
 ]);
 
-function failure(error: PostgrestError | null): DataResult<never> {
+export function failure(error: PostgrestError | null): DataResult<never> {
   if (error && error.code === 'P0001' && KNOWN_HINTS.has(error.hint ?? '')) {
     return { ok: false, message: error.message };
   }

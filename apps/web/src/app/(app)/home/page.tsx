@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getProfiles, getSpaces } from '@/data';
 import { acceptMyInvitation } from '../../../auth-actions/spaces';
-import { WELCOME, spacePath } from '../../../auth/routes';
+import { WELCOME, calendarPath } from '../../../auth/routes';
 import { formatWhen } from '../../../profile/device';
 import { Notice } from '../../../ui/Notice';
 import { type SearchParams, param } from '../../../ui/page-props';
@@ -76,7 +76,7 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
               <li key={space.id}>
                 <Link
                   className={`${card} block transition-colors hover:border-border-strong ${focusRing}`}
-                  href={spacePath(space.id)}
+                  href={calendarPath(space.id)}
                 >
                   <span className="block text-[1.125rem] font-semibold text-foreground">
                     {space.name}
