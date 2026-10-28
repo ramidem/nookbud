@@ -17,6 +17,8 @@ const LIMITED = 'Too many attempts. Wait a few minutes, then try again.';
 export type SignInState = {
   email?: string;
   message?: string;
+  /** Too many attempts: the one sign-in problem shown as an alert (R19). */
+  locked?: boolean;
   /** The email is not confirmed yet: offer to send the link again. */
   unverified?: boolean;
 };
@@ -32,7 +34,7 @@ export async function signIn(_previous: SignInState, form: FormData): Promise<Si
   const limiter = getRateLimiter();
   const who = { email: parsed.data.email, address: await requestAddress() };
   if (!(await limiter.allowed('sign_in', who))) {
-    return { email: parsed.data.email, message: LIMITED };
+    return { email: parsed.data.email, message: LIMITED, locked: true };
   }
 
   const auth = await getAuth();
@@ -43,6 +45,7 @@ export async function signIn(_previous: SignInState, form: FormData): Promise<Si
       email: parsed.data.email,
       message: result.error.message,
       unverified: result.error.code === 'email_not_verified',
+      locked: result.error.code === 'rate_limited',
     };
   }
 

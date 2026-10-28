@@ -16,7 +16,7 @@ export function PasswordForm() {
           Your other sessions have ended. This one stays signed in.
         </Notice>
       ) : null}
-      {state.message ? <Notice tone="alert">{state.message}</Notice> : null}
+      {state.message ? <Notice>{state.message}</Notice> : null}
       <Field
         autoComplete="current-password"
         error={state.errors?.current}

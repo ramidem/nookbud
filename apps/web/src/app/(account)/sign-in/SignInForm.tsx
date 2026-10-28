@@ -16,7 +16,16 @@ export function SignInForm({ next }: { next?: string }) {
     <div className="grid gap-5">
       <form action={action} className="grid gap-5" noValidate>
         {state.message ? (
-          <Notice title={state.unverified ? 'Confirm your email first' : 'Sign-in failed'}>
+          <Notice
+            title={
+              state.locked
+                ? 'Sign-in paused'
+                : state.unverified
+                  ? 'Confirm your email first'
+                  : 'Sign-in failed'
+            }
+            tone={state.locked ? 'alert' : 'status'}
+          >
             {state.message}
           </Notice>
         ) : null}

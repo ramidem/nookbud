@@ -76,7 +76,7 @@ Nothing a user sees yet. These come first because everything else leans on them.
 
 - [ ] **R6 · NF · P0** Verification and reset emails arrive.
   - They send from a Nookbud address with SPF and DKIM set up.
-  - The copy says Nookbud and follows the brand voice (R19).
+  - The copy says Nookbud and follows the brand voice. The templates are written (`supabase/templates/`); what is left is sending them from a real address.
   - A test send reaches a real inbox and it is not marked as spam.
   - Start from the old email templates (`nookbud_copy/apps/backend/src/app/email/email.templates.ts`, Resend), rebranded from CoParent to Nookbud.
   - Spec: AUTH-1, AUTH-3, AUTH-16
@@ -92,19 +92,10 @@ Sign-up, email verification, sign-in, sign-out, password reset and sessions are 
   - Tokens live in `expo-secure-store`. The web half is done ([auth.md](auth.md#cookies-csrf-and-headers)).
   - Spec: AUTH-9, AUTH-10
 
-- [ ] **R18 · NF · P0** Auth and account screens are accessible.
-  - Every control has a label, images have alt text and focus order is logical.
-  - Text has 4.5:1 contrast and nothing relies on color alone.
-  - Touch targets are at least 44×44 pt with space between them.
-  - Reduced-motion settings are respected, and no information appears only in an animation.
-  - An automated accessibility check passes, and one manual screen-reader pass is done on each platform.
+- [ ] **R18 · NF · P0** Auth and account screens pass a manual screen-reader check.
+  - One manual pass with VoiceOver and one with TalkBack (or NVDA on the web) over sign-up, sign-in, the code step, reset and settings.
+  - The automated part is done: axe runs on every account form and the text colors are checked for 4.5:1 ([auth.md](auth.md#accessibility-and-voice)).
   - Spec: UX-1
-
-- [ ] **R19 · NF · P0** Auth and account messages follow the Nookbud voice.
-  - Short sentences, one idea at a time, addressing me as "you".
-  - Titles describe what happened ("Verification failed"), never just "Error".
-  - Red is only for real alerts such as a failed sign-in lockout or data loss.
-  - Spec: UX-2
 
 ---
 

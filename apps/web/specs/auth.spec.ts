@@ -536,3 +536,27 @@ describe('passwords and the audit trail', () => {
     expect(order).toEqual(['record', 'signOut']);
   });
 });
+
+describe('the Nookbud voice (R19)', () => {
+  const codes = [
+    'invalid_credentials',
+    'email_not_verified',
+    'weak_password',
+    'rate_limited',
+    'session_missing',
+    'consent_required',
+    'code_invalid',
+    'wrong_password',
+    'link_invalid',
+    'unknown',
+  ] as const;
+
+  it.each(codes)('says %s in short sentences, never just "Error"', async (code) => {
+    const { authError } = await import('../src/auth/errors');
+    const { message } = authError(code);
+    expect(message).not.toMatch(/\berror\b/i);
+    expect(message.split(/(?<=\.)\s/).length).toBeLessThanOrEqual(2);
+    for (const sentence of message.split(/(?<=\.)\s/))
+      expect(sentence.split(' ').length).toBeLessThanOrEqual(14);
+  });
+});

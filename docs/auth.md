@@ -85,6 +85,12 @@ Supabase limits sign-ins and emails per address on its side (`[auth.rate_limit]`
 - **CORS.** The app sends no CORS headers, so browsers only allow its own pages to call it.
 - **Headers.** `next.config.js` sends a Content Security Policy (scripts, connections and forms only to this site, no framing), `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` and, in production, HSTS. `X-Powered-By` is off. Inline scripts are still allowed because Next.js needs them; use a nonce before any page renders user-supplied HTML.
 
+## Accessibility and voice
+
+- **R18.** `specs/accessibility.spec.tsx` renders every account form and runs axe (labels, roles, ARIA, names). Contrast needs real layout, so the same file checks the token pairs the screens use for 4.5:1. The app screens are light only (`ui/AppRoot.tsx`), because `subtitle` has no dark value. Every control is at least 44px tall, errors are words with a dot beside them, never color alone, and the only animation is a color change.
+- **R19.** Messages are short sentences addressed to "you"; titles say what happened ("Sign-in failed", "Not saved"), never "Error". A test checks the auth messages. Red (`Notice tone="alert"`) is used only when sign-in is paused by the rate limit and when a profile change was not saved.
+- Still to do: one manual screen-reader pass per platform (R18).
+
 ## Rules
 
 - **Import auth only from `@/auth`, and data only from `@/data`.** Nothing outside `src/auth/providers/` and `src/data/providers/` may import `@supabase/*`. An ESLint rule and a test enforce it; the test also catches a lint-disable comment and dynamic imports.

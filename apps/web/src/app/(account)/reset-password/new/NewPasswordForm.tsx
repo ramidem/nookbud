@@ -11,7 +11,7 @@ export function NewPasswordForm() {
   const [state, action] = useActionState<NewPasswordState, FormData>(setNewPassword, {});
   return (
     <form action={action} className="grid gap-5" noValidate>
-      {state.message ? <Notice tone="alert">{state.message}</Notice> : null}
+      {state.message ? <Notice>{state.message}</Notice> : null}
       <Field
         autoComplete="new-password"
         error={state.errors?.password}

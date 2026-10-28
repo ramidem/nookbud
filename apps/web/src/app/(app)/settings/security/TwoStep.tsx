@@ -58,7 +58,7 @@ export function TwoStep({ enabled }: { enabled: boolean }) {
             {state.setup.secret}
           </code>
         </details>
-        {state.message ? <Notice tone="alert">{state.message}</Notice> : null}
+        {state.message ? <Notice>{state.message}</Notice> : null}
         <Field
           autoComplete="one-time-code"
           inputMode="numeric"
@@ -80,7 +80,7 @@ export function TwoStep({ enabled }: { enabled: boolean }) {
       {state.off ? (
         <Notice>Two-step sign-in is off. Signing in needs only your password.</Notice>
       ) : null}
-      {state.message ? <Notice tone="alert">{state.message}</Notice> : null}
+      {state.message ? <Notice>{state.message}</Notice> : null}
       <p className="text-base leading-[1.55] text-subtitle">
         {on
           ? 'On. Signing in asks for a code from your authenticator app.'

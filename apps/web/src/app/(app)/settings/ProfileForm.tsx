@@ -56,7 +56,11 @@ export function ProfileForm({ profile, timeZones, currencies }: Props) {
   return (
     <form action={action} className="grid gap-5">
       {state.saved ? <Notice tone="success">Saved.</Notice> : null}
-      {state.message ? <Notice tone="alert">{state.message}</Notice> : null}
+      {state.message ? (
+        <Notice title="Not saved" tone="alert">
+          {state.message}
+        </Notice>
+      ) : null}
       <Field
         autoComplete="name"
         defaultValue={profile.displayName ?? ''}
