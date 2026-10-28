@@ -51,6 +51,13 @@ Signed-in pages live in the `(app)` route group; its layout calls `requireUser()
 
 The form sends both confirmations and `POLICY_VERSION` (`src/legal/policies.ts`) as user metadata. The adapter refuses to sign up without them, and the database trigger refuses again, so an account never exists without consent. The `users` row stores the version and the time ([database.md](database.md)). When the terms or the privacy policy change in a way people must accept again, bump `POLICY_VERSION` and the version line on both pages; a test checks they match.
 
+## Cookies, CSRF and headers
+
+- **Cookies (R15).** The session cookies are `httpOnly`, `SameSite=Lax`, `path=/`, and `Secure` in production (`src/auth/providers/cookies.ts`). The app never creates a browser Supabase client, so nothing in the browser needs to read them. A test checks the options.
+- **CSRF (R17).** Every change goes through a server action. Next.js refuses a server action whose `Origin` does not match the site, and `SameSite=Lax` keeps the cookies off cross-site posts. Route handlers have no such check, so a test fails if one exports `POST`, `PUT`, `PATCH` or `DELETE`; add an origin check before allowing one.
+- **CORS.** The app sends no CORS headers, so browsers only allow its own pages to call it.
+- **Headers.** `next.config.js` sends a Content Security Policy (scripts, connections and forms only to this site, no framing), `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` and, in production, HSTS. `X-Powered-By` is off. Inline scripts are still allowed because Next.js needs them; use a nonce before any page renders user-supplied HTML.
+
 ## Rules
 
 - **Import auth only from `@/auth`, and data only from `@/data`.** Nothing outside `src/auth/providers/` and `src/data/providers/` may import `@supabase/*`. An ESLint rule and a test enforce it; the test also catches a lint-disable comment and dynamic imports.
@@ -61,6 +68,6 @@ The form sends both confirmations and `POLICY_VERSION` (`src/legal/policies.ts`)
 
 ## Not done yet
 
-- Cookie hardening and the security headers (R15, R17), and per-account rate limits (R16).
+- Per-account rate limits (R16).
 - The settings screens: profile, password, two-step sign-in, devices (stages 4 and 5).
 - Mobile (R32, R33).

@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 import { getPublicEnv } from '../../env/public';
+import { sessionCookieOptions } from './cookies';
 import type { AuthUser } from '../types';
 
 /**
@@ -18,6 +19,7 @@ export async function refreshSupabaseSession(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
+      cookieOptions: sessionCookieOptions,
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (toSet) => {

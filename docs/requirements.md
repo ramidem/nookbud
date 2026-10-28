@@ -88,9 +88,8 @@ Nothing a user sees yet. These come first because everything else leans on them.
 
 Sign-up, email verification, sign-in, sign-out, password reset and sessions are built ([auth.md](auth.md)). What is left here hardens them.
 
-- [ ] **R15 · NF · P0** Sign-in tokens are stored safely.
-  - Web: secure, correctly configured cookies. No privileged credential is reachable from browser JavaScript.
-  - Mobile: tokens live in `expo-secure-store`.
+- [ ] **R15 · NF · P0** Sign-in tokens are stored safely on mobile.
+  - Tokens live in `expo-secure-store`. The web half is done ([auth.md](auth.md#cookies-csrf-and-headers)).
   - Spec: AUTH-9, AUTH-10
 
 - [ ] **R16 · NF · P0** Sign-in, sign-up and reset are protected against guessing.
@@ -98,12 +97,6 @@ Sign-up, email verification, sign-in, sign-out, password reset and sessions are 
   - The limit message never reveals whether an account exists.
   - A test runs the attack and shows it is stopped.
   - Spec: AUTH-6, AUTH-7, SEC-6
-
-- [ ] **R17 · NF · P0** Cookie sessions on the web are protected.
-  - CSRF protection on every state-changing request.
-  - CORS allows only our own origins.
-  - Security headers are set.
-  - Spec: SEC-5
 
 - [ ] **R18 · NF · P0** Auth and account screens are accessible.
   - Every control has a label, images have alt text and focus order is logical.

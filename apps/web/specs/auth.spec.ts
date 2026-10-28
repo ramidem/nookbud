@@ -333,3 +333,24 @@ describe('Supabase auth adapter', () => {
     expect(result).toMatchObject({ ok: false, error: { code: 'session_missing' } });
   });
 });
+
+describe('session cookies and requests (R15, R17)', () => {
+  it('keeps the session cookies out of reach of browser JavaScript', async () => {
+    const { sessionCookieOptions } = await import('../src/auth/providers/cookies');
+    expect(sessionCookieOptions).toMatchObject({ httpOnly: true, sameSite: 'lax', path: '/' });
+  });
+
+  // Server actions get Next.js's own origin check, which refuses a POST from another site. Route
+  // handlers do not, so any handler that changes state must be added here with its own check.
+  it('has route handlers that only read', () => {
+    const routes = filesUnder(path.join(webRoot, 'src', 'app')).filter((f) =>
+      /route\.(ts|js)$/.test(f),
+    );
+    const writers = routes.filter((file) =>
+      /export\s+(async\s+)?function\s+(POST|PUT|PATCH|DELETE)\b/.test(
+        fs.readFileSync(file, 'utf8'),
+      ),
+    );
+    expect(writers.map((f) => path.relative(webRoot, f))).toEqual([]);
+  });
+});
