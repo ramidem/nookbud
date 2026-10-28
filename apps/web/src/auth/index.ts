@@ -4,6 +4,7 @@
  */
 export { getAuth } from './server';
 export { requireUser } from './session';
+export { getRateLimiter, requestAddress } from './limits';
 export type {
   AuthError,
   AuthErrorCode,

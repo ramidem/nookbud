@@ -404,12 +404,10 @@ describe('two-step sign-in', () => {
   it('says a code is owed after the password when two-step sign-in is on', async () => {
     const { client } = clientWith({
       mfa: {
-        listFactors: vi
-          .fn()
-          .mockResolvedValue({
-            data: { all: [verifiedFactor], totp: [verifiedFactor] },
-            error: null,
-          }),
+        listFactors: vi.fn().mockResolvedValue({
+          data: { all: [verifiedFactor], totp: [verifiedFactor] },
+          error: null,
+        }),
         getAuthenticatorAssuranceLevel: vi
           .fn()
           .mockResolvedValue({ data: { currentLevel: 'aal1', nextLevel: 'aal2' }, error: null }),

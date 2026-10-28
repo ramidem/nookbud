@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { getAuth } from '@/auth';
+import { getAuth, getRateLimiter, requestAddress } from '@/auth';
 import { CONFIRM, NEW_PASSWORD, SIGN_IN } from '../auth/routes';
 import { siteOrigin } from './origin';
 import { type FieldErrors, email, fieldErrors, newPassword } from './validation';
@@ -21,6 +21,16 @@ export async function requestPasswordReset(
       email: String(raw.email ?? ''),
       message: 'Enter your email address, like name@example.com.',
     };
+
+  const limiter = getRateLimiter();
+  const who = { email: parsed.data.email, address: await requestAddress() };
+  if (!(await limiter.allowed('reset', who))) {
+    return {
+      email: parsed.data.email,
+      message: 'Too many attempts. Wait a few minutes, then try again.',
+    };
+  }
+  await limiter.record('reset', who);
 
   const auth = await getAuth();
   const result = await auth.requestPasswordReset({

@@ -62,6 +62,22 @@ Signed-in pages live in the `(app)` route group; its layout calls `requireUser()
 
 The form sends both confirmations and `POLICY_VERSION` (`src/legal/policies.ts`) as user metadata. The adapter refuses to sign up without them, and the database trigger refuses again, so an account never exists without consent. The `users` row stores the version and the time ([database.md](database.md)). When the terms or the privacy policy change in a way people must accept again, bump `POLICY_VERSION` and the version line on both pages; a test checks they match.
 
+## Rate limits (R16)
+
+Supabase limits sign-ins and emails per address on its side (`[auth.rate_limit]`). Nookbud adds its own limits, per account and per address, in `src/auth/rate-limit.ts`:
+
+| Kind | Per account | Per address | Counts |
+| --- | --- | --- | --- |
+| `sign_in` | 10 in 15 minutes | 50 in 15 minutes | Wrong passwords |
+| `code` | 10 in 15 minutes | 50 in 15 minutes | Wrong two-step or recovery codes |
+| `reset`, `resend` | 5 an hour | 20 an hour | Every request, since each sends an email |
+| `sign_up` | — | 10 an hour | Every request |
+
+- Each server action checks `getRateLimiter().allowed()` before doing anything, and answers "Too many attempts" the same way whether or not the account exists.
+- Attempts live in `auth_attempts` as SHA-256 hashes of the email or the address, never the values. Only the service role can read or write it, so nobody can lock out someone else by writing rows. Rows older than a day are pruned.
+- The address is the last `X-Forwarded-For` entry (the one Cloud Run's front end adds).
+- `specs/rate-limit.spec.ts` runs the attacks against the limiter: one account guessed from many addresses, and many accounts from one address.
+
 ## Cookies, CSRF and headers
 
 - **Cookies (R15).** The session cookies are `httpOnly`, `SameSite=Lax`, `path=/`, and `Secure` in production (`src/auth/providers/cookies.ts`). The app never creates a browser Supabase client, so nothing in the browser needs to read them. A test checks the options.
@@ -79,6 +95,5 @@ The form sends both confirmations and `POLICY_VERSION` (`src/legal/policies.ts`)
 
 ## Not done yet
 
-- Per-account rate limits (R16).
 - Deleting an account (R28).
 - Mobile (R32, R33).

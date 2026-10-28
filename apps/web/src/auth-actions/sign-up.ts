@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { getAuth } from '@/auth';
+import { getAuth, getRateLimiter, requestAddress } from '@/auth';
 import { CHECK_EMAIL, CONFIRM, WELCOME } from '../auth/routes';
 import { POLICY_VERSION } from '../legal/policies';
 import { siteOrigin } from './origin';
@@ -28,6 +28,16 @@ export async function signUp(_previous: SignUpState, form: FormData): Promise<Si
   if (!parsed.success) {
     return { email: String(raw.email ?? ''), errors: fieldErrors(parsed.error) };
   }
+
+  const limiter = getRateLimiter();
+  const who = { address: await requestAddress() };
+  if (!(await limiter.allowed('sign_up', who))) {
+    return {
+      email: parsed.data.email,
+      message: 'Too many attempts. Wait a few minutes, then try again.',
+    };
+  }
+  await limiter.record('sign_up', who);
 
   const auth = await getAuth();
   const result = await auth.signUp({

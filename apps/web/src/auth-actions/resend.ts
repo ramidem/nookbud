@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { getAuth } from '@/auth';
+import { getAuth, getRateLimiter, requestAddress } from '@/auth';
 import { CONFIRM, WELCOME } from '../auth/routes';
 import { siteOrigin } from './origin';
 import { email } from './validation';
@@ -14,6 +14,13 @@ export async function resendConfirmation(
 ): Promise<ResendState> {
   const parsed = z.object({ email }).safeParse(Object.fromEntries(form));
   if (!parsed.success) return { message: 'Enter the email address you signed up with.' };
+
+  const limiter = getRateLimiter();
+  const who = { email: parsed.data.email, address: await requestAddress() };
+  if (!(await limiter.allowed('resend', who))) {
+    return { message: 'Too many attempts. Wait a few minutes, then try again.' };
+  }
+  await limiter.record('resend', who);
 
   const auth = await getAuth();
   const result = await auth.resendConfirmation({

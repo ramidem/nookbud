@@ -92,12 +92,6 @@ Sign-up, email verification, sign-in, sign-out, password reset and sessions are 
   - Tokens live in `expo-secure-store`. The web half is done ([auth.md](auth.md#cookies-csrf-and-headers)).
   - Spec: AUTH-9, AUTH-10
 
-- [ ] **R16 · NF · P0** Sign-in, sign-up and reset are protected against guessing.
-  - Repeated failures slow down or block, per account and per address.
-  - The limit message never reveals whether an account exists.
-  - A test runs the attack and shows it is stopped.
-  - Spec: AUTH-6, AUTH-7, SEC-6
-
 - [ ] **R18 · NF · P0** Auth and account screens are accessible.
   - Every control has a label, images have alt text and focus order is logical.
   - Text has 4.5:1 contrast and nothing relies on color alone.
