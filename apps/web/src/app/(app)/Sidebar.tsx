@@ -19,14 +19,19 @@ function isCurrent(path: string, href: string) {
   return path === href;
 }
 
-/** The dashboard rail: a card with the small elevation (`shadow-sm`). */
-export function Sidebar() {
+/**
+ * The dashboard rail. Home, Spaces and Settings sit in a stack, centered across the rail, with no card.
+ * On a phone the shell shows it full height from the menu button. From `md` up it is the left-hand rail.
+ */
+export function Sidebar({ fill = false }: { fill?: boolean }) {
   const path = usePathname();
 
   return (
     <aside
       aria-label="Dashboard"
-      className="w-56 shrink-0 rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-sm)]"
+      className={`flex w-full flex-col items-center ${
+        fill ? 'h-full min-h-0 flex-1 overflow-y-auto' : ''
+      }`}
     >
       <nav aria-label="Places" className="grid gap-1">
         {NAV.map((entry) => {

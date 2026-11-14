@@ -25,7 +25,7 @@ export default async function SettingsPage() {
         <h2 className={sectionTitle} id="profile">
           Profile
         </h2>
-        <p className={`${body} mt-1`}>Signed in as {user.email}.</p>
+        <p className={`${body} mt-1 break-all`}>Signed in as {user.email}.</p>
         <div className="mt-6">
           <ProfileForm currencies={CURRENCIES} profile={profile} timeZones={timeZones()} />
         </div>

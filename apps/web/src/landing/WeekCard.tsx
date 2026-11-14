@@ -45,7 +45,7 @@ function Check({ seen }: { seen: boolean }) {
 
 export function WeekCard() {
   return (
-    <figure className="m-0 rounded-xl border border-border bg-surface p-5 text-left text-foreground shadow-mockup md:p-7">
+    <figure className="m-0 rounded-xl bg-surface p-5 text-left text-foreground shadow-mockup md:p-7">
       <figcaption className="flex items-baseline justify-between gap-4">
         <span className="text-[1.375rem] font-semibold leading-[1.3]">Ava&rsquo;s week</span>
         <span className="rounded-sm bg-neutral-200 px-2 py-0.5 text-[0.8125rem] font-semibold text-neutral-700">
@@ -83,7 +83,7 @@ export function WeekCard() {
       <ul className="mt-6 m-0 list-none p-0">
         {entries.map((entry) => (
           <li
-            className="flex items-start justify-between gap-4 border-t border-divider py-3 text-[0.9375rem]"
+            className="flex flex-col items-start gap-2 border-t border-divider py-3 text-[0.9375rem] sm:flex-row sm:items-start sm:justify-between sm:gap-4"
             key={entry.day}
           >
             <p className="min-w-0 text-foreground">

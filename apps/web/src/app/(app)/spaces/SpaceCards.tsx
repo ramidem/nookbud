@@ -10,7 +10,7 @@ export function SpaceCards({ spaces }: { spaces: Space[] }) {
       {spaces.map((space) => (
         <li key={space.id}>
           <Link
-            className={`${card} block transition-colors hover:border-border-strong ${focusRing}`}
+            className={`${card} block transition-colors ${focusRing}`}
             href={spacePath(space.id)}
           >
             <span className="block text-[1.125rem] font-semibold text-foreground">

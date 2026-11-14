@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './global.css';
 
@@ -6,6 +6,12 @@ const inter = Inter({ subsets: ['latin'], variable: '--nb-sans' });
 
 const description =
   'Shared care records for families raising a child across homes. Organize schedules, track expenses and keep a clear record, whether you’re co-parenting after separation, working overseas or managing a blended family.';
+
+export const viewport: Viewport = {
+  initialScale: 1,
+  viewportFit: 'cover',
+  width: 'device-width',
+};
 
 export const metadata: Metadata = {
   title: 'Nookbud — Two homes. One childhood.',

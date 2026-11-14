@@ -173,7 +173,6 @@
 
 .guideline {
   padding: var(--space-4) var(--space-6);
-  border: 1px solid var(--divider);
   border-radius: var(--radius-xl);
   background: var(--surface);
 }
@@ -209,7 +208,6 @@
   flex-direction: column;
   gap: 2px;
   padding: var(--space-3);
-  border: 1px solid var(--divider);
   border-radius: var(--radius-xl);
   background: var(--surface);
 }
@@ -435,7 +433,6 @@
   display: flex;
   justify-content: center;
   padding: var(--space-4);
-  border: 1px solid var(--divider);
   border-radius: var(--radius-xl);
   background: var(--neutral-50);
 }

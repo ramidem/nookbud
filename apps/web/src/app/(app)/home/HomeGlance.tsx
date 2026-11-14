@@ -8,7 +8,7 @@ import { body, button, card, focusRing, heading, link } from '../../../ui/styles
 import type { GlanceAlert, GlanceView } from './glance';
 
 const sectionTitle = 'text-[1.375rem] font-semibold leading-[1.3] text-foreground';
-const row = `${card} block p-5 transition-colors hover:border-border-strong md:p-5 ${focusRing}`;
+const row = `${card} block p-5 transition-colors md:p-5 ${focusRing}`;
 const pill = 'inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-medium';
 
 function Switcher({

@@ -106,7 +106,7 @@ export default async function CalendarPage({
           <h2 className={sectionTitle} id="month">
             {monthName}
           </h2>
-          <nav aria-label="Months" className="flex gap-1">
+          <nav aria-label="Months" className="flex max-w-full flex-wrap gap-1">
             <Link
               className={`${button.ghost} text-sm`}
               href={`${calendarPath(id)}?month=${prevMonth}`}
@@ -139,8 +139,59 @@ export default async function CalendarPage({
           </ul>
         ) : null}
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[42rem] table-fixed border-collapse">
+        <ol className="mt-4 grid gap-2 md:hidden">
+          {days
+            .filter((day) => day.startsWith(month))
+            .map((day) => {
+              const owner = whoseDay(day, schedule, requests);
+              const list = eventsOn(day);
+              return (
+                <li
+                  className={`rounded-lg border border-border p-3 ${day === today ? 'bg-neutral-50' : 'bg-surface'}`}
+                  key={day}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-sm font-medium text-foreground">
+                      <time dateTime={day}>{formatDate(day, { year: undefined })}</time>
+                      {day === today ? <span className="text-subtitle"> · Today</span> : null}
+                    </p>
+                    {owner ? (
+                      <p
+                        className={`truncate rounded-sm px-1.5 py-0.5 text-[0.75rem] font-medium text-foreground ${colorOf.get(owner) ?? 'bg-neutral-200'}`}
+                      >
+                        {nameOf(ctx.names, owner)}
+                      </p>
+                    ) : null}
+                  </div>
+                  {list.length ? (
+                    <ul className="mt-2 grid gap-1">
+                      {list.map((e) => (
+                        <li key={e.id}>
+                          <Link
+                            className={`block text-sm leading-[1.4] text-foreground underline-offset-2 hover:underline ${focusRing}`}
+                            href={recordPath(id, e.id)}
+                          >
+                            {e.content.all_day
+                              ? ''
+                              : `${formatTime(e.content.starts_at ?? e.createdAt, ctx.zone, { weekday: undefined, day: undefined, month: undefined })} `}
+                            {e.content.title}
+                            {e.content.outcome === 'missed'
+                              ? ' (missed)'
+                              : e.content.outcome === 'done'
+                                ? ' ✓'
+                                : ''}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
+        </ol>
+
+        <div className="mt-4 hidden overflow-x-auto md:block">
+          <table className="w-full table-fixed border-collapse">
             <caption className="sr-only">
               {monthName}: whose day each day is, and the events
             </caption>
@@ -246,7 +297,7 @@ export default async function CalendarPage({
           {pending.length ? (
             <ul className="mt-4 grid gap-4">
               {pending.map((r) => (
-                <li className="rounded-xl border border-border p-4" key={r.id}>
+                <li className="rounded-xl p-4" key={r.id}>
                   <p className="text-base text-foreground">
                     <strong className="font-semibold">{nameOf(ctx.names, r.requestedBy)}</strong>{' '}
                     asks for {formatDate(r.startsOn)}

@@ -6,14 +6,19 @@ const nav = vi.hoisted(() => ({ path: '/home' }));
 vi.mock('next/navigation', () => ({ usePathname: () => nav.path }));
 
 describe('dashboard sidebar', () => {
-  it('shows Home, Spaces and Settings on a raised card', () => {
+  it('shows Home, Spaces and Settings, centered, with no card', () => {
     nav.path = '/home';
     render(<Sidebar />);
 
     const rail = screen.getByRole('complementary', { name: 'Dashboard' });
-    expect(rail.className).toContain('rounded-xl');
-    expect(rail.className).toContain('bg-surface');
-    expect(rail.className).toContain('shadow-[var(--shadow-sm)]');
+    expect(rail.className).toContain('items-center');
+    expect(rail.className).not.toContain('rounded-xl');
+    expect(rail.className).not.toContain('bg-surface');
+    expect(rail.className).not.toContain('shadow-');
+    expect(rail.className).toContain('w-full');
+    expect(rail.className).not.toContain('md:w-56');
+    expect(screen.getByRole('navigation', { name: 'Places' }).className).toContain('grid');
+    expect(screen.getByRole('navigation', { name: 'Places' }).className).not.toContain('hidden');
 
     expect(screen.getByRole('link', { name: 'Home' }).getAttribute('href')).toBe('/home');
     expect(screen.getByRole('link', { name: 'Home' }).getAttribute('aria-current')).toBe('page');

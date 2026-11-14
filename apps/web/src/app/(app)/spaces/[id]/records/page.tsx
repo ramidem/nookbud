@@ -112,7 +112,7 @@ export default async function RecordsPage({
               return (
                 <li key={entry.id}>
                   <Link
-                    className={`${card} block p-5 transition-colors hover:border-border-strong md:p-5 ${focusRing}`}
+                    className={`${card} block p-5 transition-colors md:p-5 ${focusRing}`}
                     href={recordPath(id, entry.id)}
                   >
                     <span className="flex flex-wrap items-center gap-2">
@@ -132,7 +132,7 @@ export default async function RecordsPage({
                         </span>
                       ) : null}
                     </span>
-                    <span className="mt-2 block text-[1.0625rem] font-semibold text-foreground">
+                    <span className="mt-2 block break-words text-[1.0625rem] font-semibold text-foreground">
                       {entry.content.title}
                     </span>
                     {extra ? (

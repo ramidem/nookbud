@@ -23,7 +23,7 @@ export default async function SpaceLayout({
       <Link className={`${link} text-sm`} href={SPACES}>
         All spaces
       </Link>
-      <h1 className={`${heading} mt-3`}>{space.name}</h1>
+      <h1 className={`${heading} mt-3 break-words`}>{space.name}</h1>
       <SpaceTabs space={id} />
       <div className="mt-6">{children}</div>
     </div>

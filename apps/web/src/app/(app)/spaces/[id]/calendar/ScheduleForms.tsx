@@ -190,7 +190,7 @@ export function AnswerForm({
         </button>
       ) : (
         <>
-          <div className="min-w-[12rem] flex-1">
+          <div className="w-full min-w-0 basis-full sm:w-auto sm:min-w-[12rem] sm:flex-1 sm:basis-auto">
             <Field id={`note-${request}`} label="Note (optional)" maxLength={500} name="note" />
           </div>
           <button className={button.primary} name="answer" type="submit" value="approve">

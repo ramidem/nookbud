@@ -105,19 +105,19 @@ export default async function RecordPage({
         >
           {TYPE_LABELS[entry.type]}
         </span>
-        <h2 className="mt-3 text-[1.75rem] font-semibold leading-[1.25] tracking-[-0.5px] text-foreground">
+        <h2 className="mt-3 break-words text-[1.5rem] font-semibold leading-[1.25] tracking-[-0.5px] text-foreground sm:text-[1.75rem]">
           {c.title}
         </h2>
         <dl className="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-[10rem_1fr]">
           {facts.map(([label, value]) => (
             <div className="contents" key={label}>
               <dt className="text-sm font-medium text-subtitle">{label}</dt>
-              <dd className="m-0 text-base text-foreground">{value}</dd>
+              <dd className="m-0 min-w-0 break-words text-base text-foreground">{value}</dd>
             </div>
           ))}
         </dl>
         {c.body ? (
-          <p className="mt-4 whitespace-pre-line text-base leading-[1.55] text-foreground">
+          <p className="mt-4 whitespace-pre-line break-words text-base leading-[1.55] text-foreground">
             {c.body}
           </p>
         ) : null}
@@ -180,7 +180,7 @@ export default async function RecordPage({
                 </p>
                 {v.reason ? <p className="mt-1 text-sm text-foreground">“{v.reason}”</p> : null}
                 {changes.length ? (
-                  <ul className="mt-2 grid gap-1 text-sm">
+                  <ul className="mt-2 grid gap-1 break-words text-sm">
                     {changes.map((ch) => (
                       <li className="text-foreground" key={ch.field}>
                         <span className="font-medium">{ch.label}:</span>{' '}

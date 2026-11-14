@@ -7,7 +7,7 @@ import { focusRing } from '../../ui/styles';
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppRoot>
-      <div className="mx-auto flex min-h-dvh w-full max-w-[28rem] flex-col px-4 py-8 md:py-12">
+      <div className="mx-auto flex min-h-dvh w-full max-w-[28rem] flex-col px-4 py-8 ps-[max(1rem,env(safe-area-inset-left))] pe-[max(1rem,env(safe-area-inset-right))] md:py-12">
         <Link className={`flex items-center gap-2.5 self-start rounded-md ${focusRing}`} href="/">
           <Image
             alt=""

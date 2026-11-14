@@ -16,7 +16,7 @@ export function SpaceTabs({ space }: { space: string }) {
   return (
     <nav
       aria-label="In this space"
-      className="mt-5 flex gap-1 overflow-x-auto border-b border-border"
+      className="mt-5 flex min-w-0 gap-1 overflow-x-auto border-b border-border"
     >
       {tabs.map((tab) => (
         <Link

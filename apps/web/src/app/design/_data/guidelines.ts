@@ -35,7 +35,7 @@ export const guidelines: Guideline[] = [
       'Buttons and inputs `radius-lg` (8px). Buttons are rectangles, never pills. The main button is `foreground` with `background` text.',
       'Every card `radius-xl` (12px). `radius-full` only for status badges, pill tabs and avatars.',
       'Use the 4px spacing scale with 8px as the main step; cards pad `space-6`, feature cards `space-8`.',
-      'Borders before shadows: flat cards have a hairline and no shadow. `shadow-mockup` only for the product mockup on the hero band.',
+      'Cards have no border. Flat cards sit on `surface` with no shadow. `shadow-mockup` only for the product mockup on the hero band.',
       'Disabled buttons use the `disabled` fill with a `placeholder` label.',
     ],
     title: 'Shape & space',
