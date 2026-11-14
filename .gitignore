@@ -72,3 +72,6 @@ web-build
 vitest.config.*.timestamp*
 test-output
 .vitest
+
+# Root asset dump. Already-tracked files under /assets stay tracked.
+/assets/
