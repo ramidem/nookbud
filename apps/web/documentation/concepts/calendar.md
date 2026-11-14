@@ -11,7 +11,7 @@ Every [space](spaces-and-members.md) has a shared calendar. Open the space, then
 
 ## Events
 
-Add handoffs, appointments and school events under **Add an event**. An event has a title, a time (or all day), a place if you like, and the person responsible.
+Add school, health, and other events under **Add an event**. An event has a title, a time (or all day), a place if you like, and the person responsible.
 
 Afterwards, the person who added the event or the person responsible can record what happened: **It happened** or **It was missed**, with a note. An event is a [record](records.md), so every change to it is kept in its history.
 

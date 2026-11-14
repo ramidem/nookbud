@@ -16,7 +16,7 @@ In a [space](spaces-and-members.md), open **Records** and choose **Add a record*
 - **Note:** something worth writing down.
 - **Agreement:** something you decided together, with the date you agreed it.
 - **Expense:** what was spent, in which currency, when, and who paid.
-- **Event:** something on the [calendar](calendar.md), such as a handoff or an appointment.
+- **Event:** something on the [calendar](calendar.md), such as a school day or an appointment.
 
 Each one can be about a child in the space. Everyone in the space can see it.
 

@@ -1,6 +1,6 @@
 # Nookbud
 
-Shared care records for families raising a child across homes. Nx monorepo — web (Next.js) and API (NestJS) are scaffolded; mobile (Expo) comes next.
+Nookbud keeps one shared place for a child's well-being: the schedule, the tasks, and the money spent on the child. Parents, grandparents, and guardians keep it together. A parent abroad sees the same week. A lawyer can be invited to read it. Nx monorepo — web (Next.js) and API (NestJS) are scaffolded; mobile (Expo) comes next.
 
 - **Internal docs:** [docs/](docs/README.md), never served. The [spec](docs/spec.md) (what the product must do), the [requirements](docs/requirements.md) (the build queue, in order), the [roadmap](docs/roadmap-2026.md) and engineering notes such as [the database](docs/database.md). Say **space**, never workspace
 - **Public documentation:** `apps/web/documentation`, served at `/documentation`. Written for the people who will use Nookbud. Nothing internal goes in it

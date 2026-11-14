@@ -6,7 +6,7 @@ description: "How Nookbud works: spaces, records, and how your family's informat
 
 # Nookbud documentation
 
-Nookbud keeps shared care records for families raising a child across homes. The schedule, the expenses and what you agreed, in one place that everyone you invite can see.
+Nookbud keeps one shared place for a child's well-being: the schedule, the tasks, and the money spent on the child. Parents, grandparents, and guardians keep it together. A parent abroad sees the same week. A lawyer can be invited to read it.
 
 > Nookbud is in development. These pages describe how it is designed to work, and say so wherever something is not available yet.
 

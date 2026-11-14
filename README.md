@@ -1,6 +1,6 @@
 # Nookbud
 
-Shared care records for families raising a child across homes.
+Nookbud keeps one shared place for a child's well-being: the schedule, the tasks, and the money spent on the child. Parents, grandparents, and guardians keep it together. A parent abroad sees the same week. A lawyer can be invited to read it.
 
 ## Stack
 

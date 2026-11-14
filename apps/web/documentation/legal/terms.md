@@ -18,7 +18,7 @@ These terms are an agreement between you and Nookbud. By creating an account, yo
 
 ## What Nookbud is
 
-Nookbud is a shared record for adults raising a child across homes. It keeps schedules, notes and agreements in a [space](../concepts/spaces-and-members.md) that only the people you invite can see.
+Nookbud is a shared record for adults looking after a child. It keeps the schedule, the tasks, and the money spent on the child in a space that only the people you invite can see.
 
 Nookbud is not legal, medical or financial advice. It does not take sides and does not decide anything for you.
 
