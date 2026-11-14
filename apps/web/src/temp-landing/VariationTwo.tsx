@@ -1,21 +1,17 @@
 import { PRIVACY_HREF, TERMS_HREF } from '../legal/policies';
-import { LayoutLinks, Logo, Pill, WAITLIST_HREF } from './bits';
+import { Logo, Pill, WAITLIST_HREF } from './bits';
 
 const steps = [
-  [
-    '01',
-    'Open a space',
-    'Add the child and the homes. You can start on your own and invite someone later.',
-  ],
+  ['01', 'Open a space', 'Add the child. You can start on your own and invite someone later.'],
   [
     '02',
-    'Invite the other home',
+    'Invite who helps',
     'They only see a space you share with them. Nothing else is visible to them.',
   ],
   [
     '03',
     'Keep one calendar',
-    'School runs, handoffs and appointments live in the same week, for both homes.',
+    'School pickup, the dentist, and the things the child needs live in the same week.',
   ],
   [
     '04',
@@ -42,7 +38,7 @@ const starts = [
   ],
   [
     '3',
-    'Invite the other home',
+    'Invite who helps',
     'When you are ready. They can join later, and they only see that space.',
   ],
 ] as const;
@@ -61,7 +57,7 @@ const sideQuotes = [
 ] as const;
 
 const values = [
-  ['bg-tint-sage', 'Two homes', 'The schedule, the expenses and the agreements sit together.'],
+  ['bg-tint-sage', 'The week', 'School, health, and the things the child needs sit together.'],
   [
     'bg-tint-terracotta',
     'Starting alone',
@@ -85,8 +81,8 @@ const faqs = [
     'Only the people you invite to a space. One family’s records are never visible to another.',
   ],
   [
-    'Is it only for separated parents?',
-    'No. It’s for any family where a child lives or spends time in more than one home.',
+    'Who is Nookbud for?',
+    'Parents, grandparents, and guardians keep it together. A parent abroad sees the same week. A lawyer can be invited to read it.',
   ],
   [
     'How much will it cost?',
@@ -99,9 +95,8 @@ const faqs = [
 ] as const;
 
 /**
- * Mix of the locked stack and the split page. Those two stay as they are.
- * Split hero with the sage-bar quote on the photo, steps beside a sample note,
- * and the tint tiles beside the home card.
+ * Mix landing at /temp-landing2. Split hero with the sage-bar quote on the photo,
+ * numbered steps beside a sample note, and the tint tiles beside a card.
  */
 export function VariationTwo() {
   return (
@@ -126,9 +121,9 @@ export function VariationTwo() {
       <main id="main">
         <section className="mx-auto grid max-w-[1440px] items-center gap-10 px-6 py-12 lg:grid-cols-2 lg:gap-16 lg:py-20">
           <div className="min-w-0">
-            <p className="display text-xl italic text-primary">Two homes. One childhood.</p>
+            <p className="display text-xl italic text-primary">The week in one place.</p>
             <h1 className="display mt-4 text-[2.75rem] leading-[0.95] text-balance sm:text-6xl lg:text-7xl">
-              One record <span className="italic">for both homes</span>
+              One record <span className="italic">for the kids.</span>
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed">
               Share the schedule.
@@ -154,7 +149,7 @@ export function VariationTwo() {
             <article className="relative z-10 -mt-24 overflow-hidden rounded-[20px] bg-surface shadow-mockup sm:-mt-28 lg:absolute lg:inset-x-6 lg:bottom-6 lg:mt-0">
               <div className="h-2.5 bg-primary" />
               <p className="display px-6 pb-2 pt-6 text-xl leading-snug sm:px-7 sm:text-2xl">
-                “Both homes see the same week. Nobody has to piece it together.”
+                “The people you invite see the same week. Nobody has to piece it together.”
               </p>
               <div className="flex items-center gap-3 px-6 py-5 sm:px-7">
                 <img
@@ -178,8 +173,8 @@ export function VariationTwo() {
                 Take the tangle out of the week
               </h2>
               <p className="mt-4 max-w-xl text-lg text-subtitle">
-                Nookbud holds the schedule, the expenses and what you agreed, for the people raising
-                a child across homes.
+                Nookbud holds the schedule, the tasks, and the money spent on the child: school,
+                health, and the things the child needs.
               </p>
               <Pill className="mt-8 self-start" href={WAITLIST_HREF}>
                 Join the waitlist
@@ -240,7 +235,7 @@ export function VariationTwo() {
           <div className="mt-10 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
             <blockquote className="flex min-w-0 flex-col justify-between rounded-[1.75rem] bg-foreground px-8 py-10 text-background sm:px-12 sm:py-14">
               <p className="display text-3xl leading-snug text-balance sm:text-4xl">
-                “The handoff used to live in a thread. A shared week is calmer.”
+                “School pickup used to live in a thread. A shared week is calmer.”
               </p>
               <footer className="mt-8 flex items-center gap-3 text-sm">
                 <img
@@ -280,7 +275,7 @@ export function VariationTwo() {
                 For any home <span className="italic">a child lives in</span>
               </h2>
               <p className="mt-4 max-w-sm text-lg">
-                Separated parents, grandparents, blended families, and parents working far away.
+                Parents, grandparents, and guardians. A parent abroad sees the same week.
               </p>
               <Pill className="mt-8" href={WAITLIST_HREF}>
                 Join the waitlist
@@ -323,7 +318,7 @@ export function VariationTwo() {
           <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-0">
             <div className="relative z-10 flex min-w-0 flex-col justify-center rounded-[1.75rem] bg-tint-sage-bold px-8 py-12 sm:px-12 lg:-mr-12 lg:my-10">
               <h2 className="display text-4xl leading-none text-balance sm:text-5xl">
-                Two homes. <span className="italic">One childhood.</span>
+                The week <span className="italic">in one place.</span>
               </h2>
               <p className="mt-4 max-w-sm text-lg">We’ll email you when early access opens.</p>
               <Pill className="mt-8" href={WAITLIST_HREF}>
@@ -347,7 +342,6 @@ export function VariationTwo() {
             </p>
           </div>
           <div className="grid gap-3 text-sm">
-            <LayoutLinks current="/temp-landing2" />
             <p className="flex flex-wrap gap-x-4 gap-y-1 text-subtitle">
               <a href="/documentation">Documentation</a>
               <a href="/">Current landing</a>

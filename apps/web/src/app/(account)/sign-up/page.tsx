@@ -12,7 +12,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
   return (
     <>
       <h1 className={heading}>Create your account</h1>
-      <p className={`${body} mt-2`}>Two homes. One childhood. Start with your email.</p>
+      <p className={`${body} mt-2`}>For the kids. Start with your email.</p>
       <div className="mt-8">
         <SignUpForm />
       </div>

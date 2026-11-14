@@ -28,8 +28,9 @@ export function Hero() {
           Everything in one place, for&nbsp;them.
         </h1>
         <p className="mx-auto mt-6 max-w-[36rem] text-lg leading-[1.5] text-neutral-300">
-          Nookbud is a shared record for families raising a child across homes. The schedule, the
-          expenses and what you agreed, in one place everyone can see.
+          The week in one place. Where the child needs to be, what an adult still has to do, and
+          what was paid for them. The people you invite see the same week, including a parent who is
+          abroad.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Button href={WAITLIST_HREF} variant="on-dark">

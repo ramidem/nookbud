@@ -5,7 +5,7 @@ import './global.css';
 const inter = Inter({ subsets: ['latin'], variable: '--nb-sans' });
 
 const description =
-  'Shared care records for families raising a child across homes. Organize schedules, track expenses and keep a clear record, whether you’re co-parenting after separation, working overseas or managing a blended family.';
+  "Nookbud keeps one shared place for a child's well-being: the schedule, the tasks, and the money spent on the child. Parents, grandparents, and guardians keep it together. A parent abroad sees the same week. A lawyer can be invited to read it.";
 
 export const viewport: Viewport = {
   initialScale: 1,
@@ -14,7 +14,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Nookbud — Two homes. One childhood.',
+  title: 'Nookbud — For the kids.',
   description,
   icons: {
     apple: '/apple-touch-icon.png',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   openGraph: {
-    title: 'Nookbud — Two homes. One childhood.',
+    title: 'Nookbud — For the kids.',
     description,
     siteName: 'Nookbud',
     type: 'website',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nookbud — Two homes. One childhood.',
+    title: 'Nookbud — For the kids.',
     description,
   },
 };

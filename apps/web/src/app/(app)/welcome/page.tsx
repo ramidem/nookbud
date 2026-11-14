@@ -17,7 +17,7 @@ export default async function WelcomePage() {
         Welcome to Nookbud
       </p>
       <h1 className="mt-2 text-[clamp(2rem,5vw,3rem)] font-semibold leading-[1.15] tracking-[-0.5px] text-foreground">
-        Two homes. One childhood.
+        For the kids.
       </h1>
       <p className={`${body} mt-3`}>
         Two quick questions so Nookbud fits your family. You can skip both, and change them later in
