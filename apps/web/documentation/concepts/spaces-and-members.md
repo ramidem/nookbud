@@ -11,7 +11,7 @@ A **space** is where the people who care for a child keep their shared records. 
 
 ## One account, many spaces
 
-You have one Nookbud account, and you can be a member of many spaces. For example, you might have one space for each household you share a child's care with. You switch between them without signing in again.
+You have one Nookbud account, and you can be a member of many spaces. For example, you might have one space for each household you share a child's care with. **Spaces** lists every space you belong to. **Home** shows one space at a time; if you have more than one, you switch between them there. You do not sign in again.
 
 Each space has its own members and its own records. Nothing moves between spaces on its own.
 
@@ -46,7 +46,7 @@ An invitation:
 
 If an invitation reaches the wrong person, it does nothing. An owner can withdraw an invitation before it is accepted.
 
-If the person has no account yet, the link lets them create one. Once they confirm their email, the invitation is waiting on their home page.
+If the person has no account yet, the link lets them create one. Once they confirm their email, the invitation is waiting on Home, and on Spaces.
 
 ## Leaving and removing
 

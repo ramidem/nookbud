@@ -25,12 +25,17 @@ describe('where people go after signing in', () => {
 });
 
 describe('pages behind sign-in', () => {
-  it.each(['/home', '/welcome', '/settings', '/settings/security', '/reset-password/new'])(
-    '%s needs a session',
-    (p) => {
-      expect(isProtected(p)).toBe(true);
-    },
-  );
+  it.each([
+    '/home',
+    '/welcome',
+    '/settings',
+    '/settings/security',
+    '/reset-password/new',
+    '/spaces',
+    '/spaces/abc',
+  ])('%s needs a session', (p) => {
+    expect(isProtected(p)).toBe(true);
+  });
 
   it.each(['/', '/sign-in', '/sign-up', '/documentation', '/terms', '/homeless'])(
     '%s is public',

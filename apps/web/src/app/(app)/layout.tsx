@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { requireUser } from '@/auth';
 import { signOut } from '../../auth-actions/sign-out';
-import { HOME, SETTINGS } from '../../auth/routes';
+import { HOME, SETTINGS, SPACES } from '../../auth/routes';
 import { AppRoot } from '../../ui/AppRoot';
 import { button, focusRing } from '../../ui/styles';
 import { Sidebar } from './Sidebar';
@@ -37,6 +37,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </Link>
             <nav aria-label="Main" className="flex items-center gap-1 sm:gap-2 md:gap-3">
               <Link className={navLink} href={HOME}>
+                Home
+              </Link>
+              <Link className={navLink} href={SPACES}>
                 Spaces
               </Link>
               <Link className={navLink} href={SETTINGS}>

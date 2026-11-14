@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireUser } from '@/auth';
 import { getSpaces } from '@/data';
-import { HOME, spacePath } from '../../../../auth/routes';
+import { SPACES, spacePath } from '../../../../auth/routes';
 import { heading, link } from '../../../../ui/styles';
 import { SpaceTabs } from './SpaceTabs';
 
@@ -20,7 +20,7 @@ export default async function SpaceLayout({
   if (!space) notFound();
   return (
     <div>
-      <Link className={`${link} text-sm`} href={HOME}>
+      <Link className={`${link} text-sm`} href={SPACES}>
         All spaces
       </Link>
       <h1 className={`${heading} mt-3`}>{space.name}</h1>

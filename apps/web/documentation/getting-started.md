@@ -42,9 +42,11 @@ Choose **Forgot your password?** on the sign-in page and enter your email. If it
 
 ## 3. Create a space
 
-A [space](concepts/spaces-and-members.md) is the private place where you and the people you care with keep your records. On your home page, give it a name and choose **Create space**. Then add a child.
+A [space](concepts/spaces-and-members.md) is the private place where you and the people you care with keep your records. Open **Spaces**, give it a name and choose **Create space**. Then add a child.
 
 For a child, Nookbud asks for a name or nickname and, if you like, a birth date. That is all.
+
+**Home** is the first screen after you sign in. It shows whose day it is in one space, what is coming up, what needs you, and the latest records. If you belong to more than one space, you can switch between them there.
 
 ## 4. Invite someone, or don't
 

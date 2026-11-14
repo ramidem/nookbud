@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { requireUser } from '@/auth';
 import { getSpaces } from '@/data';
-import { HOME, INVITE, spacePath } from '../auth/routes';
+import { HOME, INVITE, SPACES, spacePath } from '../auth/routes';
 import { siteOrigin } from './origin';
 import { type FieldErrors, email, fieldErrors } from './validation';
 
@@ -39,7 +39,7 @@ export async function createSpace(
   _p: FormState<'name'>,
   form: FormData,
 ): Promise<FormState<'name'>> {
-  await requireUser(HOME);
+  await requireUser(SPACES);
   const parsed = z.object({ name: spaceName }).safeParse(read(form));
   if (!parsed.success) return { errors: fieldErrors(parsed.error) };
   const result = await (await getSpaces()).create(parsed.data.name);
@@ -76,7 +76,7 @@ export async function deleteSpace(
   }
   const result = await spaces.remove(space.id);
   if (!result.ok) return { message: result.message };
-  redirect(`${HOME}?note=space-deleted`);
+  redirect(`${SPACES}?note=space-deleted`);
 }
 
 /** Children (SPC-3, PRIV-2) */
@@ -151,14 +151,14 @@ export async function acceptInvitation(_p: AcceptState, form: FormData): Promise
   redirect(spacePath(result.data));
 }
 
-/** From the home page, for someone who signed up after being invited. */
+/** From Home or Spaces, for someone who signed up after being invited. */
 export async function acceptMyInvitation(form: FormData) {
   const parsed = z.object({ invitation: id }).safeParse(read(form));
   if (!parsed.success) return;
   await requireUser(HOME);
   const result = await (await getSpaces()).acceptForMe(parsed.data.invitation);
   if (result.ok) redirect(spacePath(result.data));
-  redirect(`${HOME}?note=invitation-failed`);
+  redirect(`${SPACES}?note=invitation-failed`);
 }
 
 /** MEM-2, OQ4 */
@@ -186,5 +186,5 @@ export async function leaveSpace(_p: FormState, form: FormData): Promise<FormSta
   await requireUser(spacePath(parsed.data.space));
   const result = await (await getSpaces()).leave(parsed.data.space);
   if (!result.ok) return { message: result.message };
-  redirect(`${HOME}?note=left`);
+  redirect(`${SPACES}?note=left`);
 }

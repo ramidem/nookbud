@@ -39,7 +39,7 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
           </Link>
         </div>
         <p className={`${body} mt-6 text-sm`}>
-          After you confirm your email, the invitation is waiting on your home page.
+          After you confirm your email, the invitation is waiting on Home, and on Spaces.
         </p>
       </>
     );

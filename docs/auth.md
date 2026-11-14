@@ -24,7 +24,8 @@ if (!result.ok) return result.error.message; // safe to show
 | `/sign-in` | Sign in. An unconfirmed email gets a resend button. `?next=` returns the person where they were | `app/(account)/sign-in` |
 | `/forgot-password`, `/reset-password/new` | Ask for a reset link, then choose a new password | `app/(account)/…` |
 | `/sign-in/code` | The second step when two-step sign-in is on: a code from the app, or a recovery code | `app/(account)/sign-in/code` |
-| `/home` | The signed-in home. Sends people who have not onboarded to `/welcome` | `app/(app)/home` |
+| `/home` | The signed-in glance for one space (whose day, upcoming events, requests, latest records). Sends people who have not onboarded to `/welcome`. With no spaces, a sentence and a link to `/spaces` | `app/(app)/home` |
+| `/spaces` | The person's spaces, invitations, and creating a space. Sends people who have not onboarded to `/welcome` | `app/(app)/spaces` |
 | `/settings` | Profile (name, time zone, currency, who they care with), the accepted policy version, delete account | `app/(app)/settings` |
 | `/settings/security` | Change password, two-step sign-in, where you're signed in, sign out everywhere | `app/(app)/settings/security`, `auth-actions/security.ts` |
 

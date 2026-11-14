@@ -6,6 +6,7 @@ Records (spec §9–10) and the shared calendar (§12, roadmap B2). A calendar e
 
 | Path | What it does |
 | --- | --- |
+| `/home` | Glance for one space: whose day it is (via `whoseDay()`), events from today through the next 7 days (five at most), pending change requests, and the five newest records |
 | `/spaces/[id]/calendar` | Month view: whose day each day is, events, add an event, change requests, and the parenting schedule (owners) |
 | `/spaces/[id]/records` | The timeline, newest first, filtered by type or `?type=removed`, and "Add a record" |
 | `/spaces/[id]/records/[entry]` | One record: its facts, the outcome (events), correcting and removing (author only), and its full history with what changed |

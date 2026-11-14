@@ -1,14 +1,22 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getProfiles, getSpaces } from '@/data';
-import { acceptMyInvitation } from '../../../auth-actions/spaces';
-import { WELCOME, calendarPath } from '../../../auth/routes';
-import { formatWhen } from '../../../profile/device';
+import { getProfiles, getRecords, getSchedules, getSpaces } from '@/data';
+import { WELCOME } from '../../../auth/routes';
+import { addDays, localToUtc, todayIn, zoneOf } from '../../../profile/time';
+import { spaceContext } from '../../../records/context';
 import { Notice } from '../../../ui/Notice';
 import { type SearchParams, param } from '../../../ui/page-props';
-import { body, button, card, focusRing, heading } from '../../../ui/styles';
-import { CreateSpaceForm } from './CreateSpaceForm';
+import { EmptyHome, HomeGlance } from './HomeGlance';
+import {
+  HOME_SPACE_COOKIE,
+  LATEST_LIMIT,
+  UPCOMING_DAYS,
+  buildGlanceView,
+  pickHomeSpace,
+  requestsNeedingAnswer,
+  upcomingEvents,
+} from './glance';
 
 export const metadata: Metadata = { title: 'Home · Nookbud' };
 
@@ -19,90 +27,89 @@ const notes: Record<string, string> = {
     'That invitation could not be accepted. It may have expired or been withdrawn.',
 };
 
-const sectionTitle = 'text-[1.375rem] font-semibold leading-[1.3] text-foreground';
-
 export default async function HomePage({ searchParams }: { searchParams: SearchParams }) {
-  const [profile, spaces] = await Promise.all([(await getProfiles()).get(), getSpaces()]);
+  const [profile, spacesStore] = await Promise.all([(await getProfiles()).get(), getSpaces()]);
   if (profile && !profile.onboardedAt) redirect(WELCOME);
-  const [mine, invitations] = await Promise.all([spaces.list(), spaces.invitationsForMe()]);
+  const [mine, invitations] = await Promise.all([
+    spacesStore.list(),
+    spacesStore.invitationsForMe(),
+  ]);
   const note = notes[param((await searchParams).note) ?? ''];
 
-  return (
-    <div className="grid gap-8">
-      <div>
-        <h1 className={heading}>
-          {profile?.displayName ? `Hello, ${profile.displayName}` : 'Hello'}
-        </h1>
-        <p className={`${body} mt-2`}>Two homes. One childhood.</p>
-      </div>
+  if (mine.length === 0) {
+    return (
+      <>
+        {note ? <Notice>{note}</Notice> : null}
+        <EmptyHome name={profile?.displayName ?? null} />
+      </>
+    );
+  }
 
-      {note ? <Notice>{note}</Notice> : null}
+  const me = profile?.id ?? '';
+  const zone = zoneOf(profile?.timeZone);
+  const today = todayIn(zone);
+  const cookieId = (await cookies()).get(HOME_SPACE_COOKIE)?.value;
+  const schedules = await getSchedules();
+  const recordsStore = await getRecords();
+  const from = localToUtc(`${today}T00:00`, zone);
+  const until = localToUtc(`${addDays(today, UPCOMING_DAYS + 1)}T00:00`, zone);
 
-      {invitations.length > 0 ? (
-        <section aria-labelledby="invitations" className="grid gap-3">
-          <h2 className={sectionTitle} id="invitations">
-            Invitations for you
-          </h2>
-          {invitations.map((inv) => (
-            <div
-              className={`${card} flex flex-wrap items-center justify-between gap-4 bg-tint-sage`}
-              key={inv.id}
-            >
-              <p className="text-base text-foreground">
-                You are invited to <strong className="font-semibold">{inv.spaceName}</strong>
-                {inv.role === 'owner' ? ' as an owner' : ''}.{' '}
-                <span className="text-subtitle">
-                  Open until {formatWhen(inv.expiresAt, profile?.timeZone)}.
-                </span>
-              </p>
-              <form action={acceptMyInvitation}>
-                <input name="invitation" type="hidden" value={inv.id} />
-                <button className={button.primary} type="submit">
-                  Join {inv.spaceName}
-                </button>
-              </form>
-            </div>
-          ))}
-        </section>
-      ) : null}
-
-      {mine.length > 0 ? (
-        <section aria-labelledby="spaces" className="grid gap-3">
-          <h2 className={sectionTitle} id="spaces">
-            Your spaces
-          </h2>
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {mine.map((space) => (
-              <li key={space.id}>
-                <Link
-                  className={`${card} block transition-colors hover:border-border-strong ${focusRing}`}
-                  href={calendarPath(space.id)}
-                >
-                  <span className="block text-[1.125rem] font-semibold text-foreground">
-                    {space.name}
-                  </span>
-                  <span className="mt-1 block text-sm text-subtitle">
-                    {space.role === 'owner' ? 'Owner' : 'Member'}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <section aria-labelledby="new-space" className={`${card} max-w-[40rem]`}>
-        <h2 className={sectionTitle} id="new-space">
-          {mine.length ? 'Create another space' : 'Create a space'}
-        </h2>
-        <p className={`${body} mt-1`}>
-          A space is the private place where you and the people you care with keep the record. Only
-          the people you invite can see it.
-        </p>
-        <div className="mt-5">
-          <CreateSpaceForm first={mine.length === 0} />
-        </div>
-      </section>
-    </div>
+  const requestEntries = await Promise.all(
+    mine.map(async (space) => [space.id, await schedules.requests(space.id)] as const),
   );
+  const requestsBySpace = new Map(requestEntries);
+  const pendingToAnswer = mine
+    .filter((space) => requestsNeedingAnswer(requestsBySpace.get(space.id) ?? [], me).length > 0)
+    .map((space) => space.id);
+
+  const remembered = cookieId && mine.some((space) => space.id === cookieId) ? cookieId : undefined;
+  const soonestEvent: Record<string, string> = {};
+  const eventsBySpace = new Map<string, Awaited<ReturnType<typeof recordsStore.events>>>();
+  if (!remembered) {
+    const eventEntries = await Promise.all(
+      mine.map(
+        async (space) => [space.id, await recordsStore.events(space.id, from, until)] as const,
+      ),
+    );
+    for (const [id, events] of eventEntries) {
+      eventsBySpace.set(id, events);
+      const first = upcomingEvents(events, zone, today)[0];
+      if (first?.content.starts_at) soonestEvent[id] = first.content.starts_at;
+    }
+  }
+
+  const selectedId = pickHomeSpace({
+    spaces: mine,
+    cookieId: remembered,
+    pendingToAnswer,
+    soonestEvent,
+  });
+  const selected = mine.find((space) => space.id === selectedId) ?? mine[0];
+  const ctx = await spaceContext(selected.id);
+  const selectedEvents =
+    eventsBySpace.get(selected.id) ?? (await recordsStore.events(selected.id, from, until));
+  const [schedule, latest] = await Promise.all([
+    schedules.get(selected.id),
+    recordsStore.list(selected.id, { limit: LATEST_LIMIT }),
+  ]);
+
+  const view = buildGlanceView({
+    displayName: profile?.displayName ?? null,
+    me,
+    zone: ctx.zone,
+    today,
+    timeZone: profile?.timeZone,
+    spaces: mine,
+    selected,
+    owner: ctx.owner,
+    schedule,
+    requestsBySpace,
+    events: selectedEvents,
+    records: latest,
+    invitations,
+    names: ctx.names,
+    children: ctx.childName,
+  });
+
+  return <HomeGlance note={note} view={view} />;
 }

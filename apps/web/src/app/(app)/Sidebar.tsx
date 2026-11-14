@@ -2,22 +2,22 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HOME, SETTINGS } from '../../auth/routes';
+import { HOME, SETTINGS, SPACES } from '../../auth/routes';
 import { focusRing } from '../../ui/styles';
 
-/** Hardcoded until the dashboard reads a space. */
 const NAV = [
   { href: HOME, label: 'Home', icon: 'layers' },
+  { href: SPACES, label: 'Spaces', icon: 'users' },
   { href: SETTINGS, label: 'Settings', icon: 'gear' },
 ] as const;
 
-const WEEK = [
-  { when: 'Mon', title: 'Handoff' },
-  { when: 'Wed', title: 'School' },
-  { when: 'Fri', title: 'Appointment' },
-] as const;
-
 const item = 'flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium leading-[1.5]';
+
+function isCurrent(path: string, href: string) {
+  if (href === SETTINGS) return path.startsWith(SETTINGS);
+  if (href === SPACES) return path === SPACES || path.startsWith(`${SPACES}/`);
+  return path === href;
+}
 
 /** The dashboard rail: a card with the small elevation (`shadow-sm`). */
 export function Sidebar() {
@@ -30,7 +30,7 @@ export function Sidebar() {
     >
       <nav aria-label="Places" className="grid gap-1">
         {NAV.map((entry) => {
-          const current = entry.href === SETTINGS ? path.startsWith(SETTINGS) : path === entry.href;
+          const current = isCurrent(path, entry.href);
           return (
             <Link
               aria-current={current ? 'page' : undefined}
@@ -46,24 +46,6 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      <section aria-labelledby="sidebar-week" className="mt-6 border-t border-border pt-5">
-        <h2 className="px-3 text-[13px] font-medium leading-[1.4] text-subtitle" id="sidebar-week">
-          This week
-        </h2>
-        <ul className="mt-2 grid">
-          {WEEK.map((entry) => (
-            <li className="flex items-baseline gap-3 px-3 py-2" key={entry.when}>
-              <span className="w-8 shrink-0 text-[13px] leading-[1.4] text-subtitle">
-                {entry.when}
-              </span>
-              <span className="text-sm font-medium leading-[1.5] text-foreground">
-                {entry.title}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
     </aside>
   );
 }
