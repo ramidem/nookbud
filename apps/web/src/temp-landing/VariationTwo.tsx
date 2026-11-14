@@ -107,7 +107,7 @@ export function VariationTwo() {
   return (
     <>
       <header className="border-b border-border">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
           <Logo href="/temp-landing2" />
           <nav
             aria-label="Main"
@@ -124,7 +124,7 @@ export function VariationTwo() {
         </div>
       </header>
       <main id="main">
-        <section className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-12 lg:grid-cols-2 lg:gap-16 lg:py-20">
+        <section className="mx-auto grid max-w-[1440px] items-center gap-10 px-6 py-12 lg:grid-cols-2 lg:gap-16 lg:py-20">
           <div className="min-w-0">
             <p className="display text-xl italic text-primary">Two homes. One childhood.</p>
             <h1 className="display mt-4 text-[2.75rem] leading-[0.95] text-balance sm:text-6xl lg:text-7xl">
@@ -172,7 +172,7 @@ export function VariationTwo() {
         </section>
 
         <section className="bg-surface py-16 lg:py-24" id="how">
-          <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-2 lg:gap-16">
+          <div className="mx-auto grid max-w-[1440px] gap-12 px-6 lg:grid-cols-2 lg:gap-16">
             <div className="flex min-w-0 flex-col">
               <h2 className="display text-4xl leading-none text-balance sm:text-5xl">
                 Take the tangle out of the week
@@ -209,7 +209,7 @@ export function VariationTwo() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+        <section className="mx-auto max-w-[1440px] px-6 py-16 lg:py-24">
           <div className="rounded-[14px] border border-border-strong bg-surface px-6 py-12 shadow-card sm:px-10 lg:px-16 lg:py-16">
             <h2 className="display mx-auto max-w-[18ch] text-center text-4xl leading-none text-balance sm:text-5xl">
               Start with one child. No new group chat.
@@ -229,7 +229,7 @@ export function VariationTwo() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 pb-16 lg:pb-24">
+        <section className="mx-auto max-w-[1440px] px-6 pb-16 lg:pb-24">
           <h2 className="display text-4xl leading-none text-balance sm:text-5xl">
             What families might say
           </h2>
@@ -272,7 +272,7 @@ export function VariationTwo() {
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-6xl items-stretch gap-6 px-6 pb-16 lg:grid-cols-2 lg:gap-8 lg:pb-24">
+        <section className="mx-auto grid max-w-[1440px] items-stretch gap-6 px-6 pb-16 lg:grid-cols-2 lg:gap-8 lg:pb-24">
           <article className="min-w-0 overflow-hidden rounded-[14px] border border-border-strong bg-surface shadow-card">
             <div className="h-2.5 bg-primary" />
             <div className="px-8 py-10 sm:px-10">
@@ -298,7 +298,7 @@ export function VariationTwo() {
         </section>
 
         <section className="border-t border-border" id="questions">
-          <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:py-24">
+          <div className="mx-auto grid max-w-[1440px] gap-10 px-6 py-16 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:py-24">
             <h2 className="display text-4xl leading-none sm:text-5xl">Questions</h2>
             <dl className="m-0">
               {faqs.map(([q, a], index) => (
@@ -319,7 +319,7 @@ export function VariationTwo() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 pb-16 lg:pb-24">
+        <section className="mx-auto max-w-[1440px] px-6 pb-16 lg:pb-24">
           <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-0">
             <div className="relative z-10 flex min-w-0 flex-col justify-center rounded-[1.75rem] bg-tint-sage-bold px-8 py-12 sm:px-12 lg:-mr-12 lg:my-10">
               <h2 className="display text-4xl leading-none text-balance sm:text-5xl">
@@ -339,7 +339,7 @@ export function VariationTwo() {
         </section>
       </main>
       <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <Logo href="/temp-landing2" />
             <p className="mt-3 max-w-xs text-sm text-subtitle">
