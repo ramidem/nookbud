@@ -7,7 +7,7 @@ import { AppRoot } from '../../ui/AppRoot';
 import { button, focusRing } from '../../ui/styles';
 import { Sidebar } from './Sidebar';
 
-const navLink = `rounded-md px-2 py-2 sm:px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-200 ${focusRing}`;
+const navLink = `rounded-md px-2 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-200 sm:px-3 md:px-4 ${focusRing}`;
 
 /** The signed-in app: a full-width top bar, a sidebar, and the page in a card that fills the right side. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -22,7 +22,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </a>
       <div className="flex h-dvh flex-col overflow-y-auto">
         <header className="shrink-0 bg-background">
-          <div className="flex h-16 w-full items-center justify-between gap-4 px-4 md:px-8">
+          <div className="flex w-full items-center justify-between gap-4 px-4 py-5 sm:px-8 md:px-12 md:py-6">
             <Link className={`flex items-center gap-2.5 rounded-md ${focusRing}`} href={HOME}>
               <Image
                 alt=""
@@ -35,7 +35,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 Nookbud
               </span>
             </Link>
-            <nav aria-label="Main" className="flex items-center gap-1">
+            <nav aria-label="Main" className="flex items-center gap-1 sm:gap-2 md:gap-3">
               <Link className={navLink} href={HOME}>
                 Spaces
               </Link>
@@ -43,7 +43,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 Settings
               </Link>
               <form action={signOut}>
-                <button className={`${button.ghost} whitespace-nowrap px-2 sm:px-3`} type="submit">
+                <button className={`${button.ghost} whitespace-nowrap px-2 sm:px-4`} type="submit">
                   Sign out
                 </button>
               </form>
