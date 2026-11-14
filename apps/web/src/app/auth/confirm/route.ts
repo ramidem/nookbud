@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { type EmailLinkType, getAuth } from '@/auth';
+import { siteOrigin } from '../../../auth-actions/origin';
 import { HOME, NEW_PASSWORD, SIGN_IN, WELCOME, safeNext } from '../../../auth/routes';
 
 const TYPES: EmailLinkType[] = ['email', 'recovery', 'email_change'];
@@ -15,13 +16,17 @@ export async function GET(request: NextRequest) {
   const fallback = type === 'recovery' ? NEW_PASSWORD : type === 'email' ? WELCOME : HOME;
   const next = safeNext(params.get('next'), fallback);
 
+  // Behind Tailscale Serve, Next builds request.url from its own localhost address.
+  // Send the browser back to the host it actually used.
+  const origin = await siteOrigin();
+
   if (tokenHash && type && TYPES.includes(type)) {
     const auth = await getAuth();
     const result = await auth.verifyEmailLink({ tokenHash, type });
-    if (result.ok) return NextResponse.redirect(new URL(next, request.url));
+    if (result.ok) return NextResponse.redirect(new URL(next, origin));
   }
 
-  const url = new URL(SIGN_IN, request.url);
+  const url = new URL(SIGN_IN, origin);
   url.searchParams.set('link', 'invalid');
   return NextResponse.redirect(url);
 }
