@@ -9,7 +9,7 @@ import { Sidebar } from './Sidebar';
 
 const navLink = `rounded-md px-2 py-2 sm:px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-200 ${focusRing}`;
 
-/** The signed-in app: a top bar, a sidebar, and the page in a card that fills the right side. */
+/** The signed-in app: a full-width top bar, a sidebar, and the page in a card that fills the right side. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   await requireUser();
   return (
@@ -20,45 +20,42 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       >
         Skip to content
       </a>
-      <div className="flex h-dvh overflow-hidden">
-        <div className="shrink-0 self-start p-4 md:p-6">
-          <Sidebar />
-        </div>
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-          <header className="shrink-0 bg-background">
-            <div className="flex h-16 w-full items-center justify-between gap-4 px-4 md:px-8">
-              <Link className={`flex items-center gap-2.5 rounded-md ${focusRing}`} href={HOME}>
-                <Image
-                  alt=""
-                  className="rounded-md"
-                  height={28}
-                  src="/design/logos/nookbud-app-icon.png"
-                  width={28}
-                />
-                <span className="text-[1.0625rem] font-semibold tracking-[-0.2px] text-foreground">
-                  Nookbud
-                </span>
+      <div className="flex h-dvh flex-col overflow-y-auto">
+        <header className="shrink-0 bg-background">
+          <div className="flex h-16 w-full items-center justify-between gap-4 px-4 md:px-8">
+            <Link className={`flex items-center gap-2.5 rounded-md ${focusRing}`} href={HOME}>
+              <Image
+                alt=""
+                className="rounded-md"
+                height={28}
+                src="/design/logos/nookbud-app-icon.png"
+                width={28}
+              />
+              <span className="text-[1.0625rem] font-semibold tracking-[-0.2px] text-foreground">
+                Nookbud
+              </span>
+            </Link>
+            <nav aria-label="Main" className="flex items-center gap-1">
+              <Link className={navLink} href={HOME}>
+                Spaces
               </Link>
-              <nav aria-label="Main" className="flex items-center gap-1">
-                <Link className={navLink} href={HOME}>
-                  Spaces
-                </Link>
-                <Link className={navLink} href={SETTINGS}>
-                  Settings
-                </Link>
-                <form action={signOut}>
-                  <button
-                    className={`${button.ghost} whitespace-nowrap px-2 sm:px-3`}
-                    type="submit"
-                  >
-                    Sign out
-                  </button>
-                </form>
-              </nav>
-            </div>
-          </header>
+              <Link className={navLink} href={SETTINGS}>
+                Settings
+              </Link>
+              <form action={signOut}>
+                <button className={`${button.ghost} whitespace-nowrap px-2 sm:px-3`} type="submit">
+                  Sign out
+                </button>
+              </form>
+            </nav>
+          </div>
+        </header>
+        <div className="flex flex-1">
+          <div className="sticky top-0 shrink-0 self-start p-4 md:p-6">
+            <Sidebar />
+          </div>
           <main
-            className="min-h-0 flex-1 overflow-y-auto rounded-tl-[var(--radius-3xl)] border border-border bg-surface p-6 shadow-[var(--shadow-sm)] md:p-8"
+            className="min-w-0 flex-1 rounded-tl-[var(--radius-3xl)] border border-border bg-surface p-6 shadow-[var(--shadow-sm)] md:p-8"
             id="main"
           >
             {children}
