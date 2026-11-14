@@ -11,6 +11,8 @@ export default defineConfig(() => ({
       '@': join(import.meta.dirname, './src'),
       // `server-only` throws outside Next.js's server build, so tests use an empty stand-in.
       'server-only': join(import.meta.dirname, './specs/stubs/server-only.ts'),
+      // `next/font/google` is a build-time helper, so tests get a stand-in.
+      'next/font/google': join(import.meta.dirname, './specs/stubs/next-font.ts'),
     },
   },
   test: {

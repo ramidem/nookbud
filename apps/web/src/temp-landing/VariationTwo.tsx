@@ -95,15 +95,15 @@ const faqs = [
 ] as const;
 
 /**
- * Mix landing at /temp-landing2. Split hero with the sage-bar quote on the photo,
+ * Mix landing. `/` and `/temp-landing2` both render it. Split hero with the sage-bar quote on the photo,
  * numbered steps beside a sample note, and the tint tiles beside a card.
  */
-export function VariationTwo() {
+export function VariationTwo({ logoHref = '/temp-landing2' }: { logoHref?: string }) {
   return (
     <>
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
-          <Logo href="/temp-landing2" />
+          <Logo href={logoHref} />
           <nav
             aria-label="Main"
             className="order-last flex w-full gap-5 text-sm font-semibold sm:order-none sm:w-auto"
@@ -336,7 +336,7 @@ export function VariationTwo() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <Logo href="/temp-landing2" />
+            <Logo href={logoHref} />
             <p className="mt-3 max-w-xs text-sm text-subtitle">
               The safe corner where your child grows.
             </p>
@@ -344,7 +344,7 @@ export function VariationTwo() {
           <div className="grid gap-3 text-sm">
             <p className="flex flex-wrap gap-x-4 gap-y-1 text-subtitle">
               <a href="/documentation">Documentation</a>
-              <a href="/">Current landing</a>
+              {logoHref === '/' ? null : <a href="/">Current landing</a>}
               <a href={TERMS_HREF}>Terms</a>
               <a href={PRIVACY_HREF}>Privacy</a>
               <a href="mailto:hello@nookbud.com">hello@nookbud.com</a>
