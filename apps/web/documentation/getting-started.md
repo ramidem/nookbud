@@ -27,11 +27,11 @@ Nookbud asks your name and who shares responsibility for a child with you. You c
 
 - Sign in with your email and password. If either is wrong, Nookbud says so without saying which, so nobody can find out who has an account.
 - You stay signed in while you use Nookbud. If you do not use it for 30 days, you are signed out and sign in again.
-- **Sign out** is in the top bar. On a phone, tap your initials there, then **Sign out**. It ends your session on Nookbud's side, not only on your device.
+- Tap your initials in the top bar, then **Sign out**. It ends your session on Nookbud's side, not only on your device.
 
 ## Your settings
 
-Choose **Settings** in the top bar. On a phone, tap your initials, then **Settings**. The menu button to the left of the logo opens Home and Settings too.
+Tap your initials in the top bar, then **Settings**. On a phone, the menu button to the left of the logo opens Home and Settings too.
 
 - **Profile:** your name, your time zone and your default currency. Your time zone starts from your device; dates and times are shown in it. You can also change your answer about who you care for a child with.
 - **Security:** change your password, turn on [two-step sign-in](security-and-privacy.md#two-step-sign-in), and see [where you're signed in](security-and-privacy.md#where-youre-signed-in).
@@ -60,7 +60,7 @@ In a space, the **Calendar** shows events and, once an owner sets up the [parent
 
 ## More than one household
 
-You use one account for everything. If you share a child's care across more than one household, make a space for each arrangement and switch between them. On a phone, the **Spaces** button in the top bar shows the space you are in, and lists your spaces by name.
+You use one account for everything. If you share a child's care across more than one household, make a space for each arrangement and switch between them. The **Spaces** button, just left of your initials, shows the space you are in and lists your spaces by name.
 
 ## Next
 

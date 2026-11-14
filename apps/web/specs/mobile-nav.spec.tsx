@@ -37,8 +37,13 @@ describe('phone top bar', () => {
     expect(spacesButton.textContent).toContain('Ava and Noah');
     expect(spacesButton.className).toContain('border-border-strong');
     expect(spacesButton.className).toContain('bg-surface');
-    expect(spacesButton.className).toContain('w-full');
+    expect(spacesButton.className).toContain('max-w-48');
+    expect(spacesButton.className).not.toContain('w-full');
     expect(spacesButton.className).toContain('justify-between');
+    const account = screen.getByRole('button', { name: 'Alexandra Nguyen, account' });
+    expect(spacesButton.compareDocumentPosition(account) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
     fireEvent.click(spacesButton);
     const current = screen.getByRole('link', { name: 'Ava and Noah' });
     expect(current.getAttribute('href')).toBe('/spaces/ava/calendar');

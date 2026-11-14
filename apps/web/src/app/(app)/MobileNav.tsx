@@ -25,12 +25,11 @@ const panel =
   'absolute top-full z-30 mt-2 max-h-72 overflow-y-auto rounded-xl border border-border bg-surface p-2 shadow-[var(--shadow-sm)]';
 // Composed here, not from `button.secondary`: that style centers its label, and a later
 // `justify-between` does not win in Tailwind 4. The name stays on the left, the chevron on the right.
-const spacesControl = `inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-border-strong px-3 text-sm font-medium leading-[1.3] text-foreground transition-colors duration-150 hover:bg-neutral-200 ${focusRing}`;
+const spacesControl = `inline-flex min-h-11 max-w-48 min-w-0 items-center justify-between gap-2 rounded-lg border border-border-strong px-3 text-sm font-medium leading-[1.3] text-foreground transition-colors duration-150 hover:bg-neutral-200 sm:max-w-64 ${focusRing}`;
 
 /**
- * The phone top bar: a button that shows the space you are in and opens the list,
- * and an avatar that holds Settings and Sign out.
- * Hidden from `md` up, where those stay as links in the top bar.
+ * The top bar's right cluster: the Spaces button sits just left of the avatar.
+ * The avatar holds Settings and Sign out.
  */
 export function MobileNav({
   spaces,
@@ -78,8 +77,8 @@ export function MobileNav({
   }, [open]);
 
   return (
-    <div className="relative flex min-w-0 flex-1 items-center gap-1 md:hidden" ref={root}>
-      <div className="relative min-w-0 flex-1">
+    <div className="relative flex min-w-0 items-center gap-2" ref={root}>
+      <div className="relative min-w-0">
         <button
           aria-controls={open === 'spaces' ? spacesId : undefined}
           aria-expanded={open === 'spaces'}
@@ -95,7 +94,7 @@ export function MobileNav({
           <Chevron open={open === 'spaces'} />
         </button>
         {open === 'spaces' ? (
-          <div className={`${panel} right-0 left-0`} id={spacesId}>
+          <div className={`${panel} right-0 w-56 max-w-[calc(100vw-1.5rem)]`} id={spacesId}>
             {spaces.length ? (
               <ul>
                 {spaces.map((space) => {
