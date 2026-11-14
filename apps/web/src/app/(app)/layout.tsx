@@ -41,10 +41,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 >
                   <Image
                     alt=""
-                    className="rounded-md"
-                    height={28}
+                    className="size-10 rounded-md"
+                    height={40}
                     src="/design/logos/nookbud-app-icon.png"
-                    width={28}
+                    width={40}
                   />
                   <span className="hidden text-[1.0625rem] font-semibold tracking-[-0.2px] text-foreground min-[23.5rem]:inline">
                     Nookbud
