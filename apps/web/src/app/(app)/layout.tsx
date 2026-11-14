@@ -20,40 +20,47 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       >
         Skip to content
       </a>
-      <header className="border-b border-border bg-background">
-        <div className="mx-auto flex h-16 w-full max-w-[64rem] items-center justify-between gap-4 px-4 md:px-8">
-          <Link className={`flex items-center gap-2.5 rounded-md ${focusRing}`} href={HOME}>
-            <Image
-              alt=""
-              className="rounded-md"
-              height={28}
-              src="/design/logos/nookbud-app-icon.png"
-              width={28}
-            />
-            <span className="text-[1.0625rem] font-semibold tracking-[-0.2px] text-foreground">
-              Nookbud
-            </span>
-          </Link>
-          <nav aria-label="Main" className="flex items-center gap-1">
-            <Link className={navLink} href={HOME}>
-              Spaces
-            </Link>
-            <Link className={navLink} href={SETTINGS}>
-              Settings
-            </Link>
-            <form action={signOut}>
-              <button className={`${button.ghost} whitespace-nowrap px-2 sm:px-3`} type="submit">
-                Sign out
-              </button>
-            </form>
-          </nav>
+      <div className="flex min-h-dvh items-start">
+        <div className="sticky top-0 shrink-0 self-start p-4 md:p-6">
+          <Sidebar />
         </div>
-      </header>
-      <div className="mx-auto flex w-full max-w-[64rem] flex-col gap-6 px-4 py-6 md:flex-row md:items-start md:px-8 md:py-8">
-        <Sidebar />
-        <main className="min-w-0 flex-1" id="main">
-          {children}
-        </main>
+        <div className="min-w-0 flex-1">
+          <header className="border-b border-border bg-background">
+            <div className="flex h-16 w-full items-center justify-between gap-4 px-4 md:px-8">
+              <Link className={`flex items-center gap-2.5 rounded-md ${focusRing}`} href={HOME}>
+                <Image
+                  alt=""
+                  className="rounded-md"
+                  height={28}
+                  src="/design/logos/nookbud-app-icon.png"
+                  width={28}
+                />
+                <span className="text-[1.0625rem] font-semibold tracking-[-0.2px] text-foreground">
+                  Nookbud
+                </span>
+              </Link>
+              <nav aria-label="Main" className="flex items-center gap-1">
+                <Link className={navLink} href={HOME}>
+                  Spaces
+                </Link>
+                <Link className={navLink} href={SETTINGS}>
+                  Settings
+                </Link>
+                <form action={signOut}>
+                  <button
+                    className={`${button.ghost} whitespace-nowrap px-2 sm:px-3`}
+                    type="submit"
+                  >
+                    Sign out
+                  </button>
+                </form>
+              </nav>
+            </div>
+          </header>
+          <main className="px-4 py-6 md:px-8 md:py-8" id="main">
+            {children}
+          </main>
+        </div>
       </div>
     </AppRoot>
   );

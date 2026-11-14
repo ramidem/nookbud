@@ -26,7 +26,7 @@ export function Sidebar() {
   return (
     <aside
       aria-label="Dashboard"
-      className="w-full shrink-0 rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-sm)] md:sticky md:top-6 md:w-60"
+      className="w-56 shrink-0 rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-sm)]"
     >
       <nav aria-label="Places" className="grid gap-1">
         {NAV.map((entry) => {
