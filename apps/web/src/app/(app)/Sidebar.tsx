@@ -11,7 +11,8 @@ const NAV = [
   { href: SETTINGS, label: 'Settings', icon: 'gear' },
 ] as const;
 
-const item = 'flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium leading-[1.5]';
+const item =
+  'flex min-h-11 w-full items-center gap-3 rounded-lg bg-surface px-4 text-sm leading-[1.5] shadow-[var(--shadow-card)]';
 
 function isCurrent(path: string, href: string) {
   if (href === SETTINGS) return path.startsWith(SETTINGS);
@@ -20,7 +21,7 @@ function isCurrent(path: string, href: string) {
 }
 
 /**
- * The dashboard rail. Home, Spaces and Settings sit in a stack, centered across the rail, with no card.
+ * The dashboard rail. Each place is its own white tile. Nothing else wraps the stack.
  * On a phone the shell shows it full height from the menu button. From `md` up it is the left-hand rail.
  */
 export function Sidebar({ fill = false }: { fill?: boolean }) {
@@ -29,18 +30,20 @@ export function Sidebar({ fill = false }: { fill?: boolean }) {
   return (
     <aside
       aria-label="Dashboard"
-      className={`flex w-full flex-col items-center ${
-        fill ? 'h-full min-h-0 flex-1 overflow-y-auto' : ''
-      }`}
+      className={
+        fill
+          ? 'flex h-full min-h-0 w-full flex-1 flex-col overflow-y-auto px-2 pt-2'
+          : 'sticky top-0 hidden w-56 shrink-0 flex-col self-start px-5 pt-8 md:flex lg:px-6 lg:pt-10'
+      }
     >
-      <nav aria-label="Places" className="grid gap-1">
+      <nav aria-label="Places" className="grid gap-4">
         {NAV.map((entry) => {
           const current = isCurrent(path, entry.href);
           return (
             <Link
               aria-current={current ? 'page' : undefined}
               className={`${item} ${focusRing} ${
-                current ? 'bg-neutral-200 text-foreground' : 'text-neutral-700 hover:bg-neutral-200'
+                current ? 'font-semibold text-foreground' : 'font-medium text-neutral-700'
               }`}
               href={entry.href}
               key={entry.href}

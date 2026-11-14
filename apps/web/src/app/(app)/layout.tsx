@@ -86,9 +86,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </div>
           </header>
           <div className="flex flex-1 flex-col md:flex-row">
-            <div className="sticky top-0 hidden w-56 shrink-0 flex-col items-center self-start px-4 pt-4 md:flex lg:px-6 lg:pt-6">
-              <Sidebar />
-            </div>
+            <Sidebar />
             <main
               className="m-3 min-w-0 flex-1 break-words rounded-xl bg-surface p-4 shadow-[var(--shadow-sm)] sm:m-4 sm:p-6 md:m-0 md:rounded-none md:rounded-tl-[var(--radius-3xl)] md:p-6 lg:p-8"
               id="main"
