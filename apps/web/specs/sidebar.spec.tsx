@@ -20,8 +20,12 @@ describe('dashboard sidebar', () => {
     const home = screen.getByRole('link', { name: 'Home' });
     expect(home.className).toContain('bg-surface');
     expect(home.className).toContain('shadow-[var(--shadow-card)]');
+    expect(screen.getByRole('link', { name: 'Spaces' }).className).toContain(
+      'hover:bg-neutral-200',
+    );
     expect(screen.getByRole('link', { name: 'Spaces' }).className).not.toContain('bg-surface');
     expect(screen.getByRole('link', { name: 'Spaces' }).className).not.toContain('shadow-');
+    expect(home.className).not.toContain('hover:bg-neutral-200');
     expect(screen.getByRole('navigation', { name: 'Places' }).className).not.toContain('hidden');
 
     expect(screen.getByRole('link', { name: 'Home' }).getAttribute('href')).toBe('/home');

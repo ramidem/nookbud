@@ -44,7 +44,7 @@ export function Sidebar({ fill = false }: { fill?: boolean }) {
               className={`${item} ${focusRing} ${
                 current
                   ? 'bg-surface font-semibold text-foreground shadow-[var(--shadow-card)]'
-                  : 'font-medium text-neutral-700'
+                  : 'font-medium text-neutral-700 hover:bg-neutral-200'
               }`}
               href={entry.href}
               key={entry.href}
