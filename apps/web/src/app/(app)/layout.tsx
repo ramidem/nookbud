@@ -93,7 +93,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               className="m-3 min-w-0 flex-1 break-words rounded-xl bg-surface p-4 shadow-[var(--shadow-sm)] sm:m-4 sm:p-6 md:m-0 md:rounded-none md:rounded-tl-[var(--radius-3xl)] md:p-6 lg:p-8"
               id="main"
             >
-              {children}
+              <div className="mx-auto w-full max-w-6xl">{children}</div>
             </main>
           </div>
         </AppScroll>

@@ -15,7 +15,7 @@ export const button = {
 
 export const input = `block min-h-11 w-full rounded-lg border border-border-strong bg-surface px-4 py-2.5 text-base text-foreground placeholder:text-placeholder focus:border-transparent focus:outline-2 focus:outline-primary aria-[invalid=true]:border-error`;
 
-export const card = 'rounded-xl bg-surface p-4 sm:p-6 md:p-8';
+export const card = 'rounded-xl border border-border bg-surface p-4 sm:p-6 md:p-8';
 
 export const link = `font-medium text-foreground underline decoration-primary decoration-2 underline-offset-[3px] ${focusRing}`;
 
