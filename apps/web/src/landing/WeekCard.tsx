@@ -1,26 +1,17 @@
 import type { CSSProperties } from 'react';
 
 const days = [
-  { label: 'Mon', home: 'a' },
-  { label: 'Tue', home: 'a' },
-  { label: 'Wed', home: 'handoff' },
-  { label: 'Thu', home: 'b' },
-  { label: 'Fri', home: 'b' },
-  { label: 'Sat', home: 'b' },
-  { label: 'Sun', home: 'b' },
+  { label: 'Mon', event: false },
+  { label: 'Tue', event: false },
+  { label: 'Wed', event: true },
+  { label: 'Thu', event: true },
+  { label: 'Fri', event: true },
+  { label: 'Sat', event: false },
+  { label: 'Sun', event: false },
 ] as const;
 
-const homeA = 'var(--home-a)';
-const homeB = 'var(--home-b)';
-
-const fills = {
-  a: homeA,
-  b: homeB,
-  handoff: `linear-gradient(90deg, ${homeA} 50%, ${homeB} 50%)`,
-};
-
 const entries = [
-  { day: 'Wed', text: 'Handoff at school, 3:30 pm', seen: true },
+  { day: 'Wed', text: 'School pickup, 3:30 pm', seen: true },
   { day: 'Thu', text: 'Dentist, 4:00 pm. Tom drives.', seen: true },
   { day: 'Fri', text: 'Football boots, $42. Priya paid.', seen: false },
 ];
@@ -53,19 +44,8 @@ export function WeekCard() {
         </span>
       </figcaption>
 
-      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-subtitle">
-        <span className="flex items-center gap-2">
-          <span className="size-2.5 rounded-full" style={{ background: homeA }} />
-          At Priya&rsquo;s
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="size-2.5 rounded-full" style={{ background: homeB }} />
-          At Tom&rsquo;s
-        </span>
-      </div>
-
       <div
-        aria-label="Example week: Ava is at Priya's Monday and Tuesday, hands over at school on Wednesday at 3:30 pm, and is at Tom's from Wednesday afternoon to Sunday."
+        aria-label="Example week: school pickup on Wednesday, dentist on Thursday, football boots on Friday."
         className="mt-5 grid grid-cols-7 gap-1.5"
         role="img"
       >
@@ -73,8 +53,8 @@ export function WeekCard() {
           <div className="min-w-0" key={day.label}>
             <p className="mb-1.5 text-center text-xs text-subtitle">{day.label}</p>
             <div
-              className="nb-day h-16 rounded-lg"
-              style={{ '--i': i, background: fills[day.home] } as CSSProperties}
+              className={`nb-day h-16 rounded-lg ${day.event ? 'bg-primary' : 'bg-neutral-200'}`}
+              style={{ '--i': i } as CSSProperties}
             />
           </div>
         ))}

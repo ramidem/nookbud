@@ -1,6 +1,6 @@
 import { WAITLIST_HREF } from '../landing/config';
 
-export function Logo({ href = '/temp-landing' }: { href?: string }) {
+export function Logo({ href = '/temp-landing2' }: { href?: string }) {
   return (
     <a className="inline-flex items-center gap-2.5 rounded-md" href={href}>
       <img
@@ -31,31 +31,6 @@ export function Pill({
     >
       {children}
     </a>
-  );
-}
-
-const layouts = [
-  ['/temp-landing', 'First'],
-  ['/temp-landing1', 'Split'],
-  ['/temp-landing2', 'Mix'],
-] as const;
-
-export function LayoutLinks({ current }: { current: string }) {
-  return (
-    <p className="flex flex-wrap gap-x-4 gap-y-1">
-      <span className="text-subtitle">Layouts</span>
-      {layouts.map(([href, label]) =>
-        href === current ? (
-          <span className="font-semibold" key={href}>
-            {label}
-          </span>
-        ) : (
-          <a className="underline decoration-border underline-offset-4" href={href} key={href}>
-            {label}
-          </a>
-        ),
-      )}
-    </p>
   );
 }
 

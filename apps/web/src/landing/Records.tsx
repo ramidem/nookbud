@@ -4,7 +4,7 @@ const items = [
   {
     tint: 'bg-tint-sage',
     title: 'Schedule',
-    text: 'A shared calendar for school runs, handoffs and appointments. Both homes see the same week.',
+    text: 'A shared calendar for school, health, and the things the child needs.',
   },
   {
     tint: 'bg-tint-terracotta',
@@ -27,7 +27,7 @@ export function Records() {
   return (
     <section className={`${container} scroll-mt-16 pb-16 pt-16 md:pb-24 md:pt-24`} id="record">
       <div className="mx-auto max-w-[40rem] text-center">
-        <h2 className={h2}>One record for both homes.</h2>
+        <h2 className={h2}>One record for the kids.</h2>
         <p className={`${body} mt-4 text-lg leading-[1.5]`}>
           Entries aren&rsquo;t edited silently. If something changes, the history shows it.
         </p>
