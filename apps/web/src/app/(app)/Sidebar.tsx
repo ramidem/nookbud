@@ -11,8 +11,7 @@ const NAV = [
   { href: SETTINGS, label: 'Settings', icon: 'gear' },
 ] as const;
 
-const item =
-  'flex min-h-11 w-full items-center gap-3 rounded-lg bg-surface px-4 text-sm leading-[1.5] shadow-[var(--shadow-card)]';
+const item = 'flex min-h-11 w-full items-center gap-3 rounded-lg px-4 text-sm leading-[1.5]';
 
 function isCurrent(path: string, href: string) {
   if (href === SETTINGS) return path.startsWith(SETTINGS);
@@ -21,7 +20,7 @@ function isCurrent(path: string, href: string) {
 }
 
 /**
- * The dashboard rail. Each place is its own white tile. Nothing else wraps the stack.
+ * The dashboard rail. Only the current place is a white button. Nothing else wraps the stack.
  * On a phone the shell shows it full height from the menu button. From `md` up it is the left-hand rail.
  */
 export function Sidebar({ fill = false }: { fill?: boolean }) {
@@ -32,18 +31,20 @@ export function Sidebar({ fill = false }: { fill?: boolean }) {
       aria-label="Dashboard"
       className={
         fill
-          ? 'flex h-full min-h-0 w-full flex-1 flex-col overflow-y-auto px-2 pt-2'
-          : 'sticky top-0 hidden w-56 shrink-0 flex-col self-start px-5 pt-8 md:flex lg:px-6 lg:pt-10'
+          ? 'flex h-full min-h-0 w-full flex-1 flex-col overflow-y-auto px-6 pt-2'
+          : 'sticky top-0 hidden w-64 shrink-0 flex-col self-start px-8 pt-8 md:flex'
       }
     >
-      <nav aria-label="Places" className="grid gap-4">
+      <nav aria-label="Places" className="grid gap-2">
         {NAV.map((entry) => {
           const current = isCurrent(path, entry.href);
           return (
             <Link
               aria-current={current ? 'page' : undefined}
               className={`${item} ${focusRing} ${
-                current ? 'font-semibold text-foreground' : 'font-medium text-neutral-700'
+                current
+                  ? 'bg-surface font-semibold text-foreground shadow-[var(--shadow-card)]'
+                  : 'font-medium text-neutral-700'
               }`}
               href={entry.href}
               key={entry.href}

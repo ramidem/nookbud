@@ -6,7 +6,7 @@ const nav = vi.hoisted(() => ({ path: '/home' }));
 vi.mock('next/navigation', () => ({ usePathname: () => nav.path }));
 
 describe('dashboard sidebar', () => {
-  it('shows Home, Spaces and Settings as separate white tiles', () => {
+  it('shows Home, Spaces and Settings, with a button only on the current one', () => {
     nav.path = '/home';
     render(<Sidebar />);
 
@@ -14,13 +14,14 @@ describe('dashboard sidebar', () => {
     expect(rail.className).not.toContain('rounded-xl');
     expect(rail.className).not.toContain('bg-surface');
     expect(rail.className).not.toContain('shadow-');
-    expect(rail.className).toContain('w-56');
-    expect(rail.className).toContain('px-5');
-    expect(screen.getByRole('navigation', { name: 'Places' }).className).toContain('gap-4');
+    expect(rail.className).toContain('w-64');
+    expect(rail.className).toContain('px-8');
+    expect(screen.getByRole('navigation', { name: 'Places' }).className).toContain('gap-2');
     const home = screen.getByRole('link', { name: 'Home' });
     expect(home.className).toContain('bg-surface');
     expect(home.className).toContain('shadow-[var(--shadow-card)]');
-    expect(home.className).not.toContain('bg-neutral-200');
+    expect(screen.getByRole('link', { name: 'Spaces' }).className).not.toContain('bg-surface');
+    expect(screen.getByRole('link', { name: 'Spaces' }).className).not.toContain('shadow-');
     expect(screen.getByRole('navigation', { name: 'Places' }).className).not.toContain('hidden');
 
     expect(screen.getByRole('link', { name: 'Home' }).getAttribute('href')).toBe('/home');
