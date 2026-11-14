@@ -5,10 +5,11 @@ import { signOut } from '../../auth-actions/sign-out';
 import { HOME, SETTINGS } from '../../auth/routes';
 import { AppRoot } from '../../ui/AppRoot';
 import { button, focusRing } from '../../ui/styles';
+import { Sidebar } from './Sidebar';
 
 const navLink = `rounded-md px-2 py-2 sm:px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-200 ${focusRing}`;
 
-/** The signed-in app: a top bar with the main places and sign out. */
+/** The signed-in app, laid out as a dashboard: a top bar and a sidebar. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   await requireUser();
   return (
@@ -48,9 +49,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </nav>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-[64rem] px-4 py-10 md:px-8 md:py-14" id="main">
-        {children}
-      </main>
+      <div className="mx-auto flex w-full max-w-[64rem] flex-col gap-6 px-4 py-6 md:flex-row md:items-start md:px-8 md:py-8">
+        <Sidebar />
+        <main className="min-w-0 flex-1" id="main">
+          {children}
+        </main>
+      </div>
     </AppRoot>
   );
 }
