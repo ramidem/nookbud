@@ -34,11 +34,19 @@ const securityHeaders = [
     : [{ key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' }]),
 ];
 
+// Hostnames, without a scheme or port, that may load the dev server. Next.js blocks every other
+// origin. Set NOOKBUD_DEV_ORIGINS when opening the dev server through Tailscale Serve.
+const devOrigins = (process.env.NOOKBUD_DEV_ORIGINS ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // A self-contained server for the container. In a monorepo, tracing has to start at the repo root
   // so the workspace's packages are included in the output.
   output: 'standalone',
+  ...(devOrigins.length > 0 ? { allowedDevOrigins: devOrigins } : {}),
   outputFileTracingRoot: path.join(__dirname, '../../'),
   poweredByHeader: false,
   async headers() {
