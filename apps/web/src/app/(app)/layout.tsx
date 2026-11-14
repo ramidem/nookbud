@@ -9,7 +9,7 @@ import { Sidebar } from './Sidebar';
 
 const navLink = `rounded-md px-2 py-2 sm:px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-200 ${focusRing}`;
 
-/** The signed-in app, laid out as a dashboard: a top bar and a sidebar. */
+/** The signed-in app: a top bar, a sidebar, and the page in a card that fills the right side. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   await requireUser();
   return (
@@ -20,12 +20,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       >
         Skip to content
       </a>
-      <div className="flex min-h-dvh items-start">
-        <div className="sticky top-0 shrink-0 self-start p-4 md:p-6">
+      <div className="flex h-dvh overflow-hidden">
+        <div className="shrink-0 self-start p-4 md:p-6">
           <Sidebar />
         </div>
-        <div className="min-w-0 flex-1">
-          <header className="border-b border-border bg-background">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <header className="shrink-0 bg-background">
             <div className="flex h-16 w-full items-center justify-between gap-4 px-4 md:px-8">
               <Link className={`flex items-center gap-2.5 rounded-md ${focusRing}`} href={HOME}>
                 <Image
@@ -57,7 +57,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               </nav>
             </div>
           </header>
-          <main className="px-4 py-6 md:px-8 md:py-8" id="main">
+          <main
+            className="min-h-0 flex-1 overflow-y-auto rounded-tl-[var(--radius-3xl)] border border-border bg-surface p-6 shadow-[var(--shadow-sm)] md:p-8"
+            id="main"
+          >
             {children}
           </main>
         </div>
